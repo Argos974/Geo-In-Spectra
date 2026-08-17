@@ -46,4 +46,37 @@ export const indicesSpectrauxQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "Nuages/brume/aérosols faussent la réflectance mesurée, et un pixel à résolution grossière peut mélanger plusieurs types de couverture : deux limites générales à tout indice spectral.",
   },
+  {
+    question: "Un indice composé se distingue d'un indice simple parce qu'il :",
+    choices: [
+      "Utilise toujours trois bandes brutes minimum",
+      "Combine plusieurs indices déjà calculés entre eux, plutôt que directement des bandes brutes",
+      "Ne peut être calculé que par une IA",
+      "N'existe qu'en télédétection radar",
+    ],
+    correctIndex: 1,
+    explanation: "Un indice composé repart d'indices déjà calculés (ex. NDMI + pente + vent) plutôt que des bandes brutes du capteur, pour produire un indicateur qu'aucun indice seul ne capture.",
+  },
+  {
+    question: "Le SAVI corrige un défaut précis du NDVI, lequel ?",
+    choices: [
+      "Sa sensibilité à la réflectance du sol nu visible à travers un couvert clairsemé",
+      "Son incapacité totale à détecter la végétation",
+      "Son usage exclusif sur des images radar",
+      "Sa dépendance à la bande thermique",
+    ],
+    correctIndex: 0,
+    explanation: "Le SAVI (Huete, 1988) ajoute une constante L à la formule du NDVI pour atténuer l'influence de la réflectance du sol nu quand la végétation est clairsemée.",
+  },
+  {
+    question: "Pourquoi le NDRE (red-edge) est-il particulièrement utile en agriculture de précision ?",
+    choices: [
+      "Il ne peut être calculé qu'à partir d'images radar",
+      "Il reste sensible à la chlorophylle et sature plus tard que le NDVI, détectant un stress nutritionnel avant qu'il soit visible sur le NDVI",
+      "Il remplace entièrement le NDVI dans tous les cas",
+      "Il ne fonctionne que sur Landsat",
+    ],
+    correctIndex: 1,
+    explanation: "Le NDRE exploite les bandes red-edge (uniques à des capteurs comme Sentinel-2, absentes de Landsat) : sensible à la teneur en chlorophylle, il sature beaucoup plus tard que le NDVI en forte biomasse.",
+  },
 ]

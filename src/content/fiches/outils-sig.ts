@@ -30,4 +30,10 @@ export const outilsSigFiche: ContentBlock[] = [
     title: "À ne pas confondre",
     text: "Un buffer ou un calcul d'aire fait sans reprojection préalable en système métrique donne un résultat en degrés, pas en mètres.",
   },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Moran, MAUP et krigeage",
+    text: "Indice de Moran proche de +1 : valeurs voisines qui se ressemblent fortement. MAUP : un même jeu de données change de résultat statistique selon le découpage spatial choisi. Krigeage : interpolation qui ajoute une carte d'incertitude, contrairement à l'IDW.",
+  },
 ]

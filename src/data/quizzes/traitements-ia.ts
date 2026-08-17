@@ -2,17 +2,6 @@ import type { QuizQuestion } from "./types"
 
 export const traitementsIaQuiz: QuizQuestion[] = [
   {
-    question: "Un indice composé se distingue d'un indice simple parce qu'il :",
-    choices: [
-      "Utilise toujours trois bandes brutes minimum",
-      "Combine plusieurs indices déjà calculés entre eux",
-      "Ne peut être calculé que par une IA",
-      "N'existe qu'en télédétection radar",
-    ],
-    correctIndex: 1,
-    explanation: "Un indice composé repart d'indices déjà calculés (ex. NDMI + pente + vent) plutôt que des bandes brutes du capteur, pour produire un indicateur qu'aucun indice seul ne capture.",
-  },
-  {
     question: "Un filtre à noyau (kernel) recalcule la valeur d'un pixel à partir de :",
     choices: [
       "Sa seule valeur d'origine",
@@ -55,5 +44,49 @@ export const traitementsIaQuiz: QuizQuestion[] = [
     ],
     correctIndex: 2,
     explanation: "Le biais du jeu d'entraînement (mauvaise généralisation) et le manque d'explicabilité sont deux limites réelles et documentées, tout comme le besoin permanent de vérité terrain pour entraîner et vérifier un modèle.",
+  },
+  {
+    question: "Le coefficient kappa, contrairement à la précision globale d'une matrice de confusion, corrige :",
+    choices: [
+      "Les erreurs de géoréférencement de l'image",
+      "L'accord qui surviendrait même par une classification aléatoire biaisée par la fréquence des classes",
+      "La résolution spatiale du capteur",
+      "Le nombre de bandes utilisées",
+    ],
+    correctIndex: 1,
+    explanation: "κ = (Po − Pe) / (1 − Pe) : Pe est la précision attendue par pur hasard. Le kappa évite qu'une classification qui prédit toujours la classe majoritaire paraisse artificiellement bonne.",
+  },
+  {
+    question: "Une fuite de données (data leakage) en classification survient quand :",
+    choices: [
+      "Le jeu de test contient des pixels trop proches ou identiques à ceux du jeu d'entraînement",
+      "Le modèle est entraîné sur trop peu de données",
+      "L'image contient des pixels nuageux",
+      "Le CRS de la couche est mal renseigné",
+    ],
+    correctIndex: 0,
+    explanation: "Si le jeu de test provient de la même parcelle que l'entraînement, la précision mesurée est artificiellement gonflée : le modèle a retrouvé un voisin quasi identique plutôt que d'avoir généralisé.",
+  },
+  {
+    question: "L'architecture U-Net est spécifiquement conçue pour :",
+    choices: [
+      "Classer une image entière avec une seule étiquette",
+      "Segmenter une image pixel par pixel (ex. délimiter chaque bâtiment)",
+      "Calculer un NDVI plus rapidement",
+      "Remplacer entièrement la classification non supervisée",
+    ],
+    correctIndex: 1,
+    explanation: "U-Net (Ronneberger et al., 2015) combine un chemin de réduction puis de restauration de la résolution spatiale pour produire une carte de sortie à la même résolution que l'image d'entrée, une étiquette par pixel.",
+  },
+  {
+    question: "Pourquoi le kappa n'est-il pas la bonne métrique pour évaluer une segmentation (ex. sortie d'un U-Net) ?",
+    choices: [
+      "Le kappa évalue un accord pixel par pixel, indépendamment de la géométrie ; l'IoU (recouvrement prédiction/vérité terrain) est la métrique adaptée à la forme d'un objet",
+      "Le kappa ne peut être calculé que sur des images radar",
+      "Il n'y a en réalité aucune différence entre les deux métriques",
+      "Le kappa est toujours égal à 1 pour une segmentation",
+    ],
+    correctIndex: 0,
+    explanation: "L'IoU (Intersection over Union) mesure directement le recouvrement entre la forme prédite et la forme réelle d'un objet — la métrique standard des benchmarks de segmentation, contrairement au kappa qui ignore la géométrie.",
   },
 ]

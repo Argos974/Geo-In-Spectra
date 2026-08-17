@@ -47,4 +47,37 @@ export const fondamentauxQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "GeoTIFF est le format raster de référence (imagerie satellite, modèles numériques de terrain) : une image accompagnée de ses informations de géoréférencement.",
   },
+  {
+    question: "L'altitude affichée par un GPS brut (h) diffère de l'altitude d'une carte IGN (H) parce que :",
+    choices: [
+      "Le GPS mesure une altitude ellipsoïdale, la carte une altitude orthométrique rattachée au niveau des mers",
+      "Le GPS est toujours plus précis que la carte",
+      "Il n'y a en réalité aucune différence entre les deux",
+      "La carte IGN n'affiche jamais d'altitude",
+    ],
+    correctIndex: 0,
+    explanation: "h = H + N, où N est l'ondulation du géoïde par rapport à l'ellipsoïde. Un GPS mesure h directement ; une carte topographique affiche H, l'altitude \"vraie\" au sens de l'écoulement de l'eau.",
+  },
+  {
+    question: "Un récepteur GPS calcule sa position à partir de :",
+    choices: [
+      "Un seul satellite, très précis",
+      "La distance à plusieurs satellites de position connue (trilatération)",
+      "Une triangulation optique avec des stations au sol uniquement",
+      "La seule boussole intégrée au récepteur",
+    ],
+    correctIndex: 1,
+    explanation: "Le récepteur mesure le temps de trajet du signal de plusieurs satellites, en déduit la distance à chacun, puis calcule sa position par trilatération (au moins 4 satellites pour lever l'ambiguïté et corriger l'horloge du récepteur).",
+  },
+  {
+    question: "Pourquoi RGF93/ETRS89 est-il préféré à ITRF pour le cadastre et les cartes françaises courantes ?",
+    choices: [
+      "ITRF n'existe pas en France",
+      "ETRS89 est \"gelé\" sur la plaque eurasienne : un point français garde pratiquement la même coordonnée dans le temps, contrairement à ITRF qui suit la dérive tectonique continue",
+      "ETRS89 est plus précis qu'ITRF",
+      "Il n'y a en réalité aucune différence entre les deux",
+    ],
+    correctIndex: 1,
+    explanation: "ITRF est un référentiel global recalculé en continu, qui suit le mouvement réel de la croûte (~2-3 cm/an en Europe). ETRS89 fixe ce mouvement à une époque de référence (1989), ce qui permet à un cadastre de rester utilisable sans recalcul permanent.",
+  },
 ]

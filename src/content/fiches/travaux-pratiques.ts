@@ -15,7 +15,10 @@ export const travauxPratiquesFiche: ContentBlock[] = [
       "Séance 3 : NDVI sur l'image géoréférencée, moyenne par cellule, ΔNDVI multi-dates",
       "Séance 4 : buffer + intersection (200 m, zone réglementaire)",
       "Séance 5 : programmation (GeoPandas, Shapely, rasterio par lot)",
-      "Séance 6 : étude de cas + mini-projet, rapport structuré (voir La Méthode)",
+      "Séance 6 : classification supervisée, jeu test réservé, matrice de confusion + kappa",
+      "Séance 7 : réseau de neurones simple (MLP), comparé au Random Forest de la séance 6",
+      "Séance 8 : radar (signature VV eau/bâti) et krigeage (variogramme, carte d'incertitude)",
+      "Séance 9 : étude de cas + mini-projet, rapport structuré (voir La Méthode)",
     ],
   },
   {

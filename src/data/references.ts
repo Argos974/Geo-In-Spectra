@@ -26,6 +26,8 @@ export const referenceGroups: ReferenceGroup[] = [
     refs: [
       { type: "manuel", label: "Hofmann-Wellenhof, B., Lichtenegger, H. & Wasle, E.", detail: "GNSS – Global Navigation Satellite Systems: GPS, GLONASS, Galileo & more, Springer" },
       { type: "officiel", label: "IGN — RGF93 et réseau GNSS permanent (RGP)", detail: "Documentation géodésique officielle française, transformations de référentiels", url: "https://geodesie.ign.fr" },
+      { type: "manuel", label: "Snyder, J. P. (1987)", detail: "Map Projections: A Working Manual, USGS Professional Paper 1395 — référence historique des formules de projection" },
+      { type: "officiel", label: "IERS (International Earth Rotation and Reference Systems Service)", detail: "Maintien du repère de référence terrestre international ITRF", url: "https://www.iers.org" },
     ],
   },
   {
@@ -41,6 +43,9 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "revue", label: "Moran, P. A. P. (1950)", detail: "Notes on Continuous Stochastic Phenomena, Biometrika — indice d'autocorrélation spatiale" },
       { type: "revue", label: "Openshaw, S. (1984)", detail: "The Modifiable Areal Unit Problem, CATMOG 38, Geo Books" },
       { type: "officiel", label: "ISO 19115", detail: "Norme internationale de structuration des métadonnées géographiques" },
+      { type: "manuel", label: "Matheron, G. (1963)", detail: "Principles of Geostatistics, Economic Geology — fondateur de la géostatistique et du krigeage" },
+      { type: "revue", label: "Saaty, T. L. (1980)", detail: "The Analytic Hierarchy Process, McGraw-Hill" },
+      { type: "revue", label: "Dijkstra, E. W. (1959)", detail: "A Note on Two Problems in Connexion with Graphs, Numerische Mathematik — algorithme du plus court chemin" },
     ],
   },
   {
@@ -54,6 +59,7 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "video", label: "Supports de formation RUS Copernicus", detail: "Webinaires et exercices guidés sur les données Copernicus" },
       { type: "revue", label: "Chavez, P. S. (1988)", detail: "An Improved Dark-Object Subtraction Technique for Atmospheric Scattering Correction of Multispectral Data, Remote Sensing of Environment" },
       { type: "revue", label: "Vermote, E. F. et al. (1997)", detail: "Second Simulation of the Satellite Signal in the Solar Spectrum (6S), IEEE Transactions on Geoscience and Remote Sensing" },
+      { type: "revue", label: "Freeman, A. & Durden, S. L. (1998)", detail: "A Three-Component Scattering Model for Polarimetric SAR Data, IEEE Transactions on Geoscience and Remote Sensing" },
     ],
   },
   {
@@ -74,6 +80,10 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "revue", label: "Key, C. H. & Benson, N. C. (2006)", detail: "Landscape Assessment: Ground Measure of Severity, the Normalized Burn Ratio (NBR), USDA Forest Service" },
       { type: "revue", label: "Gitelson, A. A. et al. (1996)", detail: "Use of a Green Channel in Remote Sensing of Global Vegetation from EOS-MODIS (GNDVI), Remote Sensing of Environment" },
       { type: "revue", label: "Kauth, R. J. & Thomas, G. S. (1976)", detail: "The Tasseled Cap — A Graphic Description of the Spectral-Temporal Development of Agricultural Crops, LARS Symposia" },
+      { type: "revue", label: "Gitelson, A. A. & Merzlyak, M. N. (1994)", detail: "Spectral Reflectance Changes Associated with Autumn Senescence (origine du NDRE), Journal of Plant Physiology" },
+      { type: "revue", label: "Daughtry, C. S. T. et al. (2000)", detail: "Estimating Corn Leaf Chlorophyll Concentration from Leaf and Canopy Reflectance (MCARI), Remote Sensing of Environment" },
+      { type: "revue", label: "Haboudane, D. et al. (2002)", detail: "Integrated Narrow-Band Vegetation Indices for Prediction of Crop Chlorophyll Content (TCARI), Remote Sensing of Environment" },
+      { type: "revue", label: "Verbesselt, J. et al. (2010)", detail: "Detecting Trend and Seasonal Changes in Satellite Image Time Series (BFAST), Remote Sensing of Environment" },
     ],
   },
   {
@@ -88,6 +98,7 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "revue", label: "LeCun, Y., Bengio, Y. & Hinton, G. (2015)", detail: "Deep Learning, Nature" },
       { type: "revue", label: "Ronneberger, O., Fischer, P. & Brox, T. (2015)", detail: "U-Net: Convolutional Networks for Biomedical Image Segmentation, MICCAI" },
       { type: "revue", label: "Vaswani, A. et al. (2017)", detail: "Attention Is All You Need, NeurIPS — mécanisme d'attention à l'origine des Transformers" },
+      { type: "revue", label: "Sumbul, G. et al. (2019)", detail: "BigEarthNet: A Large-Scale Benchmark Archive for Remote Sensing Image Understanding, IGARSS" },
     ],
   },
   {

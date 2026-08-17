@@ -56,4 +56,21 @@ export const travauxPratiquesQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "L'énoncé demande explicitement de croiser au moins une donnée vecteur, une donnée raster (ou un indice calculé), et une analyse spatiale (buffer, intersection ou jointure).",
   },
+  {
+    question: "Dans la séance de classification supervisée, pourquoi réserver 30 % des polygones d'entraînement avant de lancer le classifieur ?",
+    choices: [
+      "Pour accélérer le calcul",
+      "Pour disposer d'un jeu de test indépendant, jamais montré au modèle, et évaluer honnêtement sa précision",
+      "QGIS l'exige techniquement",
+      "Pour réduire la taille du fichier exporté",
+    ],
+    correctIndex: 1,
+    explanation: "Évaluer un classifieur sur les mêmes données que celles utilisées pour l'entraîner donne une précision artificiellement optimiste. Un jeu de test réservé et jamais vu par le modèle est indispensable à une évaluation honnête.",
+  },
+  {
+    question: "Pour vérifier rapidement le CRS et le nombre d'entités d'un GeoPackage sans ouvrir QGIS, on utilise :",
+    choices: ["gdalinfo", "ogrinfo", "ffmpeg", "curl"],
+    correctIndex: 1,
+    explanation: "ogrinfo (GDAL/OGR) inspecte une couche vecteur en ligne de commande : nombre d'entités, CRS, champs. gdalinfo joue le même rôle pour un raster.",
+  },
 ]

@@ -32,4 +32,10 @@ export const indicesSpectrauxFiche: ContentBlock[] = [
     title: "À ne pas confondre",
     text: "Sol nu et zone bâtie ont tous deux un NDVI faible : c'est le NDBI, pas le NDVI, qui permet de les distinguer.",
   },
+  {
+    type: "formula",
+    label: "SAVI, EVI, NDRE",
+    formula: "SAVI = (NIR−Rouge)/(NIR+Rouge+L)×(1+L)  ·  EVI = 2.5×(NIR−Rouge)/(NIR+6·Rouge−7.5·Bleu+1)  ·  NDRE = (NIR−RedEdge)/(NIR+RedEdge)",
+    note: "SAVI corrige l'effet du sol nu, EVI corrige la saturation en forte biomasse, NDRE (bandes red-edge, Sentinel-2 uniquement) sature plus tard que le NDVI.",
+  },
 ]

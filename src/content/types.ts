@@ -13,3 +13,4 @@ export type ContentBlock =
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "diagram"; name: DiagramName; caption?: string }
   | { type: "link"; to: string; label: string; description?: string }
+  | { type: "solution"; title: string; text?: string; items?: string[] }

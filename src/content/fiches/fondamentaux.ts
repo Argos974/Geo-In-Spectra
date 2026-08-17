@@ -35,4 +35,10 @@ export const fondamentauxFiche: ContentBlock[] = [
     title: "À ne pas confondre",
     text: "Coordonnées géographiques (degrés, WGS84) ≠ coordonnées projetées (mètres, Lambert-93). Un buffer ou un calcul de surface fait en degrés donne un résultat faux, sans message d'erreur.",
   },
+  {
+    type: "callout",
+    tone: "info",
+    title: "ITRF vs ETRS89/RGF93",
+    text: "ITRF suit en continu la dérive des plaques tectoniques (~2-3 cm/an). ETRS89/RGF93 est \"gelé\" à l'époque 1989 : un point français garde la même coordonnée dans le temps — la transformation entre les deux passe par un modèle à 7 paramètres (Helmert : 3 translations, 3 rotations, 1 échelle).",
+  },
 ]

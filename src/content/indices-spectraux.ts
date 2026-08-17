@@ -54,7 +54,7 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   },
   {
     type: "paragraph",
-    text: "L'eau contenue dans les tissus végétaux absorbe fortement le SWIR (une conséquence directe des bandes d'absorption de l'eau liquide vers 1.4–1.9 µm, voir module précédent). Une végétation bien hydratée a donc un NDMI élevé ; une végétation en stress hydrique (sécheresse, précurseur de risque incendie) voit son NDMI chuter avant même que le changement soit visible à l'œil nu ou détectable par le NDVI seul — le NDVI mesure la vigueur chlorophyllienne, le NDMI mesure directement la teneur en eau des tissus, deux grandeurs biophysiques distinctes qui décrochent l'une de l'autre précisément au moment le plus intéressant pour la surveillance du risque. C'est un indicateur précoce très utilisé pour le suivi de sécheresse et l'évaluation de l'inflammabilité de la végétation (Gao, 1996, qui l'introduit sous le nom de NDWI pour la végétation — à ne pas confondre avec le NDWI de surface en eau de la section 4).",
+    text: "L'eau contenue dans les tissus végétaux absorbe fortement le SWIR (une conséquence directe des bandes d'absorption de l'eau liquide vers 1.4–1.9 µm, voir module précédent). Une végétation bien hydratée a donc un NDMI élevé ; une végétation en stress hydrique (sécheresse, précurseur de risque incendie) voit son NDMI chuter avant même que le changement soit visible à l'œil nu ou détectable par le NDVI seul — le NDVI mesure la vigueur chlorophyllienne, le NDMI mesure directement la teneur en eau des tissus, deux grandeurs biophysiques distinctes qui décrochent l'une de l'autre précisément au moment le plus intéressant pour la surveillance du risque. C'est un indicateur précoce très utilisé pour le suivi de sécheresse et l'évaluation de l'inflammabilité de la végétation (Gao, 1996, qui l'introduit sous le nom de NDWI pour la végétation — à ne pas confondre avec le NDWI de surface en eau de la section 6).",
   },
 
   { type: "heading", text: "3. NDBI : Normalized Difference Built-up Index" },
@@ -99,7 +99,32 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "Le NDVI reste le standard par défaut (simple, comparable à des décennies d'archives). Le SAVI/MSAVI2 est préférable sur sol peu couvert (semis, zones arides, débuts de saison culturale). L'EVI est préférable sur forêt dense ou canopée fermée, là où le NDVI plafonne. Changer d'indice au milieu d'une série temporelle sans le documenter est une erreur méthodologique fréquente : les valeurs ne sont pas directement comparables d'un indice à l'autre.",
   },
 
-  { type: "heading", text: "5. Autres indices courants" },
+  { type: "heading", text: "5. Red-edge et indices de chlorophylle", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Sentinel-2 possède une particularité rare parmi les capteurs gratuits : trois bandes situées dans le red-edge (le \"bord rouge\", la zone de transition très abrupte entre absorption chlorophyllienne et plateau de réflectance NIR — B5 à 705 nm, B6 à 740 nm, B7 à 783 nm). Cette zone est directement sensible à la teneur en chlorophylle de la feuille, avant même que le NDVI (fondé sur le plateau NIR, moins sensible aux variations fines de chlorophylle une fois la canopée fermée) ne réagisse.",
+  },
+  {
+    type: "formula",
+    label: "NDRE (Normalized Difference Red Edge, Gitelson & Merzlyak, 1994)",
+    formula: "NDRE = (NIR − RedEdge) / (NIR + RedEdge)",
+    note: "Sur Sentinel-2 : NIR = B8 (842 nm), RedEdge = B5 (705 nm). Le NDRE sature beaucoup plus tard que le NDVI en forte biomasse, car le red-edge reste sensible à la chlorophylle même quand le plateau NIR est déjà saturé — c'est l'indice de référence en agriculture de précision pour détecter un stress nutritionnel (azote) avant qu'il ne soit visible sur le NDVI.",
+  },
+  {
+    type: "list",
+    items: [
+      "MCARI (Modified Chlorophyll Absorption Ratio Index, Daughtry et al., 2000) : combine rouge, red-edge et vert pour isoler l'absorption liée à la chlorophylle de l'effet du sol sous-jacent",
+      "TCARI (Transformed CARI, Haboudane et al., 2002) : variante de MCARI conçue pour rester peu sensible à l'indice foliaire (LAI), afin d'isoler spécifiquement la concentration en chlorophylle plutôt que la quantité de feuillage",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Pourquoi si peu de capteurs gratuits ont des bandes red-edge",
+    text: "Landsat (toutes générations) n'a jamais eu de bande red-edge : le NDRE et les indices de chlorophylle qui en dépendent sont, de fait, réservés aux capteurs qui en sont équipés (Sentinel-2, RapidEye, certains capteurs commerciaux). C'est une des raisons pour lesquelles Sentinel-2 s'est imposé plus vite que Landsat en agriculture de précision malgré une résolution spatiale comparable.",
+  },
+
+  { type: "heading", text: "6. Autres indices courants" },
   {
     type: "table",
     headers: ["Indice", "Formule", "Usage"],
@@ -119,7 +144,50 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "Le NBR utilise la bande SWIR2 (~2.2 µm, B12 sur Sentinel-2), car la végétation brûlée et les cendres ont une réflectance NIR effondrée et une réflectance SWIR fortement augmentée par rapport à une végétation saine. Comparer le NBR juste avant et juste après un feu (ΔNBR = NBR_préfeu − NBR_postfeu) est la méthode standard des services forestiers (US Forest Service, séquelle d'usage international) pour classer la sévérité d'un incendie en plusieurs catégories, de la repousse rapide à la mortalité totale du peuplement.",
   },
 
-  { type: "heading", text: "6. Signatures spectrales comparées", level: "superieur" },
+  { type: "heading", text: "7. Des indices simples aux indices composés", level: "college-lycee" },
+  {
+    type: "paragraph",
+    text: "Un peu comme un bulletin météo qui annonce un \"risque d'orage élevé\" en croisant température, humidité et pression plutôt qu'une seule mesure isolée : un indice simple comme le NDVI, le NDMI ou le NDBI combine deux bandes brutes d'un capteur. Un indice composé va un cran plus loin : il combine plusieurs indices déjà calculés entre eux, plutôt que de repartir des bandes. L'objectif est de faire ressortir un phénomène qu'aucun indice seul ne capture correctement.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Exemple réel : un indice composite de comportement du feu",
+    text: "Un système de cartographie du risque incendie peut pondérer plusieurs entrées déjà calculées (indice d'humidité de la végétation, alignement du vent avec la pente, exposition solaire) dans une seule moyenne pondérée pour produire un indice de comportement du feu. Aucune de ces entrées prise seule ne suffit : c'est leur combinaison réfléchie qui a un sens opérationnel.",
+  },
+
+  { type: "heading", text: "8. Indices complexes : au-delà du simple ratio", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Un indice complexe ne se limite pas à une division entre deux bandes : il peut combiner linéairement plusieurs bandes avec des coefficients fixes, ou reposer sur une transformation statistique de l'image entière. Deux exemples classiques :",
+  },
+  {
+    type: "list",
+    items: [
+      "Tasseled Cap (transformation de Kauth-Thomas, 1976) : combine toutes les bandes d'une image via des coefficients fixes, propres à chaque capteur, pour produire trois axes interprétables — luminosité du sol (brightness), verdeur de la végétation (greenness), humidité (wetness)",
+      "Analyse en composantes principales (ACP) appliquée à l'image : recombine les bandes corrélées entre elles en un plus petit nombre de composantes non corrélées, qui concentrent l'essentiel de l'information utile",
+    ],
+  },
+  {
+    type: "formula",
+    label: "Tasseled Cap — axe \"greenness\" (coefficients Landsat TM, Crist & Cicone, 1984)",
+    formula: "Greenness ≈ −0.283·B1 − 0.660·B2 + 0.577·B3 + 0.388·B4 − 0.045·B5 − 0.472·B7",
+    note: "Contrairement au NDVI, ces coefficients ne sont pas universels : ils sont recalculés pour chaque capteur (des jeux distincts existent pour Landsat TM, ETM+, OLI et pour Sentinel-2) à partir d'une analyse statistique des images de ce capteur précis. C'est le prix de leur précision accrue.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Pourquoi ne pas toujours utiliser un indice complexe ?",
+    text: "Un indice simple (NDVI) est interprétable en un coup d'œil et comparable d'une étude à l'autre. Un indice complexe est souvent plus précis pour un usage donné, mais ses coefficients sont propres à un capteur et un contexte : il perd en généralité ce qu'il gagne en finesse.",
+  },
+  {
+    type: "link",
+    to: "/module/traitements-ia",
+    label: "Continuer : du pixel isolé au voisinage, jusqu'à la classification",
+    description: "Le module L'Intelligence prend le relais à partir d'ici : filtres à noyau, classification supervisée/non supervisée, deep learning.",
+  },
+
+  { type: "heading", text: "9. Signatures spectrales comparées", level: "superieur" },
   {
     type: "paragraph",
     text: "Chaque type de surface (végétation, eau, sol nu, bâti) a une signature spectrale caractéristique — sa réflectance selon la longueur d'onde. Superposer ces signatures explique d'un coup pourquoi le NDVI, le NDMI et le NDBI choisissent chacun des paires de bandes différentes : ils exploitent l'endroit du spectre où deux types de surface se distinguent le plus nettement.",
@@ -136,7 +204,7 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "L'eau absorbe presque tout le rayonnement au-delà du visible, d'où sa réflectance qui chute continûment. La végétation présente le sursaut caractéristique en proche infrarouge (voir module Télédétection). Sol nu et bâti ont des courbes plus plates et proches l'une de l'autre dans le visible/NIR, ce qui explique pourquoi il faut aller chercher le SWIR (NDBI) pour les séparer.",
   },
 
-  { type: "heading", text: "7. Indices radar : au-delà de l'optique", level: "approfondissement" },
+  { type: "heading", text: "10. Indices radar : au-delà de l'optique", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Un capteur SAR ne mesure pas une réflectance mais un coefficient de rétrodiffusion (σ°, en dB) — les indices \"spectraux\" au sens strict n'existent donc pas en radar, mais des indicateurs équivalents jouent le même rôle : ratios entre polarisations, ou différences temporelles.",
@@ -150,7 +218,45 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "8. Limites communes à tous les indices spectraux" },
+  { type: "heading", text: "11. Valider un indice : le confronter à une mesure biophysique réelle", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un indice spectral reste, par construction, une mesure indirecte (section 13, \"absence de vérité terrain\"). Le valider scientifiquement suppose de le confronter statistiquement à une grandeur biophysique mesurée sur le terrain — le LAI (Leaf Area Index, surface foliaire par unité de surface au sol) est la référence la plus courante pour un indice de végétation.",
+  },
+  {
+    type: "formula",
+    label: "Régression indice ↔ variable terrain",
+    formula: "LAI ≈ a · exp(b · NDVI) + c   (ou une régression linéaire simple selon la gamme de LAI étudiée)",
+    note: "Le couple (R², RMSE) de cette régression, calculé sur un jeu de placettes terrain indépendant, quantifie la qualité du lien indice↔terrain pour la zone et la culture étudiées : un R² proche de 1 avec une RMSE faible valide l'indice comme proxy fiable du LAI localement — mais ces coefficients (a, b, c) sont propres à un couvert végétal et une région, et ne se généralisent jamais automatiquement ailleurs sans nouvelle calibration terrain.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un R² élevé sur le jeu de calibration ne garantit rien sur un jeu indépendant",
+    text: "Comme pour un modèle de classification (module L'Intelligence, sur-apprentissage), une régression indice↔LAI calibrée et évaluée sur le même jeu de placettes terrain donne un R² optimiste. La validation rigoureuse exige un jeu de placettes de test indépendant, jamais utilisé pour ajuster (a, b, c).",
+  },
+
+  { type: "heading", text: "12. Séries temporelles et phénologie", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un indice calculé sur une seule date décrit un état. La même série d'indices calculée à intervalles réguliers sur une saison ou plusieurs années décrit une dynamique — la phénologie (cycle végétatif) d'une culture ou d'un écosystème, exploitable pour détecter un changement réel plutôt qu'une simple fluctuation saisonnière.",
+  },
+  {
+    type: "list",
+    items: [
+      "Régression harmonique : modélise le cycle saisonnier normal d'un indice (ex. NDVI) par une somme de sinusoïdes (une composante annuelle, éventuellement une semestrielle), ajustée sur plusieurs années d'archive",
+      "Résidu par rapport à la courbe harmonique : une fois le cycle saisonnier normal modélisé, l'écart entre la valeur observée et la valeur attendue à cette date signale une anomalie (stress, coupe, maladie) indépendamment de la saison",
+      "Détection de rupture (ex. approche BFAST — Breaks For Additive Season and Trend, Verbesselt et al., 2010) : détecte statistiquement le moment où la série change durablement de comportement (tendance ou saisonnalité), utilisée pour dater automatiquement une déforestation sur une série Landsat/Sentinel-2 pluriannuelle",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Pourquoi un ΔNDVI simple (deux dates) ne suffit pas toujours",
+    text: "Le ΔNDVI de la séance 3 du module Travaux pratiques compare deux dates précises : un bon outil pour un changement net et localisé (coupe rase). Sur un phénomène progressif ou bruité par la variabilité interannuelle (sécheresse pluriannuelle, dépérissement lent), une analyse de série temporelle complète (harmonique + détection de rupture) sépare beaucoup mieux le signal réel du bruit saisonnier normal qu'une simple différence à deux dates.",
+  },
+
+  { type: "heading", text: "13. Limites communes à tous les indices spectraux" },
   {
     type: "list",
     items: [
@@ -165,6 +271,12 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Exemple d'application concrète",
-    text: "Un projet de cartographie du risque incendie de forêt peut croiser NDMI (stress hydrique de la végétation), NDVI (densité de combustible), pente et exposition au vent pour produire un indice composite de comportement du feu. C'est exactement ce type de croisement multi-indices qui est mis en pratique dans le module Travaux pratiques, et détaillé en profondeur dans le module L'Intelligence.",
+    text: "Un projet de cartographie du risque incendie de forêt peut croiser NDMI (stress hydrique de la végétation), NDVI (densité de combustible), pente et exposition au vent pour produire un indice composite de comportement du feu — l'exemple de la section 7. C'est exactement ce type de croisement multi-indices qui est mis en pratique dans le module Travaux pratiques.",
+  },
+  {
+    type: "link",
+    to: "/module/travaux-pratiques",
+    label: "Pratiquer : du calcul de NDVI à l'indice composé",
+    description: "La séance 3 de l'Atelier calcule un NDVI réel, puis compose un ΔNDVI multi-dates à partir de ce que ce module vient de présenter.",
   },
 ]

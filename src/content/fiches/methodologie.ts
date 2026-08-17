@@ -27,4 +27,10 @@ export const methodologieFiche: ContentBlock[] = [
     title: "En rapport technique",
     text: "Toujours séparer les résultats bruts de leur discussion/interprétation — deux sections distinctes, jamais mélangées.",
   },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Mémoire de recherche (IMRaD) et p-value",
+    text: "Introduction → Méthode → Résultats → Discussion. Une p-value n'est pas la probabilité que l'hypothèse soit vraie : c'est la probabilité d'observer un résultat aussi extrême si l'effet n'existait pas. Toujours préciser ce qu'est \"une observation\" et si les observations sont indépendantes.",
+  },
 ]

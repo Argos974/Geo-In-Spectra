@@ -139,6 +139,12 @@ export const methodologieContent: ContentBlock[] = [
     title: "Application directe à un indice spectral",
     text: "Un NDVI cartographié est une donnée continue et ordonnée (de -1 à 1) : une palette séquentielle à une seule teinte (ex. blanc → vert foncé) ou une palette divergente centrée sur 0 (ex. marron → blanc → vert, si l'on veut distinguer explicitement le négatif du positif) respecte la sémiologie de Bertin. Une palette arc-en-ciel non ordonnée (souvent choisie par défaut dans un logiciel) est un contre-exemple classique : elle introduit des ruptures visuelles qui ne correspondent à aucune rupture réelle dans la donnée.",
   },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Voir l'indice concerné : le NDVI",
+    description: "Le module Les Couleurs détaille la formule et l'échelle de valeurs du NDVI utilisé comme exemple ci-dessus.",
+  },
 
   { type: "heading", text: "5. Le croquis et la carte de synthèse", level: "superieur" },
   {
@@ -179,5 +185,47 @@ export const methodologieContent: ContentBlock[] = [
     tone: "info",
     title: "L'oral de concours : reformuler, ne pas réciter",
     text: "Un jury évalue autant la capacité à répondre à une question précise posée en direct qu'à dérouler un exposé préparé. Le réflexe le plus utile : reformuler brièvement la question avant d'y répondre, pour vérifier qu'on l'a bien comprise et laisser au jury l'occasion de préciser s'il le souhaite — un geste simple, souvent négligé sous la pression du temps.",
+  },
+  {
+    type: "link",
+    to: "/module/travaux-pratiques",
+    label: "Mettre en pratique : le mini-projet et son rapport",
+    description: "La séance 7 de l'Atelier applique cette méthode à un rapport complet, avec une grille d'auto-évaluation corrigée.",
+  },
+
+  { type: "heading", text: "7. Le mémoire de recherche : structure IMRaD et rigueur statistique", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un mémoire de master recherche ou un article scientifique obéit à une structure différente du rapport technique de la section 3 : la structure IMRaD (Introduction, Méthode, Résultats, and Discussion), quasi universelle dans les sciences empiriques, y compris en géographie quantitative et en télédétection.",
+  },
+  {
+    type: "table",
+    headers: ["Section IMRaD", "Fonction", "Erreur fréquente à éviter"],
+    rows: [
+      ["Introduction", "Situe la question dans la littérature existante, justifie pourquoi elle reste ouverte", "Un état de l'art qui résume sans jamais dire ce qui manque encore"],
+      ["Méthode", "Décrit précisément ce qui a été fait, de façon à ce qu'un tiers puisse reproduire l'étude", "Une méthode décrite après coup pour justifier le résultat obtenu, plutôt que fixée avant l'analyse"],
+      ["Résultats", "Présente les données obtenues, sans interprétation", "Mélanger résultat et interprétation dans la même phrase (voir section 3)"],
+      ["Discussion", "Interprète, compare à la littérature, admet les limites", "Une discussion qui ignore les résultats qui ne vont pas dans le sens attendu"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Lire et écrire un test statistique correctement",
+    text: "Une valeur de p (p-value) ne mesure pas la probabilité que l'hypothèse étudiée soit vraie : c'est la probabilité d'observer un résultat au moins aussi extrême que celui obtenu, si l'hypothèse nulle (\"aucun effet réel\") était vraie. p < 0.05 est un seuil conventionnel, pas une preuve absolue — et un résultat significatif sur un échantillon non indépendant (ex. plusieurs mesures successives du même phénomène, comme des pas horaires d'un seul événement) surestime la confiance qu'on peut réellement y accorder si cette non-indépendance n'est pas prise en compte dans le test (test apparié, correction pour pseudo-réplication).",
+  },
+  {
+    type: "list",
+    items: [
+      "Toujours rapporter la taille d'échantillon et préciser ce qu'est \"une observation\" (un pixel ? un pas de temps ? un site ?) — deux études avec le même p peuvent avoir une robustesse très différente selon ce choix",
+      "Distinguer significativité statistique (l'effet existe-t-il probablement) et significativité pratique (l'effet est-il assez grand pour compter) : un effet minuscule peut devenir statistiquement significatif avec un échantillon assez grand, sans être opérationnellement intéressant",
+      "Documenter une limite méthodologique honnêtement (échantillon unique, absence d'indépendance entre observations) est un signe de rigueur, pas un aveu de faiblesse — un résultat présenté sans ses limites est moins crédible, pas plus, aux yeux d'un lecteur averti",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Revue de littérature : synthétiser, pas empiler",
+    text: "Une revue de littérature organisée chronologiquement (\"en 1990, X a montré... puis en 2005, Y a montré...\") reste souvent une paraphrase juxtaposée. Une revue organisée par débat ou par méthode (\"deux approches s'opposent sur ce point : d'un côté X, Y ; de l'autre Z\") démontre une réelle appropriation de la littérature — c'est ce second type qui est attendu dans l'introduction d'un mémoire de recherche.",
   },
 ]

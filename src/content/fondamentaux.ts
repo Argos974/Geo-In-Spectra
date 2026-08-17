@@ -46,10 +46,24 @@ export const fondamentauxContent: ContentBlock[] = [
     ],
   },
   {
+    type: "paragraph",
+    text: "Un signal GPS brut est affecté par plusieurs sources d'erreur communes (retard ionosphérique/troposphérique, erreur d'horloge satellite résiduelle, multi-trajets). Plusieurs techniques d'augmentation corrigent tout ou partie de ces erreurs, à des coûts et des précisions très différents :",
+  },
+  {
+    type: "table",
+    headers: ["Technique", "Principe", "Précision typique", "Usage"],
+    rows: [
+      ["GPS grand public (autonome)", "Aucune correction externe", "3 – 8 m", "Smartphone, navigation routière"],
+      ["DGPS (Differential GPS)", "Correction diffusée en temps réel par une station de référence fixe proche", "0.5 – 3 m", "Agriculture de précision d'entrée de gamme, navigation maritime"],
+      ["RTK (Real-Time Kinematic)", "Corrections de phase porteuse en temps réel depuis une station de référence (ou un réseau, ex. RGP de l'IGN)", "1 – 2 cm", "Relevés topographiques, géoréférencement de précision, engins agricoles autoguidés"],
+      ["PPK (Post-Processed Kinematic)", "Même principe que le RTK, mais la correction est appliquée après coup, en post-traitement, sans lien radio temps réel", "1 – 2 cm", "Photogrammétrie par drone, zones sans réseau de correction temps réel"],
+    ],
+  },
+  {
     type: "callout",
-    tone: "warning",
-    title: "Précision GPS grand public vs RTK",
-    text: "Un smartphone donne une position avec une précision typique de 3 à 8 m (dégradée par les multi-trajets urbains, la couverture nuageuse dense ou le sous-couvert forestier). Le RTK (Real-Time Kinematic), qui compare en temps réel le signal capté à celui d'une station de référence fixe à position connue, atteint une précision centimétrique — la méthode utilisée pour les relevés de terrain topographiques professionnels.",
+    tone: "info",
+    title: "RTK vs PPK : le compromis temps réel / robustesse",
+    text: "Le RTK exige une liaison de correction continue (radio ou internet) au moment même de la mesure : une coupure, même brève, dégrade instantanément la précision. Le PPK enregistre les données brutes sur le terrain et applique la correction ensuite, en bureau — plus robuste (aucune dépendance à un lien temps réel sur site), au prix de ne pas connaître la position précise avant le retour au bureau. C'est le compromis typique des relevés par drone en zone isolée.",
   },
 
   { type: "heading", text: "4. Coordonnées géographiques vs coordonnées projetées" },
@@ -109,6 +123,12 @@ export const fondamentauxContent: ContentBlock[] = [
   },
   {
     type: "formula",
+    label: "Le facteur d'échelle k : quantifier la déformation en un point",
+    formula: "k(φ) = 1 exactement aux deux parallèles standards (44° N, 49° N)   ·   k(φ) > 1 hors de cet intervalle, k(φ) < 1 entre les deux",
+    note: "k est le rapport entre une distance mesurée sur la carte projetée et la distance réelle sur l'ellipsoïde en ce point : k = 1 signifie aucune déformation locale d'échelle. Pour une projection conique conforme, la formule complète de k(φ) en fonction de la latitude et des deux parallèles standards est donnée par Snyder (1987, USGS Professional Paper 1395) — la retenir ici : l'écart de k à 1 mesure directement, en un point donné, l'erreur relative qu'introduit la projection sur une distance mesurée à la règle sur la carte plutôt que calculée sur l'ellipsoïde.",
+  },
+  {
+    type: "formula",
     label: "Code EPSG : identifiant universel d'un système de coordonnées",
     formula: "EPSG:4326 = WGS84 (géographique)   ·   EPSG:2154 = Lambert-93 (France métropolitaine)   ·   EPSG:3857 = Web Mercator",
     note: "Chaque logiciel SIG (QGIS, PostGIS, Leaflet, MapLibre…) identifie un référentiel par son code EPSG. Se tromper de code EPSG au chargement d'une couche est l'erreur la plus fréquente en géomatique. Elle produit des données décalées de plusieurs centaines de mètres, parfois sans erreur visible immédiate.",
@@ -151,6 +171,10 @@ export const fondamentauxContent: ContentBlock[] = [
   },
 
   { type: "heading", text: "7. Formats de données courants", level: "college-lycee" },
+  {
+    type: "paragraph",
+    text: "De la même façon qu'un texte peut être un .docx, un .pdf ou un simple .txt selon l'usage, une donnée géographique existe sous plusieurs formats de fichier selon ce qu'on veut en faire — les quatre ci-dessous sont les plus courants.",
+  },
   {
     type: "table",
     headers: ["Format", "Type", "Points clés"],
@@ -208,7 +232,7 @@ export const fondamentauxContent: ContentBlock[] = [
   },
   {
     type: "link",
-    to: "/jeu/epsg",
+    to: "/jeu/fondamentaux",
     label: "S'entraîner : la Chasse aux EPSG",
     description: "Un jeu court pour associer les codes EPSG de cette section à leur système, en pratique plutôt qu'en lecture.",
   },
@@ -262,10 +286,61 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "Le débat Mercator/Peters dépasse la seule technique : représenter le monde avec une projection qui agrandit visuellement les pays du Nord (Mercator) ou qui respecte les surfaces réelles au prix de formes moins familières (Peters) porte un message implicite sur l'importance relative des territoires. C'est un bon sujet de commentaire de carte ou de dissertation (voir le module Méthodologie).",
   },
 
+  { type: "heading", text: "13. Repères de référence : ITRF, ETRS89 et la dérive des plaques", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "WGS84 (section 1) n'est pas un point fixe dans le temps : la croûte terrestre se déplace en permanence (dérive des plaques tectoniques, ~2 à 3 cm/an en Europe de l'Ouest). Deux familles de référentiels gèrent ce mouvement de façon radicalement différente.",
+  },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "ITRF (International Terrestrial Reference Frame)",
+        points: [
+          "Référentiel global, recalculé et mis à jour en continu (ITRS/ITRF, maintenu par l'IERS)",
+          "Les coordonnées d'un même point au sol changent d'une année sur l'autre, car le référentiel suit le mouvement réel de la croûte",
+          "Indispensable pour la géodésie de précision à l'échelle mondiale (mesure de la dérive elle-même, sismologie, océanographie spatiale)",
+        ],
+      },
+      {
+        label: "ETRS89 (European Terrestrial Reference System) / RGF93",
+        points: [
+          "Référentiel \"gelé\" sur la plaque eurasienne à une époque de référence (1989)",
+          "Un point français garde pratiquement la même coordonnée dans le temps, puisque toute la plaque eurasienne (et le référentiel avec elle) se déplace ensemble",
+          "C'est ce choix, pas ITRF, qui permet à une carte ou un cadastre français de rester utilisable des décennies sans recalcul",
+        ],
+      },
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Le piège d'un relevé GNSS de précision comparé à un ancien relevé",
+    text: "Un récepteur GNSS professionnel donne nativement une position en ITRF (référentiel de calcul des orbites satellites), pas en ETRS89/RGF93. Comparer directement une coordonnée ITRF récente à une coordonnée RGF93 ancienne, sans passer par la transformation officielle (grille de conversion IGN), introduit une erreur systématique de plusieurs centimètres — négligeable pour une carte grand public, rédhibitoire pour un relevé topographique de précision ou une étude de déformation du sol.",
+  },
+
+  { type: "heading", text: "14. Passer d'un référentiel à un autre : la transformation à 7 paramètres de Helmert", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Convertir des coordonnées d'un système géodésique à un autre (par exemple d'un ancien référentiel local vers RGF93) n'est pas qu'une reprojection : c'est un changement de datum, qui suppose un modèle mathématique du décalage entre les deux ellipsoïdes de référence. Le modèle standard est la transformation de similitude à 7 paramètres de Helmert.",
+  },
+  {
+    type: "formula",
+    label: "Transformation de Helmert à 7 paramètres",
+    formula: "X' = (1 + s) · R(rx, ry, rz) · X + T",
+    note: "3 paramètres de translation (T : décalage d'origine en X/Y/Z), 3 de rotation (R : rx/ry/rz, désalignement des axes) et 1 facteur d'échelle (s, différence de taille entre les deux ellipsoïdes) — 7 paramètres en tout, déterminés empiriquement à partir de points communs mesurés dans les deux référentiels. En France, l'IGN diffuse une grille de conversion (plus précise qu'un simple Helmert à 7 paramètres uniforme, car elle absorbe aussi les distorsions locales historiques des anciens réseaux géodésiques) plutôt qu'une formule unique nationale.",
+  },
+
   {
     type: "callout",
     tone: "warning",
     title: "À retenir avant le module suivant",
     text: "La télédétection produit presque exclusivement des données raster (images satellite). Comprendre la différence entre résolution spatiale d'un raster et précision géométrique d'un vecteur est indispensable pour interpréter correctement une image satellite : c'est le point de départ du module 2.",
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Continuer : le rayonnement électromagnétique et les capteurs satellite",
+    description: "Le module Le Regard part de ces bases (raster, résolution) pour expliquer comment un satellite mesure la surface terrestre.",
   },
 ]

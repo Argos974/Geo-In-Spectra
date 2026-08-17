@@ -258,6 +258,21 @@ export const teledetectionContent: ContentBlock[] = [
     ],
   },
   {
+    type: "table",
+    headers: ["Méthode de rééchantillonnage", "Principe", "Effet sur les valeurs"],
+    rows: [
+      ["Plus proche voisin (nearest neighbor)", "Reprend telle quelle la valeur du pixel source le plus proche", "Aucune valeur inventée — seule méthode correcte pour une donnée catégorielle (classification, masque)"],
+      ["Bilinéaire", "Moyenne pondérée des 4 pixels sources les plus proches", "Lisse légèrement l'image ; correct pour une donnée continue (réflectance) mais fausse une classification"],
+      ["Cubique (convolution cubique)", "Moyenne pondérée sur 16 pixels sources (4×4), avec des poids négatifs possibles", "Rendu visuel plus net que le bilinéaire, au prix d'un léger risque de dépassement (overshoot) hors de la plage de valeurs d'origine"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne jamais rééchantillonner une classification en bilinéaire",
+    text: "Le géoréférencement/reprojection (correction géométrique ci-dessus) nécessite de rééchantillonner la grille de pixels sur de nouvelles coordonnées. Appliquer une interpolation bilinéaire ou cubique à une carte de classes (ex. 1 = forêt, 2 = eau, 3 = bâti) produit des valeurs intermédiaires absurdes (1.5 ne veut rien dire). Le plus proche voisin est la seule méthode qui préserve le sens d'une donnée catégorielle.",
+  },
+  {
     type: "comparison",
     items: [
       {
@@ -285,5 +300,73 @@ export const teledetectionContent: ContentBlock[] = [
     tone: "warning",
     title: "Toujours vérifier le masque de nuages",
     text: "Le niveau L2A de Sentinel-2 fournit une bande SCL (Scene Classification Layer) qui classe chaque pixel : végétation, sol nu, eau, nuage, ombre de nuage, neige... Calculer un indice sans exclure les pixels nuageux ou leurs ombres produit des valeurs aberrantes, parfois indétectables à l'œil sur une seule bande mais visibles comme un bruit incohérent sur une série temporelle.",
+  },
+
+  { type: "heading", text: "12. Au-delà du multispectral : l'imagerie hyperspectrale", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un capteur multispectral comme Sentinel-2 mesure une dizaine de bandes larges (quelques dizaines à une centaine de nanomètres chacune). Un capteur hyperspectral (ex. PRISMA de l'agence spatiale italienne, EnMAP allemand, ou l'instrument aéroporté AVIRIS de la NASA) mesure plusieurs centaines de bandes contiguës, chacune large de quelques nanomètres seulement — une courbe de réflectance quasi continue par pixel plutôt qu'un échantillonnage épars.",
+  },
+  {
+    type: "list",
+    items: [
+      "Cette résolution spectrale fine permet de détecter des signatures d'absorption précises (minéraux, espèces végétales, polluants) invisibles à un capteur multispectral, qui les moyenne sur une bande trop large",
+      "Le volume de données explose (plusieurs centaines de bandes par pixel) : le traitement mobilise des méthodes de réduction de dimension (ACP, voir module Les Couleurs) avant toute classification",
+      "Le continuum removal (retrait du continuum) normalise chaque bande d'absorption par rapport à une ligne de base spectrale locale, pour comparer la profondeur d'une bande d'absorption indépendamment de l'albédo global du pixel",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Le mélange spectral, un problème que l'hyperspectral rend justement traitable",
+    text: "Un pixel de 20-30 m (résolution typique des capteurs hyperspectraux actuels) contient presque toujours plusieurs matériaux mélangés. Le démélange spectral (spectral unmixing) exploite la richesse des centaines de bandes pour estimer la proportion de chaque matériau \"pur\" (endmember) dans un pixel — un problème mal posé avec seulement une dizaine de bandes multispectrales, mais abordable avec un vrai spectre hyperspectral.",
+  },
+
+  { type: "heading", text: "13. La physique complète : équation de transfert radiatif et polarimétrie SAR", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "La formule DN → réflectance TOA de la section 10 est une approximation calibrée ; la grandeur physique réellement mesurée par le capteur obéit à l'équation de transfert radiatif (ETR), qui décrit tout ce que subit le rayonnement entre le Soleil et le capteur.",
+  },
+  {
+    type: "formula",
+    label: "Équation de transfert radiatif simplifiée (cas optique)",
+    formula: "L_capteur = L_surface · T_atm + L_path",
+    note: "L_surface = radiance réellement issue de la surface (ce qu'on veut mesurer), T_atm = transmittance de l'atmosphère (fraction du signal qui la traverse sans être diffusée ni absorbée), L_path = radiance de trajet (\"path radiance\", la lumière diffusée par l'atmosphère elle-même qui atteint le capteur sans jamais avoir touché le sol — c'est ce terme, non nul même au-dessus d'une surface parfaitement noire, qui justifie la Dark Object Subtraction de la section précédente). Un modèle comme 6S (Vermote et al., 1997) résout cette équation en modélisant T_atm et L_path à partir de la composition atmosphérique réelle, plutôt que de l'estimer empiriquement comme le fait la DOS.",
+  },
+  {
+    type: "paragraph",
+    text: "Côté radar, la rétrodiffusion (σ°, module Le Regard section 4) dépend du mécanisme physique de diffusion, que la polarimétrie SAR permet de distinguer en combinant plusieurs polarisations d'émission/réception (HH, VV, HV, VH) :",
+  },
+  {
+    type: "list",
+    items: [
+      "Diffusion de surface (Bragg) : dominante sur une surface lisse à l'échelle de la longueur d'onde radar (eau calme, sol nu lisse) — signal fort en co-polarisation (HH ou VV), faible en polarisation croisée",
+      "Diffusion de volume : dominante dans un milieu structuré en trois dimensions (canopée forestière, culture dense) — dépolarise fortement le signal, augmentant la polarisation croisée (HV/VH)",
+      "Double rebond (double-bounce) : réflexion en coin, typique d'une surface verticale au-dessus d'une surface horizontale (façade de bâtiment + sol, tronc + sol inondé en forêt) — signature très caractéristique en HH",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "La décomposition de Freeman-Durden",
+    text: "La décomposition de Freeman-Durden (1998) exploite précisément ces trois mécanismes pour recomposer, à partir des polarisations mesurées, la contribution relative de la diffusion de surface, de volume et du double rebond dans chaque pixel — une méthode qui permet, par exemple, de distinguer une forêt inondée (double rebond tronc/eau, signature radar unique) d'une forêt sur sol sec (diffusion de volume dominante), invisible en optique sous la canopée.",
+  },
+
+  { type: "heading", text: "14. Température de brillance : de la radiance thermique à la température", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "La bande thermique (module précédent, section \"rayonnement réfléchi et émis\") mesure une radiance, pas directement une température : il faut inverser la loi de Planck pour retrouver la température de brillance du pixel.",
+  },
+  {
+    type: "formula",
+    label: "Température de brillance (inversion simplifiée de Planck)",
+    formula: "T_b = K2 / ln(K1/L_capteur + 1)",
+    note: "K1 et K2 sont des constantes de calibration propres à chaque capteur thermique (ex. Landsat TIRS bandes 10/11), fournies dans les métadonnées de chaque scène. T_b est une température de brillance, pas la température de surface réelle : elle suppose un corps noir parfait (émissivité = 1). La température de surface réelle (Land Surface Temperature, LST) nécessite une correction d'émissivité supplémentaire, propre à chaque type de surface (l'eau et la végétation dense ont une émissivité proche de 1 ; le métal ou le sable sec, nettement plus faible).",
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Continuer : du rouge et du NIR au NDVI",
+    description: "Le module Les Couleurs combine les bandes présentées ici (rouge, NIR, SWIR) en indices interprétables : NDVI, NDMI, NDBI et au-delà.",
   },
 ]

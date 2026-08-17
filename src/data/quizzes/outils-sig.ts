@@ -41,4 +41,37 @@ export const outilsSigQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "Comme pour un buffer, un calcul de surface directement en coordonnées géographiques (degrés) donne un résultat non interprétable. Reprojeter en Lambert-93 (ou un autre système métrique) est indispensable.",
   },
+  {
+    question: "Le Modifiable Areal Unit Problem (MAUP) désigne le fait que :",
+    choices: [
+      "Une carte peut toujours être modifiée après publication",
+      "Un même jeu de données peut donner des résultats statistiques différents selon le découpage spatial choisi pour l'agréger",
+      "Les unités de mesure (mètres, degrés) sont interchangeables sans conséquence",
+      "Un SIG ne peut traiter qu'un seul découpage administratif à la fois",
+    ],
+    correctIndex: 1,
+    explanation: "Formalisé par Openshaw (1984), le MAUP montre que le choix d'une maille ou d'un zonage (commune, canton, carreau) influence directement le résultat statistique obtenu — une propriété structurelle, pas une erreur de calcul.",
+  },
+  {
+    question: "Que mesure l'indice de Moran en analyse spatiale ?",
+    choices: [
+      "La distance moyenne entre deux points quelconques",
+      "L'autocorrélation spatiale : à quel point des valeurs voisines se ressemblent",
+      "La précision d'un géoréférencement",
+      "Le nombre d'entités d'une couche vecteur",
+    ],
+    correctIndex: 1,
+    explanation: "Un indice de Moran proche de +1 signale un fort regroupement de valeurs similaires dans l'espace ; proche de 0, une répartition aléatoire sans structure spatiale.",
+  },
+  {
+    question: "Contrairement à une simple pondération inverse à la distance (IDW), le krigeage ajoute :",
+    choices: [
+      "Rien, c'est exactement la même méthode sous un autre nom",
+      "Une carte de variance de krigeage, qui indique où l'estimation est fiable et où elle ne l'est pas",
+      "La nécessité d'un capteur radar",
+      "Une résolution spatiale automatiquement plus fine",
+    ],
+    correctIndex: 1,
+    explanation: "Le krigeage estime d'abord la structure spatiale du phénomène via un variogramme, puis fournit à la fois une carte de valeurs et une carte d'incertitude — l'IDW, purement déterministe, ne produit que des valeurs, sans mesure de fiabilité.",
+  },
 ]

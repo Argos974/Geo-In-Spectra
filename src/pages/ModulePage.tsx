@@ -1,17 +1,35 @@
+import { useMemo, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
 import { quizzes } from "@/data/quizzes"
+import { games } from "@/data/games"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { ALL_LEVELS, filterBlocksByLevel } from "@/lib/levelFilter"
+import type { ContentLevel } from "@/content/types"
+import { cn } from "@/lib/utils"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+
+const LEVEL_TOGGLE_LABEL: Record<ContentLevel, string> = {
+  "college-lycee": "Collège / lycée",
+  superieur: "Supérieur",
+  approfondissement: "Approfondissement",
+}
 
 export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()
   const module = modules.find((m) => m.slug === slug)
+  const [activeLevels, setActiveLevels] = useState<Set<ContentLevel>>(new Set(ALL_LEVELS))
+
+  const blocks = module ? moduleContent[module.slug] : undefined
+  const filteredBlocks = useMemo(
+    () => (blocks ? filterBlocksByLevel(blocks, activeLevels) : undefined),
+    [blocks, activeLevels],
+  )
 
   if (!module) {
     return (
@@ -22,8 +40,20 @@ export function ModulePage() {
     )
   }
 
+  function toggleLevel(level: ContentLevel) {
+    setActiveLevels((prev) => {
+      const next = new Set(prev)
+      if (next.has(level)) {
+        if (next.size === 1) return prev // toujours garder au moins un niveau actif
+        next.delete(level)
+      } else {
+        next.add(level)
+      }
+      return next
+    })
+  }
+
   const index = modules.findIndex((m) => m.slug === slug)
-  const blocks = moduleContent[module.slug]
   const art = artworks[module.slug]
   const prev = modules[index - 1]
   const next = modules[index + 1]
@@ -32,6 +62,7 @@ export function ModulePage() {
   const coursName = `${order}-${module.slug}-cours.pdf`
   const ficheName = `${order}-${module.slug}-fiche-memo.pdf`
   const hasQuiz = Boolean(quizzes[module.slug])
+  const hasGame = Boolean(games[module.slug])
 
   return (
     <div className="print-page min-h-screen bg-ink text-parchment">
@@ -53,7 +84,7 @@ export function ModulePage() {
       <div className="mx-auto max-w-3xl px-6 pt-16 pb-24">
         <p className="text-parchment-dim text-lg mb-6">{module.summary}</p>
 
-        <div className="print:hidden flex flex-wrap items-center gap-3 mb-10">
+        <div className="print:hidden flex flex-wrap items-center gap-3 mb-6">
           <a
             href={`/pdf/${module.slug}/${coursName}`}
             download={coursName}
@@ -76,12 +107,47 @@ export function ModulePage() {
               Faire le quiz →
             </Link>
           )}
+          {hasGame && (
+            <Link
+              to={`/jeu/${module.slug}`}
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-oxblood border border-oxblood/40 px-4 py-2 hover:bg-oxblood/10 transition-colors"
+            >
+              Jouer →
+            </Link>
+          )}
         </div>
 
-        {blocks && <RoomIndex blocks={blocks} />}
+        <div className="print:hidden flex flex-wrap items-center gap-2 mb-10">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/60 mr-1">Afficher :</span>
+          {ALL_LEVELS.map((level) => {
+            const active = activeLevels.has(level)
+            return (
+              <button
+                key={level}
+                type="button"
+                onClick={() => toggleLevel(level)}
+                aria-pressed={active}
+                className={cn(
+                  "font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
+                  active ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/50 hover:text-parchment-dim hover:border-gilt/30",
+                )}
+              >
+                {LEVEL_TOGGLE_LABEL[level]}
+              </button>
+            )
+          })}
+        </div>
 
-        {blocks ? (
-          <ContentBlocks blocks={blocks} />
+        {filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
+
+        {filteredBlocks ? (
+          filteredBlocks.length > 0 ? (
+            <ContentBlocks blocks={filteredBlocks} />
+          ) : (
+            <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
+              <p className="font-mono text-sm">Aucun contenu à ce niveau — élargis le filtre ci-dessus.</p>
+            </div>
+          )
         ) : (
           <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
             <p className="font-mono text-sm">Contenu du module à venir.</p>

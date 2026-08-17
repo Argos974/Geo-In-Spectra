@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import type { ContentBlock } from "@/content/types"
 import { cn } from "@/lib/utils"
@@ -38,6 +39,62 @@ const levelStylePrint: Record<NonNullable<Extract<ContentBlock, { type: "heading
   "college-lycee": "border-lapis/60 text-lapis",
   superieur: "border-[#8a6a2f]/60 text-[#8a6a2f]",
   approfondissement: "border-oxblood/60 text-oxblood",
+}
+
+function SolutionBlock({
+  block,
+  isPrint,
+  textDim,
+  accent,
+  accentBg,
+  border,
+  panelBg,
+}: {
+  block: Extract<ContentBlock, { type: "solution" }>
+  isPrint: boolean
+  textDim: string
+  accent: string
+  accentBg: string
+  border: string
+  panelBg: string
+}) {
+  const [revealed, setRevealed] = useState(isPrint)
+  const panelId = `solution-${slugify(block.title)}`
+
+  return (
+    <div className={cn("border", border, panelBg)}>
+      {!isPrint && (
+        <button
+          type="button"
+          onClick={() => setRevealed((r) => !r)}
+          aria-expanded={revealed}
+          aria-controls={panelId}
+          className={cn("w-full flex items-center justify-between gap-4 px-5 py-4 text-left transition-colors", !revealed && "hover:bg-white/[0.02]")}
+        >
+          <span className={cn("font-mono text-[11px] uppercase tracking-wider", accent)}>
+            {revealed ? "Corrigé" : "Voir le corrigé"} — {block.title}
+          </span>
+          <span className={cn("font-mono text-xs", accent)} aria-hidden="true">{revealed ? "▲" : "▼"}</span>
+        </button>
+      )}
+      {revealed && (
+        <div id={panelId} className={cn(isPrint ? "p-5" : "px-5 pb-5", isPrint && "border-t", isPrint && border)}>
+          {isPrint && <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", accent)}>Corrigé — {block.title}</p>}
+          {block.text && <p className={cn("leading-relaxed mb-3 last:mb-0", textDim)}>{block.text}</p>}
+          {block.items && (
+            <ul className={cn("space-y-2", textDim)}>
+              {block.items.map((item, j) => (
+                <li key={j} className="flex items-start gap-3">
+                  <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlock[]; variant?: Variant }) {
@@ -142,6 +199,20 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
                   </div>
                 ))}
               </div>
+            )
+
+          case "solution":
+            return (
+              <SolutionBlock
+                key={i}
+                block={block}
+                isPrint={isPrint}
+                textDim={textDim}
+                accent={accent}
+                accentBg={accentBg}
+                border={border}
+                panelBg={panelBg}
+              />
             )
 
           case "table":

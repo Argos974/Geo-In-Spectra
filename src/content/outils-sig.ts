@@ -89,6 +89,12 @@ export const outilsSigContent: ContentBlock[] = [
     text: "L'autocorrélation spatiale mesure précisément à quel point cette proximité influence la ressemblance : un indice de Moran (I de Moran, Moran 1950) proche de +1 signale un fort regroupement de valeurs similaires (une maladie qui se propage en tache d'huile, un indice de végétation homogène par massif) ; proche de -1, une alternance de valeurs opposées ; proche de 0, une répartition aléatoire sans structure spatiale.",
   },
   {
+    type: "formula",
+    label: "Indice de Moran I",
+    formula: "I = (n / S0) · [ Σᵢ Σⱼ wᵢⱼ (xᵢ − x̄)(xⱼ − x̄) ] / Σᵢ (xᵢ − x̄)²",
+    note: "n = nombre d'entités, xᵢ = valeur de l'entité i, x̄ = moyenne de toutes les valeurs, wᵢⱼ = poids de voisinage entre i et j (souvent 1 si les entités sont adjacentes, 0 sinon), S0 = somme de tous les poids wᵢⱼ. Le numérateur compare chaque paire d'entités voisines à la moyenne globale ; le dénominateur normalise par la variance totale. Le choix de la matrice de poids wᵢⱼ (contiguïté, distance, k plus proches voisins) n'est pas neutre : deux définitions de voisinage différentes sur la même donnée peuvent donner des I sensiblement différents — à documenter comme tout autre choix méthodologique.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Le problème du zonage arbitraire (MAUP)",
@@ -107,6 +113,12 @@ export const outilsSigContent: ContentBlock[] = [
       "Algèbre raster (map algebra, calculatrice raster) : combine plusieurs rasters pixel à pixel avec des opérations arithmétiques ou logiques — c'est ainsi que se calcule tout indice spectral (NDVI = (NIR−Rouge)/(NIR+Rouge)) directement dans QGIS ou avec GDAL",
       "Analyse de voisinage (focal statistics, filtre à noyau) : recalcule chaque pixel à partir de son voisinage — détaillée dans le module L'Intelligence, qui la relie aux réseaux de neurones convolutifs",
     ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Voir en pratique : la calculatrice raster pour un NDVI",
+    description: "Le module Les Couleurs utilise directement l'algèbre raster présentée ici pour calculer NDVI, NDMI, NDBI et leurs dérivés.",
   },
 
   { type: "heading", text: "6. Automatisation avec Python" },
@@ -170,7 +182,58 @@ export const outilsSigContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "8. Qualité des données et métadonnées", level: "superieur" },
+  { type: "heading", text: "8. Géostatistique : interpoler avec le krigeage", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Estimer une valeur continue (pluviométrie, teneur en polluant, altitude) en un point non mesuré à partir d'un échantillon de points de mesure est un problème classique d'interpolation spatiale. Les méthodes déterministes simples (plus proche voisin, pondération inverse à la distance — IDW) ignorent la structure spatiale propre du phénomène ; le krigeage, lui, l'estime statistiquement avant d'interpoler.",
+  },
+  {
+    type: "formula",
+    label: "Variogramme expérimental : mesurer comment la ressemblance décroît avec la distance",
+    formula: "γ(h) = (1 / 2N(h)) · Σ [z(xᵢ) − z(xᵢ + h)]²",
+    note: "γ(h) est la semi-variance moyenne entre toutes les paires de points séparées d'une distance h, N(h) leur nombre. Contrairement à l'indice de Moran (mesure globale d'autocorrélation, section 4), le variogramme décrit comment la ressemblance décroît spécifiquement en fonction de la distance — un modèle théorique (sphérique, exponentiel, gaussien) est ensuite ajusté sur ce nuage de points expérimental.",
+  },
+  {
+    type: "list",
+    items: [
+      "Portée (range) : distance au-delà de laquelle deux points ne sont plus statistiquement liés — au-delà, γ(h) plafonne",
+      "Palier (sill) : valeur de γ(h) à laquelle le variogramme plafonne, proche de la variance totale du phénomène",
+      "Effet de pépite (nugget) : discontinuité à l'origine (h→0), traduisant soit une erreur de mesure, soit une variabilité à une échelle plus fine que l'échantillonnage",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Ce que le krigeage ajoute par rapport à l'IDW",
+    text: "Une fois le variogramme ajusté, le krigeage l'utilise pour pondérer optimalement chaque point de mesure (au sens de la variance d'estimation minimale, sous hypothèse de stationnarité du phénomène) — contrairement à l'IDW, dont la pondération par la seule distance est une convention arbitraire, pas une propriété statistiquement optimale du phénomène étudié. Le krigeage fournit en prime une carte d'incertitude (variance de krigeage), pas seulement une carte de valeurs estimées : on sait où l'estimation est fiable et où elle ne l'est pas, typiquement loin de tout point de mesure.",
+  },
+
+  { type: "heading", text: "9. Analyse réseau et décision multicritère", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Deux familles d'analyse spatiale, distinctes des opérations vectorielles/raster déjà vues, répondent à des questions différentes : « comment circule-t-on dans l'espace ? » et « comment arbitrer entre plusieurs critères contradictoires sur un même territoire ? »",
+  },
+  {
+    type: "list",
+    items: [
+      "Analyse réseau (plus court chemin) : un réseau routier ou hydrographique est modélisé comme un graphe (nœuds = intersections, arêtes = tronçons pondérés par une distance, un temps ou un coût) ; l'algorithme de Dijkstra (1959) calcule le chemin de coût minimal entre deux nœuds — la base de tout calcul d'itinéraire ou de zone de chalandise (isochrone)",
+      "Zone de service (service area) : ensemble des points atteignables depuis un point donné en deçà d'un coût maximal (ex. tout ce qui est à moins de 15 minutes d'un hôpital) — une extension directe de Dijkstra, pas un algorithme différent",
+    ],
+  },
+  {
+    type: "formula",
+    label: "AHP (Analytic Hierarchy Process, Saaty, 1980) : pondérer plusieurs critères spatiaux",
+    formula: "Score(x) = Σᵢ wᵢ · critère_i(x)   avec Σᵢ wᵢ = 1",
+    note: "Utilisée pour combiner plusieurs couches raster/vecteur normalisées (pente, distance aux routes, exposition, occupation du sol…) en une carte de synthèse unique — typiquement une carte d'aptitude ou de risque. Les poids wᵢ ne sont pas fixés arbitrairement : l'AHP les dérive d'une matrice de comparaisons deux à deux entre critères (« la pente compte-t-elle plus ou moins que la distance aux routes, et dans quelle proportion ? »), avec un ratio de cohérence qui signale si les comparaisons fournies par l'expert sont mutuellement contradictoires.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Lien direct avec les indices composites du module Les Couleurs",
+    text: "Un indice composite de comportement du feu (module Les Couleurs, section indices composés) qui pondère NDMI, alignement vent/pente et exposition solaire est, de fait, une application d'AHP simplifiée : chaque couche est un critère normalisé, chaque poids reflète l'importance relative jugée du critère. Documenter explicitement ces poids (et idéalement leur cohérence, au sens de Saaty) plutôt que les fixer \"au jugé\" est ce qui distingue une analyse multicritère rigoureuse d'un bricolage de pondérations.",
+  },
+
+  { type: "heading", text: "10. Qualité des données et métadonnées", level: "superieur" },
   {
     type: "paragraph",
     text: "Une donnée géographique n'est jamais parfaitement exacte, et ne prétend jamais l'être : ce qui compte, c'est de savoir à quel point elle l'est, et de le documenter pour quiconque la réutilise après vous.",
