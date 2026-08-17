@@ -28,9 +28,9 @@ export function ModulePage() {
   const next = modules[index + 1]
 
   return (
-    <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
+    <div className="print-page min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-3xl">
-        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
+        <Link to="/" className="print:hidden font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
           ← La galerie
         </Link>
 
@@ -39,7 +39,15 @@ export function ModulePage() {
         <p className="font-body italic text-parchment-dim mb-6 leading-relaxed border-l-2 border-gilt/30 pl-4">
           {module.epigraph}
         </p>
-        <p className="text-parchment-dim text-lg mb-10">{module.summary}</p>
+        <p className="text-parchment-dim text-lg mb-6">{module.summary}</p>
+
+        <a
+          href={`/pdf/${module.slug}/cours.pdf`}
+          download
+          className="print:hidden inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 mb-10 hover:bg-gilt/10 transition-colors"
+        >
+          ↓ Télécharger cette salle en PDF
+        </a>
 
         {art && (
           <GalleryFrame

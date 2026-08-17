@@ -75,3 +75,22 @@ body {
 .anchor-flash {
   animation: anchor-flash 1.3s ease-out;
 }
+
+/* Export PDF (scripts/generate-course-pdfs.mjs) — masque le chrome de navigation,
+   force l'impression des couleurs/fond sombre, évite les coupures de page malvenues. */
+@media print {
+  header, footer, .canvas-grain {
+    display: none !important;
+  }
+  .print-page {
+    padding-top: 0 !important;
+  }
+  body {
+    background: #0d0e12 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  figure, table, .avoid-break {
+    break-inside: avoid;
+  }
+}
