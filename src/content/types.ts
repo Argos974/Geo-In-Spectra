@@ -1,3 +1,5 @@
+import type { DiagramName } from "@/components/diagrams"
+
 export type ContentBlock =
   | { type: "heading"; text: string }
   | { type: "paragraph"; text: string }
@@ -6,3 +8,4 @@ export type ContentBlock =
   | { type: "callout"; tone?: "info" | "warning" | "example"; title: string; text: string }
   | { type: "comparison"; items: { label: string; points: string[] }[] }
   | { type: "table"; headers: string[]; rows: string[][] }
+  | { type: "diagram"; name: DiagramName; caption?: string }

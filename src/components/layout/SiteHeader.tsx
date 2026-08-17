@@ -21,7 +21,7 @@ export function SiteHeader() {
                 location.pathname === `/module/${m.slug}` && "text-gilt",
               )}
             >
-              {m.title.split(" ")[0]}
+              {m.navLabel}
             </Link>
           ))}
         </div>

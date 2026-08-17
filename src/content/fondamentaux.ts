@@ -49,6 +49,12 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "L'ensemble des traitements géomatiques de ce cours (et des projets réels associés) utilise Lambert-93 / EPSG:2154 comme référentiel de calcul — c'est le standard officiel français depuis 2006. Les données sources en WGS84 (GPS, beaucoup de fichiers GeoJSON publics) sont systématiquement reprojetées avant tout calcul de distance ou de surface.",
   },
 
+  {
+    type: "diagram",
+    name: "coordinate-systems",
+    caption: "Un même point de Marseille, lu en degrés sur le globe puis reporté en mètres sur le plan projeté.",
+  },
+
   { type: "heading", text: "3. Les projections cartographiques" },
   {
     type: "paragraph",
@@ -93,6 +99,11 @@ export const fondamentauxContent: ContentBlock[] = [
         ],
       },
     ],
+  },
+  {
+    type: "diagram",
+    name: "vector-raster",
+    caption: "Le même paysage lu comme des objets (points, ligne, polygone) ou comme une grille de cellules.",
   },
   {
     type: "callout",

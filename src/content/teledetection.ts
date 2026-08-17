@@ -22,10 +22,20 @@ export const teledetectionContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "em-spectrum",
+    caption: "Les quatre domaines du spectre utilisés en télédétection, du visible au thermique.",
+  },
+  {
     type: "callout",
     tone: "info",
     title: "Pourquoi la végétation est \"rouge\" en proche infrarouge",
     text: "La chlorophylle absorbe fortement le rouge visible (pour la photosynthèse) mais la structure interne des feuilles réfléchit très fortement le proche infrarouge. Ce contraste rouge/NIR est si marqué et si stable qu'il constitue la base de l'indice le plus utilisé en télédétection végétale : le NDVI (module suivant).",
+  },
+  {
+    type: "diagram",
+    name: "reflectance-curve",
+    caption: "La courbe de réflectance d'une végétation en bonne santé : le creux dans le rouge, le sursaut dans le proche infrarouge.",
   },
 
   { type: "heading", text: "2. Capteurs optiques vs radar (SAR)" },

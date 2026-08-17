@@ -1,5 +1,7 @@
 import type { ContentBlock } from "@/content/types"
 import { cn } from "@/lib/utils"
+import { slugify } from "@/lib/slug"
+import { Diagram } from "@/components/diagrams"
 
 const calloutStyles: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
   info: "border-lapis/40 bg-lapis/[0.08]",
@@ -20,10 +22,17 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
         switch (block.type) {
           case "heading":
             return (
-              <h2 key={i} className="font-heading text-2xl md:text-3xl pt-8 first:pt-0">
+              <h2
+                key={i}
+                id={slugify(block.text)}
+                className="font-heading text-2xl md:text-3xl pt-8 first:pt-0 scroll-mt-28"
+              >
                 {block.text}
               </h2>
             )
+
+          case "diagram":
+            return <Diagram key={i} name={block.name} caption={block.caption} />
 
           case "paragraph":
             return (

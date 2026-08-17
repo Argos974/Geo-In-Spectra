@@ -6,6 +6,12 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "Ce module regroupe des exercices guidés, à réaliser dans QGIS avec des jeux de données publics et gratuits. Chaque TP part d'un objectif concret et détaille les étapes ; ils sont conçus pour être enchaînés dans l'ordre, chacun réutilisant les compétences du précédent.",
   },
 
+  {
+    type: "diagram",
+    name: "workflow-tp",
+    caption: "La marche à suivre, commune aux trois TP qui suivent.",
+  },
+
   { type: "heading", text: "TP 1 — Cartographie de base sous QGIS" },
   {
     type: "paragraph",

@@ -37,6 +37,12 @@ export const outilsSigContent: ContentBlock[] = [
     ],
   },
 
+  {
+    type: "diagram",
+    name: "spatial-operations",
+    caption: "Trois opérations spatiales fondamentales, vues comme des figures géométriques.",
+  },
+
   { type: "heading", text: "3. Requêtes attributaires et spatiales" },
   {
     type: "paragraph",

@@ -28,6 +28,11 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "ndvi-scale",
+    caption: "L'échelle du NDVI et ses classes de lecture, de l'eau à la végétation dense.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Limite importante : la saturation",

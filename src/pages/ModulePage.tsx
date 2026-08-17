@@ -3,6 +3,7 @@ import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
+import { RoomIndex } from "@/components/content/RoomIndex"
 import { GalleryFrame } from "@/components/gallery/GalleryFrame"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
@@ -34,7 +35,10 @@ export function ModulePage() {
         </Link>
 
         <p className="font-mono text-[12px] text-gilt mt-8">Salle {ROOM_NUMERALS[index] ?? index + 1}</p>
-        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-6">{module.title}</h1>
+        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">{module.title}</h1>
+        <p className="font-body italic text-parchment-dim mb-6 leading-relaxed border-l-2 border-gilt/30 pl-4">
+          {module.epigraph}
+        </p>
         <p className="text-parchment-dim text-lg mb-10">{module.summary}</p>
 
         {art && (
@@ -49,6 +53,8 @@ export function ModulePage() {
             priority
           />
         )}
+
+        {blocks && <RoomIndex blocks={blocks} />}
 
         {blocks ? (
           <ContentBlocks blocks={blocks} />

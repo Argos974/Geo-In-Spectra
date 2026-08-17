@@ -65,3 +65,13 @@ body {
   background: rgba(184, 147, 79, 0.35);
   color: #ece3cf;
 }
+
+/* Flash bref quand on arrive sur une partie via le plan de la salle (RoomIndex) */
+@keyframes anchor-flash {
+  0% { background-color: rgba(184, 147, 79, 0.22); }
+  100% { background-color: transparent; }
+}
+
+.anchor-flash {
+  animation: anchor-flash 1.3s ease-out;
+}
