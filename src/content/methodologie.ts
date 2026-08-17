@@ -27,6 +27,12 @@ export const methodologieContent: ContentBlock[] = [
     title: "L'erreur la plus fréquente",
     text: "Décrire sans jamais expliquer. \"On observe une zone urbanisée au sud\" est une description ; \"cette urbanisation s'explique par la proximité de l'axe routier visible au nord-est\" est une analyse. Le second niveau seul est noté comme une vraie compétence de commentaire.",
   },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Grille de lecture pour un document de télédétection précisément",
+    text: "Pour une image satellite ou un indice cartographié (NDVI, NDBI…), l'identification doit préciser en plus : le capteur et sa résolution spatiale (une image Sentinel-2 à 10 m ne permet pas les mêmes conclusions qu'une image Pléiades à 0.5 m), la composition affichée (naturelle ou fausse couleur — voir module Le Regard) et, pour un indice, sa formule et son échelle de valeurs. Omettre ces précisions techniques dans l'identification est sanctionné comme une identification incomplète, au même titre qu'oublier l'échelle d'une carte topographique.",
+  },
 
   { type: "heading", text: "2. La dissertation de géographie", level: "superieur" },
   {
@@ -54,6 +60,25 @@ export const methodologieContent: ContentBlock[] = [
     title: "Sujet travaillé",
     text: "« Le satellite peut-il remplacer le terrain dans la gestion des risques naturels ? » — Partie I : ce que le satellite apporte réellement (couverture large, répétée, indices quantifiés). Partie II : ses limites concrètes (résolution, occlusion nuageuse, absence de contexte humain/social). Partie III : la complémentarité effective observée dans les dispositifs réels (le satellite oriente, le terrain confirme et affine).",
   },
+  {
+    type: "paragraph",
+    text: "Trois familles de plans reviennent le plus souvent en géographie, à choisir selon la nature exacte du sujet, jamais par habitude :",
+  },
+  {
+    type: "table",
+    headers: ["Type de plan", "Quand l'utiliser", "Risque principal"],
+    rows: [
+      ["Thématique (I. Aspect A, II. Aspect B, III. Aspect C)", "Sujet qui invite à explorer plusieurs dimensions d'un même phénomène", "Trois parties qui juxtaposent sans dialoguer entre elles"],
+      ["Dialectique (I. Thèse, II. Antithèse, III. Synthèse)", "Sujet formulé comme une question fermée ou un débat explicite", "Une antithèse artificielle, construite juste pour la forme du plan"],
+      ["Chronologique / évolutif (I. Avant, II. Rupture, III. Aujourd'hui)", "Sujet portant sur une évolution, une transition technique ou historique", "Une simple chronique des faits, sans problématique transversale"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Le plan doit se déduire de la problématique, pas l'inverse",
+    text: "Un plan-type plaqué sur un sujet qu'il ne sert pas est une des critiques les plus fréquentes en évaluation. Le test simple : si l'on peut permuter deux parties du plan sans rien perdre à la démonstration, c'est que le plan ne démontre en réalité rien de progressif — il ne fait qu'illustrer.",
+  },
 
   { type: "heading", text: "3. Le rapport technique SIG et télédétection", level: "superieur" },
   {
@@ -78,8 +103,59 @@ export const methodologieContent: ContentBlock[] = [
     title: "Résultats avant interprétation",
     text: "Séparer nettement les résultats bruts de leur discussion évite au lecteur de confondre ce qui a été mesuré et ce que l'auteur du rapport en pense. Cette distinction, banale à l'écrit scientifique, est souvent la première chose qui manque dans un premier rapport technique.",
   },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Documenter une incertitude, pas seulement un résultat",
+    text: "\"Le NDVI moyen de la parcelle est de 0.62\" est une affirmation incomplète pour un rapport technique. \"Le NDVI moyen de la parcelle est de 0.62 (image Sentinel-2 du 14/07, niveau L2A, résolution 10 m, ±quelques pixels nuageux masqués sur le quart nord-est)\" permet à un lecteur externe d'évaluer lui-même la fiabilité du chiffre — c'est cette transparence, plus que le chiffre seul, qui distingue un rapport technique d'une simple affirmation.",
+  },
 
-  { type: "heading", text: "4. Préparer un concours (CAPES / Agrégation d'histoire-géographie)", level: "approfondissement" },
+  { type: "heading", text: "4. La sémiologie graphique : le langage visuel de la carte", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Une carte n'est pas une illustration libre : elle obéit à un langage visuel formalisé par Jacques Bertin dans la Sémiologie graphique (1967), qui reste la référence de toute cartographie thématique aujourd'hui enseignée en France. Bertin identifie six variables visuelles qu'un symbole cartographique peut porter, et associe chacune à un type de donnée qu'elle représente correctement — ou trahit, si mal choisie.",
+  },
+  {
+    type: "table",
+    headers: ["Variable visuelle", "Convient pour représenter"],
+    rows: [
+      ["Taille", "Une quantité (donnée d'ordre ou de quantité) — ex. ronds proportionnels à une population"],
+      ["Valeur (clair → foncé)", "Un ordre, une intensité progressive — ex. dégradé de couleur pour un taux, une densité"],
+      ["Grain / texture", "Un ordre également, moins précis visuellement que la valeur"],
+      ["Couleur (teinte)", "Une donnée qualitative, sans ordre — ex. type d'occupation du sol (forêt, culture, bâti)"],
+      ["Orientation", "Rarement utilisée seule ; combinable avec d'autres variables"],
+      ["Forme", "Une donnée qualitative catégorielle — ex. pictogrammes différenciant un type d'équipement"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "L'erreur sémiologique la plus commune : la couleur pour une quantité",
+    text: "Utiliser un dégradé de teintes qualitatives différentes (par exemple rouge puis bleu puis vert) pour représenter une donnée ordonnée (un taux croissant) brouille la lecture : l'œil ne perçoit pas d'ordre naturel entre des teintes. Une variable de quantité ou d'ordre doit être portée par la taille ou par un dégradé de valeur d'une même teinte (clair → foncé), jamais par une succession de couleurs sans ordre perceptif.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Application directe à un indice spectral",
+    text: "Un NDVI cartographié est une donnée continue et ordonnée (de -1 à 1) : une palette séquentielle à une seule teinte (ex. blanc → vert foncé) ou une palette divergente centrée sur 0 (ex. marron → blanc → vert, si l'on veut distinguer explicitement le négatif du positif) respecte la sémiologie de Bertin. Une palette arc-en-ciel non ordonnée (souvent choisie par défaut dans un logiciel) est un contre-exemple classique : elle introduit des ruptures visuelles qui ne correspondent à aucune rupture réelle dans la donnée.",
+  },
+
+  { type: "heading", text: "5. Le croquis et la carte de synthèse", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Le croquis de géographie (fréquent en épreuve de bac et de concours) répond aux mêmes exigences de méthode qu'une dissertation, mais transposées au langage cartographique : il doit avoir un titre problématisé (pas un simple intitulé de sujet), une légende organisée en rubriques logiques (jamais une liste de symboles dans l'ordre où ils viennent à l'esprit), et une nomenclature choisie pour appuyer une démonstration, pas pour être exhaustive.",
+  },
+  {
+    type: "list",
+    items: [
+      "Le titre du croquis doit annoncer une problématique, comme le ferait l'intitulé d'un plan de dissertation",
+      "La légende s'organise en 2 à 4 rubriques thématiques (ex. \"Les dynamiques du territoire\", \"Les contraintes physiques\", \"Les réseaux\"), jamais en vrac",
+      "Chaque figuré cartographique choisi doit respecter la sémiologie de Bertin (section 4) — le figuré doit être justifié par la nature de la donnée qu'il porte",
+      "La légende, la nomenclature et le figuré ne doivent jamais être plus détaillés que ce que l'échelle du fond de carte permet réellement de représenter",
+    ],
+  },
+
+  { type: "heading", text: "6. Préparer un concours (CAPES / Agrégation d'histoire-géographie)", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Les épreuves de concours d'enseignement en histoire-géographie mobilisent directement les compétences des sections précédentes, avec des attentes spécifiques :",
@@ -88,7 +164,7 @@ export const methodologieContent: ContentBlock[] = [
     type: "list",
     items: [
       "L'épreuve écrite de dissertation attend un plan démonstratif rigoureux et des références précises (auteurs, exemples localisés, dates)",
-      "L'épreuve de cartographie thématique (fréquente à l'oral) évalue la capacité à choisir une sémiologie graphique adaptée au phénomène représenté, pas seulement une carte esthétique",
+      "L'épreuve de cartographie thématique (fréquente à l'oral) évalue la capacité à choisir une sémiologie graphique adaptée au phénomène représenté (section 4), pas seulement une carte esthétique",
       "Les rapports de jury, publiés après chaque session, sont la ressource la plus utile pour calibrer précisément le niveau d'exigence attendu — bien plus qu'un manuel générique",
     ],
   },
@@ -97,5 +173,11 @@ export const methodologieContent: ContentBlock[] = [
     tone: "warning",
     title: "La carte n'est pas une illustration",
     text: "En épreuve de cartographie thématique, une carte mal choisie (par exemple des ronds proportionnels là où un dégradé de couleur conviendrait à une donnée relative) est sanctionnée même si le fond de carte est soigné. Le choix sémiologique fait partie de la réponse, pas de sa mise en forme.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "L'oral de concours : reformuler, ne pas réciter",
+    text: "Un jury évalue autant la capacité à répondre à une question précise posée en direct qu'à dérouler un exposé préparé. Le réflexe le plus utile : reformuler brièvement la question avant d'y répondre, pour vérifier qu'on l'a bien comprise et laisser au jury l'occasion de préciser s'il le souhaite — un geste simple, souvent négligé sous la pression du temps.",
   },
 ]

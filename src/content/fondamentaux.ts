@@ -9,16 +9,50 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "1. Le problème de départ : la Terre n'est pas plate" },
   {
     type: "paragraph",
-    text: "La Terre est un ellipsoïde (une sphère légèrement aplatie aux pôles). Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme : c'est le rôle d'un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
+    text: "La Terre est un ellipsoïde (une sphère légèrement aplatie aux pôles, sous l'effet de la force centrifuge liée à sa rotation). Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme : c'est le rôle d'un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
   },
   {
     type: "callout",
     tone: "info",
     title: "Latitude / longitude : ce ne sont pas des mètres",
-    text: "Un degré de longitude ne mesure pas la même distance au niveau de l'équateur qu'à Marseille : les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique (voir section 3).",
+    text: "Un degré de longitude ne mesure pas la même distance au niveau de l'équateur qu'à Marseille : les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique (voir section 4).",
   },
 
-  { type: "heading", text: "2. Coordonnées géographiques vs coordonnées projetées" },
+  { type: "heading", text: "2. L'ellipsoïde n'est encore qu'une approximation : le géoïde", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "L'ellipsoïde est un objet mathématique parfaitement lisse ; la surface réelle de la Terre ne l'est pas, ni topographiquement (montagnes, fosses), ni même sous l'effet de la seule gravité. Le géoïde est la surface équipotentielle du champ de gravité terrestre qui coïncide en moyenne avec le niveau des mers au repos : il ondule par rapport à l'ellipsoïde de référence, de -106 m (dans l'océan Indien, près du Sri Lanka) à +85 m (au-dessus de la Nouvelle-Guinée), selon les variations locales de densité de la croûte et du manteau terrestre.",
+  },
+  {
+    type: "formula",
+    label: "Altitude géodésique vs altitude orthométrique",
+    formula: "h (altitude ellipsoïdale, GPS brut) = H (altitude orthométrique, \"vraie\" altitude au sens de l'écoulement de l'eau) + N (ondulation du géoïde)",
+    note: "Un GPS mesure directement h, une altitude par rapport à l'ellipsoïde mathématique — pas l'altitude affichée sur une carte IGN, qui est une altitude orthométrique H, rattachée au niveau moyen des mers (repère altimétrique NGF-IGN69 en France). Ignorer cette différence peut introduire des écarts d'altitude de plusieurs dizaines de mètres entre une mesure GPS brute et une carte topographique.",
+  },
+
+  { type: "heading", text: "3. Comment un GPS calcule une position : la trilatération", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un récepteur GPS (ou plus largement GNSS — Global Navigation Satellite System, qui inclut aussi le système européen Galileo, le russe GLONASS et le chinois BeiDou) ne connaît jamais sa position directement : il la déduit par trilatération, à partir de la distance qui le sépare de plusieurs satellites dont la position orbitale est connue à chaque instant.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Chaque satellite émet en continu un signal horodaté avec une extrême précision (horloge atomique embarquée)",
+      "Le récepteur mesure le temps de trajet du signal, et en déduit la distance au satellite (distance = vitesse de la lumière × temps de trajet)",
+      "Avec la distance à 3 satellites, la position se réduit théoriquement à deux points possibles dans l'espace (intersection de trois sphères) ; un quatrième satellite lève l'ambiguïté et corrige simultanément l'imprécision de l'horloge, bien moins précise, du récepteur lui-même",
+      "Un récepteur grand public capte en pratique 8 à 12 satellites simultanément pour affiner et fiabiliser le résultat",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Précision GPS grand public vs RTK",
+    text: "Un smartphone donne une position avec une précision typique de 3 à 8 m (dégradée par les multi-trajets urbains, la couverture nuageuse dense ou le sous-couvert forestier). Le RTK (Real-Time Kinematic), qui compare en temps réel le signal capté à celui d'une station de référence fixe à position connue, atteint une précision centimétrique — la méthode utilisée pour les relevés de terrain topographiques professionnels.",
+  },
+
+  { type: "heading", text: "4. Coordonnées géographiques vs coordonnées projetées" },
   {
     type: "comparison",
     items: [
@@ -55,10 +89,10 @@ export const fondamentauxContent: ContentBlock[] = [
     caption: "Un même point de Marseille, lu en degrés sur le globe puis reporté en mètres sur le plan projeté.",
   },
 
-  { type: "heading", text: "3. Les projections cartographiques" },
+  { type: "heading", text: "5. Les projections cartographiques" },
   {
     type: "paragraph",
-    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois. Le choix d'une projection dépend donc de l'usage :",
+    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois — c'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss (une surface courbe ne peut être développée sur un plan sans déformation). Le choix d'une projection dépend donc de l'usage :",
   },
   {
     type: "list",
@@ -70,13 +104,17 @@ export const fondamentauxContent: ContentBlock[] = [
     ],
   },
   {
+    type: "paragraph",
+    text: "Lambert-93 appartient à la famille des projections coniques conformes : on imagine un cône posé sur l'ellipsoïde le long de deux parallèles de référence (dits parallèles standards, 44° N et 49° N pour Lambert-93), sur lesquels la déformation d'échelle est nulle par construction. Elle augmente ensuite progressivement en s'éloignant de ces deux parallèles vers le nord ou le sud — un compromis pensé spécifiquement pour l'étendue en latitude de la France métropolitaine, et inadapté tel quel à un territoire qui s'étend surtout en longitude ou situé à une autre latitude (d'où l'existence de projections UTM par fuseaux, utilisées par exemple pour les territoires d'outre-mer français).",
+  },
+  {
     type: "formula",
     label: "Code EPSG : identifiant universel d'un système de coordonnées",
     formula: "EPSG:4326 = WGS84 (géographique)   ·   EPSG:2154 = Lambert-93 (France métropolitaine)   ·   EPSG:3857 = Web Mercator",
     note: "Chaque logiciel SIG (QGIS, PostGIS, Leaflet, MapLibre…) identifie un référentiel par son code EPSG. Se tromper de code EPSG au chargement d'une couche est l'erreur la plus fréquente en géomatique. Elle produit des données décalées de plusieurs centaines de mètres, parfois sans erreur visible immédiate.",
   },
 
-  { type: "heading", text: "4. Vecteur vs raster : les deux familles de données" },
+  { type: "heading", text: "6. Vecteur vs raster : les deux familles de données" },
   {
     type: "comparison",
     items: [
@@ -112,7 +150,7 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "Une zone forestière peut être représentée en vecteur (un polygone \"forêt\" avec un attribut essence dominante) ou en raster (un indice de végétation calculé pixel par pixel depuis une image satellite). Le choix dépend de la précision recherchée et de la source de donnée disponible : c'est un fil conducteur qu'on retrouvera dans le module Télédétection.",
   },
 
-  { type: "heading", text: "5. Formats de données courants", level: "college-lycee" },
+  { type: "heading", text: "7. Formats de données courants", level: "college-lycee" },
   {
     type: "table",
     headers: ["Format", "Type", "Points clés"],
@@ -124,7 +162,7 @@ export const fondamentauxContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "6. D'autres formats, pour des besoins précis", level: "superieur" },
+  { type: "heading", text: "8. D'autres formats, pour des besoins précis", level: "superieur" },
   {
     type: "paragraph",
     text: "Au-delà des quatre formats du cœur du métier, chaque besoin a fait émerger son propre format, aujourd'hui incontournable dans un contexte précis :",
@@ -148,10 +186,10 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "Un flux WMS renvoie une image déjà mise en forme (impossible d'en changer la couleur ou de récupérer les attributs). Un flux WFS renvoie les géométries et leurs attributs bruts, modifiables et interrogeables dans un SIG. Confondre les deux est une source fréquente de blocage en début de projet web-cartographique.",
   },
 
-  { type: "heading", text: "7. Codes et identifiants géographiques", level: "superieur" },
+  { type: "heading", text: "9. Codes et identifiants géographiques", level: "superieur" },
   {
     type: "paragraph",
-    text: "Le code EPSG identifie un système de coordonnées (section 3), mais ce n'est qu'un type de code parmi d'autres utilisés en géographie pour désigner un lieu de façon non ambiguë, sans redire son nom en toutes lettres :",
+    text: "Le code EPSG identifie un système de coordonnées (section 5), mais ce n'est qu'un type de code parmi d'autres utilisés en géographie pour désigner un lieu de façon non ambiguë, sans redire son nom en toutes lettres :",
   },
   {
     type: "list",
@@ -175,7 +213,7 @@ export const fondamentauxContent: ContentBlock[] = [
     description: "Un jeu court pour associer les codes EPSG de cette section à leur système, en pratique plutôt qu'en lecture.",
   },
 
-  { type: "heading", text: "8. Petite histoire de la cartographie", level: "college-lycee" },
+  { type: "heading", text: "10. Petite histoire de la cartographie", level: "college-lycee" },
   {
     type: "paragraph",
     text: "Mesurer et représenter la Terre n'a rien d'une invention récente. Le fil qui va de Ptolémée aux satellites d'observation actuels est continu : à chaque époque, un instrument nouveau a permis de mesurer un peu plus précisément ce que l'époque précédente ne pouvait qu'estimer.",
@@ -188,15 +226,16 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Antiquité : Ptolémée (~150 apr. J.-C.) formalise un système de coordonnées et une première projection dans sa Géographia",
+      "Antiquité : Ératosthène (~240 av. J.-C.) estime la circonférence terrestre à partir de la différence d'angle d'ombre entre Alexandrie et Syène, avec un écart de quelques pourcents seulement par rapport à la valeur actuelle ; Ptolémée (~150 apr. J.-C.) formalise ensuite un système de coordonnées et une première projection dans sa Géographia",
       "Moyen Âge / Renaissance : les portulans, cartes marines fondées sur le relevé au compas entre ports, précèdent la triangulation terrestre",
       "XVIᵉ siècle : Mercator (1569) publie sa projection conforme, encore la base du Web Mercator des cartes en ligne aujourd'hui",
       "XVIIIᵉ siècle : la famille Cassini triangule systématiquement la France, premier grand relevé topographique national",
+      "XXᵉ siècle : le système GPS, développé par le département de la Défense américain, atteint sa pleine capacité opérationnelle en 1995, puis s'ouvre progressivement à l'usage civil",
       "XXᵉ – XXIᵉ siècle : de Landsat 1 (1972, premier satellite civil d'observation) à Sentinel-2 (2015, données ouvertes et gratuites)",
     ],
   },
 
-  { type: "heading", text: "9. Lire une carte", level: "college-lycee" },
+  { type: "heading", text: "11. Lire une carte", level: "college-lycee" },
   {
     type: "paragraph",
     text: "Une carte topographique se lit avec une méthode, pas au hasard. Quatre éléments à vérifier systématiquement avant d'interpréter le contenu lui-même :",
@@ -211,10 +250,10 @@ export const fondamentauxContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "10. Le débat des projections : Mercator contre Peters", level: "approfondissement" },
+  { type: "heading", text: "12. Le débat des projections : Mercator contre Peters", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "La projection de Mercator (section 3) conserve les angles, ce qui la rend précieuse pour la navigation, mais déforme considérablement les surfaces aux hautes latitudes : le Groenland y paraît aussi grand que l'Afrique, alors qu'il est en réalité environ 14 fois plus petit. La projection de Peters (1973), équivalente, corrige les surfaces mais déforme fortement les formes.",
+    text: "La projection de Mercator (section 5) conserve les angles, ce qui la rend précieuse pour la navigation, mais déforme considérablement les surfaces aux hautes latitudes : le Groenland y paraît aussi grand que l'Afrique, alors qu'il est en réalité environ 14 fois plus petit. La projection de Peters (1973), équivalente, corrige les surfaces mais déforme fortement les formes.",
   },
   {
     type: "callout",

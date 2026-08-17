@@ -5,6 +5,11 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Chaque séance ci-dessous est autonome : elle peut constituer un TP complet à elle seule, avec son objectif, ses exercices à plusieurs niveaux et ses ressources. Elles sont néanmoins conçues pour s'enchaîner — en particulier les séances 2 et 3, qui réutilisent directement le résultat l'une de l'autre. Utilise le module La Méthode pour la structure attendue d'un compte-rendu ou d'un rapport, et le module Références pour les sources de données et de documentation.",
   },
+  {
+    type: "diagram",
+    name: "workflow-tp",
+    caption: "Le fil directeur des séances : de la donnée brute géoréférencée jusqu'à la carte de synthèse et son rapport.",
+  },
 
   { type: "heading", text: "Séance 1 : Cartographie de base sous QGIS", level: "college-lycee" },
   {
@@ -21,7 +26,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
       "Charger la couche dans QGIS (glisser-déposer, ou Couche > Ajouter une couche)",
       "Vérifier le CRS du projet et le reprojeter en EPSG:2154 (Lambert-93) si nécessaire",
       "Ouvrir la table attributaire, identifier un champ numérique pertinent (ex. population, superficie)",
-      "Appliquer une symbologie graduée sur ce champ (Propriétés de la couche > Symbologie > Graduée)",
+      "Appliquer une symbologie graduée sur ce champ (Propriétés de la couche > Symbologie > Graduée), en choisissant une variable visuelle cohérente avec la nature de la donnée (voir module La Méthode, sémiologie graphique)",
       "Ajouter une légende, une échelle et une flèche du nord via la mise en page d'impression",
     ],
   },
@@ -67,8 +72,8 @@ export const travauxPratiquesContent: ContentBlock[] = [
       "Repérer sur l'image au moins 6 à 8 intersections de la grille, réparties sur toute l'étendue du document (pas seulement dans un coin)",
       "Lire la coordonnée réelle de chaque intersection à partir des codes de la grille imprimée",
       "Dans QGIS, ouvrir le Géoréférenceur (Raster > Géoréférencement), placer un point de contrôle sur chaque intersection repérée et saisir sa coordonnée réelle",
-      "Choisir une transformation adaptée (une transformation affine linéaire suffit si la grille est régulière et sans rotation notable)",
-      "Lancer le géoréférencement et vérifier le résultat : le résidu affiché par point doit rester très inférieur à l'espacement réel de la grille",
+      "Choisir une transformation adaptée (une transformation affine linéaire suffit si la grille est régulière et sans rotation notable ; une transformation polynomiale d'ordre 2 ou plus absorbe une distorsion non linéaire, au prix d'un risque de sur-ajustement si peu de points sont disponibles)",
+      "Lancer le géoréférencement et vérifier le résidu affiché par point : il doit rester très inférieur à l'espacement réel de la grille",
       "Exporter le raster géoréférencé (GeoTIFF, EPSG:2154)",
     ],
   },
@@ -76,7 +81,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "Vérifier, ne pas supposer",
-    text: "Un géoréférencement peut sembler correct visuellement tout en étant décalé de plusieurs dizaines de mètres. Toujours comparer le résultat à une couche de référence connue et indépendante (ex. un réseau routier ou une grille administrative déjà géoréférencée) avant de considérer l'image comme fiable.",
+    text: "Un géoréférencement peut sembler correct visuellement tout en étant décalé de plusieurs dizaines de mètres. Toujours comparer le résultat à une couche de référence connue et indépendante (ex. un réseau routier ou une grille administrative déjà géoréférencée) avant de considérer l'image comme fiable — c'est la même logique de contrôle indépendant que la RMSE présentée au module Le Compas.",
   },
   {
     type: "comparison",
@@ -87,7 +92,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
       },
       {
         label: "Avancé",
-        points: ["Grille partiellement illisible : combiner points de grille et repères topographiques identifiables", "Comparer deux transformations (affine vs polynomiale) et justifier laquelle convient le mieux"],
+        points: ["Grille partiellement illisible : combiner points de grille et repères topographiques identifiables", "Comparer deux transformations (affine vs polynomiale) et justifier laquelle convient le mieux, résidu par résidu"],
       },
     ],
   },
@@ -102,7 +107,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     ordered: true,
     items: [
       "Calculer le NDVI sur l'image nouvellement géoréférencée (calculatrice raster, voir module Le Regard/Les Couleurs pour la formule) — sans géoréférencement préalable, ce calcul produirait un résultat exact en valeur mais inutilisable en position",
-      "Superposer une grille régulière (fishnet) sur l'emprise de l'image et calculer, pour chaque cellule, la moyenne du NDVI qu'elle contient (Vecteur > Analyse > Statistiques de zone, ou l'outil « Statistiques de zone » du menu Raster)",
+      "Superposer une grille régulière (fishnet) sur l'emprise de l'image et calculer, pour chaque cellule, la moyenne du NDVI qu'elle contient (Vecteur > Analyse > Statistiques de zone, ou l'outil « Statistiques de zone » du menu Raster — voir module Le Compas, section algèbre raster)",
       "Répéter le géoréférencement et le calcul de NDVI sur une seconde image de la même zone, prise à une date différente",
       "Composer un indice complexe à partir des deux dates : ΔNDVI = NDVI(date 2) − NDVI(date 1), qui met en évidence les zones de changement plutôt que l'état à un instant donné",
     ],
@@ -161,7 +166,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
   { type: "heading", text: "Séance 5 : Programmation géospatiale simple", level: "superieur" },
   {
     type: "paragraph",
-    text: "Trois exercices Python courts, indépendants, qui couvrent les besoins les plus fréquents en géographie et télédétection : lire/transformer une donnée vecteur, mesurer, automatiser un calcul raster répétitif.",
+    text: "Quatre exercices courts, indépendants, qui couvrent les besoins les plus fréquents en géographie et télédétection : lire/transformer une donnée vecteur, mesurer, automatiser un calcul raster répétitif, et interroger une donnée en ligne de commande sans passer par une interface graphique.",
   },
   {
     type: "formula",
@@ -173,7 +178,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "formula",
     label: "Exercice 2 (intermédiaire) : mesurer avec Shapely/GeoPandas",
     formula: "gdf['buffer_200m'] = gdf.to_crs(epsg=2154).geometry.buffer(200)",
-    note: "Reprendre le GeoDataFrame de l'exercice 1, créer un buffer de 200 m autour de chaque point, puis calculer l'aire cumulée de tous les buffers (attention aux chevauchements, non gérés par une simple somme).",
+    note: "Reprendre le GeoDataFrame de l'exercice 1, créer un buffer de 200 m autour de chaque point, puis calculer l'aire cumulée de tous les buffers (attention aux chevauchements, non gérés par une simple somme — utiliser gdf.unary_union avant de mesurer l'aire réelle couverte).",
   },
   {
     type: "formula",
@@ -182,16 +187,53 @@ export const travauxPratiquesContent: ContentBlock[] = [
     note: "Avec rasterio : parcourir un dossier contenant plusieurs paires de bandes rouge/NIR, calculer le NDVI de chacune, et enregistrer chaque résultat sous un nom dérivé du fichier source — la base de tout traitement par lot en télédétection.",
   },
   {
+    type: "formula",
+    label: "Exercice 4 (découverte) : inspecter une donnée en ligne de commande avec GDAL",
+    formula: "ogrinfo -al -so parcelles.gpkg   ·   gdalinfo -stats sentinel2_ndvi.tif",
+    note: "GDAL/OGR (la bibliothèque sur laquelle repose la quasi-totalité des logiciels SIG, dont QGIS) fournit des utilitaires en ligne de commande pour inspecter rapidement une couche sans l'ouvrir dans une interface graphique : ogrinfo pour le vecteur (nombre d'entités, CRS, champs), gdalinfo pour le raster (dimensions, résolution, statistiques par bande). Un réflexe utile pour vérifier une donnée avant de l'intégrer à un traitement automatisé plus long.",
+  },
+  {
     type: "link",
     to: "/module/outils-sig",
     label: "Revoir : PyQGIS et GeoPandas",
     description: "Le module Le Compas présente ces deux approches avant de les pratiquer ici.",
   },
 
-  { type: "heading", text: "Séance 6 : Étude de cas et mini-projet final", level: "approfondissement" },
+  { type: "heading", text: "Séance 6 : Classification supervisée et évaluation de précision", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Aller jusqu'au bout d'une classification : constituer des échantillons d'entraînement représentatifs, entraîner un classifieur, puis évaluer honnêtement sa précision — l'étape la plus souvent négligée dans un premier projet de classification.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Digitaliser des polygones d'entraînement pour 3 à 4 classes (ex. forêt, culture, bâti, eau), répartis sur toute l'emprise de l'image, en s'appuyant sur la photo-interprétation (voir module Le Regard, section 9)",
+      "Réserver environ 30 % de ces polygones, mis de côté et jamais montrés au classifieur, pour servir de jeu de test indépendant (voir module L'Intelligence, section sur le sur-apprentissage)",
+      "Entraîner une classification supervisée (SCP — Semi-Automatic Classification Plugin pour QGIS, ou un script scikit-learn en Python) sur le jeu d'entraînement uniquement",
+      "Appliquer le classifieur à l'ensemble de l'image",
+      "Construire la matrice de confusion entre la classification obtenue et le jeu de test réservé à l'étape 2, puis calculer la précision globale et le coefficient kappa (formules détaillées au module L'Intelligence)",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne jamais évaluer un modèle sur les données qui ont servi à l'entraîner",
+    text: "Calculer la précision d'une classification sur les mêmes polygones que ceux utilisés pour l'entraîner donne un chiffre optimiste, souvent proche de 100 %, qui ne dit rien de la performance réelle du modèle sur le reste de l'image. C'est l'erreur méthodologique la plus grave et la plus fréquente en classification supervisée — voir la mise en garde sur la fuite de données au module L'Intelligence.",
+  },
+  {
+    type: "link",
+    to: "/module/traitements-ia",
+    label: "Revoir : classification supervisée et matrice de confusion",
+    description: "Le module L'Intelligence détaille les méthodes de classification et les métriques d'évaluation avant de les pratiquer ici.",
+  },
+
+  { type: "heading", text: "Séance 7 : Étude de cas et mini-projet final", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "Les cinq séances précédentes traitent chacune une compétence isolée. Le mini-projet les combine toutes, au service d'une vraie question. Quatre familles de sujets reviennent le plus souvent :",
+    text: "Les six séances précédentes traitent chacune une compétence isolée. Le mini-projet les combine toutes, au service d'une vraie question. Quatre familles de sujets reviennent le plus souvent :",
   },
   {
     type: "list",
@@ -206,12 +248,12 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Cahier des charges du mini-projet",
-    text: "Choisir un territoire et l'une des quatre familles ci-dessus. Produire une carte finale qui combine au minimum : une donnée vecteur, une donnée raster ou un indice spectral calculé, et au moins une analyse spatiale (buffer, intersection ou jointure spatiale). Le rendu attendu est une carte mise en page (légende, échelle, source des données) accompagnée d'un court rapport.",
+    text: "Choisir un territoire et l'une des quatre familles ci-dessus. Produire une carte finale qui combine au minimum : une donnée vecteur, une donnée raster ou un indice spectral calculé, et au moins une analyse spatiale (buffer, intersection ou jointure spatiale). Le rendu attendu est une carte mise en page (légende organisée, échelle, source des données, sémiologie graphique justifiée) accompagnée d'un court rapport structuré selon le module La Méthode.",
   },
   {
     type: "link",
     to: "/module/methodologie",
     label: "Structurer le rapport rendu",
-    description: "Le module La Méthode détaille la structure attendue d'un rapport technique (contexte, données et méthode, résultats, discussion, recommandations).",
+    description: "Le module La Méthode détaille la structure attendue d'un rapport technique (contexte, données et méthode, résultats, discussion, recommandations) et la sémiologie graphique d'une carte de synthèse.",
   },
 ]
