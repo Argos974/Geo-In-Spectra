@@ -30,34 +30,32 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Palette thème géomatique / télédétection — distincte de GRNF (pas de rouge incendie ici)
-        space: {
-          DEFAULT: "#070b14",
-          light: "#0d1524",
-          deep: "#04070d",
+        // Palette "cabinet de curiosités" — huile ancienne, feuille d'or, lapis-lazuli.
+        // Le lapis en particulier est le pigment réellement utilisé pour les ciels/robes
+        // dans les toiles reproduites sur ce site (Vermeer, Cellarius) — pas une couleur
+        // décorative arbitraire.
+        ink: {
+          DEFAULT: "#0d0e12",
+          deep: "#07080a",
         },
-        signal: {
-          DEFAULT: "#22d3ee",
-          dim: "#0e7490",
+        canvas: "#17140f",
+        parchment: {
+          DEFAULT: "#ece3cf",
+          dim: "#a89f8c",
         },
-        amber: {
-          DEFAULT: "#f6b84c",
+        gilt: {
+          DEFAULT: "#b8934f",
+          bright: "#d9b46a",
         },
-        terrain: {
-          DEFAULT: "#7bd88f",
-        },
-        text: {
-          primary: "#e6ecf5",
-          secondary: "#8b96ac",
-        },
+        lapis: "#3c5a8f",
+        oxblood: "#7a2f24",
       },
       fontFamily: {
-        heading: ['Space Grotesk', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'monospace'],
+        heading: ['Cinzel', 'serif'],
+        body: ['"EB Garamond"', 'serif'],
+        mono: ['"IBM Plex Mono"', 'monospace'],
       },
       borderRadius: {
-        xl: "calc(var(--radius) + 4px)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",

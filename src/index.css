@@ -3,22 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --background: 220 45% 5%;
-  --foreground: 216 33% 92%;
-  --primary: 189 85% 53%;
-  --primary-foreground: 220 45% 5%;
-  --secondary: 220 30% 14%;
-  --secondary-foreground: 216 33% 92%;
-  --muted: 220 25% 16%;
-  --muted-foreground: 218 14% 62%;
-  --accent: 38 88% 65%;
-  --accent-foreground: 220 45% 5%;
-  --card: 220 35% 8%;
-  --card-foreground: 216 33% 92%;
-  --border: 220 25% 18%;
-  --input: 220 25% 18%;
-  --ring: 189 85% 53%;
-  --radius: 0.6rem;
+  /* Cabinet de curiosités — huile ancienne, feuille d'or, lapis-lazuli */
+  --background: 30 10% 6%;
+  --foreground: 42 30% 89%;
+  --primary: 38 40% 52%;
+  --primary-foreground: 30 10% 6%;
+  --secondary: 30 8% 12%;
+  --secondary-foreground: 42 30% 89%;
+  --muted: 30 8% 14%;
+  --muted-foreground: 35 12% 62%;
+  --accent: 213 42% 39%;
+  --accent-foreground: 42 30% 89%;
+  --card: 30 10% 8%;
+  --card-foreground: 42 30% 89%;
+  --border: 32 12% 18%;
+  --input: 32 12% 18%;
+  --ring: 38 40% 52%;
+  --radius: 0.2rem;
 }
 
 * {
@@ -30,14 +31,30 @@ html {
 }
 
 body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: 'Inter', sans-serif;
+  background: #0d0e12;
+  color: #ece3cf;
+  font-family: 'EB Garamond', serif;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Grain de toile — texture d'huile ancienne, appliquée une seule fois sur tout le site */
+.canvas-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .font-heading {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Cinzel', serif;
+}
+
+.font-body {
+  font-family: 'EB Garamond', serif;
 }
 
 .font-mono {
@@ -45,6 +62,6 @@ body {
 }
 
 ::selection {
-  background: hsl(var(--primary) / 0.35);
-  color: hsl(var(--foreground));
+  background: rgba(184, 147, 79, 0.35);
+  color: #ece3cf;
 }

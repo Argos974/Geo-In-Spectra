@@ -6,19 +6,19 @@ export function SiteHeader() {
   const location = useLocation()
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-space/70 border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink/80 border-b border-gilt/15">
       <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4">
-        <Link to="/" className="font-heading text-sm uppercase tracking-[0.28em] text-text-primary">
-          Géomatique<span className="text-signal">.</span>Télédétection
+        <Link to="/" className="font-heading text-sm uppercase tracking-[0.28em] text-parchment">
+          Géomatique<span className="text-gilt">.</span>Télédétection
         </Link>
-        <div className="hidden md:flex items-center gap-6 font-mono text-[12px] uppercase tracking-wider text-text-secondary">
+        <div className="hidden md:flex items-center gap-6 font-mono text-[12px] uppercase tracking-wider text-parchment-dim">
           {modules.map((m) => (
             <Link
               key={m.slug}
               to={`/module/${m.slug}`}
               className={cn(
-                "transition-colors hover:text-signal",
-                location.pathname === `/module/${m.slug}` && "text-signal",
+                "transition-colors hover:text-gilt",
+                location.pathname === `/module/${m.slug}` && "text-gilt",
               )}
             >
               {m.title.split(" ")[0]}
