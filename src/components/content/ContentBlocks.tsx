@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import type { ContentBlock } from "@/content/types"
 import { cn } from "@/lib/utils"
 import { slugify } from "@/lib/slug"
@@ -70,6 +71,18 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
 
           case "diagram":
             return <Diagram key={i} name={block.name} caption={block.caption} variant={variant} />
+
+          case "link":
+            return (
+              <Link
+                key={i}
+                to={block.to}
+                className={cn("block border p-5 transition-colors", border, panelBg, isPrint ? "" : "hover:bg-gilt/10")}
+              >
+                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-1", accent)}>{block.label} →</p>
+                {block.description && <p className={cn("text-sm", textDim)}>{block.description}</p>}
+              </Link>
+            )
 
           case "paragraph":
             return (

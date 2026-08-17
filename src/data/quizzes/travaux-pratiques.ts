@@ -35,6 +35,17 @@ export const travauxPratiquesQuiz: QuizQuestion[] = [
     explanation: "Le buffer transforme la ligne du cours d'eau en une zone (ex. 200 m, bande réglementaire), qu'on peut ensuite intersecter avec les parcelles pour savoir lesquelles sont concernées.",
   },
   {
+    question: "Pour géoréférencer une image par une grille de coordonnées, la méthode fiable consiste à :",
+    choices: [
+      "Caler l'image visuellement contre un fond de carte, à l'œil",
+      "Placer des points de contrôle sur les intersections de la grille, avec leur coordonnée réelle lue sur les codes affichés",
+      "Utiliser directement les coordonnées du centre de l'image",
+      "Le géoréférencement ne nécessite jamais de vérification une fois fait",
+    ],
+    correctIndex: 1,
+    explanation: "Chaque intersection de grille est un point de contrôle à coordonnée réelle certaine. Le résultat doit ensuite être vérifié contre une couche de référence indépendante, jamais supposé correct.",
+  },
+  {
     question: "Le mini-projet final doit combiner au minimum :",
     choices: [
       "Une donnée vecteur seule",

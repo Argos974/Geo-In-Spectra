@@ -18,7 +18,7 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "site", label: "Géoconfluences", detail: "Ressource pédagogique de référence en géographie (ENS de Lyon)", url: "https://geoconfluences.ens-lyon.fr" },
       { type: "site", label: "Hypergéo", detail: "Encyclopédie collaborative de géographie et d'épistémologie de la discipline", url: "https://www.hypergeo.eu" },
       { type: "officiel", label: "IGN — Institut national de l'information géographique et forestière", detail: "Référentiels géodésiques français, documentation Lambert-93/RGF93", url: "https://www.ign.fr" },
-      { type: "officiel", label: "Géoportail", detail: "Visualisation cartographique officielle française (IGN)", url: "https://www.geoportail.gouv.fr" },
+      { type: "officiel", label: "cartes.gouv.fr", detail: "Plateforme cartographique officielle française (IGN), qui a repris et unifié Géoportail", url: "https://www.cartes.gouv.fr" },
     ],
   },
   {

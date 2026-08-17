@@ -29,7 +29,7 @@ export const modules: CourseModule[] = [
   },
   {
     slug: "indices-spectraux",
-    title: "Du Langage des Couleurs",
+    title: "Du Langage aux Couleurs",
     navLabel: "Les Couleurs",
     summary: "NDVI, NDMI, NDBI et autres indices dérivés des bandes satellite.",
     topics: ["NDVI : végétation", "NDMI : humidité", "NDBI : bâti", "Interprétation et limites"],
@@ -44,20 +44,20 @@ export const modules: CourseModule[] = [
     epigraph: "Le géographe de Vermeer prend le compas pour mesurer sa carte. Le SIG est ce même compas, rendu numérique et systématique.",
   },
   {
-    slug: "travaux-pratiques",
-    title: "Le Cabinet de l'Apprenti",
-    navLabel: "L'Atelier",
-    summary: "Exercices guidés, jeux de données réels, mini-projets.",
-    topics: ["TP 1 : cartographie de base", "TP 2 : calcul d'indice NDVI", "TP 3 : analyse spatiale", "Mini-projet final"],
-    epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
-  },
-  {
     slug: "traitements-ia",
     title: "De la Machine qui Apprend",
     navLabel: "L'Intelligence",
     summary: "Indices composés, filtres à noyau, classification, deep learning : la place de l'IA en géomatique et télédétection.",
     topics: ["Indices composés et complexes", "Filtres kernel et passe-haut", "Classification supervisée / non supervisée", "Deep learning et IA"],
     epigraph: "Comme le cabinet de curiosités range chaque coquillage, chaque tableau, chaque médaille dans une catégorie pour le comprendre, l'algorithme range chaque pixel dans une classe pour lire le paysage.",
+  },
+  {
+    slug: "travaux-pratiques",
+    title: "Le Cabinet de l'Apprenti",
+    navLabel: "L'Atelier",
+    summary: "Séances pratiques complètes, chacune une séance autonome : géoréférencement, indices, analyse spatiale, programmation.",
+    topics: ["Géoréférencement par grille", "NDVI, indices par cellule, composition complexe", "Analyse spatiale", "Programmation géospatiale"],
+    epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
   },
   {
     slug: "methodologie",

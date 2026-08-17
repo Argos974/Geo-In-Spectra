@@ -12,3 +12,4 @@ export type ContentBlock =
   | { type: "comparison"; items: { label: string; points: string[] }[] }
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "diagram"; name: DiagramName; caption?: string }
+  | { type: "link"; to: string; label: string; description?: string }

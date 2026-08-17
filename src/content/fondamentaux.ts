@@ -168,6 +168,12 @@ export const fondamentauxContent: ContentBlock[] = [
     title: "Un code postal n'est pas une commune",
     text: "Joindre des données par code postal plutôt que par code INSEE est une erreur fréquente : plusieurs communes peuvent partager un même code postal, et une commune peut en couvrir plusieurs. Le code INSEE (ou son équivalent cadastral pour la parcelle) est la clé de jointure fiable en géomatique française.",
   },
+  {
+    type: "link",
+    to: "/jeu/epsg",
+    label: "S'entraîner : la Chasse aux EPSG",
+    description: "Un jeu court pour associer les codes EPSG de cette section à leur système, en pratique plutôt qu'en lecture.",
+  },
 
   { type: "heading", text: "8. Petite histoire de la cartographie", level: "college-lycee" },
   {

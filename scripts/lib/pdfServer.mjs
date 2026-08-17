@@ -19,8 +19,8 @@ export const ALL_SLUGS = [
   "teledetection",
   "indices-spectraux",
   "outils-sig",
-  "travaux-pratiques",
   "traitements-ia",
+  "travaux-pratiques",
   "methodologie",
 ]
 
