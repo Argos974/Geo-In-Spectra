@@ -13,9 +13,9 @@ export function ModulePage() {
 
   if (!module) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-vellum text-vellum-ink gap-4">
-        <p className="font-mono text-vellum-dim">Salle introuvable.</p>
-        <Link to="/" className="text-gilt-ink underline">Retour à la galerie</Link>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-ink text-parchment gap-4">
+        <p className="font-mono text-parchment-dim">Salle introuvable.</p>
+        <Link to="/" className="text-gilt underline">Retour à la galerie</Link>
       </div>
     )
   }
@@ -27,15 +27,15 @@ export function ModulePage() {
   const next = modules[index + 1]
 
   return (
-    <div className="min-h-screen bg-vellum text-vellum-ink px-6 pt-32 pb-24">
+    <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-3xl">
-        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt-ink hover:underline">
+        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
           ← La galerie
         </Link>
 
-        <p className="font-mono text-[12px] text-gilt-ink mt-8">Salle {ROOM_NUMERALS[index] ?? index + 1}</p>
+        <p className="font-mono text-[12px] text-gilt mt-8">Salle {ROOM_NUMERALS[index] ?? index + 1}</p>
         <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-6">{module.title}</h1>
-        <p className="text-vellum-dim text-lg mb-10">{module.summary}</p>
+        <p className="text-parchment-dim text-lg mb-10">{module.summary}</p>
 
         {art && (
           <GalleryFrame
@@ -47,26 +47,25 @@ export function ModulePage() {
             figure={ROOM_NUMERALS[index] ?? String(index + 1)}
             className="mb-12 max-w-md"
             priority
-            variant="light"
           />
         )}
 
         {blocks ? (
           <ContentBlocks blocks={blocks} />
         ) : (
-          <div className="border border-dashed border-gilt-ink/30 p-8 text-center text-vellum-dim">
+          <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
             <p className="font-mono text-sm">Contenu du module à venir.</p>
           </div>
         )}
 
-        <div className="mt-16 pt-8 border-t border-gilt-ink/20 flex items-center justify-between font-mono text-[12px] uppercase tracking-wider">
+        <div className="mt-16 pt-8 border-t border-gilt/15 flex items-center justify-between font-mono text-[12px] uppercase tracking-wider">
           {prev ? (
-            <Link to={`/module/${prev.slug}`} className="text-vellum-dim hover:text-gilt-ink transition-colors">
+            <Link to={`/module/${prev.slug}`} className="text-parchment-dim hover:text-gilt transition-colors">
               ← {prev.title}
             </Link>
           ) : <span />}
           {next ? (
-            <Link to={`/module/${next.slug}`} className="text-gilt-ink hover:text-oxblood transition-colors">
+            <Link to={`/module/${next.slug}`} className="text-gilt hover:text-gilt-bright transition-colors">
               {next.title} →
             </Link>
           ) : <span />}

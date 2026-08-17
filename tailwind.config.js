@@ -46,17 +46,9 @@ module.exports = {
         gilt: {
           DEFAULT: "#b8934f",
           bright: "#d9b46a",
-          ink: "#8a6a2f", // variante assombrie — texte/liens lisibles sur fond clair (vellum)
         },
         lapis: "#3c5a8f",
         oxblood: "#7a2f24",
-        // Salle de lecture claire (pages module) — vélin/parchemin, contrepoint des
-        // salles sombres de la galerie (Home), pas un relight du site entier.
-        vellum: {
-          DEFAULT: "#f3ead8",
-          ink: "#2b2116",
-          dim: "#6b5f4a",
-        },
       },
       fontFamily: {
         heading: ['Cinzel', 'serif'],
