@@ -9,13 +9,13 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "1. Le problème de départ : la Terre n'est pas plate" },
   {
     type: "paragraph",
-    text: "La Terre est un ellipsoïde (une sphère légèrement aplatie aux pôles). Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme — c'est le rôle d'un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
+    text: "La Terre est un ellipsoïde (une sphère légèrement aplatie aux pôles). Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme : c'est le rôle d'un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
   },
   {
     type: "callout",
     tone: "info",
     title: "Latitude / longitude : ce ne sont pas des mètres",
-    text: "Un degré de longitude ne mesure pas la même distance au niveau de l'équateur qu'à Marseille — les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique (voir section 3).",
+    text: "Un degré de longitude ne mesure pas la même distance au niveau de l'équateur qu'à Marseille : les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique (voir section 3).",
   },
 
   { type: "heading", text: "2. Coordonnées géographiques vs coordonnées projetées" },
@@ -46,7 +46,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Convention du projet",
-    text: "L'ensemble des traitements géomatiques de ce cours (et des projets réels associés) utilise Lambert-93 / EPSG:2154 comme référentiel de calcul — c'est le standard officiel français depuis 2006. Les données sources en WGS84 (GPS, beaucoup de fichiers GeoJSON publics) sont systématiquement reprojetées avant tout calcul de distance ou de surface.",
+    text: "L'ensemble des traitements géomatiques de ce cours (et des projets réels associés) utilise Lambert-93 / EPSG:2154 comme référentiel de calcul : c'est le standard officiel français depuis 2006. Les données sources en WGS84 (GPS, beaucoup de fichiers GeoJSON publics) sont systématiquement reprojetées avant tout calcul de distance ou de surface.",
   },
 
   {
@@ -63,17 +63,17 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Conforme (conserve les angles/formes localement) — ex. Lambert conique conforme, utilisée pour Lambert-93",
-      "Équivalente (conserve les surfaces) — utile pour comparer des superficies (ex. usage agricole, forestier)",
-      "Équidistante (conserve certaines distances) — rare en usage général",
-      "Mercator (conforme, très déformante en surface aux hautes latitudes) — standard des cartes web (Google Maps, OpenStreetMap) pour sa simplicité de calcul, pas pour sa précision métrique",
+      "Conforme (conserve les angles/formes localement) : ex. Lambert conique conforme, utilisée pour Lambert-93",
+      "Équivalente (conserve les surfaces) : utile pour comparer des superficies (ex. usage agricole, forestier)",
+      "Équidistante (conserve certaines distances) : rare en usage général",
+      "Mercator (conforme, très déformante en surface aux hautes latitudes) : standard des cartes web (Google Maps, OpenStreetMap) pour sa simplicité de calcul, pas pour sa précision métrique",
     ],
   },
   {
     type: "formula",
-    label: "Code EPSG — identifiant universel d'un système de coordonnées",
+    label: "Code EPSG : identifiant universel d'un système de coordonnées",
     formula: "EPSG:4326 = WGS84 (géographique)   ·   EPSG:2154 = Lambert-93 (France métropolitaine)   ·   EPSG:3857 = Web Mercator",
-    note: "Chaque logiciel SIG (QGIS, PostGIS, Leaflet, MapLibre…) identifie un référentiel par son code EPSG. Se tromper de code EPSG au chargement d'une couche est l'erreur la plus fréquente en géomatique — elle produit des données décalées de plusieurs centaines de mètres, parfois sans erreur visible immédiate.",
+    note: "Chaque logiciel SIG (QGIS, PostGIS, Leaflet, MapLibre…) identifie un référentiel par son code EPSG. Se tromper de code EPSG au chargement d'une couche est l'erreur la plus fréquente en géomatique. Elle produit des données décalées de plusieurs centaines de mètres, parfois sans erreur visible immédiate.",
   },
 
   { type: "heading", text: "4. Vecteur vs raster : les deux familles de données" },
@@ -109,7 +109,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Un même phénomène, deux représentations possibles",
-    text: "Une zone forestière peut être représentée en vecteur (un polygone \"forêt\" avec un attribut essence dominante) ou en raster (un indice de végétation calculé pixel par pixel depuis une image satellite). Le choix dépend de la précision recherchée et de la source de donnée disponible — c'est un fil conducteur qu'on retrouvera dans le module Télédétection.",
+    text: "Une zone forestière peut être représentée en vecteur (un polygone \"forêt\" avec un attribut essence dominante) ou en raster (un indice de végétation calculé pixel par pixel depuis une image satellite). Le choix dépend de la précision recherchée et de la source de donnée disponible : c'est un fil conducteur qu'on retrouvera dans le module Télédétection.",
   },
 
   { type: "heading", text: "5. Formats de données courants" },
@@ -128,6 +128,6 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "À retenir avant le module suivant",
-    text: "La télédétection produit presque exclusivement des données raster (images satellite). Comprendre la différence entre résolution spatiale d'un raster et précision géométrique d'un vecteur est indispensable pour interpréter correctement une image satellite — c'est le point de départ du module 2.",
+    text: "La télédétection produit presque exclusivement des données raster (images satellite). Comprendre la différence entre résolution spatiale d'un raster et précision géométrique d'un vecteur est indispensable pour interpréter correctement une image satellite : c'est le point de départ du module 2.",
   },
 ]

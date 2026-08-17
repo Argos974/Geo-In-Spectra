@@ -12,7 +12,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     caption: "La marche à suivre, commune aux trois TP qui suivent.",
   },
 
-  { type: "heading", text: "TP 1 — Cartographie de base sous QGIS" },
+  { type: "heading", text: "TP 1 : Cartographie de base sous QGIS" },
   {
     type: "paragraph",
     text: "Objectif : produire une première carte thématique en manipulant chargement de données, système de coordonnées et symbologie.",
@@ -36,7 +36,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "La carte doit afficher un dégradé de couleur cohérent avec le champ choisi, une légende lisible, et le CRS du projet doit être EPSG:2154 (vérifiable en bas à droite de la fenêtre QGIS).",
   },
 
-  { type: "heading", text: "TP 2 — Calcul du NDVI depuis une image Sentinel-2" },
+  { type: "heading", text: "TP 2 : Calcul du NDVI depuis une image Sentinel-2" },
   {
     type: "paragraph",
     text: "Objectif : appliquer la formule du NDVI (module Indices spectraux) sur une vraie image satellite, et interpréter le résultat.",
@@ -55,12 +55,12 @@ export const travauxPratiquesContent: ContentBlock[] = [
   },
   {
     type: "formula",
-    label: "Rappel — expression calculatrice raster QGIS",
+    label: "Rappel : expression calculatrice raster QGIS",
     formula: "(\"B08@1\" - \"B04@1\") / (\"B08@1\" + \"B04@1\")",
-    note: "@1 désigne la première bande de chaque raster chargé — adapter selon la structure réelle du fichier téléchargé (bandes séparées ou empilées).",
+    note: "@1 désigne la première bande de chaque raster chargé, à adapter selon la structure réelle du fichier téléchargé (bandes séparées ou empilées).",
   },
 
-  { type: "heading", text: "TP 3 — Analyse spatiale : buffer et intersection" },
+  { type: "heading", text: "TP 3 : Analyse spatiale, buffer et intersection" },
   {
     type: "paragraph",
     text: "Objectif : combiner deux couches vecteur pour répondre à une question spatiale concrète, en utilisant les opérations du module Outils SIG.",

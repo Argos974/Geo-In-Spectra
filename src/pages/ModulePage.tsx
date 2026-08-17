@@ -4,7 +4,7 @@ import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
-import { GalleryFrame } from "@/components/gallery/GalleryFrame"
+import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
 
@@ -26,41 +26,37 @@ export function ModulePage() {
   const art = artworks[module.slug]
   const prev = modules[index - 1]
   const next = modules[index + 1]
+  const numeral = ROOM_NUMERALS[index] ?? String(index + 1)
+  const order = String(index + 1).padStart(2, "0")
+  const pdfName = `${order}-${module.slug}-cours.pdf`
 
   return (
-    <div className="print-page min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
-      <div className="mx-auto max-w-3xl">
-        <Link to="/" className="print:hidden font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
-          ← La galerie
-        </Link>
+    <div className="print-page min-h-screen bg-ink text-parchment">
+      {art && (
+        <ArtworkBackdrop art={art} figure={numeral} className="h-[70vh] min-h-[480px] w-full pt-24">
+          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-16 max-w-3xl">
+            <Link to="/" className="print:hidden font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
+              ← La galerie
+            </Link>
+            <p className="font-mono text-[12px] text-gilt mb-3">Salle {numeral}</p>
+            <h1 className="font-heading text-4xl md:text-5xl mb-4">{module.title}</h1>
+            <p className="font-body italic text-parchment-dim leading-relaxed border-l-2 border-gilt/30 pl-4">
+              {module.epigraph}
+            </p>
+          </div>
+        </ArtworkBackdrop>
+      )}
 
-        <p className="font-mono text-[12px] text-gilt mt-8">Salle {ROOM_NUMERALS[index] ?? index + 1}</p>
-        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">{module.title}</h1>
-        <p className="font-body italic text-parchment-dim mb-6 leading-relaxed border-l-2 border-gilt/30 pl-4">
-          {module.epigraph}
-        </p>
+      <div className="mx-auto max-w-3xl px-6 pt-16 pb-24">
         <p className="text-parchment-dim text-lg mb-6">{module.summary}</p>
 
         <a
-          href={`/pdf/${module.slug}/cours.pdf`}
-          download
+          href={`/pdf/${module.slug}/${pdfName}`}
+          download={pdfName}
           className="print:hidden inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 mb-10 hover:bg-gilt/10 transition-colors"
         >
           ↓ Télécharger cette salle en PDF
         </a>
-
-        {art && (
-          <GalleryFrame
-            src={art.src}
-            alt={art.alt}
-            artist={art.artist}
-            title={art.title}
-            year={art.year}
-            figure={ROOM_NUMERALS[index] ?? String(index + 1)}
-            className="mb-12 max-w-md"
-            priority
-          />
-        )}
 
         {blocks && <RoomIndex blocks={blocks} />}
 

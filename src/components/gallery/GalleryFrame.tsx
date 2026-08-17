@@ -31,7 +31,7 @@ export function GalleryFrame({ src, alt, artist, title, year, figure, className,
         </div>
       </div>
       <figcaption className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-parchment-dim">
-        <span className="text-gilt">Fig. {figure}</span> — {artist}, «&nbsp;{title}&nbsp;», {year}
+        <span className="text-gilt">Fig. {figure}.</span> {artist}, «&nbsp;{title}&nbsp;», {year}
       </figcaption>
     </figure>
   )

@@ -57,7 +57,7 @@ export function LegalPage() {
             <ul className="space-y-2">
               {Object.values(artworks).map((art) => (
                 <li key={art.src} className="text-parchment-dim text-sm border-l-2 border-gilt/25 pl-4">
-                  {art.artist}, «&nbsp;{art.title}&nbsp;», {art.year} — domaine public, Wikimedia Commons
+                  {art.artist}, «&nbsp;{art.title}&nbsp;», {art.year} ; domaine public, Wikimedia Commons
                 </li>
               ))}
             </ul>

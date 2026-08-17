@@ -9,15 +9,15 @@ export const teledetectionContent: ContentBlock[] = [
   { type: "heading", text: "1. Le rayonnement électromagnétique" },
   {
     type: "paragraph",
-    text: "Le Soleil émet un rayonnement qui couvre un large spectre de longueurs d'onde. Une partie atteint le sol, y est en partie absorbée et en partie réfléchie vers le capteur satellite. La proportion réfléchie — la réflectance — varie selon la longueur d'onde et selon la nature de la surface observée. C'est cette signature spectrale qui permet de distinguer une forêt d'un champ, d'un parking ou d'un plan d'eau.",
+    text: "Le Soleil émet un rayonnement qui couvre un large spectre de longueurs d'onde. Une partie atteint le sol, y est en partie absorbée et en partie réfléchie vers le capteur satellite. La proportion réfléchie, la réflectance, varie selon la longueur d'onde et selon la nature de la surface observée. C'est cette signature spectrale qui permet de distinguer une forêt d'un champ, d'un parking ou d'un plan d'eau.",
   },
   {
     type: "table",
     headers: ["Domaine", "Longueur d'onde", "Usage typique"],
     rows: [
       ["Visible (bleu, vert, rouge)", "~ 0.4 – 0.7 µm", "Composition couleur naturelle, distinction eau/sol/végétation"],
-      ["Proche infrarouge (NIR)", "~ 0.7 – 1.3 µm", "Très réfléchi par la végétation en bonne santé — cœur de la plupart des indices végétation"],
-      ["Infrarouge à ondes courtes (SWIR)", "~ 1.3 – 2.5 µm", "Sensible à l'humidité (végétation, sol) — cœur des indices d'humidité et de stress hydrique"],
+      ["Proche infrarouge (NIR)", "~ 0.7 – 1.3 µm", "Très réfléchi par la végétation en bonne santé ; cœur de la plupart des indices de végétation"],
+      ["Infrarouge à ondes courtes (SWIR)", "~ 1.3 – 2.5 µm", "Sensible à l'humidité (végétation, sol) ; cœur des indices d'humidité et de stress hydrique"],
       ["Infrarouge thermique", "~ 8 – 14 µm", "Température de surface, détection de foyers actifs, îlots de chaleur urbains"],
     ],
   },
@@ -67,17 +67,17 @@ export const teledetectionContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Résolution spatiale — taille au sol d'un pixel (ex. Sentinel-2 : 10 m en visible/NIR, 20 m sur certaines bandes SWIR)",
-      "Résolution spectrale — nombre et finesse des bandes mesurées (Sentinel-2 : 13 bandes, du visible au SWIR)",
-      "Résolution temporelle — fréquence de revisite du même endroit (Sentinel-2 : ~5 jours avec les deux satellites jumeaux)",
-      "Résolution radiométrique — nombre de niveaux d'intensité codés par pixel (Sentinel-2 : 12 bits, soit 4096 niveaux par bande)",
+      "Résolution spatiale : taille au sol d'un pixel (ex. Sentinel-2 : 10 m en visible/NIR, 20 m sur certaines bandes SWIR)",
+      "Résolution spectrale : nombre et finesse des bandes mesurées (Sentinel-2 : 13 bandes, du visible au SWIR)",
+      "Résolution temporelle : fréquence de revisite du même endroit (Sentinel-2 : ~5 jours avec les deux satellites jumeaux)",
+      "Résolution radiométrique : nombre de niveaux d'intensité codés par pixel (Sentinel-2 : 12 bits, soit 4096 niveaux par bande)",
     ],
   },
   {
     type: "callout",
     tone: "warning",
     title: "Un compromis, jamais un gratuit",
-    text: "Aucun satellite ne maximise les quatre résolutions à la fois — c'est un compromis physique et budgétaire. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) a une fauchée étroite et une revisite plus rare ; un capteur à revisite quotidienne (ex. MODIS) a une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
+    text: "Aucun satellite ne maximise les quatre résolutions à la fois : c'est un compromis physique et budgétaire. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) a une fauchée étroite et une revisite plus rare ; un capteur à revisite quotidienne (ex. MODIS) a une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
   },
 
   { type: "heading", text: "4. Les principales plateformes accessibles gratuitement" },

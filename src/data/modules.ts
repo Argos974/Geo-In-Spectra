@@ -25,15 +25,15 @@ export const modules: CourseModule[] = [
     navLabel: "Le Regard",
     summary: "Principes de l'observation satellite, capteurs, résolutions, plateformes.",
     topics: ["Rayonnement électromagnétique", "Capteurs optiques / radar", "Résolutions spatiale/spectrale/temporelle", "Missions Sentinel/Landsat"],
-    epigraph: "L'astronome de Vermeer observe à l'œil et au globe. Le satellite fait le même geste — regarder, mesurer la lumière — à 800 km d'altitude.",
+    epigraph: "L'astronome de Vermeer observe à l'œil et au globe. Le satellite fait le même geste : regarder, mesurer la lumière, à 800 km d'altitude.",
   },
   {
     slug: "indices-spectraux",
     title: "Du Langage des Couleurs",
     navLabel: "Les Couleurs",
     summary: "NDVI, NDMI, NDBI et autres indices dérivés des bandes satellite.",
-    topics: ["NDVI — végétation", "NDMI — humidité", "NDBI — bâti", "Interprétation et limites"],
-    epigraph: "Chaque constellation gravée par Cellarius est une lecture du ciel par la couleur et la forme — l'indice spectral fait de même avec les bandes du capteur.",
+    topics: ["NDVI : végétation", "NDMI : humidité", "NDBI : bâti", "Interprétation et limites"],
+    epigraph: "Chaque constellation gravée par Cellarius est une lecture du ciel par la couleur et la forme ; l'indice spectral fait de même avec les bandes du capteur.",
   },
   {
     slug: "outils-sig",
@@ -48,7 +48,7 @@ export const modules: CourseModule[] = [
     title: "Le Cabinet de l'Apprenti",
     navLabel: "L'Atelier",
     summary: "Exercices guidés, jeux de données réels, mini-projets.",
-    topics: ["TP 1 — cartographie de base", "TP 2 — calcul d'indice NDVI", "TP 3 — analyse spatiale", "Mini-projet final"],
+    topics: ["TP 1 : cartographie de base", "TP 2 : calcul d'indice NDVI", "TP 3 : analyse spatiale", "Mini-projet final"],
     epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
   },
 ]

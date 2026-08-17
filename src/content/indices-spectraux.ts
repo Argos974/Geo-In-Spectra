@@ -6,7 +6,7 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "Un indice spectral est une combinaison mathématique simple entre plusieurs bandes d'une image satellite, conçue pour faire ressortir un phénomène précis (végétation, humidité, bâti…) tout en atténuant les effets parasites (éclairage, ombre, type de sol). Le principe commun : opposer une bande où le phénomène réfléchit fortement à une bande où il réfléchit faiblement, puis normaliser le résultat entre -1 et 1.",
   },
 
-  { type: "heading", text: "1. NDVI — Normalized Difference Vegetation Index" },
+  { type: "heading", text: "1. NDVI : Normalized Difference Vegetation Index" },
   {
     type: "formula",
     label: "Formule du NDVI",
@@ -36,10 +36,10 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "Limite importante : la saturation",
-    text: "Au-delà d'une certaine densité de canopée (forêt dense, culture en pleine croissance), le NDVI sature — il n'augmente plus alors que la biomasse continue de croître. Pour ces cas, on utilise des indices dérivés comme le SAVI (Soil-Adjusted Vegetation Index) ou l'EVI (Enhanced Vegetation Index), qui corrigent partiellement cet effet.",
+    text: "Au-delà d'une certaine densité de canopée (forêt dense, culture en pleine croissance), le NDVI sature ; il n'augmente plus alors que la biomasse continue de croître. Pour ces cas, on utilise des indices dérivés comme le SAVI (Soil-Adjusted Vegetation Index) ou l'EVI (Enhanced Vegetation Index), qui corrigent partiellement cet effet.",
   },
 
-  { type: "heading", text: "2. NDMI — Normalized Difference Moisture Index" },
+  { type: "heading", text: "2. NDMI : Normalized Difference Moisture Index" },
   {
     type: "formula",
     label: "Formule du NDMI",
@@ -51,16 +51,16 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "L'eau contenue dans les tissus végétaux absorbe fortement le SWIR. Une végétation bien hydratée a donc un NDMI élevé ; une végétation en stress hydrique (sécheresse, précurseur de risque incendie) voit son NDMI chuter avant même que le changement soit visible à l'œil nu ou détectable par le NDVI seul. C'est un indicateur précoce très utilisé pour le suivi de sécheresse et l'évaluation de l'inflammabilité de la végétation.",
   },
 
-  { type: "heading", text: "3. NDBI — Normalized Difference Built-up Index" },
+  { type: "heading", text: "3. NDBI : Normalized Difference Built-up Index" },
   {
     type: "formula",
     label: "Formule du NDBI",
     formula: "NDBI = (SWIR − NIR) / (SWIR + NIR)",
-    note: "Symétrique du NDMI — les surfaces bâties réfléchissent davantage le SWIR que le NIR, contrairement à la végétation.",
+    note: "Symétrique du NDMI : les surfaces bâties réfléchissent davantage le SWIR que le NIR, contrairement à la végétation.",
   },
   {
     type: "paragraph",
-    text: "Utilisé pour cartographier l'étalement urbain, détecter les surfaces imperméabilisées, ou — combiné au NDVI — distinguer une zone bâtie d'un sol nu (les deux ont un NDVI faible, mais un NDBI les différencie).",
+    text: "Utilisé pour cartographier l'étalement urbain, détecter les surfaces imperméabilisées, ou, combiné au NDVI, distinguer une zone bâtie d'un sol nu (les deux ont un NDVI faible, mais un NDBI les différencie).",
   },
 
   { type: "heading", text: "4. Autres indices courants" },
@@ -78,16 +78,16 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Effets atmosphériques — nuages, brume, aérosols faussent la réflectance mesurée si l'image n'est pas correctement corrigée (niveau L2A pour Sentinel-2)",
-      "Résolution spatiale — un pixel de 10 m peut mélanger plusieurs types de couverture (effet de mélange spectral)",
-      "Angle de prise de vue et ombres portées — un même objet peut avoir une réflectance différente selon l'heure et la saison de l'acquisition",
-      "Saturation — voir NDVI ci-dessus, un phénomène général à haute densité de signal",
+      "Effets atmosphériques : nuages, brume, aérosols faussent la réflectance mesurée si l'image n'est pas correctement corrigée (niveau L2A pour Sentinel-2)",
+      "Résolution spatiale : un pixel de 10 m peut mélanger plusieurs types de couverture (effet de mélange spectral)",
+      "Angle de prise de vue et ombres portées : un même objet peut avoir une réflectance différente selon l'heure et la saison de l'acquisition",
+      "Saturation : voir NDVI ci-dessus, un phénomène général à haute densité de signal",
     ],
   },
   {
     type: "callout",
     tone: "example",
     title: "Exemple d'application concrète",
-    text: "Un projet de cartographie du risque incendie de forêt peut croiser NDMI (stress hydrique de la végétation), NDVI (densité de combustible), pente et exposition au vent pour produire un indice composite de comportement du feu — c'est exactement ce type de croisement multi-indices qui est mis en pratique dans le module Travaux pratiques.",
+    text: "Un projet de cartographie du risque incendie de forêt peut croiser NDMI (stress hydrique de la végétation), NDVI (densité de combustible), pente et exposition au vent pour produire un indice composite de comportement du feu. C'est exactement ce type de croisement multi-indices qui est mis en pratique dans le module Travaux pratiques.",
   },
 ]

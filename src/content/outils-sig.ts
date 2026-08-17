@@ -3,25 +3,25 @@ import type { ContentBlock } from "./types"
 export const outilsSigContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "Un SIG (Système d'Information Géographique) permet de stocker, visualiser, interroger et analyser des données géographiques. Ce module présente QGIS — le SIG open-source de référence, gratuit et multiplateforme — puis les grandes familles d'analyses spatiales qu'on retrouve dans tout logiciel SIG, avant d'introduire l'automatisation en Python.",
+    text: "Un SIG (Système d'Information Géographique) permet de stocker, visualiser, interroger et analyser des données géographiques. Ce module présente QGIS (le SIG open-source de référence, gratuit et multiplateforme), puis les grandes familles d'analyses spatiales qu'on retrouve dans tout logiciel SIG, avant d'introduire l'automatisation en Python.",
   },
 
   { type: "heading", text: "1. Prise en main de QGIS" },
   {
     type: "list",
     items: [
-      "Panneau des couches (Layers) — liste des données chargées, ordre d'affichage du haut vers le bas",
-      "Vue carte — navigation (zoom/pan), affichage selon le système de coordonnées du projet",
-      "Table attributaire — chaque entité géométrique (point/ligne/polygone) est une ligne, chaque colonne un attribut",
-      "Symbologie — un clic droit sur une couche > Propriétés > Symbologie permet de styliser selon un attribut (couleur par catégorie, dégradé par valeur…)",
-      "Boîte à outils de traitement (Processing Toolbox) — accès à des centaines d'algorithmes d'analyse prêts à l'emploi",
+      "Panneau des couches (Layers) : liste des données chargées, ordre d'affichage du haut vers le bas",
+      "Vue carte : navigation (zoom/pan), affichage selon le système de coordonnées du projet",
+      "Table attributaire : chaque entité géométrique (point/ligne/polygone) est une ligne, chaque colonne un attribut",
+      "Symbologie : un clic droit sur une couche > Propriétés > Symbologie permet de styliser selon un attribut (couleur par catégorie, dégradé par valeur…)",
+      "Boîte à outils de traitement (Processing Toolbox) : accès à des centaines d'algorithmes d'analyse prêts à l'emploi",
     ],
   },
   {
     type: "callout",
     tone: "info",
     title: "Système de coordonnées du projet",
-    text: "QGIS reprojette à la volée l'affichage des couches, mais tout calcul de distance/surface doit se faire dans un système de coordonnées projeté et métrique (voir module 1) — vérifier le CRS du projet (coin bas-droit de la fenêtre) avant tout calcul.",
+    text: "QGIS reprojette à la volée l'affichage des couches, mais tout calcul de distance/surface doit se faire dans un système de coordonnées projeté et métrique (voir module 1). Vérifier le CRS du projet (coin bas-droit de la fenêtre) avant tout calcul.",
   },
 
   { type: "heading", text: "2. Les grandes familles d'analyses spatiales" },
@@ -52,7 +52,7 @@ export const outilsSigContent: ContentBlock[] = [
     type: "formula",
     label: "Exemple d'expression QGIS",
     formula: "\"altitude\" > 500 AND \"pente\" > 15",
-    note: "Sélectionne les entités dont l'altitude dépasse 500 m ET la pente dépasse 15° — syntaxe du générateur d'expressions QGIS, proche du SQL.",
+    note: "Sélectionne les entités dont l'altitude dépasse 500 m ET la pente dépasse 15° : syntaxe du générateur d'expressions QGIS, proche du SQL.",
   },
 
   { type: "heading", text: "4. Automatisation avec Python" },
@@ -85,9 +85,9 @@ export const outilsSigContent: ContentBlock[] = [
   },
   {
     type: "formula",
-    label: "Exemple GeoPandas — calcul de surface",
+    label: "Exemple GeoPandas : calcul de surface",
     formula: "gdf['surface_ha'] = gdf.to_crs(epsg=2154).area / 10_000",
-    note: "Reprojection en Lambert-93 (EPSG:2154) avant calcul de surface — indispensable, voir la mise en garde du module 1 sur les coordonnées géographiques.",
+    note: "Reprojection en Lambert-93 (EPSG:2154) avant calcul de surface : indispensable, voir la mise en garde du module 1 sur les coordonnées géographiques.",
   },
   {
     type: "callout",

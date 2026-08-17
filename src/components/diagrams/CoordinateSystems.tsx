@@ -37,11 +37,11 @@ export function CoordinateSystems() {
       </defs>
 
       <g fontFamily="'IBM Plex Mono', monospace" fill="currentColor" stroke="none">
-        <text x="150" y="270" fontSize="11" textAnchor="middle" letterSpacing="1">GÉOGRAPHIQUES — WGS84</text>
+        <text x="150" y="270" fontSize="11" textAnchor="middle" letterSpacing="1">GÉOGRAPHIQUES · WGS84</text>
         <text x="90" y="95" fontSize="9.5">43.53° N</text>
         <text x="90" y="107" fontSize="9.5">5.45° E</text>
 
-        <text x="480" y="270" fontSize="11" textAnchor="middle" letterSpacing="1">PROJETÉES — LAMBERT-93</text>
+        <text x="480" y="270" fontSize="11" textAnchor="middle" letterSpacing="1">PROJETÉES · LAMBERT-93</text>
         <text x="450" y="122" fontSize="9.5">X 892 000</text>
         <text x="450" y="134" fontSize="9.5">Y 6 247 000</text>
 

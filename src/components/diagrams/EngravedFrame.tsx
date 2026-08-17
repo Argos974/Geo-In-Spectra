@@ -17,8 +17,8 @@ export function EngravedFrame({ children, caption, plate }: EngravedFrameProps) 
         <div className="text-gilt/80">{children}</div>
       </div>
       <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.15em] text-parchment-dim">
-        <span className="text-gilt">Planche {plate}</span>
-        {caption ? <> — {caption}</> : null}
+        <span className="text-gilt">Planche {plate}.</span>
+        {caption ? <> {caption}</> : null}
       </figcaption>
     </figure>
   )

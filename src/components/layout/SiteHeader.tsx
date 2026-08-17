@@ -24,6 +24,15 @@ export function SiteHeader() {
               {m.navLabel}
             </Link>
           ))}
+          <Link
+            to="/glossaire"
+            className={cn(
+              "pl-4 border-l border-gilt/20 transition-colors hover:text-gilt",
+              location.pathname === "/glossaire" && "text-gilt",
+            )}
+          >
+            Glossaire
+          </Link>
         </div>
       </nav>
     </header>

@@ -93,4 +93,7 @@ body {
   figure, table, .avoid-break {
     break-inside: avoid;
   }
+  .print-cover, .print-toc {
+    break-after: page;
+  }
 }
