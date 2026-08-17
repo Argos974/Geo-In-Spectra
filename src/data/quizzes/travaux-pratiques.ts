@@ -1,0 +1,48 @@
+import type { QuizQuestion } from "./types"
+
+export const travauxPratiquesQuiz: QuizQuestion[] = [
+  {
+    question: "Dans la calculatrice raster QGIS, quelle expression calcule le NDVI à partir de B04 (rouge) et B08 (NIR) ?",
+    choices: [
+      "(\"B04@1\" - \"B08@1\") / (\"B04@1\" + \"B08@1\")",
+      "(\"B08@1\" - \"B04@1\") / (\"B08@1\" + \"B04@1\")",
+      "\"B08@1\" / \"B04@1\"",
+      "(\"B08@1\" + \"B04@1\") / 2",
+    ],
+    correctIndex: 1,
+    explanation: "NDVI = (NIR − Rouge) / (NIR + Rouge), soit (B08 − B04) / (B08 + B04) sur Sentinel-2.",
+  },
+  {
+    question: "Pourquoi télécharger une image Sentinel-2 de niveau L2A plutôt que L1C pour calculer un indice ?",
+    choices: [
+      "L2A est gratuite, L1C est payante",
+      "L2A est déjà corrigée des effets atmosphériques",
+      "L1C n'a pas de bande NIR",
+      "Il n'y a aucune différence pour le calcul d'indice",
+    ],
+    correctIndex: 1,
+    explanation: "Le niveau L2A applique une correction atmosphérique, indispensable pour que la réflectance mesurée (et donc l'indice calculé) soit comparable d'une image à l'autre.",
+  },
+  {
+    question: "Dans le TP buffer + intersection, pourquoi créer d'abord un tampon autour des cours d'eau ?",
+    choices: [
+      "Pour améliorer l'affichage cartographique uniquement",
+      "Pour matérialiser la bande réglementaire avant de croiser avec les parcelles",
+      "Parce que QGIS l'exige avant toute intersection",
+      "Pour convertir les cours d'eau en raster",
+    ],
+    correctIndex: 1,
+    explanation: "Le buffer transforme la ligne du cours d'eau en une zone (ex. 200 m, bande réglementaire), qu'on peut ensuite intersecter avec les parcelles pour savoir lesquelles sont concernées.",
+  },
+  {
+    question: "Le mini-projet final doit combiner au minimum :",
+    choices: [
+      "Une donnée vecteur seule",
+      "Une donnée vecteur, une donnée raster ou indice calculé, et au moins une analyse spatiale",
+      "Uniquement des captures d'écran de QGIS",
+      "Cinq couches vecteur différentes sans analyse",
+    ],
+    correctIndex: 1,
+    explanation: "L'énoncé demande explicitement de croiser au moins une donnée vecteur, une donnée raster (ou un indice calculé), et une analyse spatiale (buffer, intersection ou jointure).",
+  },
+]

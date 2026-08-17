@@ -39,6 +39,7 @@ export function GlossaryPage() {
                     <div key={t.term} className="border-l-2 border-gilt/20 pl-4">
                       <dt className="font-heading text-lg">{t.term}</dt>
                       <dd className="text-parchment-dim mt-1">{t.definition}</dd>
+                      <dd className="font-mono text-[10.5px] text-parchment-dim/60 mt-1.5">{t.source}</dd>
                       {mod && (
                         <Link
                           to={`/module/${mod.slug}`}

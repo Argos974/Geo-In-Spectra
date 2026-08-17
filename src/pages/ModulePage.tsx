@@ -2,11 +2,12 @@ import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
+import { quizzes } from "@/data/quizzes"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI"]
 
 export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()
@@ -28,7 +29,9 @@ export function ModulePage() {
   const next = modules[index + 1]
   const numeral = ROOM_NUMERALS[index] ?? String(index + 1)
   const order = String(index + 1).padStart(2, "0")
-  const pdfName = `${order}-${module.slug}-cours.pdf`
+  const coursName = `${order}-${module.slug}-cours.pdf`
+  const ficheName = `${order}-${module.slug}-fiche-memo.pdf`
+  const hasQuiz = Boolean(quizzes[module.slug])
 
   return (
     <div className="print-page min-h-screen bg-ink text-parchment">
@@ -50,13 +53,30 @@ export function ModulePage() {
       <div className="mx-auto max-w-3xl px-6 pt-16 pb-24">
         <p className="text-parchment-dim text-lg mb-6">{module.summary}</p>
 
-        <a
-          href={`/pdf/${module.slug}/${pdfName}`}
-          download={pdfName}
-          className="print:hidden inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 mb-10 hover:bg-gilt/10 transition-colors"
-        >
-          ↓ Télécharger cette salle en PDF
-        </a>
+        <div className="print:hidden flex flex-wrap items-center gap-3 mb-10">
+          <a
+            href={`/pdf/${module.slug}/${coursName}`}
+            download={coursName}
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+          >
+            ↓ Télécharger le cours (PDF)
+          </a>
+          <a
+            href={`/pdf/${module.slug}/${ficheName}`}
+            download={ficheName}
+            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lapis border border-lapis/40 px-4 py-2 hover:bg-lapis/10 transition-colors"
+          >
+            ↓ Télécharger la fiche mémo (PDF)
+          </a>
+          {hasQuiz && (
+            <Link
+              to={`/module/${module.slug}/quiz`}
+              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-4 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
+            >
+              Faire le quiz →
+            </Link>
+          )}
+        </div>
 
         {blocks && <RoomIndex blocks={blocks} />}
 

@@ -2,10 +2,11 @@
 
 Site pédagogique de géomatique et télédétection, pensé comme une galerie : chaque
 salle (module) est illustrée par une œuvre réelle du domaine public (Vermeer,
-Cellarius, Raphaël, Ortelius) choisie pour son lien avec le sujet enseigné, pas pour
-décorer. Le fond de chaque salle est l'œuvre elle-même en plein cadre ; les planches
-diagrammatiques (SVG gravées à la main) illustrent les concepts sans jamais casser
-l'identité visuelle.
+Cellarius, Raphaël, Ortelius, Francken) choisie pour son lien avec le sujet
+enseigné, pas pour décorer. Le fond de chaque salle est l'œuvre elle-même en plein
+cadre ; les planches diagrammatiques (SVG gravées à la main) illustrent les concepts
+sans jamais casser l'identité visuelle. Chaque salle propose aussi un quiz noté, un
+cours et une fiche mémo téléchargeables en PDF.
 
 ## Stack
 
@@ -18,7 +19,8 @@ l'identité visuelle.
 ## Identité visuelle
 
 - **Palette** : `ink` / `canvas` (fonds sombres), `parchment` (texte), `gilt` /
-  `gilt-bright` (or, accent principal), `lapis`, `oxblood` (accents secondaires).
+  `gilt-bright` (or, accent principal), `lapis`, `oxblood` (accents secondaires,
+  aussi utilisés pour les repères de niveau — voir « Niveaux » ci-dessous).
   Définie dans `tailwind.config.js`.
 - **Typographie** : Cinzel (titres, façon plaque gravée), EB Garamond (texte
   courant), IBM Plex Mono (cartels, données, libellés).
@@ -30,11 +32,12 @@ l'identité visuelle.
 
 ```bash
 npm install
-npm run dev           # serveur de dev
-npm run build          # build production (dist/)
-npm run test            # vitest
-npm run lint             # eslint
-npm run pdf:generate      # exporte les PDF de cours, voir ci-dessous
+npm run dev                 # serveur de dev
+npm run build                # build production (dist/)
+npm run test                  # vitest
+npm run lint                   # eslint
+npm run pdf:generate             # exporte les PDF de cours, voir "Export PDF"
+npm run pdf:generate:fiches       # exporte les fiches mémo PDF
 ```
 
 ## Structure
@@ -47,41 +50,58 @@ src/
       RoomIndex.tsx          # "Plan de la salle" : table cliquable, scroll fluide vers la partie
     diagrams/
       registry.ts             # nom -> composant SVG + numéro de planche
-      *.tsx                     # une planche gravée par concept (spectre EM, NDVI, opérations spatiales…)
+      *.tsx                     # une planche gravée par concept
     gallery/
       ArtworkBackdrop.tsx     # œuvre en fond plein cadre (accueil, en-tête de module)
       GalleryFrame.tsx          # œuvre encadrée + cartel (page de garde des PDF)
     layout/                     # header, footer, grain de toile
   content/
-    *.ts                          # contenu réel de chaque salle, un fichier par module
-    types.ts                       # ContentBlock (paragraph, formula, callout, table, diagram…)
+    *.ts                          # cours complet de chaque salle, un fichier par module
+    fiches/*.ts                     # version condensée (fiche mémo) de chaque salle
+    types.ts                         # ContentBlock (paragraph, formula, callout, table, diagram…)
+                                       # heading accepte un `level` (voir "Niveaux")
   data/
-    modules.ts                     # 5 salles : slug, titre, résumé, thèmes, épigraphe
+    modules.ts                     # 6 salles : slug, titre, résumé, thèmes, épigraphe
     artworks.ts                     # œuvre associée à chaque salle (+ crédits)
-    glossary.ts                      # termes techniques, un renvoi vers la salle qui les introduit
+    glossary.ts                      # termes techniques, source universitaire, renvoi vers la salle
+    quizzes/*.ts                      # questions à choix multiple par salle
   pages/
     Home.tsx                         # frontispice + salles en fond plein cadre
-    ModulePage.tsx                     # page web d'une salle
-    PrintCourse.tsx                     # mise en page dédiée à l'export PDF (route /print/module/:slug)
-    GlossaryPage.tsx                     # /glossaire
-    LegalPage.tsx                          # /mentions-legales
-  RootRouter.tsx                            # routes + masque header/footer/grain sur /print/*
+    ModulePage.tsx                     # page web d'une salle (cours, PDF, fiche PDF, quiz)
+    QuizPage.tsx                        # /module/:slug/quiz
+    EpsgGamePage.tsx                     # /jeu/epsg
+    PrintCourse.tsx                       # mise en page dédiée à l'export PDF du cours
+    PrintFiche.tsx                         # mise en page dédiée à l'export PDF de la fiche mémo
+    GlossaryPage.tsx                        # /glossaire
+    LegalPage.tsx                            # /mentions-legales
+  RootRouter.tsx                              # routes + masque header/footer/grain sur /print/*
 scripts/
-  generate-course-pdfs.mjs                   # voir "Export PDF" ci-dessous
+  lib/pdfServer.mjs                            # build + serve + kill, partagé par les deux scripts PDF
+  generate-course-pdfs.mjs                      # voir "Export PDF"
+  generate-fiche-pdfs.mjs                        # idem, pour les fiches mémo
 public/
-  pdf/<slug>/<NN>-<slug>-cours.pdf              # PDF générés (regroupés par salle)
-  images/gallery/                                # les 6 œuvres (domaine public, Wikimedia Commons)
+  pdf/<slug>/<NN>-<slug>-<type>.pdf                # PDF générés (regroupés par salle)
+  images/gallery/                                   # les 7 œuvres (domaine public, Wikimedia Commons)
 ```
 
 ## Ajouter une salle (module)
 
 1. Ajouter une entrée dans `src/data/modules.ts` (slug, titre, navLabel, résumé, thèmes, épigraphe).
 2. Ajouter l'œuvre associée dans `src/data/artworks.ts` (même clé que le slug).
-3. Créer `src/content/<slug>.ts` (tableau de `ContentBlock`) et le référencer dans `src/content/index.ts`.
-4. `npm run pdf:generate -- <slug>` pour générer son PDF.
+3. Créer `src/content/<slug>.ts` (cours complet) et `src/content/fiches/<slug>.ts` (fiche condensée), référencer les deux dans leurs `index.ts` respectifs.
+4. Optionnel : `src/data/quizzes/<slug>.ts` (référencé dans `quizzes/index.ts`) — sans lui, le bouton « Faire le quiz » n'apparaît simplement pas sur la page.
+5. `npm run pdf:generate -- <slug>` et `npm run pdf:generate:fiches -- <slug>` pour générer ses PDF.
 
-Nav, page web et export PDF se branchent automatiquement sur ces données ; aucun
-autre fichier à modifier pour une salle qui suit le même schéma que les cinq déjà en ligne.
+Nav, page web et export PDF se branchent automatiquement sur ces données.
+
+## Niveaux
+
+Un bloc `heading` peut porter un `level` (`college-lycee`, `superieur`,
+`approfondissement`), affiché comme un repère coloré au-dessus du titre
+(`ContentBlocks.tsx`). Objectif : une même salle peut mélanger une explication
+accessible dès le collège/lycée et un approfondissement de niveau supérieur, sans
+dupliquer le contenu en plusieurs pages — le lecteur choisit jusqu'où descendre. Voir
+`src/content/traitements-ia.ts` pour un exemple complet (10 sections, 3 niveaux).
 
 ## Diagrammes
 
@@ -93,32 +113,36 @@ pas des fichiers image : elles sont dessinées au chargement, rien à stocker da
 
 ## Export PDF
 
-`npm run pdf:generate` régénère les 5 salles ; `npm run pdf:generate -- fondamentaux`
-n'en régénère qu'une (ou plusieurs, séparées par des espaces) — utile pour ne pas
-tout reconstruire après une petite modification d'une seule salle.
+Deux scripts, même pipeline partagé (`scripts/lib/pdfServer.mjs`) : build le site,
+sert `dist/` en local, imprime via Chromium headless (Playwright), avec en-tête/pied
+de page générés par Playwright lui-même (`displayHeaderFooter`, numérotation des
+pages) — jamais une capture de la page web : `PrintCourse.tsx`/`PrintFiche.tsx` sont
+des mises en page dédiées (`/print/module/:slug`, `/print/fiche/:slug`), sans aucun
+élément d'interface web (`RootRouter.tsx` masque header/footer/grain sur ces routes).
 
-Le PDF **n'est pas** une capture de la page web : `src/pages/PrintCourse.tsx` est une
-mise en page dédiée (page de garde, sommaire, contenu), rendue sur la route
-`/print/module/:slug` sans aucun élément d'interface web (`RootRouter.tsx` masque
-header/footer/grain sur ces routes). Le script build le site, sert `dist/`, imprime
-chaque salle via Chromium headless (Playwright) avec en-tête/pied de page générés
-par Playwright lui-même (`displayHeaderFooter`, numérotation des pages), puis dépose
-le résultat dans `public/pdf/<slug>/`.
+```bash
+npm run pdf:generate                          # les 6 cours
+npm run pdf:generate -- fondamentaux           # un seul cours
+npm run pdf:generate:fiches                     # les 6 fiches mémo
+npm run pdf:generate:fiches -- fondamentaux      # une seule fiche
+```
 
-**Nommage** : `<NN>-<slug>-cours.pdf` (ex. `01-fondamentaux-cours.pdf`) — le numéro
-d'ordre et le type de document (`cours` pour l'instant) permettent de s'y retrouver
-une fois que fiches mémo et quiz PDF viendront s'ajouter au même endroit, avec la
-même convention (`01-fondamentaux-fiche-memo.pdf`, `01-fondamentaux-quiz.pdf`, `01-fondamentaux-quiz-corrige.pdf`).
+**Nommage** : `<NN>-<slug>-<type>.pdf` (ex. `01-fondamentaux-cours.pdf`,
+`01-fondamentaux-fiche-memo.pdf`) — le numéro d'ordre et le type de document
+permettent de s'y retrouver une fois plusieurs PDF téléchargés dans le même dossier
+de téléchargements. `<type>` vaut `cours` ou `fiche-memo` aujourd'hui ; `quiz` et
+`quiz-corrige` suivront la même convention le jour où ils existeront en PDF.
 
 ## Feuille de route
 
 Un état des lieux pédagogique complet (critique du site, programme en sept axes,
-exemples d'exercices, quiz, jeux, bibliographie, ordre de priorité proposé) a été
-produit comme document de travail séparé plutôt que versionné ici. Premier chantier
-déjà en ligne : le glossaire transversal (`/glossaire`). Restent, dans l'ordre
-proposé : quiz interactif par salle, fiches mémo PDF, méthodologie académique
-(commentaire de carte, dissertation, concours), histoire et fondements de la
-géographie, un premier jeu pédagogique, puis l'étoffement des salles existantes.
+bibliographie) a été produit comme document de travail séparé plutôt que versionné
+ici. Déjà en ligne depuis : glossaire transversal (avec sources), quiz interactif
+par salle, fiches mémo PDF, un premier jeu pédagogique (Chasse aux EPSG), une
+sixième salle (indices composés/complexes, filtres, classification, deep learning,
+IA) avec repères de niveau collège/lycée → supérieur → approfondissement. Restent :
+méthodologie académique (commentaire de carte, dissertation, concours), histoire et
+fondements de la géographie, étoffement des axes B/C/D/E du programme complet.
 
 ## Déploiement
 

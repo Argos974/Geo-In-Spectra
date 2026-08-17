@@ -6,7 +6,7 @@ import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { GalleryFrame } from "@/components/gallery/GalleryFrame"
 import type { ContentBlock } from "@/content/types"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI"]
 
 /**
  * Mise en page dédiée à l'export PDF — pas la page web avec le chrome masqué :

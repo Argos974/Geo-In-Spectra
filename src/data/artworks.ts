@@ -54,4 +54,11 @@ export const artworks: Record<string, Artwork> = {
     title: "Typus Orbis Terrarum",
     year: "1570",
   },
+  "traitements-ia": {
+    src: "/images/gallery/traitements-ia-francken-kunstkammer.jpg",
+    alt: "Cabinet de curiosités de Frans Francken le Jeune, un mur et une table couverts de tableaux, coquillages, sculptures et médailles classés et rangés",
+    artist: "Frans Francken le Jeune",
+    title: "Kunst- und Raritätenkammer",
+    year: "1636",
+  },
 }

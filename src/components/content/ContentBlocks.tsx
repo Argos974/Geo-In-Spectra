@@ -15,6 +15,18 @@ const calloutLabel: Record<NonNullable<Extract<ContentBlock, { type: "callout" }
   example: "Exemple",
 }
 
+const levelLabel: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
+  "college-lycee": "Collège / lycée",
+  superieur: "Supérieur",
+  approfondissement: "Approfondissement",
+}
+
+const levelStyle: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
+  "college-lycee": "border-lapis/50 text-lapis",
+  superieur: "border-gilt/50 text-gilt",
+  approfondissement: "border-oxblood/50 text-oxblood",
+}
+
 export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
   return (
     <div className="space-y-6">
@@ -22,13 +34,14 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
         switch (block.type) {
           case "heading":
             return (
-              <h2
-                key={i}
-                id={slugify(block.text)}
-                className="font-heading text-2xl md:text-3xl pt-8 first:pt-0 scroll-mt-28"
-              >
-                {block.text}
-              </h2>
+              <div key={i} id={slugify(block.text)} className="pt-8 first:pt-0 scroll-mt-28">
+                {block.level && (
+                  <span className={cn("inline-block mb-2 font-mono text-[10px] uppercase tracking-wider border px-2 py-0.5", levelStyle[block.level])}>
+                    {levelLabel[block.level]}
+                  </span>
+                )}
+                <h2 className="font-heading text-2xl md:text-3xl">{block.text}</h2>
+              </div>
             )
 
           case "diagram":

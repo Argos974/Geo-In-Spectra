@@ -51,4 +51,12 @@ export const modules: CourseModule[] = [
     topics: ["TP 1 : cartographie de base", "TP 2 : calcul d'indice NDVI", "TP 3 : analyse spatiale", "Mini-projet final"],
     epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
   },
+  {
+    slug: "traitements-ia",
+    title: "De la Machine qui Apprend",
+    navLabel: "L'Intelligence",
+    summary: "Indices composés, filtres à noyau, classification, deep learning : la place de l'IA en géomatique et télédétection.",
+    topics: ["Indices composés et complexes", "Filtres kernel et passe-haut", "Classification supervisée / non supervisée", "Deep learning et IA"],
+    epigraph: "Comme le cabinet de curiosités range chaque coquillage, chaque tableau, chaque médaille dans une catégorie pour le comprendre, l'algorithme range chaque pixel dans une classe pour lire le paysage.",
+  },
 ]

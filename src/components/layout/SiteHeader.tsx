@@ -33,6 +33,15 @@ export function SiteHeader() {
           >
             Glossaire
           </Link>
+          <Link
+            to="/jeu/epsg"
+            className={cn(
+              "transition-colors hover:text-gilt",
+              location.pathname === "/jeu/epsg" && "text-gilt",
+            )}
+          >
+            Jeu
+          </Link>
         </div>
       </nav>
     </header>

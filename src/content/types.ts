@@ -1,7 +1,10 @@
 import type { DiagramName } from "@/components/diagrams"
 
+/** Repère de niveau affiché à côté d'un titre — organise une même salle pour plusieurs publics. */
+export type ContentLevel = "college-lycee" | "superieur" | "approfondissement"
+
 export type ContentBlock =
-  | { type: "heading"; text: string }
+  | { type: "heading"; text: string; level?: ContentLevel }
   | { type: "paragraph"; text: string }
   | { type: "list"; items: string[]; ordered?: boolean }
   | { type: "formula"; label: string; formula: string; note?: string }

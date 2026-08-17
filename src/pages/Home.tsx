@@ -8,7 +8,7 @@ import { artworks } from "@/data/artworks"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI"]
 
 export function Home() {
   const roomsRef = useRef<HTMLDivElement>(null)

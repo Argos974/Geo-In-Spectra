@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "pdf:generate": "node scripts/generate-course-pdfs.mjs"
+    "pdf:generate": "node scripts/generate-course-pdfs.mjs",
+    "pdf:generate:fiches": "node scripts/generate-fiche-pdfs.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
