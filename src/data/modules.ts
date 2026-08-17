@@ -52,19 +52,19 @@ export const modules: CourseModule[] = [
     epigraph: "Comme le cabinet de curiosités range chaque coquillage, chaque tableau, chaque médaille dans une catégorie pour le comprendre, l'algorithme range chaque pixel dans une classe pour lire le paysage.",
   },
   {
-    slug: "travaux-pratiques",
-    title: "Le Cabinet de l'Apprenti",
-    navLabel: "L'Atelier",
-    summary: "Séances pratiques complètes, chacune une séance autonome : géoréférencement, indices, analyse spatiale, programmation.",
-    topics: ["Géoréférencement par grille", "NDVI, indices par cellule, composition complexe", "Analyse spatiale", "Programmation géospatiale"],
-    epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
-  },
-  {
     slug: "methodologie",
     title: "De l'Ordre des Idées",
     navLabel: "La Méthode",
     summary: "Commentaire de document, dissertation, rapport technique, concours : mobiliser le cours à l'écrit.",
     topics: ["Commentaire de carte", "Dissertation de géographie", "Rapport technique SIG", "Concours CAPES/Agrégation"],
     epigraph: "Le philosophe de Rembrandt médite dans l'ombre d'un escalier qui monte en spirale : la méthode, en géographie comme ailleurs, est cet escalier qui structure la pensée avant qu'elle ne s'exprime.",
+  },
+  {
+    slug: "travaux-pratiques",
+    title: "Le Cabinet de l'Apprenti",
+    navLabel: "L'Atelier",
+    summary: "Séances pratiques complètes, chacune une séance autonome : géoréférencement, indices, analyse spatiale, programmation.",
+    topics: ["Géoréférencement par grille", "NDVI, indices par cellule, composition complexe", "Analyse spatiale", "Programmation géospatiale"],
+    epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
   },
 ]

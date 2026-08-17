@@ -32,7 +32,7 @@ export function PrintCourse() {
       {/* Page de garde */}
       <section className="print-cover min-h-screen flex flex-col justify-center items-center text-center px-16 py-24">
         <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-[#8a6a2f] mb-10">
-          Geo-Ind-Spectra · Salle {numeral}
+          Geo-In-Spectra · Salle {numeral}
         </p>
         <h1 className="font-heading text-5xl mb-8 max-w-2xl">{module.title}</h1>
         <p className="font-body italic text-[#5c5140] max-w-lg mb-12 leading-relaxed">{module.epigraph}</p>

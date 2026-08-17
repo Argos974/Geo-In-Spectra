@@ -1,4 +1,4 @@
-# Geo-Ind-Spectra
+# Geo-In-Spectra
 
 Site pédagogique de géomatique et télédétection, pensé comme une galerie : chaque
 salle (module) est illustrée par une œuvre réelle du domaine public (Vermeer,
@@ -145,10 +145,13 @@ de téléchargements. `<type>` vaut `cours` ou `fiche-memo` aujourd'hui ; `quiz`
 
 Un état des lieux pédagogique complet (critique du site, programme en sept axes,
 bibliographie) a été produit comme document de travail séparé plutôt que versionné
-ici. Sept salles en ligne aujourd'hui : Fondements, Le Regard, Les Couleurs, Le
-Compas, L'Atelier, L'Intelligence (indices composés/complexes, filtres,
-classification, deep learning, IA) et La Méthode (commentaire de document,
-dissertation, rapport technique, concours). Fondements intègre aussi l'histoire de
+ici. Sept salles en ligne aujourd'hui, dans cet ordre : Fondements, Le Regard, Les
+Couleurs, Le Compas, L'Intelligence (indices composés/complexes, filtres,
+classification, deep learning, IA), La Méthode (commentaire de document,
+dissertation, rapport technique, concours) et L'Atelier, en clôture, six séances
+pratiques autonomes qui réutilisent les compétences des salles précédentes
+(géoréférencement par grille, NDVI/statistiques zonales/ΔNDVI, buffer/intersection,
+programmation Python, étude de cas). Fondements intègre aussi l'histoire de
 la cartographie, la lecture de carte, le débat Mercator/Peters et les codes
 géographiques (EPSG, INSEE/COG, NUTS, cadastre) — regroupés là plutôt qu'en salle
 séparée. Glossaire (avec sources et recherche), page Références (bibliographie par

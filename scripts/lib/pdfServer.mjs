@@ -20,8 +20,8 @@ export const ALL_SLUGS = [
   "indices-spectraux",
   "outils-sig",
   "traitements-ia",
-  "travaux-pratiques",
   "methodologie",
+  "travaux-pratiques",
 ]
 
 export function resolveRequestedSlugs() {

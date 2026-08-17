@@ -23,7 +23,7 @@ export function PrintFiche() {
   return (
     <div className="bg-[#f3ecdd] text-[#2b2116] font-body px-16 py-20 max-w-3xl mx-auto">
       <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#8a6a2f] mb-4">
-        Geo-Ind-Spectra · Fiche mémo · Salle {numeral}
+        Geo-In-Spectra · Fiche mémo · Salle {numeral}
       </p>
       <h1 className="font-heading text-3xl mb-2">{module.title}</h1>
       <p className="text-[#5c5140] mb-10">{module.summary}</p>
