@@ -83,6 +83,27 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "Un buffer de \"200\" appliqué sur une couche en EPSG:4326 (degrés) produira une zone tampon de 200 degrés, pas 200 mètres. Toujours vérifier que la couche est en système projeté métrique avant de créer un buffer en mètres.",
   },
 
+  { type: "heading", text: "TP 4 : Étude de cas, applications thématiques", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Les trois TP précédents traitent chacun une seule compétence isolée. Un vrai projet de terrain les combine toutes, au service d'une question concrète. Quatre familles d'applications reviennent le plus souvent :",
+  },
+  {
+    type: "list",
+    items: [
+      "Risques naturels : croiser indices d'humidité/de végétation, pente et vent pour cartographier un risque incendie (voir le module Traitements & IA pour un exemple réel d'indice composite de comportement du feu)",
+      "Agriculture de précision : suivi du NDVI d'une parcelle dans le temps pour cibler l'irrigation ou détecter un stress hydrique précoce",
+      "Urbanisme : NDBI et séries temporelles pour mesurer l'étalement urbain d'une commune sur dix ans",
+      "Climat et environnement : détection de changement (déforestation, recul d'un glacier) par comparaison de deux dates",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Étude de cas guidée",
+    text: "Choisir l'une des quatre familles ci-dessus sur un territoire connu. Lister les couches nécessaires (vecteur, raster, indice), la ou les analyses spatiales à mener, et rédiger en 10 lignes la méthode envisagée avant de l'exécuter dans QGIS — l'exercice méthodologique de cadrage compte autant que le résultat cartographique final.",
+  },
+
   { type: "heading", text: "Mini-projet final" },
   {
     type: "paragraph",

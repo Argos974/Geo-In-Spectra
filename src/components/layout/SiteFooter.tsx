@@ -7,7 +7,6 @@ export function SiteFooter() {
         <span>Géomatique &amp; Télédétection · galerie pédagogique</span>
         <div className="flex items-center gap-6">
           <Link to="/mentions-legales" className="hover:text-gilt transition-colors">Mentions légales</Link>
-          <span>EPSG:2154 · Lambert-93</span>
         </div>
       </div>
     </footer>

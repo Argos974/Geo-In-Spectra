@@ -47,7 +47,7 @@ module.exports = {
           DEFAULT: "#b8934f",
           bright: "#d9b46a",
         },
-        lapis: "#3c5a8f",
+        lapis: "#3f5066",
         oxblood: "#7a2f24",
       },
       fontFamily: {

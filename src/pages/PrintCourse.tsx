@@ -6,13 +6,15 @@ import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { GalleryFrame } from "@/components/gallery/GalleryFrame"
 import type { ContentBlock } from "@/content/types"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
 
 /**
  * Mise en page dédiée à l'export PDF — pas la page web avec le chrome masqué :
  * une page de garde, un sommaire statique, puis le contenu. Rendue par
  * scripts/generate-course-pdfs.mjs, jamais visitée par un humain dans le
- * navigateur (aucun lien du site n'y mène).
+ * navigateur (aucun lien du site n'y mène). Thème papier clair, volontairement
+ * différent du site (fond sombre) : un support de cours formel destiné à être
+ * imprimé ou lu à l'écran comme un document, pas comme une page web.
  */
 export function PrintCourse() {
   const { slug } = useParams<{ slug: string }>()
@@ -26,14 +28,14 @@ export function PrintCourse() {
   const headings = blocks.filter((b): b is Extract<ContentBlock, { type: "heading" }> => b.type === "heading")
 
   return (
-    <div className="bg-ink text-parchment font-body">
+    <div className="bg-[#f3ecdd] text-[#2b2116] font-body">
       {/* Page de garde */}
       <section className="print-cover min-h-screen flex flex-col justify-center items-center text-center px-16 py-24">
-        <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-gilt mb-10">
+        <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-[#8a6a2f] mb-10">
           Geo-Ind-Spectra · Salle {numeral}
         </p>
         <h1 className="font-heading text-5xl mb-8 max-w-2xl">{module.title}</h1>
-        <p className="font-body italic text-parchment-dim max-w-lg mb-12 leading-relaxed">{module.epigraph}</p>
+        <p className="font-body italic text-[#5c5140] max-w-lg mb-12 leading-relaxed">{module.epigraph}</p>
 
         {art && (
           <GalleryFrame
@@ -45,19 +47,20 @@ export function PrintCourse() {
             figure={numeral}
             className="max-w-sm mx-auto"
             priority
+            variant="print"
           />
         )}
 
-        <p className="text-parchment-dim max-w-lg mt-12 leading-relaxed">{module.summary}</p>
+        <p className="text-[#5c5140] max-w-lg mt-12 leading-relaxed">{module.summary}</p>
       </section>
 
       {/* Sommaire */}
       {headings.length > 0 && (
         <section className="print-toc min-h-screen px-16 py-24">
-          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-gilt mb-8">Sommaire</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#8a6a2f] mb-8">Sommaire</p>
           <ol className="space-y-4">
             {headings.map((h) => (
-              <li key={h.text} className="font-heading text-xl border-b border-gilt/15 pb-4">
+              <li key={h.text} className="font-heading text-xl border-b border-[#8a6a2f]/20 pb-4">
                 {h.text}
               </li>
             ))}
@@ -67,7 +70,7 @@ export function PrintCourse() {
 
       {/* Contenu */}
       <section className="px-16 py-24 max-w-3xl mx-auto">
-        <ContentBlocks blocks={blocks} />
+        <ContentBlocks blocks={blocks} variant="print" />
       </section>
     </div>
   )

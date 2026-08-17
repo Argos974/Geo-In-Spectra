@@ -112,7 +112,7 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "Une zone forestière peut être représentée en vecteur (un polygone \"forêt\" avec un attribut essence dominante) ou en raster (un indice de végétation calculé pixel par pixel depuis une image satellite). Le choix dépend de la précision recherchée et de la source de donnée disponible : c'est un fil conducteur qu'on retrouvera dans le module Télédétection.",
   },
 
-  { type: "heading", text: "5. Formats de données courants" },
+  { type: "heading", text: "5. Formats de données courants", level: "college-lycee" },
   {
     type: "table",
     headers: ["Format", "Type", "Points clés"],
@@ -122,6 +122,99 @@ export const fondamentauxContent: ContentBlock[] = [
       ["GeoPackage (.gpkg)", "Vecteur (+ raster)", "Fichier unique type base de données, remplace progressivement le Shapefile"],
       ["GeoTIFF (.tif)", "Raster", "Image géoréférencée, standard pour l'imagerie satellite et les MNT"],
     ],
+  },
+
+  { type: "heading", text: "6. D'autres formats, pour des besoins précis", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Au-delà des quatre formats du cœur du métier, chaque besoin a fait émerger son propre format, aujourd'hui incontournable dans un contexte précis :",
+  },
+  {
+    type: "table",
+    headers: ["Format", "Type", "Usage typique"],
+    rows: [
+      ["KML / KMZ", "Vecteur", "Format ouvert par Google Earth, très lisible, pédagogique"],
+      ["WMS (Web Map Service)", "Service raster", "Diffuse une carte déjà stylisée en tant qu'image (pas de données brutes)"],
+      ["WFS (Web Feature Service)", "Service vecteur", "Diffuse les entités géographiques elles-mêmes, interrogeables"],
+      ["CSV avec coordonnées", "Tabulaire", "Le format le plus simple pour un relevé de terrain (colonnes X/Y ou lat/lon)"],
+      ["NetCDF", "Raster multidimensionnel", "Données climatiques/océaniques avec une dimension temporelle en plus de l'espace"],
+      ["LAS / LAZ", "Nuage de points", "Données LiDAR : des millions de points 3D, LAZ = LAS compressé"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "WMS vs WFS : la différence qui piège le plus souvent",
+    text: "Un flux WMS renvoie une image déjà mise en forme (impossible d'en changer la couleur ou de récupérer les attributs). Un flux WFS renvoie les géométries et leurs attributs bruts, modifiables et interrogeables dans un SIG. Confondre les deux est une source fréquente de blocage en début de projet web-cartographique.",
+  },
+
+  { type: "heading", text: "7. Codes et identifiants géographiques", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Le code EPSG identifie un système de coordonnées (section 3), mais ce n'est qu'un type de code parmi d'autres utilisés en géographie pour désigner un lieu de façon non ambiguë, sans redire son nom en toutes lettres :",
+  },
+  {
+    type: "list",
+    items: [
+      "Code INSEE / COG (Code Officiel Géographique) : identifiant à 5 chiffres unique de chaque commune française, stable même si son nom change",
+      "Codes NUTS (Nomenclature des Unités Territoriales Statistiques) : découpage européen normalisé (région, département, canton) utilisé pour comparer des statistiques entre pays",
+      "Référence cadastrale : identifie une parcelle précise (section + numéro) au sein d'une commune, indépendamment de ses coordonnées",
+      "Code postal : identifiant de distribution postale, à ne pas confondre avec une unité administrative (un code postal peut chevaucher plusieurs communes)",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un code postal n'est pas une commune",
+    text: "Joindre des données par code postal plutôt que par code INSEE est une erreur fréquente : plusieurs communes peuvent partager un même code postal, et une commune peut en couvrir plusieurs. Le code INSEE (ou son équivalent cadastral pour la parcelle) est la clé de jointure fiable en géomatique française.",
+  },
+
+  { type: "heading", text: "8. Petite histoire de la cartographie", level: "college-lycee" },
+  {
+    type: "paragraph",
+    text: "Mesurer et représenter la Terre n'a rien d'une invention récente. Le fil qui va de Ptolémée aux satellites d'observation actuels est continu : à chaque époque, un instrument nouveau a permis de mesurer un peu plus précisément ce que l'époque précédente ne pouvait qu'estimer.",
+  },
+  {
+    type: "diagram",
+    name: "cartography-timeline",
+    caption: "De la Géographie de Ptolémée aux satellites d'observation actuels, une même quête de précision.",
+  },
+  {
+    type: "list",
+    items: [
+      "Antiquité : Ptolémée (~150 apr. J.-C.) formalise un système de coordonnées et une première projection dans sa Géographia",
+      "Moyen Âge / Renaissance : les portulans, cartes marines fondées sur le relevé au compas entre ports, précèdent la triangulation terrestre",
+      "XVIᵉ siècle : Mercator (1569) publie sa projection conforme, encore la base du Web Mercator des cartes en ligne aujourd'hui",
+      "XVIIIᵉ siècle : la famille Cassini triangule systématiquement la France, premier grand relevé topographique national",
+      "XXᵉ – XXIᵉ siècle : de Landsat 1 (1972, premier satellite civil d'observation) à Sentinel-2 (2015, données ouvertes et gratuites)",
+    ],
+  },
+
+  { type: "heading", text: "9. Lire une carte", level: "college-lycee" },
+  {
+    type: "paragraph",
+    text: "Une carte topographique se lit avec une méthode, pas au hasard. Quatre éléments à vérifier systématiquement avant d'interpréter le contenu lui-même :",
+  },
+  {
+    type: "list",
+    items: [
+      "La légende : sans elle, aucun symbole n'a de sens garanti — ne jamais supposer qu'une couleur ou un pictogramme signifie la même chose d'une carte à l'autre",
+      "L'échelle : le rapport entre une distance sur la carte et la distance réelle (ex. 1:25 000 = 1 cm sur la carte pour 250 m sur le terrain)",
+      "L'orientation : par convention le nord est en haut, sauf mention contraire explicite (flèche du nord)",
+      "Les courbes de niveau : relient les points de même altitude ; plus elles sont rapprochées, plus la pente est forte",
+    ],
+  },
+
+  { type: "heading", text: "10. Le débat des projections : Mercator contre Peters", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "La projection de Mercator (section 3) conserve les angles, ce qui la rend précieuse pour la navigation, mais déforme considérablement les surfaces aux hautes latitudes : le Groenland y paraît aussi grand que l'Afrique, alors qu'il est en réalité environ 14 fois plus petit. La projection de Peters (1973), équivalente, corrige les surfaces mais déforme fortement les formes.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un choix de projection n'est jamais neutre",
+    text: "Le débat Mercator/Peters dépasse la seule technique : représenter le monde avec une projection qui agrandit visuellement les pays du Nord (Mercator) ou qui respecte les surfaces réelles au prix de formes moins familières (Peters) porte un message implicite sur l'importance relative des territoires. C'est un bon sujet de commentaire de carte ou de dissertation (voir le module Méthodologie).",
   },
 
   {

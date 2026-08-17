@@ -5,6 +5,7 @@ import { indicesSpectrauxQuiz } from "./indices-spectraux"
 import { outilsSigQuiz } from "./outils-sig"
 import { travauxPratiquesQuiz } from "./travaux-pratiques"
 import { traitementsIaQuiz } from "./traitements-ia"
+import { methodologieQuiz } from "./methodologie"
 
 export const quizzes: Record<string, QuizQuestion[]> = {
   fondamentaux: fondamentauxQuiz,
@@ -13,4 +14,5 @@ export const quizzes: Record<string, QuizQuestion[]> = {
   "outils-sig": outilsSigQuiz,
   "travaux-pratiques": travauxPratiquesQuiz,
   "traitements-ia": traitementsIaQuiz,
+  methodologie: methodologieQuiz,
 }

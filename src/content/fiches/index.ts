@@ -5,6 +5,7 @@ import { indicesSpectrauxFiche } from "./indices-spectraux"
 import { outilsSigFiche } from "./outils-sig"
 import { travauxPratiquesFiche } from "./travaux-pratiques"
 import { traitementsIaFiche } from "./traitements-ia"
+import { methodologieFiche } from "./methodologie"
 
 export const ficheContent: Record<string, ContentBlock[]> = {
   fondamentaux: fondamentauxFiche,
@@ -13,4 +14,5 @@ export const ficheContent: Record<string, ContentBlock[]> = {
   "outils-sig": outilsSigFiche,
   "travaux-pratiques": travauxPratiquesFiche,
   "traitements-ia": traitementsIaFiche,
+  methodologie: methodologieFiche,
 }

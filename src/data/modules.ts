@@ -59,4 +59,12 @@ export const modules: CourseModule[] = [
     topics: ["Indices composés et complexes", "Filtres kernel et passe-haut", "Classification supervisée / non supervisée", "Deep learning et IA"],
     epigraph: "Comme le cabinet de curiosités range chaque coquillage, chaque tableau, chaque médaille dans une catégorie pour le comprendre, l'algorithme range chaque pixel dans une classe pour lire le paysage.",
   },
+  {
+    slug: "methodologie",
+    title: "De l'Ordre des Idées",
+    navLabel: "La Méthode",
+    summary: "Commentaire de document, dissertation, rapport technique, concours : mobiliser le cours à l'écrit.",
+    topics: ["Commentaire de carte", "Dissertation de géographie", "Rapport technique SIG", "Concours CAPES/Agrégation"],
+    epigraph: "Le philosophe de Rembrandt médite dans l'ombre d'un escalier qui monte en spirale : la méthode, en géographie comme ailleurs, est cet escalier qui structure la pensée avant qu'elle ne s'exprime.",
+  },
 ]

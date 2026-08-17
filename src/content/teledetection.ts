@@ -97,4 +97,40 @@ export const teledetectionContent: ContentBlock[] = [
     title: "Lien avec le module Indices spectraux",
     text: "Sentinel-2 est la référence utilisée dans quasiment tous les cas pratiques de ce cours : gratuite, résolution spatiale suffisante pour du travail à l'échelle d'une parcelle ou d'un massif, et dotée des bandes rouge/NIR/SWIR nécessaires au calcul du NDVI, NDMI et NDBI présentés dans le module suivant.",
   },
+
+  { type: "heading", text: "5. La photo-interprétation", level: "college-lycee" },
+  {
+    type: "paragraph",
+    text: "Avant tout calcul d'indice, la première compétence en télédétection reste la lecture directe de l'image à l'œil — une compétence qui reste précieuse aujourd'hui pour vérifier un résultat automatique, et directement utile en épreuve de commentaire de document. Quatre clés de lecture classiques :",
+  },
+  {
+    type: "list",
+    items: [
+      "La forme : un rectangle très régulier évoque un bâtiment ou une serre, une ligne sinueuse un cours d'eau ou une route",
+      "La texture : lisse pour un plan d'eau ou un toit, grenue pour une forêt vue en résolution fine",
+      "La teinte : la coloration en composition naturelle (rouge/vert/bleu) ou fausse couleur (souvent NIR/rouge/vert, qui fait ressortir la végétation en rouge vif)",
+      "L'ombre portée : trahit la hauteur d'un objet (bâtiment, arbre) que l'image seule, vue du dessus, ne montre pas directement",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Composition naturelle vs fausse couleur",
+    text: "Une composition \"fausse couleur\" affiche le proche infrarouge à la place du rouge visible : la végétation, très réfléchissante en NIR, apparaît alors en rouge vif plutôt qu'en vert. Ce n'est pas une erreur de calibration — c'est un choix délibéré qui rend la végétation immédiatement identifiable à l'œil, sans calculer le moindre indice.",
+  },
+
+  { type: "heading", text: "6. Prétraiter une image avant de l'utiliser", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Une image satellite brute (niveau L1C pour Sentinel-2) n'est pas directement comparable à une autre image, ni même exploitable pour un indice fiable, sans un minimum de correction :",
+  },
+  {
+    type: "list",
+    items: [
+      "Correction radiométrique : compense les différences de sensibilité entre capteurs et dans le temps",
+      "Correction atmosphérique : retire l'effet de la vapeur d'eau, des aérosols et des nuages fins sur la réflectance mesurée (c'est ce qui distingue le niveau L2A du L1C pour Sentinel-2)",
+      "Correction géométrique : recale précisément l'image sur un système de coordonnées, pour qu'elle se superpose exactement à d'autres couches",
+      "Mosaïquage : assemble plusieurs scènes adjacentes en une seule image continue, en harmonisant leurs teintes aux raccords",
+    ],
+  },
 ]

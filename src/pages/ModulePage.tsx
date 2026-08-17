@@ -7,7 +7,7 @@ import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
 
 export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()

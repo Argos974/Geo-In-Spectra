@@ -8,6 +8,9 @@ import { WorkflowTp } from "./WorkflowTp"
 import { KernelConvolution } from "./KernelConvolution"
 import { ClassificationMethods } from "./ClassificationMethods"
 import { NeuralNetwork } from "./NeuralNetwork"
+import { CartographyTimeline } from "./CartographyTimeline"
+import { SpectralSignatures } from "./SpectralSignatures"
+import { DissertationPlan } from "./DissertationPlan"
 
 export const diagramRegistry = {
   "coordinate-systems": { Component: CoordinateSystems, plate: "I" },
@@ -20,6 +23,9 @@ export const diagramRegistry = {
   "kernel-convolution": { Component: KernelConvolution, plate: "VIII" },
   "classification-methods": { Component: ClassificationMethods, plate: "IX" },
   "neural-network": { Component: NeuralNetwork, plate: "X" },
+  "cartography-timeline": { Component: CartographyTimeline, plate: "XI" },
+  "spectral-signatures": { Component: SpectralSignatures, plate: "XII" },
+  "dissertation-plan": { Component: DissertationPlan, plate: "XIII" },
 } as const
 
 export type DiagramName = keyof typeof diagramRegistry

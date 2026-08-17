@@ -3,10 +3,17 @@ import { cn } from "@/lib/utils"
 import { slugify } from "@/lib/slug"
 import { Diagram } from "@/components/diagrams"
 
-const calloutStyles: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
+type Variant = "dark" | "print"
+
+const calloutStylesDark: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
   info: "border-lapis/40 bg-lapis/[0.08]",
   warning: "border-oxblood/40 bg-oxblood/[0.08]",
   example: "border-gilt/40 bg-gilt/[0.07]",
+}
+const calloutStylesPrint: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
+  info: "border-lapis/50 bg-lapis/[0.05]",
+  warning: "border-oxblood/50 bg-oxblood/[0.05]",
+  example: "border-[#8a6a2f]/50 bg-[#8a6a2f]/[0.05]",
 }
 
 const calloutLabel: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
@@ -21,13 +28,30 @@ const levelLabel: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>[
   approfondissement: "Approfondissement",
 }
 
-const levelStyle: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
+const levelStyleDark: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
   "college-lycee": "border-lapis/50 text-lapis",
   superieur: "border-gilt/50 text-gilt",
   approfondissement: "border-oxblood/50 text-oxblood",
 }
+const levelStylePrint: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
+  "college-lycee": "border-lapis/60 text-lapis",
+  superieur: "border-[#8a6a2f]/60 text-[#8a6a2f]",
+  approfondissement: "border-oxblood/60 text-oxblood",
+}
 
-export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
+export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlock[]; variant?: Variant }) {
+  const isPrint = variant === "print"
+
+  const text = isPrint ? "text-[#2b2116]" : "text-parchment"
+  const textDim = isPrint ? "text-[#5c5140]" : "text-parchment-dim"
+  const accent = isPrint ? "text-[#8a6a2f]" : "text-gilt"
+  const accentBg = isPrint ? "bg-[#8a6a2f]" : "bg-gilt"
+  const border = isPrint ? "border-[#8a6a2f]/35" : "border-gilt/25"
+  const borderSoft = isPrint ? "border-[#8a6a2f]/20" : "border-gilt/15"
+  const panelBg = isPrint ? "bg-[#8a6a2f]/[0.04]" : "bg-gilt/[0.04]"
+  const calloutStyles = isPrint ? calloutStylesPrint : calloutStylesDark
+  const levelStyle = isPrint ? levelStylePrint : levelStyleDark
+
   return (
     <div className="space-y-6">
       {blocks.map((block, i) => {
@@ -40,16 +64,16 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
                     {levelLabel[block.level]}
                   </span>
                 )}
-                <h2 className="font-heading text-2xl md:text-3xl">{block.text}</h2>
+                <h2 className={cn("font-heading text-2xl md:text-3xl", text)}>{block.text}</h2>
               </div>
             )
 
           case "diagram":
-            return <Diagram key={i} name={block.name} caption={block.caption} />
+            return <Diagram key={i} name={block.name} caption={block.caption} variant={variant} />
 
           case "paragraph":
             return (
-              <p key={i} className="text-parchment-dim leading-relaxed">
+              <p key={i} className={cn("leading-relaxed", textDim)}>
                 {block.text}
               </p>
             )
@@ -57,10 +81,10 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           case "list": {
             const Tag = block.ordered ? "ol" : "ul"
             return (
-              <Tag key={i} className={cn("space-y-2 text-parchment-dim", block.ordered ? "list-decimal pl-5" : "pl-0")}>
+              <Tag key={i} className={cn("space-y-2", textDim, block.ordered ? "list-decimal pl-5" : "pl-0")}>
                 {block.items.map((item, j) => (
                   <li key={j} className={cn(!block.ordered && "flex items-start gap-3")}>
-                    {!block.ordered && <span className="h-1.5 w-1.5 rounded-full bg-gilt shrink-0 mt-2" />}
+                    {!block.ordered && <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />}
                     <span>{item}</span>
                   </li>
                 ))}
@@ -70,21 +94,21 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "formula":
             return (
-              <div key={i} className="border border-gilt/25 bg-gilt/[0.04] p-5">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">{block.label}</p>
-                <p className="font-mono text-sm md:text-base text-parchment break-words">{block.formula}</p>
-                {block.note && <p className="text-parchment-dim text-sm mt-3">{block.note}</p>}
+              <div key={i} className={cn("border p-5", border, panelBg)}>
+                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", accent)}>{block.label}</p>
+                <p className={cn("font-mono text-sm md:text-base break-words", text)}>{block.formula}</p>
+                {block.note && <p className={cn("text-sm mt-3", textDim)}>{block.note}</p>}
               </div>
             )
 
           case "callout":
             return (
               <div key={i} className={cn("border p-5", calloutStyles[block.tone ?? "info"])}>
-                <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim mb-2">
+                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", textDim)}>
                   {calloutLabel[block.tone ?? "info"]}
                 </p>
-                <p className="font-heading text-lg mb-1">{block.title}</p>
-                <p className="text-parchment-dim leading-relaxed">{block.text}</p>
+                <p className={cn("font-heading text-lg mb-1", text)}>{block.title}</p>
+                <p className={cn("leading-relaxed", textDim)}>{block.text}</p>
               </div>
             )
 
@@ -92,11 +116,11 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
             return (
               <div key={i} className="grid gap-4 md:grid-cols-2">
                 {block.items.map((col) => (
-                  <div key={col.label} className="border border-gilt/15 bg-white/[0.02] p-5">
-                    <p className="font-heading mb-3">{col.label}</p>
+                  <div key={col.label} className={cn("border p-5", borderSoft, isPrint ? "bg-black/[0.015]" : "bg-white/[0.02]")}>
+                    <p className={cn("font-heading mb-3", text)}>{col.label}</p>
                     <ul className="space-y-2">
                       {col.points.map((p, j) => (
-                        <li key={j} className="flex items-start gap-2 text-parchment-dim text-sm">
+                        <li key={j} className={cn("flex items-start gap-2 text-sm", textDim)}>
                           <span className="h-1.5 w-1.5 rounded-full bg-lapis shrink-0 mt-1.5" />
                           <span>{p}</span>
                         </li>
@@ -109,12 +133,12 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
 
           case "table":
             return (
-              <div key={i} className="overflow-x-auto border border-gilt/15">
+              <div key={i} className={cn("overflow-x-auto border", borderSoft)}>
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gilt/[0.06]">
+                    <tr className={panelBg}>
                       {block.headers.map((h) => (
-                        <th key={h} className="text-left font-mono text-[11px] uppercase tracking-wider text-gilt px-4 py-3 whitespace-nowrap">
+                        <th key={h} className={cn("text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 whitespace-nowrap", accent)}>
                           {h}
                         </th>
                       ))}
@@ -122,9 +146,9 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
                   </thead>
                   <tbody>
                     {block.rows.map((row, j) => (
-                      <tr key={j} className="border-t border-gilt/10">
+                      <tr key={j} className={cn("border-t", borderSoft)}>
                         {row.map((cell, k) => (
-                          <td key={k} className="px-4 py-3 text-parchment-dim align-top">
+                          <td key={k} className={cn("px-4 py-3 align-top", textDim)}>
                             {cell}
                           </td>
                         ))}

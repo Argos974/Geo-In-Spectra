@@ -9,7 +9,7 @@
 
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
-import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN, headerFooterTemplates } from "./lib/pdfServer.mjs"
+import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN } from "./lib/pdfServer.mjs"
 
 async function main() {
   const slugs = resolveRequestedSlugs()
@@ -31,7 +31,6 @@ async function main() {
         format: "A4",
         printBackground: true,
         margin: PDF_MARGIN,
-        ...headerFooterTemplates(`Salle ${order}`),
       })
     }
   })

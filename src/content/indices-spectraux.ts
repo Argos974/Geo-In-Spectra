@@ -74,7 +74,24 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "5. Limites communes à tous les indices spectraux" },
+  { type: "heading", text: "5. Signatures spectrales comparées", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Chaque type de surface (végétation, eau, sol nu, bâti) a une signature spectrale caractéristique — sa réflectance selon la longueur d'onde. Superposer ces signatures explique d'un coup pourquoi le NDVI, le NDMI et le NDBI choisissent chacun des paires de bandes différentes : ils exploitent l'endroit du spectre où deux types de surface se distinguent le plus nettement.",
+  },
+  {
+    type: "diagram",
+    name: "spectral-signatures",
+    caption: "Végétation, eau, sol nu et bâti n'ont pas la même courbe de réflectance : c'est ce qui rend chaque indice possible.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Lire le graphe",
+    text: "L'eau absorbe presque tout le rayonnement au-delà du visible, d'où sa réflectance qui chute continûment. La végétation présente le sursaut caractéristique en proche infrarouge (voir module Télédétection). Sol nu et bâti ont des courbes plus plates et proches l'une de l'autre dans le visible/NIR, ce qui explique pourquoi il faut aller chercher le SWIR (NDBI) pour les séparer.",
+  },
+
+  { type: "heading", text: "6. Limites communes à tous les indices spectraux" },
   {
     type: "list",
     items: [

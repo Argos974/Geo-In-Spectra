@@ -11,7 +11,7 @@ export function SiteHeader() {
         <Link to="/" className="font-heading text-sm uppercase tracking-[0.28em] text-parchment">
           Géomatique<span className="text-gilt">.</span>Télédétection
         </Link>
-        <div className="hidden md:flex items-center gap-6 font-mono text-[12px] uppercase tracking-wider text-parchment-dim">
+        <div className="hidden lg:flex items-center gap-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim">
           {modules.map((m) => (
             <Link
               key={m.slug}
@@ -32,6 +32,15 @@ export function SiteHeader() {
             )}
           >
             Glossaire
+          </Link>
+          <Link
+            to="/references"
+            className={cn(
+              "transition-colors hover:text-gilt",
+              location.pathname === "/references" && "text-gilt",
+            )}
+          >
+            Références
           </Link>
           <Link
             to="/jeu/epsg"

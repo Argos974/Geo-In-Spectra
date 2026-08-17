@@ -61,19 +61,21 @@ src/
     types.ts                         # ContentBlock (paragraph, formula, callout, table, diagram…)
                                        # heading accepte un `level` (voir "Niveaux")
   data/
-    modules.ts                     # 6 salles : slug, titre, résumé, thèmes, épigraphe
+    modules.ts                     # 7 salles : slug, titre, résumé, thèmes, épigraphe
     artworks.ts                     # œuvre associée à chaque salle (+ crédits)
     glossary.ts                      # termes techniques, source universitaire, renvoi vers la salle
-    quizzes/*.ts                      # questions à choix multiple par salle
+    references.ts                     # bibliographie groupée par thème (page /references)
+    quizzes/*.ts                       # questions à choix multiple par salle
   pages/
     Home.tsx                         # frontispice + salles en fond plein cadre
     ModulePage.tsx                     # page web d'une salle (cours, PDF, fiche PDF, quiz)
     QuizPage.tsx                        # /module/:slug/quiz
     EpsgGamePage.tsx                     # /jeu/epsg
-    PrintCourse.tsx                       # mise en page dédiée à l'export PDF du cours
-    PrintFiche.tsx                         # mise en page dédiée à l'export PDF de la fiche mémo
-    GlossaryPage.tsx                        # /glossaire
-    LegalPage.tsx                            # /mentions-legales
+    PrintCourse.tsx                       # mise en page dédiée à l'export PDF du cours (thème papier clair)
+    PrintFiche.tsx                         # idem pour la fiche mémo
+    GlossaryPage.tsx                        # /glossaire (recherche incluse)
+    ReferencesPage.tsx                       # /references
+    LegalPage.tsx                              # /mentions-legales
   RootRouter.tsx                              # routes + masque header/footer/grain sur /print/*
 scripts/
   lib/pdfServer.mjs                            # build + serve + kill, partagé par les deux scripts PDF
@@ -81,7 +83,7 @@ scripts/
   generate-fiche-pdfs.mjs                        # idem, pour les fiches mémo
 public/
   pdf/<slug>/<NN>-<slug>-<type>.pdf                # PDF générés (regroupés par salle)
-  images/gallery/                                   # les 7 œuvres (domaine public, Wikimedia Commons)
+  images/gallery/                                   # les 8 œuvres (domaine public, Wikimedia Commons)
 ```
 
 ## Ajouter une salle (module)
@@ -114,16 +116,22 @@ pas des fichiers image : elles sont dessinées au chargement, rien à stocker da
 ## Export PDF
 
 Deux scripts, même pipeline partagé (`scripts/lib/pdfServer.mjs`) : build le site,
-sert `dist/` en local, imprime via Chromium headless (Playwright), avec en-tête/pied
-de page générés par Playwright lui-même (`displayHeaderFooter`, numérotation des
-pages) — jamais une capture de la page web : `PrintCourse.tsx`/`PrintFiche.tsx` sont
-des mises en page dédiées (`/print/module/:slug`, `/print/fiche/:slug`), sans aucun
-élément d'interface web (`RootRouter.tsx` masque header/footer/grain sur ces routes).
+sert `dist/` en local, imprime via Chromium headless (Playwright) — jamais une
+capture de la page web : `PrintCourse.tsx`/`PrintFiche.tsx` sont des mises en page
+dédiées (`/print/module/:slug`, `/print/fiche/:slug`), sans aucun élément
+d'interface web (`RootRouter.tsx` masque header/footer/grain sur ces routes), **et
+sur un thème papier clair délibérément différent du site** (fond sombre) : un
+support de cours destiné à être imprimé ou lu comme un document, pas comme une page
+web. `ContentBlocks`/`GalleryFrame`/`EngravedFrame` acceptent un prop `variant`
+(`"dark"` pour le site, `"print"` pour ces deux pages) qui bascule leurs couleurs en
+conséquence — aucun `displayHeaderFooter` Playwright : pas de bandeau ni de
+numérotation de page superposés, la page de garde (illustrée) et le sommaire portent
+déjà leur propre identité.
 
 ```bash
-npm run pdf:generate                          # les 6 cours
+npm run pdf:generate                          # les 7 cours
 npm run pdf:generate -- fondamentaux           # un seul cours
-npm run pdf:generate:fiches                     # les 6 fiches mémo
+npm run pdf:generate:fiches                     # les 7 fiches mémo
 npm run pdf:generate:fiches -- fondamentaux      # une seule fiche
 ```
 
@@ -137,12 +145,16 @@ de téléchargements. `<type>` vaut `cours` ou `fiche-memo` aujourd'hui ; `quiz`
 
 Un état des lieux pédagogique complet (critique du site, programme en sept axes,
 bibliographie) a été produit comme document de travail séparé plutôt que versionné
-ici. Déjà en ligne depuis : glossaire transversal (avec sources), quiz interactif
-par salle, fiches mémo PDF, un premier jeu pédagogique (Chasse aux EPSG), une
-sixième salle (indices composés/complexes, filtres, classification, deep learning,
-IA) avec repères de niveau collège/lycée → supérieur → approfondissement. Restent :
-méthodologie académique (commentaire de carte, dissertation, concours), histoire et
-fondements de la géographie, étoffement des axes B/C/D/E du programme complet.
+ici. Sept salles en ligne aujourd'hui : Fondements, Le Regard, Les Couleurs, Le
+Compas, L'Atelier, L'Intelligence (indices composés/complexes, filtres,
+classification, deep learning, IA) et La Méthode (commentaire de document,
+dissertation, rapport technique, concours). Fondements intègre aussi l'histoire de
+la cartographie, la lecture de carte, le débat Mercator/Peters et les codes
+géographiques (EPSG, INSEE/COG, NUTS, cadastre) — regroupés là plutôt qu'en salle
+séparée. Glossaire (avec sources et recherche), page Références (bibliographie par
+thème), quiz interactif et fiches mémo PDF couvrent les sept salles. Reste : étoffer
+encore chaque salle (le programme en sept axes en liste bien plus que ce qui est
+déjà écrit).
 
 ## Déploiement
 

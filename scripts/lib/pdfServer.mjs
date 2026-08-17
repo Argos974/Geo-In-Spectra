@@ -21,6 +21,7 @@ export const ALL_SLUGS = [
   "outils-sig",
   "travaux-pratiques",
   "traitements-ia",
+  "methodologie",
 ]
 
 export function resolveRequestedSlugs() {
@@ -94,12 +95,8 @@ export async function withPdfServer(fn) {
   }
 }
 
-export const PDF_MARGIN = { top: "20mm", bottom: "18mm", left: "14mm", right: "14mm" }
-
-export function headerFooterTemplates(label) {
-  return {
-    displayHeaderFooter: true,
-    headerTemplate: `<div style="font-size:8px; width:100%; text-align:center; color:#8a7a5a; font-family: Georgia, serif; padding-top:6px; letter-spacing:1px;">GEO-IND-SPECTRA${label ? ` · ${label}` : ""}</div>`,
-    footerTemplate: `<div style="font-size:8px; width:100%; text-align:center; color:#8a7a5a; font-family: Georgia, serif;">Page <span class="pageNumber"></span> / <span class="totalPages"></span></div>`,
-  }
-}
+// Pas d'en-tête ni de pied de page généré par Playwright : un vrai document de
+// cours n'affiche pas de numérotation sur sa page de garde, et le reste du
+// contenu (page de garde, sommaire, cartels des planches) porte déjà sa propre
+// identité visuelle — un bandeau superposé par-dessus serait redondant.
+export const PDF_MARGIN = { top: "16mm", bottom: "16mm", left: "14mm", right: "14mm" }

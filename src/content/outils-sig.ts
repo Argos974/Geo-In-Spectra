@@ -95,4 +95,43 @@ export const outilsSigContent: ContentBlock[] = [
     title: "Vers la pratique",
     text: "Le module Travaux pratiques met en œuvre ces outils sur des cas concrets : chargement d'une image Sentinel-2 dans QGIS, calcul de NDVI par calculatrice raster, puis croisement avec une couche vectorielle via une analyse spatiale.",
   },
+
+  { type: "heading", text: "5. Qualité des données et métadonnées", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Une donnée géographique n'est jamais parfaitement exacte, et ne prétend jamais l'être : ce qui compte, c'est de savoir à quel point elle l'est, et de le documenter pour quiconque la réutilise après vous.",
+  },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Précision",
+        points: [
+          "Répétabilité de la mesure : des mesures répétées donnent-elles des résultats proches ?",
+          "Une donnée peut être précise sans être exacte (biais systématique)",
+        ],
+      },
+      {
+        label: "Exactitude",
+        points: [
+          "Proximité avec la valeur réelle sur le terrain",
+          "Se vérifie par comparaison à une référence indépendante (relevé GPS de contrôle, orthophoto)",
+        ],
+      },
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Résolution n'est pas précision",
+    text: "Un raster à 10 m de résolution spatiale n'est pas nécessairement localisé avec une précision de 10 m : la résolution décrit la taille du pixel, la précision géométrique décrit l'écart entre la position affichée et la position réelle. Les deux notions sont indépendantes et se confondent souvent à tort.",
+  },
+  {
+    type: "list",
+    items: [
+      "Les métadonnées documentent la source, la date, le système de coordonnées, la précision estimée et la méthode de production d'une couche",
+      "Sans métadonnées, une donnée téléchargée reste invérifiable : impossible de savoir si elle est encore à jour ou dans quelles conditions elle a été produite",
+      "La norme ISO 19115 encadre la structure des métadonnées géographiques, reprise par la plupart des portails de données ouvertes (dont data.gouv.fr)",
+    ],
+  },
 ]

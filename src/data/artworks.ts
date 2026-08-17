@@ -61,4 +61,11 @@ export const artworks: Record<string, Artwork> = {
     title: "Kunst- und Raritätenkammer",
     year: "1636",
   },
+  methodologie: {
+    src: "/images/gallery/methodologie-rembrandt-philosophe.jpg",
+    alt: "Le Philosophe en méditation de Rembrandt, un vieil homme assis près d'une fenêtre à côté d'un escalier en colimaçon",
+    artist: "Rembrandt",
+    title: "Philosophe en méditation",
+    year: "1632",
+  },
 }
