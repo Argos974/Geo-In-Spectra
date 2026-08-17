@@ -11,6 +11,53 @@ export const travauxPratiquesContent: ContentBlock[] = [
     caption: "Le fil directeur des séances : de la donnée brute géoréférencée jusqu'à la carte de synthèse et son rapport.",
   },
 
+  { type: "heading", text: "Le jeu de données canonique : une vraie scène Sentinel-2" },
+  {
+    type: "paragraph",
+    text: "Plutôt que de renvoyer vers « télécharge une image quelque part », plusieurs séances ci-dessous (3, 5, 6, 7, 9) s'appuient sur un même jeu de données réel, extrait directement de l'archive Copernicus et fourni avec le site : une scène Sentinel-2 authentique, quasiment sans nuage, sur une emprise de 3,2 × 3,3 km à Vitrolles (Bouches-du-Rhône), qui mélange volontairement bâti dense, infrastructure aéroportuaire, végétation de garrigue et une portion de l'étang de Berre — de quoi illustrer chaque indice du module Les Couleurs sur un seul et même territoire.",
+  },
+  {
+    type: "image",
+    src: "/images/sample-vitrolles-2024-rgb.jpg",
+    alt: "Composition colorée réelle (rouge/vert/bleu) de la scène Sentinel-2 du 6 août 2024 sur Vitrolles",
+    caption: "Composition couleur naturelle réelle, scène S2B_31TFJ_20240806_0_L2A (6 août 2024, 0.008 % de nuages). Étang de Berre en haut à gauche, tissu urbain de Vitrolles à droite, piste de l'aéroport Marseille-Provence en bas à gauche.",
+  },
+  {
+    type: "image",
+    src: "/images/sample-vitrolles-2024-ndvi.jpg",
+    alt: "NDVI réel calculé sur la même emprise, palette marron-blanc-vert",
+    caption: "Le NDVI réellement calculé sur cette même image (formule du module Les Couleurs) : le contraste végétation (vert) / bâti-piste-eau (blanc à marron) saute aux yeux sans aucune interprétation nécessaire.",
+  },
+  {
+    type: "table",
+    headers: ["Fichier", "Contenu"],
+    rows: [
+      ["sentinel2_2024-08-06_vitrolles_bands.tif", "6 bandes réelles en réflectance de surface (0–1) : bleu, vert, rouge, red-edge (B5), NIR, SWIR (B11) — EPSG:2154, 10 m"],
+      ["sentinel2_2024-08-06_vitrolles_indices.tif", "NDVI, NDMI, NDBI, NDRE, NDWI déjà calculés, en 5 bandes — pour vérifier un calcul plutôt que le refaire"],
+      ["emprise.geojson", "Polygone exact de l'emprise, pour un découpage (clip) propre"],
+      ["grille_100m_indices.geojson", "1122 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule — résultat de référence pour la séance 3"],
+      ["stats.json", "Statistiques réelles (min/max/moyenne/écart-type) de chaque indice sur toute l'emprise"],
+    ],
+  },
+  {
+    type: "formula",
+    label: "Accès direct aux fichiers",
+    formula: "/data/sample-vitrolles-2024/<nom-du-fichier>",
+    note: "Les 5 fichiers du tableau ci-dessus sont servis statiquement par le site à cette adresse relative (ex. /data/sample-vitrolles-2024/emprise.geojson) — à charger directement dans QGIS (Couche > Ajouter une couche) via l'URL complète du site, ou à télécharger avec un clic droit > Enregistrer sous depuis le navigateur.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Origine et licence de cette image",
+    text: "Scène S2B_31TFJ_20240806_0_L2A, extraite du catalogue public Sentinel-2 L2A hébergé sur AWS (Element84 Earth Search STAC, sentinel-cogs, accès direct sans authentification) — les données sources proviennent du programme Copernicus de l'Union européenne et de l'ESA. Conformément à la politique de données Copernicus (libre, complète et gratuite), toute réutilisation doit porter la mention « Contains modified Copernicus Sentinel data [2024] ».",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Valeurs réelles de référence (calculées sur toute l'emprise)",
+    text: "NDVI : moyenne 0.33, écart-type 0.30 (de -1.0 à 1.0 selon les pixels). NDMI : moyenne -0.09, écart-type 0.16. NDBI : moyenne +0.09 (symétrique du NDMI, comme attendu de la formule). NDRE : moyenne 0.16. NDWI : moyenne -0.47 — cohérent avec un territoire majoritairement non aquatique, comportant une portion d'étang. Ces chiffres, pas des estimations, servent de repère pour vérifier un calcul personnel : un NDVI moyen très éloigné de 0.33 sur cette même emprise signale une erreur de calcul (mauvaises bandes, mauvais CRS, image non corrigée), pas une variante légitime.",
+  },
+
   { type: "heading", text: "Séance 1 : Cartographie de base sous QGIS", level: "college-lycee" },
   {
     type: "callout",
@@ -145,6 +192,12 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "Une moyenne par cellule lisse le bruit pixel-à-pixel et rend le résultat directement comparable à une grille administrative ou réglementaire (commune, parcelle, zone de gestion) — c'est la même logique que les statistiques zonales utilisées dans un vrai projet de suivi de territoire.",
   },
   {
+    type: "callout",
+    tone: "info",
+    title: "Valider sa propre méthode contre un résultat déjà connu",
+    text: "Une fois l'étape 2 maîtrisée sur une image personnelle, la refaire sur sentinel2_2024-08-06_vitrolles_bands.tif (le jeu de données canonique présenté en tête de ce module) permet une vraie vérification : grille_100m_indices.geojson donne déjà, pour 1122 cellules de 100 m, la moyenne réelle de NDVI/NDMI/NDBI calculée sur les mêmes bandes. Un fishnet + statistiques de zone fait correctement sur ce fichier doit reproduire ces valeurs à peu de choses près (petits écarts possibles selon l'alignement exact de la grille) — un net écart signale une erreur dans sa propre chaîne de traitement, pas une variante légitime.",
+  },
+  {
     type: "comparison",
     items: [
       {
@@ -235,8 +288,8 @@ export const travauxPratiquesContent: ContentBlock[] = [
   {
     type: "formula",
     label: "Exercice 4 (découverte) : inspecter une donnée en ligne de commande avec GDAL",
-    formula: "ogrinfo -al -so parcelles.gpkg   ·   gdalinfo -stats sentinel2_ndvi.tif",
-    note: "GDAL/OGR (la bibliothèque sur laquelle repose la quasi-totalité des logiciels SIG, dont QGIS) fournit des utilitaires en ligne de commande pour inspecter rapidement une couche sans l'ouvrir dans une interface graphique : ogrinfo pour le vecteur (nombre d'entités, CRS, champs), gdalinfo pour le raster (dimensions, résolution, statistiques par bande). Un réflexe utile pour vérifier une donnée avant de l'intégrer à un traitement automatisé plus long.",
+    formula: "gdalinfo -stats sentinel2_2024-08-06_vitrolles_indices.tif",
+    note: "GDAL/OGR (la bibliothèque sur laquelle repose la quasi-totalité des logiciels SIG, dont QGIS) fournit des utilitaires en ligne de commande pour inspecter rapidement une couche sans l'ouvrir dans une interface graphique : ogrinfo pour le vecteur (nombre d'entités, CRS, champs), gdalinfo pour le raster (dimensions, résolution, statistiques par bande). Sur le fichier réel du jeu de données canonique (bande 1 = NDVI), gdalinfo -stats doit afficher un minimum proche de -1, un maximum proche de 1 et une moyenne proche de 0.33 — les mêmes chiffres que le callout \"Valeurs réelles de référence\" en tête de ce module : un réflexe utile pour vérifier une donnée avant de l'intégrer à un traitement automatisé plus long, ou simplement pour confirmer qu'un fichier téléchargé n'est pas corrompu.",
   },
   {
     type: "solution",
@@ -261,27 +314,27 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "list",
     ordered: true,
     items: [
-      "Digitaliser des polygones d'entraînement pour 3 à 4 classes (ex. forêt, culture, bâti, eau), répartis sur toute l'emprise de l'image, en s'appuyant sur la photo-interprétation (voir module Le Regard, section 9)",
-      "Réserver environ 30 % de ces polygones, mis de côté et jamais montrés au classifieur, pour servir de jeu de test indépendant (voir module L'Intelligence, section sur le sur-apprentissage)",
-      "Entraîner une classification supervisée (SCP — Semi-Automatic Classification Plugin pour QGIS, ou un script scikit-learn en Python) sur le jeu d'entraînement uniquement",
-      "Appliquer le classifieur à l'ensemble de l'image",
-      "Construire la matrice de confusion entre la classification obtenue et le jeu de test réservé à l'étape 2, puis calculer la précision globale et le coefficient kappa (formules détaillées au module L'Intelligence)",
+      "Charger sentinel2_2024-08-06_vitrolles_bands.tif (jeu de données canonique ci-dessus) et sa bande SCL — la Scene Classification Layer, calculée par l'algorithme officiel ESA/Sen2Cor, une vérité terrain déjà disponible sans digitalisation manuelle pour 3 classes franches : végétation, sol nu/bâti, eau",
+      "Réserver un tiers de l'emprise (par exemple le tiers droit) comme jeu de test, jamais montré à l'entraînement — un découpage spatial, pas un tirage aléatoire pixel par pixel (voir module L'Intelligence, mise en garde sur la fuite de données)",
+      "Entraîner une classification supervisée (Random Forest, scikit-learn ou SCP dans QGIS) sur les deux tiers restants uniquement, avec les 6 bandes comme variables d'entrée",
+      "Appliquer le classifieur à l'ensemble de l'emprise",
+      "Construire la matrice de confusion entre la classification obtenue et les pixels de test, puis calculer la précision globale et le coefficient kappa (formules détaillées au module L'Intelligence)",
     ],
   },
   {
     type: "callout",
     tone: "warning",
     title: "Ne jamais évaluer un modèle sur les données qui ont servi à l'entraîner",
-    text: "Calculer la précision d'une classification sur les mêmes polygones que ceux utilisés pour l'entraîner donne un chiffre optimiste, souvent proche de 100 %, qui ne dit rien de la performance réelle du modèle sur le reste de l'image. C'est l'erreur méthodologique la plus grave et la plus fréquente en classification supervisée — voir la mise en garde sur la fuite de données au module L'Intelligence.",
+    text: "Calculer la précision d'une classification sur les mêmes pixels que ceux utilisés pour l'entraîner donne un chiffre optimiste, souvent proche de 100 %, qui ne dit rien de la performance réelle du modèle sur le reste de l'image. C'est l'erreur méthodologique la plus grave et la plus fréquente en classification supervisée — voir la mise en garde sur la fuite de données au module L'Intelligence.",
   },
   {
     type: "solution",
-    title: "Séance 6",
-    text: "Avec 4 classes bien choisies (spectralement distinctes : forêt, culture, bâti, eau) et des polygones d'entraînement propres, une précision globale de 80 à 95 % et un kappa supérieur à 0.75 sont des résultats typiques pour un premier essai. Un kappa nettement plus faible (< 0.6) signale le plus souvent l'une de ces trois causes, dans cet ordre de fréquence : des classes spectralement trop proches pour la résolution utilisée (ex. distinguer deux types de culture avec une seule date d'image), des polygones d'entraînement mal placés (à cheval sur deux classes), ou une confusion bâti/sol nu déjà repérée au module Les Couleurs — un NDBI en entrée du classifieur, en plus des bandes brutes, corrige souvent ce dernier cas.",
+    title: "Séance 6 — résultat réel, mesuré sur le jeu de données Vitrolles (pas une estimation)",
+    text: "Sur ce jeu réel (113 000 pixels labellisés par la SCL, découpage spatial 2/3 gauche = entraînement / 1/3 droit = test) : un Random Forest à 200 arbres atteint 100 % de précision sur l'entraînement mais seulement 96.2 % sur le test, avec un kappa de 0.640 — l'écart net entre les deux confirme le sur-apprentissage attendu d'un Random Forest peu contraint (module L'Intelligence, section sur-apprentissage). La matrice de confusion réelle montre la quasi-totalité des erreurs sur la frontière végétation ↔ sol nu/bâti (1009 pixels de végétation classés sol nu/bâti sur 2390 pixels de végétation en test) — cohérent avec la confusion bâti/sol nu déjà annoncée au module Les Couleurs.",
     items: [
-      "Critère 1 : le jeu de test n'a jamais été montré au classifieur pendant l'entraînement (pas de fuite de données)",
-      "Critère 2 : la matrice de confusion est présentée avant toute interprétation, comme un vrai rapport technique (voir module La Méthode)",
-      "Critère 3 : les confusions les plus fréquentes de la matrice (hors diagonale) sont commentées, pas seulement le score global",
+      "Critère 1 : le découpage entraînement/test est spatial (par zone), jamais un tirage aléatoire pixel par pixel",
+      "Critère 2 : la matrice de confusion réelle est présentée avant toute interprétation, comme un vrai rapport technique (voir module La Méthode)",
+      "Critère 3 (piège réel rencontré sur ce jeu de données) : la classe eau, présente uniquement dans l'étang de Berre en haut à gauche de l'emprise, se retrouve à 100 % du côté entraînement avec ce découpage par tiers verticaux — 0 pixel d'eau dans le jeu de test. Un score de précision qui semble bon peut donc masquer une classe jamais réellement évaluée : toujours vérifier que chaque classe a des effectifs non nuls des deux côtés du découpage avant de faire confiance au score global.",
     ],
   },
   {
@@ -322,13 +375,13 @@ export const travauxPratiquesContent: ContentBlock[] = [
   {
     type: "callout",
     tone: "warning",
-    title: "Un réseau de neurones n'est pas automatiquement meilleur",
-    text: "Sur un jeu de données petit (quelques centaines à quelques milliers de pixels d'entraînement), un MLP fait souvent moins bien qu'un Random Forest, qui généralise mieux avec peu de données. L'avantage des réseaux profonds apparaît surtout à grande échelle (des dizaines de milliers d'exemples, ou l'exploitation du voisinage spatial par un vrai CNN) — un résultat \"décevant\" du MLP sur cette séance n'est donc pas une erreur, c'est une observation empirique cohérente avec la théorie du module L'Intelligence.",
+    title: "Ne pas présumer du vainqueur avant de mesurer",
+    text: "L'intuition générale (un Random Forest généralise souvent mieux qu'un MLP sur peu de données, l'avantage des réseaux de neurones apparaissant surtout à grande échelle) n'est qu'une tendance, pas une loi : elle peut être contredite sur un jeu de données précis, comme le montre le résultat réel ci-dessous. La bonne pratique n'est jamais de présumer lequel gagnera, mais de toujours mesurer sur son propre jeu de test.",
   },
   {
     type: "solution",
-    title: "Séance 7",
-    text: "Sur un jeu de quelques centaines de polygones d'entraînement typique de cette séance, un MLP à 50 neurones cachés obtient généralement une précision proche (± quelques points) de celle du Random Forest de la séance 6, parfois légèrement en dessous — cohérent avec l'avertissement ci-dessus. Un MLP à 200 neurones cachés sur ce même petit jeu de données montre souvent un écart croissant entre précision d'entraînement (qui monte vers 100 %) et précision de test (qui stagne ou baisse) : c'est un surapprentissage direct, observable sur la courbe de perte qui continue de décroître sur l'entraînement bien après que la précision de test a cessé de s'améliorer.",
+    title: "Séance 7 — résultat réel, mesuré sur le même jeu de données que la séance 6",
+    text: "Contrairement à l'intuition générale : sur ce jeu réel, le MLP à 50 neurones cachés fait légèrement MIEUX que le Random Forest de la séance 6 sur le jeu de test — kappa 0.673 contre 0.640, pour une précision test quasi identique (96.3 % contre 96.2 %). Le MLP à 200 neurones cachés (kappa 0.672, précision test 96.4 %) n'apporte rien de plus que celui à 50 neurones : la capacité supplémentaire ne sert à rien ici, le facteur limitant n'est pas la taille du réseau mais l'ambiguïté spectrale intrinsèque entre végétation et sol nu/bâti à cette résolution. Autre différence réelle mesurée : le Random Forest atteint 100 % de précision sur l'entraînement (sur-apprentissage net) quand le MLP plafonne à 97.3 % sur l'entraînement — sa frontière de décision, plus lisse, colle moins parfaitement aux données d'entraînement, ce qui explique en partie sa meilleure tenue sur le test.",
     items: [
       "Critère 1 : le même découpage train/test que la séance 6 est réutilisé à l'identique (comparaison valide)",
       "Critère 2 : la courbe de perte est tracée et commentée, pas seulement le score final",
@@ -400,6 +453,12 @@ export const travauxPratiquesContent: ContentBlock[] = [
     tone: "example",
     title: "Cahier des charges du mini-projet",
     text: "Choisir un territoire et l'une des quatre familles ci-dessus. Produire une carte finale qui combine au minimum : une donnée vecteur, une donnée raster ou un indice spectral calculé, et au moins une analyse spatiale (buffer, intersection ou jointure spatiale). Le rendu attendu est une carte mise en page (légende organisée, échelle, source des données, sémiologie graphique justifiée) accompagnée d'un court rapport structuré selon le module La Méthode.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Démarrer directement sur le jeu de données canonique",
+    text: "Sans territoire personnel en tête, le jeu de données Vitrolles présenté en tête de ce module se prête directement à la famille « urbanisme » (NDBI déjà calculé sur du bâti réel, dont l'aéroport Marseille-Provence) ou « risques naturels » (contraste net végétation de garrigue / bâti dense, utile pour un indice de vulnérabilité simplifié) — un point de départ réel et déjà vérifié, plutôt qu'un jeu de données à dénicher soi-même avant de pouvoir commencer.",
   },
   {
     type: "solution",

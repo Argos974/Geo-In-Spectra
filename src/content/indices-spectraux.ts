@@ -108,14 +108,19 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     type: "formula",
     label: "NDRE (Normalized Difference Red Edge, Gitelson & Merzlyak, 1994)",
     formula: "NDRE = (NIR − RedEdge) / (NIR + RedEdge)",
-    note: "Sur Sentinel-2 : NIR = B8 (842 nm), RedEdge = B5 (705 nm). Le NDRE sature beaucoup plus tard que le NDVI en forte biomasse, car le red-edge reste sensible à la chlorophylle même quand le plateau NIR est déjà saturé — c'est l'indice de référence en agriculture de précision pour détecter un stress nutritionnel (azote) avant qu'il ne soit visible sur le NDVI.",
+    note: "Sur Sentinel-2 : NIR = B8 (842 nm). Pour RedEdge, la littérature n'est pas unanime : la publication d'origine (Gitelson & Merzlyak, 1994) teste à la fois 705 nm et 750 nm ; la pratique courante utilise B5 (705 nm, le plus proche du rouge, le plus sensible à la chlorophylle) ou B6 (740 nm, un peu plus stable en forte biomasse) selon les études. Un NDRE \"B5\" et un NDRE \"B6\" calculés sur la même image ne sont pas strictement le même indice — toujours préciser laquelle des deux bandes a été utilisée dans un rapport ou une publication.",
   },
   {
-    type: "list",
-    items: [
-      "MCARI (Modified Chlorophyll Absorption Ratio Index, Daughtry et al., 2000) : combine rouge, red-edge et vert pour isoler l'absorption liée à la chlorophylle de l'effet du sol sous-jacent",
-      "TCARI (Transformed CARI, Haboudane et al., 2002) : variante de MCARI conçue pour rester peu sensible à l'indice foliaire (LAI), afin d'isoler spécifiquement la concentration en chlorophylle plutôt que la quantité de feuillage",
-    ],
+    type: "formula",
+    label: "MCARI (Daughtry et al., 2000)",
+    formula: "MCARI = [(R700 − R670) − 0.2×(R700 − R550)] × (R700 / R670)",
+    note: "R550/R670/R700 = réflectance à 550, 670 et 700 nm — approximables sur Sentinel-2 par Vert (B3), Rouge (B4) et RedEdge B5 (705 nm), sans être des correspondances exactes (les longueurs d'onde d'origine ne tombent pas pile sur les centres de bande Sentinel-2). Combine rouge, red-edge et vert pour isoler l'absorption liée à la chlorophylle de l'effet du sol sous-jacent.",
+  },
+  {
+    type: "formula",
+    label: "TCARI (Haboudane et al., 2002)",
+    formula: "TCARI = 3 × [(R700 − R670) − 0.2×(R700 − R550) × (R700 / R670)]",
+    note: "Variante de MCARI conçue pour rester peu sensible à l'indice foliaire (LAI), afin d'isoler spécifiquement la concentration en chlorophylle plutôt que la quantité de feuillage. En pratique, TCARI est presque toujours utilisé sous forme du ratio TCARI/OSAVI (un second indice corrigeant l'effet du sol), pas seul — TCARI seul reste sensible à la structure du couvert.",
   },
   {
     type: "callout",

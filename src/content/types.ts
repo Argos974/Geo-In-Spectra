@@ -14,3 +14,4 @@ export type ContentBlock =
   | { type: "diagram"; name: DiagramName; caption?: string }
   | { type: "link"; to: string; label: string; description?: string }
   | { type: "solution"; title: string; text?: string; items?: string[] }
+  | { type: "image"; src: string; alt: string; caption?: string }

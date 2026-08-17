@@ -129,6 +129,16 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
           case "diagram":
             return <Diagram key={i} name={block.name} caption={block.caption} variant={variant} />
 
+          case "image":
+            return (
+              <figure key={i} className={cn("border", borderSoft)}>
+                <img src={block.src} alt={block.alt} className="w-full h-auto block" loading="lazy" />
+                {block.caption && (
+                  <figcaption className={cn("px-4 py-3 text-sm border-t", borderSoft, textDim)}>{block.caption}</figcaption>
+                )}
+              </figure>
+            )
+
           case "link":
             return (
               <Link

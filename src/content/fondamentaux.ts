@@ -330,6 +330,12 @@ export const fondamentauxContent: ContentBlock[] = [
     formula: "X' = (1 + s) · R(rx, ry, rz) · X + T",
     note: "3 paramètres de translation (T : décalage d'origine en X/Y/Z), 3 de rotation (R : rx/ry/rz, désalignement des axes) et 1 facteur d'échelle (s, différence de taille entre les deux ellipsoïdes) — 7 paramètres en tout, déterminés empiriquement à partir de points communs mesurés dans les deux référentiels. En France, l'IGN diffuse une grille de conversion (plus précise qu'un simple Helmert à 7 paramètres uniforme, car elle absorbe aussi les distorsions locales historiques des anciens réseaux géodésiques) plutôt qu'une formule unique nationale.",
   },
+  {
+    type: "callout",
+    tone: "info",
+    title: "En pratique : l'approximation aux petits angles",
+    text: "La forme écrite ci-dessus utilise une matrice de rotation complète R(rx, ry, rz). En géodésie, les rotations entre deux référentiels proches (comme ITRF et ETRS89) sont toujours minuscules (fractions de seconde d'arc) : on linéarise alors la formule en une transformation affine à 7 paramètres, où R est remplacée par une matrice antisymétrique simple (identité + petites rotations), ce qui rend le système résoluble directement par moindres carrés à partir des points communs. C'est cette version linéarisée, pas la rotation complète, qu'utilisent en pratique les logiciels de conversion de coordonnées (dont PROJ, la bibliothèque sous-jacente à QGIS).",
+  },
 
   {
     type: "callout",

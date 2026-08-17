@@ -57,6 +57,8 @@ export const referenceGroups: ReferenceGroup[] = [
       { type: "officiel", label: "Copernicus Data Space Ecosystem", detail: "Téléchargement gratuit des images Sentinel (ESA/UE)", url: "https://dataspace.copernicus.eu" },
       { type: "officiel", label: "USGS EarthExplorer", detail: "Téléchargement gratuit des images Landsat (USGS/NASA)", url: "https://earthexplorer.usgs.gov" },
       { type: "video", label: "Supports de formation RUS Copernicus", detail: "Webinaires et exercices guidés sur les données Copernicus" },
+      { type: "officiel", label: "Element84 Earth Search (STAC)", detail: "Catalogue public Sentinel-2 L2A sur AWS, sans authentification — source du jeu de données canonique du module Travaux pratiques", url: "https://earth-search.aws.element84.com/v1" },
+      { type: "officiel", label: "Union européenne / ESA — Copernicus Sentinel data", detail: "Programme européen d'observation de la Terre ; toute réutilisation des données doit porter la mention \"Contains modified Copernicus Sentinel data\"", url: "https://www.copernicus.eu" },
       { type: "revue", label: "Chavez, P. S. (1988)", detail: "An Improved Dark-Object Subtraction Technique for Atmospheric Scattering Correction of Multispectral Data, Remote Sensing of Environment" },
       { type: "revue", label: "Vermote, E. F. et al. (1997)", detail: "Second Simulation of the Satellite Signal in the Solar Spectrum (6S), IEEE Transactions on Geoscience and Remote Sensing" },
       { type: "revue", label: "Freeman, A. & Durden, S. L. (1998)", detail: "A Three-Component Scattering Model for Polarimetric SAR Data, IEEE Transactions on Geoscience and Remote Sensing" },
