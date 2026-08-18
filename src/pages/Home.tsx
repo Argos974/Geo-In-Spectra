@@ -22,9 +22,6 @@ export function Home() {
     setProgress(getProgress())
   }, [])
 
-  const visitedCount = modules.filter((m) => progress[m.slug]?.visited).length
-  const hasProgress = visitedCount > 0
-
   useEffect(() => {
     const rooms = roomsRef.current?.querySelectorAll("[data-room-text]")
     if (!rooms) return
@@ -74,14 +71,6 @@ export function Home() {
               Pas sûr par où commencer ? Parcours conseillés →
             </Link>
           </div>
-          {hasProgress && (
-            <Link
-              to="/bilan"
-              className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 hover:text-gilt transition-colors mt-6 w-fit"
-            >
-              {visitedCount}/{modules.length} salles visitées · Voir le bilan →
-            </Link>
-          )}
         </div>
       </ArtworkBackdrop>
 
