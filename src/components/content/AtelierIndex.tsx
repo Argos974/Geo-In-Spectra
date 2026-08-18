@@ -3,19 +3,28 @@ import { atelierSeances } from "@/data/atelierSeances"
 import { slugify } from "@/lib/slug"
 import { scrollToAnchor } from "@/lib/lenisStore"
 import { cn } from "@/lib/utils"
+import type { ContentLevel } from "@/content/types"
 
 type ViewMode = "pipeline" | "salle"
 
 /**
  * Plan de l'Atelier à deux vues du même contenu, jamais dupliqué : "pipeline"
- * (ordre séquentiel 1→9, chaque séance construit sur la précédente) et "par
- * salle" (mêmes séances regroupées par module théorique de référence). Les
- * deux ne font que naviguer vers les mêmes ancres de titre déjà rendues par
- * ContentBlocks (même mécanisme que RoomIndex) — aucun contenu n'est recalculé
- * ou réordonné dans le DOM, seul l'index de navigation change de tri.
+ * (ordre séquentiel 1→12 de la piste active, chaque séance construit sur la
+ * précédente) et "par salle" (mêmes séances regroupées par module théorique de
+ * référence). Les deux ne font que naviguer vers les mêmes ancres de titre déjà
+ * rendues par ContentBlocks (même mécanisme que RoomIndex) — aucun contenu
+ * n'est recalculé ou réordonné dans le DOM, seul l'index de navigation change
+ * de tri.
+ *
+ * Filtré par `activeLevels` (même Set que le filtre "Afficher" du reste du
+ * cours, ModuleChapterBody) : l'Atelier a trois pistes indépendantes de 12
+ * séances (Lycée/Licence-BUT/Master-Recherche), pas un seul programme mixte —
+ * sans ce filtre, le plan listerait les 36 séances des trois pistes à la fois,
+ * y compris celles que le filtre de niveau masque déjà plus bas dans la page.
  */
-export function AtelierIndex() {
+export function AtelierIndex({ activeLevels }: { activeLevels: Set<ContentLevel> }) {
   const [mode, setMode] = useState<ViewMode>("pipeline")
+  const visibleSeances = useMemo(() => atelierSeances.filter((s) => activeLevels.has(s.level)), [activeLevels])
 
   function goTo(heading: string) {
     const id = slugify(heading)
@@ -28,14 +37,14 @@ export function AtelierIndex() {
 
   const grouped = useMemo(() => {
     const map = new Map<string, { label: string; seances: string[] }>()
-    for (const s of atelierSeances) {
+    for (const s of visibleSeances) {
       for (const salle of s.salles) {
         if (!map.has(salle.slug)) map.set(salle.slug, { label: salle.label, seances: [] })
         map.get(salle.slug)!.seances.push(s.heading)
       }
     }
     return [...map.values()]
-  }, [])
+  }, [visibleSeances])
 
   const rowClass = "w-full flex items-center justify-between gap-4 px-5 py-3 text-left font-heading text-base text-parchment-dim hover:text-gilt hover:bg-gilt/[0.04] transition-colors"
 
@@ -72,7 +81,7 @@ export function AtelierIndex() {
       {mode === "pipeline" ? (
         <table className="w-full text-sm">
           <tbody>
-            {atelierSeances.map((s) => (
+            {visibleSeances.map((s) => (
               <tr key={s.heading} className="border-t border-gilt/10">
                 <td className="py-0">
                   <button type="button" onClick={() => goTo(s.heading)} className={rowClass}>

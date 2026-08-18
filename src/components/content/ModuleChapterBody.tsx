@@ -40,7 +40,15 @@ interface ModuleChapterBodyProps {
  * pas de repli possible), ChapterAccordion à l'ouverture réelle (voir son onOpen).
  */
 export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProps) {
-  const [activeLevels, setActiveLevels] = useState<Set<ContentLevel>>(new Set(ALL_LEVELS))
+  // L'Atelier a trois pistes indépendantes de 12 séances (Lycée/Licence-BUT/
+  // Master-Recherche), pas un même contenu simplement stratifié par niveau
+  // comme les autres salles : afficher les trois par défaut (ALL_LEVELS)
+  // dumperait 36 séances non liées d'un coup à la première visite. Un seul
+  // niveau par défaut (Licence/BUT, la piste la plus généraliste) — le filtre
+  // "Afficher" reste modifiable normalement pour changer de piste ensuite.
+  const [activeLevels, setActiveLevels] = useState<Set<ContentLevel>>(
+    () => new Set(module.slug === "travaux-pratiques" ? ["superieur"] : ALL_LEVELS),
+  )
   const activeParcours = useActiveParcours()
   const parcours = activeParcours ? PARCOURS.find((p) => p.id === activeParcours.id) : undefined
 
@@ -138,7 +146,7 @@ export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProp
         )}
       </div>
 
-      {module.slug === "travaux-pratiques" ? <AtelierIndex /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
+      {module.slug === "travaux-pratiques" ? <AtelierIndex activeLevels={activeLevels} /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
 
       {filteredBlocks ? (
         filteredBlocks.length > 0 ? (

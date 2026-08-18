@@ -98,9 +98,10 @@ export function ProgrammePage() {
               </div>
             )}
             <p className="text-parchment-dim/80 text-sm text-justify border-l-2 border-gilt/20 pl-4">
-              Cette trame nomme 7 des 12 séances de l'Atelier (2, 3, 4, 5, 6, 7, 9) : les séances 1, 8, 10, 11 et 12
-              (dont trois ajoutées depuis à l'Atelier) se rattachent naturellement selon le temps disponible. Voir
-              la vue d'ensemble ci-dessous pour les intégrer.
+              Cette trame nomme 8 des 12 séances de la piste Licence/BUT (2, 3, 4, 5, 6, 7, 10, 12) : les séances 1,
+              8, 9 et 11 se rattachent naturellement selon le temps disponible. L'Atelier compte deux autres pistes
+              indépendantes (Lycée, Master/Recherche) non couvertes par cette trame — voir la vue d'ensemble
+              ci-dessous pour les trois.
             </p>
           </ChapterAccordion>
 

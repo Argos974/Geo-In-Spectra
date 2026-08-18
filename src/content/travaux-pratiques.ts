@@ -3,7 +3,7 @@ import type { ContentBlock } from "./types"
 export const travauxPratiquesContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "Chaque séance ci-dessous est autonome : elle peut constituer un TP complet à elle seule, avec son objectif, ses exercices à plusieurs niveaux, ses ressources et un corrigé dépliable. Elles sont néanmoins conçues pour s'enchaîner, en particulier les séances 2 et 3, qui réutilisent directement le résultat l'une de l'autre. Utilise le module La Méthode pour la structure attendue d'un compte-rendu ou d'un rapport, et le module Références pour les sources de données et de documentation. Le corrigé de chaque séance est volontairement masqué par défaut : chercher d'abord, comparer ensuite, c'est la vérification qui consolide l'apprentissage, pas la lecture seule de la réponse.",
+    text: "L'Atelier propose trois pistes indépendantes de douze séances chacune, un semestre par piste : Lycée (socle, guidé, sans code), Licence/BUT (technique, Python, livrable professionnel) et Master/Recherche (rigueur statistique, IMRaD, techniques avancées). Choisis un seul niveau dans le filtre « Afficher » ci-dessus pour ne voir que les douze séances de ta piste, dans l'ordre. Chaque séance est autonome (objectif, étapes, corrigé dépliable), mais les séances d'une même piste s'enchaînent, en particulier quand l'une réutilise directement le résultat de la précédente. Utilise le module La Méthode pour la structure attendue d'un compte-rendu ou d'un rapport, et le module Références pour les sources de données et de documentation. Le corrigé de chaque séance est volontairement masqué par défaut : chercher d'abord, comparer ensuite, c'est la vérification qui consolide l'apprentissage, pas la lecture seule de la réponse.",
   },
   {
     type: "diagram",
@@ -14,7 +14,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
   { type: "heading", text: "Le jeu de données canonique : une vraie scène Sentinel-2" },
   {
     type: "paragraph",
-    text: "Plutôt que de renvoyer vers « télécharge une image quelque part », plusieurs séances ci-dessous (3, 5, 6, 7, 9) s'appuient sur un même jeu de données réel, extrait directement de l'archive Copernicus et fourni avec le site : une scène Sentinel-2 authentique, quasiment sans nuage, sur une emprise de 3,2 × 3,3 km à Vitrolles (Bouches-du-Rhône), qui mélange volontairement bâti dense, infrastructure aéroportuaire, végétation de garrigue et une portion de l'étang de Berre, de quoi illustrer chaque indice du module Les Couleurs sur un seul et même territoire.",
+    text: "Plutôt que de renvoyer vers « télécharge une image quelque part », de nombreuses séances des trois pistes s'appuient sur un même jeu de données réel, extrait directement de l'archive Copernicus et fourni avec le site : une scène Sentinel-2 authentique, quasiment sans nuage, sur une emprise de 3,2 × 3,3 km à Vitrolles (Bouches-du-Rhône), qui mélange volontairement bâti dense, infrastructure aéroportuaire, végétation de garrigue et une portion de l'étang de Berre, de quoi illustrer chaque indice du module Les Couleurs sur un seul et même territoire.",
   },
   {
     type: "imagepair",
@@ -40,9 +40,9 @@ export const travauxPratiquesContent: ContentBlock[] = [
       ["sentinel2_2024-08-06_vitrolles_bands.tif", "6 bandes réelles en réflectance de surface (0–1) : bleu, vert, rouge, red-edge (B5), NIR, SWIR (B11), EPSG:2154, 10 m"],
       ["sentinel2_2024-08-06_vitrolles_indices.tif", "NDVI, NDMI, NDBI, NDRE, NDWI déjà calculés, en 5 bandes, pour vérifier un calcul plutôt que le refaire"],
       ["emprise.geojson", "Polygone exact de l'emprise, pour un découpage (clip) propre"],
-      ["grille_100m_indices.geojson", "1122 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule, résultat de référence pour la séance 3"],
+      ["grille_100m_indices.geojson", "1122 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule, résultat de référence utilisé dans plusieurs séances de géoréférencement et d'indices"],
       ["stats.json", "Statistiques réelles (min/max/moyenne/écart-type) de chaque indice sur toute l'emprise"],
-      ["classification_reference.json", "Classification SCL réelle à 3 classes, découpage train/test et matrices de confusion Random Forest/MLP, référence pour la séance 6"],
+      ["classification_reference.json", "Classification SCL réelle à 3 classes, découpage train/test et matrices de confusion Random Forest/MLP, référence pour les séances de classification (Licence/BUT et Master/Recherche)"],
     ],
   },
   {
@@ -70,12 +70,18 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "NDVI : moyenne 0.33, écart-type 0.30 (de -1.0 à 1.0 selon les pixels). NDMI : moyenne -0.09, écart-type 0.16. NDBI : moyenne +0.09 (symétrique du NDMI, comme attendu de la formule). NDRE : moyenne 0.16. NDWI : moyenne -0.47, cohérent avec un territoire majoritairement non aquatique, comportant une portion d'étang. Ces chiffres, pas des estimations, servent de repère pour vérifier un calcul personnel : un NDVI moyen très éloigné de 0.33 sur cette même emprise signale une erreur de calcul (mauvaises bandes, mauvais CRS, image non corrigée), pas une variante légitime.",
   },
 
-  { type: "heading", text: "Séance 1 : Cartographie de base sous QGIS", level: "lycee" },
+  // ============================================================================
+  // PISTE LYCÉE — 12 séances, socle, guidé, sans code. Progression : mécanique
+  // SIG de base (1-4) → lecture d'image et indices simples (5-7) → communication
+  // cartographique (8-11) → synthèse (12).
+  // ============================================================================
+
+  { type: "heading", text: "Séance Lycée 1 : Cartographie de base sous QGIS", level: "lycee" },
   {
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Manipuler dans l'ordre les quatre gestes de base de tout projet SIG : charger une donnée, vérifier son système de coordonnées, la styliser selon un attribut, la mettre en page pour la communiquer. Ce sont les gestes qui reviennent dans toutes les séances suivantes.",
+    text: "Manipuler dans l'ordre les quatre gestes de base de tout projet SIG : charger une donnée, vérifier son système de coordonnées, la styliser selon un attribut, la mettre en page pour la communiquer. Ce sont les gestes qui reviennent dans toutes les séances suivantes de cette piste.",
   },
   {
     type: "list",
@@ -90,33 +96,14 @@ export const travauxPratiquesContent: ContentBlock[] = [
     ],
   },
   {
-    type: "comparison",
-    items: [
-      {
-        label: "Découverte",
-        points: ["Une seule couche, une seule classe de symbologie", "Légende et échelle suffisent pour valider la séance"],
-      },
-      {
-        label: "Approfondissement",
-        points: ["Superposer une deuxième couche (ex. cours d'eau) avec sa propre symbologie", "Justifier par écrit le choix de la palette de couleur (voir module La Méthode, critique du document)"],
-      },
-    ],
-  },
-  {
     type: "solution",
-    title: "Séance 1",
-    text: "Une donnée numérique continue (population, superficie) se porte par la variable visuelle valeur (dégradé clair → foncé d'une même teinte) ou par la taille (ronds proportionnels), jamais par une palette de teintes qualitatives sans ordre, voir le module La Méthode, section sémiologie graphique. Une classification par quantiles (autant d'entités par classe) donne en général une carte plus lisible qu'une classification à intervalles égaux quand la donnée est très inégalement répartie (cas fréquent d'une population communale). Le CRS du projet doit afficher EPSG:2154 en bas à droite avant tout calcul de surface : sinon $area renvoie une valeur en degrés carrés, inexploitable.",
+    title: "Séance Lycée 1",
+    text: "Une donnée numérique continue (population, superficie) se porte par la variable visuelle valeur (dégradé clair → foncé d'une même teinte) ou par la taille (ronds proportionnels), jamais par une palette de teintes qualitatives sans ordre, voir le module La Méthode, section sémiologie graphique. Le CRS du projet doit afficher EPSG:2154 en bas à droite avant tout calcul de surface : sinon $area renvoie une valeur en degrés carrés, inexploitable.",
     items: [
       "Critère 1 : le CRS du projet est bien Lambert-93 (EPSG:2154), vérifié avant toute mesure",
       "Critère 2 : la variable visuelle choisie correspond au type de donnée (valeur/taille pour une quantité, teinte pour une catégorie)",
       "Critère 3 : la légende, l'échelle et l'orientation sont toutes trois présentes sur la mise en page finale",
     ],
-  },
-  {
-    type: "link",
-    to: "/references",
-    label: "Ressources : data.gouv.fr, documentation QGIS",
-    description: "Voir le thème « Géomatique, SIG et données géographiques » dans les Références.",
   },
   {
     type: "link",
@@ -128,155 +115,96 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "devoir",
     format: "Carte",
     title: "Une carte thématique simple, sur une vraie donnée publique",
-    prompt: "En reprenant exactement la méthode de la séance 1 (télécharger, vérifier le CRS, styliser, mettre en page), produis une carte de la répartition d'un indicateur au choix (population, superficie, densité…) sur les communes d'un département de ton choix, à partir d'un jeu de données réel de data.gouv.fr. La carte doit être exportée en PDF ou image, prête à être présentée telle quelle.",
+    prompt: "En reprenant exactement la méthode de cette séance (télécharger, vérifier le CRS, styliser, mettre en page), produis une carte de la répartition d'un indicateur au choix (population, superficie, densité…) sur les communes d'un département de ton choix, à partir d'un jeu de données réel de data.gouv.fr.",
     criteria: [
       "Le CRS du projet est vérifié et correspond à un système projeté métrique",
       "La variable visuelle (taille, valeur ou teinte) correspond au type de donnée représentée",
       "Légende, échelle et orientation figurent toutes trois sur la mise en page finale",
-      "La source des données (nom du jeu, date de téléchargement) est indiquée sur la carte ou en note",
     ],
   },
 
-  { type: "heading", text: "Séance 2 : Géoréférencer une image par grille", level: "superieur" },
-  {
-    type: "paragraph",
-    text: "Une image scannée ou une photo aérienne ancienne n'a, à l'origine, aucune coordonnée : ses pixels ne sont repérés que par leur ligne et leur colonne. La géoréférencer, c'est établir la correspondance entre ces pixels et de vraies coordonnées terrain, une compétence indispensable pour exploiter n'importe quelle archive cartographique ou image non géoréférencée.",
-  },
+  { type: "heading", text: "Séance Lycée 2 : Lire et localiser, les coordonnées Lambert-93", level: "lycee" },
   {
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Comprendre qu'un géoréférencement n'est fiable que s'il s'appuie sur des points de contrôle (GCP) à coordonnées réelles certaines, jamais sur un calage approximatif « à l'œil » contre un fond de carte.",
-  },
-  {
-    type: "paragraph",
-    text: "La méthode la plus fiable quand aucun repère topographique clair n'est disponible : utiliser une grille de coordonnées déjà imprimée sur le document (grille DFCI, grille Lambert, quadrillage kilométrique). Chaque intersection de la grille est un point de contrôle dont la coordonnée réelle se lit directement sur les codes affichés en marge.",
+    text: "Comprendre concrètement ce que veut dire une coordonnée projetée (module Fondements) en la manipulant réellement, avant de l'utiliser sans y penser dans toutes les séances suivantes.",
   },
   {
     type: "list",
     ordered: true,
     items: [
-      "Repérer sur l'image au moins 6 à 8 intersections de la grille, réparties sur toute l'étendue du document (pas seulement dans un coin)",
-      "Lire la coordonnée réelle de chaque intersection à partir des codes de la grille imprimée",
-      "Dans QGIS, ouvrir le Géoréférenceur (Raster > Géoréférencement), placer un point de contrôle sur chaque intersection repérée et saisir sa coordonnée réelle",
-      "Choisir une transformation adaptée (une transformation affine linéaire suffit si la grille est régulière et sans rotation notable ; une transformation polynomiale d'ordre 2 ou plus absorbe une distorsion non linéaire, au prix d'un risque de sur-ajustement si peu de points sont disponibles)",
-      "Lancer le géoréférencement et vérifier le résidu affiché par point : il doit rester très inférieur à l'espacement réel de la grille",
-      "Exporter le raster géoréférencé (GeoTIFF, EPSG:2154)",
+      "Ouvrir QGIS, activer l'affichage des coordonnées de la souris en bas de l'écran, vérifier qu'elles sont bien en EPSG:2154 (valeurs à 6-7 chiffres, en mètres, pas en degrés)",
+      "Placer un point sur une ville connue et relever ses coordonnées X/Y réelles",
+      "Comparer ce point à sa coordonnée théorique (voir le jeu « Le Compas des Coordonnées », module Fondements)",
+      "Créer trois points supplémentaires à des coordonnées données, sans repère visuel, uniquement à partir des chiffres (Couche > Créer une couche > Couche temporaire, saisie manuelle)",
     ],
   },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Vérifier, ne pas supposer",
-    text: "Un géoréférencement peut sembler correct visuellement tout en étant décalé de plusieurs dizaines de mètres. Toujours comparer le résultat à une couche de référence connue et indépendante (ex. un réseau routier ou une grille administrative déjà géoréférencée) avant de considérer l'image comme fiable : c'est la même logique de contrôle indépendant que la RMSE présentée au module Le Compas.",
-  },
-  {
-    type: "comparison",
-    items: [
-      {
-        label: "Découverte",
-        points: ["4 points de contrôle sur une grille bien visible et régulière", "Transformation affine simple"],
-      },
-      {
-        label: "Avancé",
-        points: ["Grille partiellement illisible : combiner points de grille et repères topographiques identifiables", "Comparer deux transformations (affine vs polynomiale) et justifier laquelle convient le mieux, résidu par résidu"],
-      },
-    ],
-  },
+  { type: "game" },
   {
     type: "solution",
-    title: "Séance 2",
-    text: "Sur une grille régulière sans rotation, une transformation affine à 6 points bien répartis donne typiquement un résidu par point inférieur à 1/100e de l'espacement réel de la grille (par exemple, moins de 20 m de résidu pour une grille DFCI espacée de 2 km), un résidu du même ordre de grandeur que l'espacement de la grille signale presque toujours une erreur de lecture de coordonnée sur au moins un point, pas une limite de la méthode. Une transformation polynomiale d'ordre 2 avec seulement 4-6 points donne souvent un résidu affiché plus faible que l'affine, sans que ce soit un signe de meilleure qualité : c'est un sur-ajustement (le polynôme absorbe le bruit de pointage plutôt que la vraie distorsion), à éviter en dessous d'une dizaine de points de contrôle.",
+    title: "Séance Lycée 2",
+    text: "En EPSG:2154, X croît vers l'est et Y croît vers le nord, l'origine du système est choisie loin au sud-ouest de la France pour que toutes les coordonnées réelles du territoire restent positives. Une coordonnée qui commence par un 6 en X correspond à peu près à la moitié ouest de la France, un 9 ou 10 à l'extrême est ou au sud-est (voir les valeurs réelles du jeu du Compas des Coordonnées).",
     items: [
-      "Critère 1 : au moins 6 GCP utilisés, répartis sur toute l'étendue de l'image (pas regroupés dans un coin)",
-      "Critère 2 : le résidu par point, une fois la transformation calculée, reste très inférieur à l'espacement réel de la grille",
-      "Critère 3 : le résultat est comparé à une couche de référence indépendante avant d'être considéré comme fiable",
+      "Critère 1 : les coordonnées affichées dans QGIS sont bien en EPSG:2154, pas en degrés",
+      "Critère 2 : les trois points saisis sans repère visuel tombent au bon endroit une fois affichés sur un fond de carte",
     ],
   },
   {
     type: "devoir",
-    format: "Introduction",
-    title: "Rédiger l'introduction d'un compte-rendu de géoréférencement",
-    prompt: "Avant même d'avoir les résultats, rédige l'introduction (150 à 200 mots) du compte-rendu de la séance 2 : contexte (nature du document à géoréférencer, pourquoi il en a besoin), objectif précis (quelle exploitation ultérieure ce géoréférencement doit permettre), et méthode annoncée (grille de coordonnées, nombre de points de contrôle prévu, transformation envisagée), sans anticiper les résultats eux-mêmes, qui n'ont pas leur place ici.",
+    format: "Exercice noté",
+    title: "Localiser cinq villes à partir de leurs seules coordonnées",
+    prompt: "Sans regarder aucune carte, place dans QGIS cinq points à partir de coordonnées Lambert-93 données par ton professeur ou trouvées toi-même (ex. sur cartes.gouv.fr). Une fois les cinq points placés, affiche un fond de carte et vérifie : chaque point tombe-t-il sur la bonne ville ?",
     criteria: [
-      "Le contexte explique la nature du document et pourquoi un géoréférencement est nécessaire, pas seulement « on va géoréférencer une image »",
-      "L'objectif est formulé de façon précise, pas comme un simple rappel du titre de la séance",
-      "La méthode est annoncée (grille, nombre de points, transformation) sans qu'aucun résultat ou chiffre de résidu n'apparaisse encore",
-      "Le texte respecte la fourchette de longueur demandée (150-200 mots), signe d'un travail de synthèse réel",
+      "Les cinq points sont saisis directement à partir des chiffres, sans triche visuelle préalable",
+      "Le résultat est vérifié après coup contre un fond de carte réel",
     ],
   },
 
-  { type: "heading", text: "Séance 3 : De l'image géoréférencée à l'indice composé", level: "superieur" },
+  { type: "heading", text: "Séance Lycée 3 : Vecteur ou raster, choisir la bonne donnée", level: "lycee" },
   {
-    type: "paragraph",
-    text: "Cette séance part directement du résultat de la séance 2 : une image auparavant sans coordonnées, maintenant géoréférencée. Trois étapes progressives, du calcul le plus simple au plus complexe.",
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le module Fondements distingue vecteur et raster en théorie : cette séance fait manipuler les deux sur le même territoire pour rendre la différence concrète, pas seulement mémorisée.",
   },
   {
     type: "list",
     ordered: true,
     items: [
-      "Calculer le NDVI sur l'image nouvellement géoréférencée (calculatrice raster, voir module Le Regard/Les Couleurs pour la formule), sans géoréférencement préalable, ce calcul produirait un résultat exact en valeur mais inutilisable en position",
-      "Superposer une grille régulière (fishnet) sur l'emprise de l'image et calculer, pour chaque cellule, la moyenne du NDVI qu'elle contient (Vecteur > Analyse > Statistiques de zone, ou l'outil « Statistiques de zone » du menu Raster, voir module Le Compas, section algèbre raster)",
-      "Répéter le géoréférencement et le calcul de NDVI sur une seconde image de la même zone, prise à une date différente",
-      "Composer un indice complexe à partir des deux dates : ΔNDVI = NDVI(date 2) − NDVI(date 1), qui met en évidence les zones de changement plutôt que l'état à un instant donné",
-    ],
-  },
-  {
-    type: "callout",
-    tone: "example",
-    title: "Pourquoi passer par la cellule plutôt que le pixel seul",
-    text: "Une moyenne par cellule lisse le bruit pixel-à-pixel et rend le résultat directement comparable à une grille administrative ou réglementaire (commune, parcelle, zone de gestion), c'est la même logique que les statistiques zonales utilisées dans un vrai projet de suivi de territoire.",
-  },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Valider sa propre méthode contre un résultat déjà connu",
-    text: "Une fois l'étape 2 maîtrisée sur une image personnelle, la refaire sur sentinel2_2024-08-06_vitrolles_bands.tif (le jeu de données canonique présenté en tête de ce module) permet une vraie vérification : grille_100m_indices.geojson donne déjà, pour 1122 cellules de 100 m, la moyenne réelle de NDVI/NDMI/NDBI calculée sur les mêmes bandes. Un fishnet + statistiques de zone fait correctement sur ce fichier doit reproduire ces valeurs à peu de choses près (petits écarts possibles selon l'alignement exact de la grille), un net écart signale une erreur dans sa propre chaîne de traitement, pas une variante légitime.",
-  },
-  {
-    type: "comparison",
-    items: [
-      {
-        label: "Intermédiaire",
-        points: ["NDVI sur l'image géoréférencée + moyenne par cellule d'une grille fournie"],
-      },
-      {
-        label: "Avancé",
-        points: ["Les deux dates, le ΔNDVI complet, et une carte finale classant les cellules en trois catégories (perte, stable, gain de végétation)"],
-      },
+      "Charger sentinel2_2024-08-06_vitrolles_bands.tif (raster, voir Ressources → Jeux de données) et une couche vecteur de bâtiments ou de parcelles sur la même zone",
+      "Zoomer fortement sur les deux couches : observer que le raster se pixellise (grille régulière de valeurs) alors que le vecteur garde des contours nets quel que soit le zoom",
+      "Mesurer la surface d'un même bâtiment de deux façons : $area sur le polygone vecteur, puis comptage de pixels × résolution sur le raster",
+      "Lister, pour trois cas concrets (une limite de commune, la température d'une zone, un réseau routier), quel format est le plus adapté et pourquoi",
     ],
   },
   {
     type: "solution",
-    title: "Séance 3",
-    text: "Un ΔNDVI se classe généralement en trois catégories à partir d'un seuil autour de ±0.05 à ±0.1 (au-delà de l'incertitude de mesure habituelle entre deux dates) : une variation plus faible que ce seuil est considérée stable, pas un vrai changement. Un ΔNDVI très négatif localisé (chute franche, au-delà de -0.3) sur une zone auparavant boisée est la signature typique d'une coupe rase ou d'un défrichement plutôt que d'un simple cycle saisonnier, qui produit rarement une chute aussi abrupte d'une date à l'autre si les deux images sont prises à la même saison.",
+    title: "Séance Lycée 3",
+    text: "Le vecteur convient à une donnée qui a des limites nettes et un sens discret (une commune, un bâtiment, une route) ; le raster convient à un phénomène continu mesuré partout de la même façon (une température, une réflectance, une altitude). Les deux mesures de surface (vecteur exact vs comptage de pixels) diffèrent légèrement : c'est normal, la résolution du raster (10 m ici) introduit une marge d'erreur sur les contours que le vecteur n'a pas.",
     items: [
-      "Critère 1 : le NDVI est calculé sur l'image géoréférencée, pas sur l'image brute (position exploitable)",
-      "Critère 2 : les deux dates comparées sont prises à une saison comparable, sinon le ΔNDVI mélange changement réel et cycle végétatif normal",
-      "Critère 3 : un seuil explicite (documenté) sépare perte / stable / gain, plutôt qu'un découpage arbitraire",
+      "Critère 1 : les deux mesures de surface sont réellement effectuées et comparées, pas seulement l'une des deux",
+      "Critère 2 : le choix vecteur/raster pour les trois cas est justifié, pas seulement affirmé",
     ],
   },
   {
     type: "link",
-    to: "/module/indices-spectraux",
-    label: "Revoir : indices composés et complexes",
-    description: "Le module Les Couleurs détaille la logique des indices composés avant de les mettre en pratique ici.",
+    to: "/module/fondamentaux",
+    label: "Revoir : vecteur vs raster",
+    description: "Le module Fondements détaille cette distinction avant de la pratiquer ici.",
   },
   {
     type: "devoir",
-    format: "Analyse de texte",
-    title: "Analyser l'article fondateur d'un indice que tu viens d'utiliser",
-    prompt: "Trouve et lis le résumé (abstract) de l'article original ayant introduit le NDVI (Rouse et al., 1974, « Monitoring vegetation systems in the Great Plains with ERTS ») ou celui du SAVI (Huete, 1988, « A soil-adjusted vegetation index »), les deux sont largement documentés et cités dans la littérature de télédétection, cherchables par leur titre exact. Rédige une analyse de 300 à 400 mots qui répond à trois questions : quel problème concret l'auteur cherchait-il à résoudre ? quelle est l'idée centrale de sa solution ? en quoi la limite qu'il identifie (ou corrige) rejoint-elle ce que tu as observé toi-même en séance 3 (ΔNDVI, confusion sol nu/végétation clairsemée) ?",
+    format: "Tableau comparatif",
+    title: "Vecteur ou raster pour cinq données réelles",
+    prompt: "Pour cinq données géographiques de ton choix (autres que les exemples de la séance), indique dans un tableau si chacune est naturellement vecteur ou raster, et justifie en une phrase.",
     criteria: [
-      "La source exacte (auteur, année, titre) est citée, pas une paraphrase anonyme de « un article sur le NDVI »",
-      "Le problème initial identifié par l'auteur est reformulé avec ses propres mots, pas recopié",
-      "Un lien explicite est établi avec l'expérience concrète de la séance 3, pas une simple juxtaposition",
-      "La longueur demandée (300-400 mots) est respectée : ni un résumé trop court, ni un remplissage hors sujet",
+      "Les cinq choix sont majoritairement corrects",
+      "Chaque justification s'appuie sur la nature de la donnée (discrète/continue), pas sur une habitude logicielle",
     ],
   },
-  { type: "game" },
 
-  { type: "heading", text: "Séance 4 : Analyse spatiale, buffer et intersection", level: "lycee" },
+  { type: "heading", text: "Séance Lycée 4 : Buffer et intersection, une contrainte réglementaire simple", level: "lycee" },
   {
     type: "callout",
     tone: "info",
@@ -302,34 +230,33 @@ export const travauxPratiquesContent: ContentBlock[] = [
   },
   {
     type: "solution",
-    title: "Séance 4",
-    text: "Une parcelle qui chevauche partiellement le buffer (et non entièrement) apparaît en plusieurs entités après l'intersection : une pour la portion dans le buffer, la géométrie d'origine de la parcelle n'est pas conservée telle quelle. C'est le comportement normal de l'outil Intersection, pas une erreur : sommer $area sur le résultat donne bien la surface réellement concernée par la contrainte, même pour les parcelles partiellement traversées.",
+    title: "Séance Lycée 4",
+    text: "Une parcelle qui chevauche partiellement le buffer (et non entièrement) apparaît en plusieurs entités après l'intersection : une pour la portion dans le buffer, la géométrie d'origine de la parcelle n'est pas conservée telle quelle. C'est le comportement normal de l'outil Intersection, pas une erreur.",
     items: [
       "Critère 1 : le buffer est créé sur une couche en CRS projeté métrique (EPSG:2154), jamais en degrés",
-      "Critère 2 : le résultat de l'intersection contient une entité par portion de parcelle réellement recoupée par le buffer, pas par parcelle entière",
-      "Critère 3 : la surface totale est calculée par somme de $area sur le résultat de l'intersection, pas sur la couche de parcelles d'origine",
+      "Critère 2 : le résultat de l'intersection contient une entité par portion de parcelle réellement recoupée, pas par parcelle entière",
+      "Critère 3 : la surface totale est calculée par somme de $area sur le résultat de l'intersection",
     ],
   },
   {
     type: "link",
     to: "/module/outils-sig",
     label: "Revoir : buffer, intersection et opérations spatiales",
-    description: "Le module Le Compas détaille les opérations spatiales (buffer, intersection, union, différence) mobilisées dans cette séance, avant de les pratiquer ici.",
+    description: "Le module Le Compas détaille les opérations spatiales mobilisées dans cette séance, avant de les pratiquer ici.",
   },
   {
     type: "devoir",
     format: "Carte",
     title: "Carte d'une contrainte réglementaire réelle, buffer + intersection",
-    prompt: "Choisis une contrainte réglementaire réelle basée sur une distance (bande de 200 m autour d'un cours d'eau, périmètre de protection autour d'un monument, zone tampon autour d'une ICPE…) sur un territoire de ton choix. Produis une carte qui montre la zone tampon, les parcelles ou bâtiments concernés (résultat de l'intersection), et une légende qui distingue clairement les entités entièrement incluses des entités seulement partiellement recoupées. Accompagne la carte d'un paragraphe de critique du document (module La Méthode, section 1) : quelle limite cette analyse comporte-t-elle (distance réglementaire simplifiée, données parcellaires pas toujours à jour…) ?",
+    prompt: "Choisis une contrainte réglementaire réelle basée sur une distance (bande de 200 m autour d'un cours d'eau, périmètre de protection autour d'un monument…) sur un territoire de ton choix. Produis une carte qui montre la zone tampon et les parcelles concernées, avec une légende qui distingue les entités entièrement incluses de celles seulement partiellement recoupées.",
     criteria: [
       "Le buffer est calculé sur une couche projetée métrique, la distance correspond à une vraie contrainte nommée et sourcée",
-      "La légende distingue visuellement les entités entièrement dans le buffer de celles seulement partiellement recoupées",
+      "La légende distingue visuellement les deux cas (entièrement/partiellement inclus)",
       "La surface totale concernée est indiquée sur la carte ou dans le texte d'accompagnement",
-      "Le paragraphe de critique identifie au moins une limite réelle de l'analyse, pas une remarque générique",
     ],
   },
 
-  { type: "heading", text: "Bonus séance 4 : la même question, sur une donnée vivante" },
+  { type: "heading", text: "Bonus : la même question, sur une donnée vivante" },
   {
     type: "paragraph",
     text: "Le jeu de données canonique (bâti, végétation, eau) est une photographie figée au 06/08/2024. OpenStreetMap couvre la même emprise exacte, mais c'est une donnée vivante (VGI, volunteered geographic information) : n'importe quel contributeur peut la corriger ou la compléter à tout moment. Le bloc ci-dessous interroge l'API Overpass en direct, au moment où tu charges cette page, pas une capture figée à l'avance.",
@@ -339,53 +266,608 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Consigne",
-    text: "Note le nombre de bâtiments affiché. Recharge la page dans quelques minutes (bouton « Rafraîchir ») : le chiffre a-t-il changé ? Compare ensuite ce nombre à ta propre lecture visuelle du bâti sur l'image Sentinel-2 de la séance 1, te semble-t-il cohérent (même ordre de grandeur), ou la couverture OSM te paraît-elle nettement incomplète sur cette zone précise ?",
+    text: "Note le nombre de bâtiments affiché. Recharge la page dans quelques minutes (bouton « Rafraîchir ») : le chiffre a-t-il changé ? Compare ensuite ce nombre à ta propre lecture visuelle du bâti sur l'image Sentinel-2 vue plus haut, te semble-t-il cohérent, ou la couverture OSM te paraît-elle nettement incomplète sur cette zone précise ?",
   },
   {
     type: "solution",
-    title: "Bonus séance 4",
-    text: "Il n'y a volontairement pas de nombre \"correct\" à retenir ici : c'est le point de l'exercice. Deux lectures possibles, selon ce que tu observes : si le nombre de bâtiments OSM est proche de ta lecture visuelle, la zone est bien cartographiée par la communauté (fréquent en zone urbaine dense en France). S'il est nettement inférieur, tu viens de mettre en évidence une limite réelle et fréquente des données participatives (VGI) : une complétude très inégale selon les zones et les contributeurs locaux, contrairement à un jeu de données satellite qui, lui, couvre uniformément tout le territoire à chaque passage : c'est la différence entre donnée autoritative (Sentinel-2, produite et validée de façon homogène) et donnée participative (OSM, aussi bonne que ses contributeurs locaux).",
+    title: "Bonus",
+    text: "Il n'y a volontairement pas de nombre \"correct\" à retenir ici : c'est le point de l'exercice. Si le nombre de bâtiments OSM est proche de ta lecture visuelle, la zone est bien cartographiée par la communauté. S'il est nettement inférieur, tu viens de mettre en évidence une limite réelle et fréquente des données participatives (VGI) : une complétude très inégale selon les zones, contrairement à un jeu de données satellite qui couvre uniformément tout le territoire.",
+  },
+
+  { type: "heading", text: "Séance Lycée 5 : Lire une image satellite à l'œil, la photo-interprétation", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Avant tout calcul d'indice, savoir lire une image à l'œil reste une compétence à part entière (module Le Regard, section 9) : les six clés classiques de la photo-interprétation, appliquées à une vraie image.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Charger la composition couleur naturelle du jeu de données Vitrolles (voir Ressources → Jeux de données)",
+      "Identifier, une par une, les six clés de lecture sur l'image : texture, teinte, ombre portée, motif, association/contexte, forme (voir module Le Regard, section 9)",
+      "Pour chaque clé, noter au moins un exemple précis localisé sur l'image (ex. « motif régulier » = rangées d'arbres visibles au sud-est)",
+      "Rédiger une légende commentée de l'image en dix lignes maximum, une clé de lecture par ligne",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 5",
+    text: "Sur cette image, la piste de l'aéroport Marseille-Provence est reconnaissable par sa texture lisse et sa forme allongée régulière (motif), le tissu urbain de Vitrolles par sa texture grenue et son association à un réseau routier visible, la garrigue environnante par sa texture irrégulière et sa teinte verte à brune hétérogène.",
+    items: [
+      "Critère 1 : les six clés sont toutes mobilisées, pas seulement la teinte (la plus facile)",
+      "Critère 2 : chaque clé est illustrée par un exemple localisé précis sur l'image, pas une généralité",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Revoir : la photo-interprétation",
+    description: "Le module Le Regard détaille les six clés de lecture classiques mobilisées ici.",
+  },
+  {
+    type: "devoir",
+    format: "Légende commentée",
+    title: "Légende commentée d'une image satellite au choix",
+    prompt: "Choisis une autre image satellite (une capture d'écran de cartes.gouv.fr ou Google Maps en vue satellite suffit) d'un lieu que tu connais. Rédige sa légende commentée selon les six clés de lecture, comme en séance.",
+    criteria: [
+      "Les six clés sont mobilisées",
+      "Chaque observation est localisée précisément sur l'image, pas générale",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 6 : Calculer et lire un NDVI", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Calculer le NDVI une première fois, sur une seule date, pour comprendre la mécanique de la formule (module Les Couleurs) avant toute complication (comparaison de dates, seuils de classification).",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Charger sentinel2_2024-08-06_vitrolles_bands.tif (voir Ressources → Jeux de données)",
+      "Ouvrir la calculatrice raster de QGIS (Raster > Calculatrice raster)",
+      "Saisir la formule NDVI = (NIR − Rouge) / (NIR + Rouge) en utilisant les bandes correspondantes du fichier",
+      "Appliquer une palette de couleur divergente (marron → blanc → vert) centrée sur 0",
+      "Comparer visuellement le résultat à la composition couleur naturelle de la même zone",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 6",
+    text: "Le NDVI moyen réel sur cette emprise est de 0.33 (voir le callout « Valeurs réelles de référence » en tête de module) : un NDVI très éloigné de cette valeur sur le même fichier signale une erreur de formule (mauvaises bandes, division par zéro non gérée), pas une variante légitime. La végétation apparaît en vert, le bâti et la piste d'aéroport en blanc à marron, l'eau de l'étang de Berre proche de zéro ou légèrement négative.",
+    items: [
+      "Critère 1 : la formule utilise bien les bandes NIR et Rouge, pas une autre paire",
+      "Critère 2 : le NDVI moyen obtenu est cohérent avec la valeur réelle de référence (0.33)",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Revoir : la formule du NDVI",
+    description: "Le module Les Couleurs détaille l'origine et la lecture du NDVI avant de le calculer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Carte",
+    title: "Carte NDVI commentée",
+    prompt: "Produis une carte NDVI mise en page (légende, échelle) de l'emprise Vitrolles, accompagnée de trois phrases qui identifient et expliquent les zones les plus vertes et les plus marron.",
+    criteria: [
+      "La palette utilisée est divergente et centrée sur 0, pas une palette arc-en-ciel non ordonnée",
+      "Les trois phrases identifient des zones précises, pas des généralités",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 7 : Repérer le bâti et l'eau, NDBI et NDWI", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le NDVI répond à « où est la végétation ? ». D'autres indices, construits sur le même principe (différence normalisée de deux bandes), répondent à d'autres questions : où est le bâti, où est l'eau.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Sur le même fichier que la séance précédente, calculer le NDBI = (SWIR − NIR) / (SWIR + NIR) (module Les Couleurs)",
+      "Calculer le NDWI = (Vert − NIR) / (Vert + NIR)",
+      "Comparer les trois cartes (NDVI, NDBI, NDWI) côte à côte sur les mêmes zones : la piste d'aéroport, le tissu urbain, l'étang de Berre",
+      "Formuler une phrase pour chaque indice : quelle zone y ressort le plus nettement, et pourquoi (quelle bande domine dans la formule) ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 7",
+    text: "Le NDBI moyen réel sur cette emprise est de +0.09 (symétrique du NDMI, comme attendu de la formule), il ressort fortement positif sur la piste d'aéroport et le bâti dense. Le NDWI, moyenne réelle -0.47, cohérent avec un territoire majoritairement non aquatique, ne devient positif que sur l'étang de Berre lui-même.",
+    items: [
+      "Critère 1 : les deux formules utilisent les bonnes paires de bandes",
+      "Critère 2 : chaque phrase relie la zone qui ressort à la bande dominante de la formule, pas une simple observation visuelle",
+    ],
+  },
+  {
+    type: "devoir",
+    format: "Tableau",
+    title: "Trois indices, trois cartes, un territoire",
+    prompt: "Produis les trois cartes (NDVI, NDBI, NDWI) de l'emprise Vitrolles côte à côte, avec un tableau qui résume pour chacune : formule, bande dominante, zone qui ressort le plus nettement.",
+    criteria: [
+      "Les trois cartes utilisent des palettes cohérentes et lisibles",
+      "Le tableau est correctement rempli pour les trois indices",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 8 : Mettre en page une carte, légende et sémiologie", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Une carte techniquement correcte peut rester illisible si sa mise en page ne respecte pas la sémiologie graphique de Bertin (module La Méthode). Cette séance porte uniquement sur la communication, pas sur un nouveau calcul.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Reprendre une carte déjà produite dans une séance précédente (NDVI, NDBI, ou la carte thématique de la séance 1)",
+      "Identifier la variable visuelle utilisée (taille, valeur, teinte, forme) et vérifier qu'elle correspond au type de donnée (module La Méthode, section 4)",
+      "Organiser la légende par rubriques logiques plutôt que dans l'ordre de création des couches",
+      "Ajouter un titre qui répond à une question, pas un simple intitulé technique (« Répartition du NDVI » plutôt que « NDVI »)",
+      "Exporter la mise en page en PDF, vérifier qu'elle reste lisible imprimée en noir et blanc si possible",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 8",
+    text: "L'erreur sémiologique la plus commune est d'utiliser une palette de teintes qualitatives (rouge puis bleu puis vert) pour une donnée ordonnée : l'œil ne perçoit pas d'ordre naturel entre des teintes. Une donnée continue et ordonnée comme le NDVI doit toujours être portée par un dégradé de valeur (clair → foncé d'une même teinte, ou divergent autour d'un centre significatif), jamais par une succession de couleurs sans ordre perceptif.",
+    items: [
+      "Critère 1 : la variable visuelle correspond bien au type de donnée représentée",
+      "Critère 2 : le titre répond à une question, pas un simple intitulé technique",
+      "Critère 3 : la légende est organisée par rubriques, pas dans l'ordre de création",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/methodologie",
+    label: "Revoir : la sémiologie graphique de Bertin",
+    description: "Le module La Méthode détaille les six variables visuelles avant de les appliquer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Carte",
+    title: "Refonte sémiologique d'une carte existante",
+    prompt: "Reprends une carte produite dans une séance précédente et refais entièrement sa mise en page en appliquant strictement la sémiologie de Bertin. Joins une phrase qui explique ce qui a changé et pourquoi.",
+    criteria: [
+      "La nouvelle version corrige au moins un vrai défaut sémiologique de la version précédente",
+      "La phrase d'explication justifie le changement par la sémiologie, pas par le goût personnel",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 9 : Commenter un document cartographique", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Les séances précédentes produisent toutes un document. Celle-ci fait l'inverse : lire et commenter par écrit un document déjà produit, l'exercice le plus fréquent en épreuve de lycée (module La Méthode, section 1). Un commentaire de document n'est pas une description : c'est une lecture organisée qui répond à une problématique.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger la composition couleur naturelle et le NDVI du jeu de données Vitrolles (voir Ressources → Jeux de données)",
+      "Identifier, sans aucun calcul, les grands ensembles visibles sur la composition naturelle : bâti, végétation, eau, infrastructure (séance Lycée 5)",
+      "Comparer les mêmes zones sur le NDVI : formuler une problématique du type « le contraste bâti/végétation vu à l'œil se confirme-t-il, et se précise-t-il, une fois l'indice calculé ? »",
+      "Rédiger un commentaire structuré (introduction avec problématique, deux ou trois parties, conclusion) qui répond à cette problématique, appuyé uniquement sur ce que montrent les deux documents",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "S'appuyer sur le document, pas sur une connaissance générale plaquée dessus",
+    text: "L'erreur la plus fréquente d'un commentaire de document consiste à réciter une connaissance générale sur le NDVI sans jamais revenir au document précis fourni. Chaque affirmation doit pouvoir être localisée sur l'image, pas rester générale.",
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 9",
+    text: "Sur ce jeu de données, la piste de l'aéroport Marseille-Provence et le tissu urbain de Vitrolles se distinguent nettement en blanc à marron sur le NDVI, cohérent avec la lecture à l'œil de la composition naturelle. L'étang de Berre apparaît en valeurs NDVI proches de zéro ou négatives, une nuance qu'une lecture purement visuelle ne permet pas de chiffrer aussi précisément. Un bon commentaire relève cette complémentarité : le NDVI ne remplace pas la lecture à l'œil, il la précise.",
+    items: [
+      "Critère 1 : la problématique figure explicitement en introduction",
+      "Critère 2 : chaque affirmation renvoie à un endroit précis du document",
+      "Critère 3 : la conclusion répond réellement à la problématique posée",
+    ],
+  },
+  {
+    type: "devoir",
+    format: "Commentaire de document",
+    title: "Commentaire structuré sur un document au choix",
+    prompt: "En reprenant la méthode de cette séance, rédige un commentaire structuré (400 à 600 mots) sur la composition naturelle et le NDVI du jeu de données Vitrolles, ou sur un autre couple image/indice de ton choix issu d'une séance précédente.",
+    criteria: [
+      "Une problématique explicite figure en introduction et structure tout le commentaire",
+      "Chaque partie s'appuie sur un élément localisable du document",
+      "La longueur demandée (400-600 mots) est respectée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 10 : Une carte ancienne face à une image récente", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le module Fondements retrace la petite histoire de la cartographie (section 10) : cette séance confronte concrètement un document ancien à une donnée satellite actuelle, sur le même territoire.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Trouver une carte ancienne d'un territoire connu (carte de Cassini sur remonterletemps.ign.fr, ou une carte postale/plan ancien numérisé de ta commune)",
+      "Charger, sur la même zone, une image satellite récente (Vitrolles, ou cartes.gouv.fr pour un autre territoire)",
+      "Repérer au moins trois éléments présents sur la carte ancienne encore identifiables aujourd'hui (une route, un cours d'eau, un bâti ancien)",
+      "Repérer au moins un changement majeur (urbanisation, disparition d'une zone agricole, nouvelle infrastructure)",
+      "Rédiger un court texte qui date approximativement et explique ce changement",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 10",
+    text: "Les éléments les plus stables dans le temps sont généralement le réseau hydrographique et les tracés routiers anciens (souvent conservés même urbanisés) ; les éléments les plus changeants sont l'occupation du sol elle-même (agricole → urbain) et les infrastructures récentes (aéroports, zones industrielles) qui n'existaient simplement pas sur un document ancien.",
+    items: [
+      "Critère 1 : les trois éléments stables identifiés sont réellement présents sur les deux documents",
+      "Critère 2 : le changement identifié est expliqué, pas seulement constaté",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/fondamentaux",
+    label: "Revoir : petite histoire de la cartographie",
+    description: "Le module Fondements retrace les grandes étapes de la cartographie avant cette confrontation pratique.",
+  },
+  {
+    type: "devoir",
+    format: "Texte comparatif",
+    title: "Comparaison illustrée ancien/actuel",
+    prompt: "Produis un document qui juxtapose la carte ancienne et l'image récente choisies, avec ton texte de comparaison (250 mots minimum).",
+    criteria: [
+      "Les deux documents sont juxtaposés de façon lisible, à échelle comparable",
+      "Le texte identifie clairement continuité et changement, pas l'un sans l'autre",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 11 : Le débat Mercator/Peters, mesurer une déformation", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le module Fondements présente le débat Mercator/Peters (section 12) : cette séance fait mesurer, pas seulement lire, l'ampleur réelle d'une déformation de projection.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Dans QGIS, afficher une couche mondiale des pays en projection Mercator (EPSG:3857) puis en projection équivalente (EPSG:8857, Equal Earth, ou une projection Peters approximée)",
+      "Mesurer la surface réelle du Groenland et celle de l'Afrique (table attributaire ou $area, en reprojection appropriée pour une mesure de surface fiable)",
+      "Comparer ce ratio réel à ce qu'en montre visuellement la projection Mercator",
+      "Rédiger un court paragraphe qui prend position, avec les chiffres mesurés à l'appui, sur l'usage de Mercator comme carte scolaire par défaut",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 11",
+    text: "L'Afrique fait réellement environ 14 fois la surface du Groenland, alors qu'en projection Mercator les deux paraissent de taille quasi comparable sur une carte du monde standard : c'est l'exemple le plus souvent cité du débat Mercator/Peters, ici mesuré et non simplement affirmé.",
+    items: [
+      "Critère 1 : les deux surfaces sont réellement mesurées dans QGIS, pas recopiées d'une source externe sans vérification",
+      "Critère 2 : le paragraphe final s'appuie explicitement sur les chiffres mesurés",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/fondamentaux",
+    label: "Revoir : le débat des projections",
+    description: "Le module Fondements détaille les enjeux du choix d'une projection avant cette mesure pratique.",
+  },
+  {
+    type: "devoir",
+    format: "Paragraphe argumenté",
+    title: "Prise de position sourcée sur le choix d'une projection",
+    prompt: "Rédige un paragraphe argumenté (200 mots) qui prend position sur la question : une carte scolaire du monde devrait-elle rester en projection Mercator ? Appuie ta position sur les mesures réalisées en séance.",
+    criteria: [
+      "La position est claire et argumentée, pas seulement descriptive",
+      "Les chiffres mesurés en séance sont explicitement mobilisés",
+    ],
+  },
+
+  { type: "heading", text: "Séance Lycée 12 : Mini-projet, une carte thématique complète", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Les onze séances précédentes traitent chacune une compétence isolée. Ce mini-projet les combine : un vrai sujet, une problématique, une carte mise en page et un court commentaire, sans la complexité technique des pistes Licence/BUT ou Master/Recherche.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Cahier des charges",
+    text: "Choisir un territoire et un sujet simple (répartition d'un indicateur, contrainte réglementaire par buffer, ou lecture NDVI/NDBI d'une zone). Produire une carte mise en page complète (titre problématisé, légende organisée, échelle, source) accompagnée d'un commentaire structuré de 300 mots (introduction, problématique, deux parties, conclusion).",
+  },
+  {
+    type: "table",
+    headers: ["Section évaluée", "Barème indicatif"],
+    rows: [
+      ["Problématique et cadrage du sujet", "/3"],
+      ["Méthode (source documentée, geste SIG correct)", "/4"],
+      ["Carte de synthèse (sémiologie, légende, lisibilité)", "/5"],
+      ["Commentaire structuré (introduction, parties, conclusion)", "/5"],
+      ["Forme du rendu", "/3"],
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Lycée 12 : grille d'auto-évaluation",
+    items: [
+      "La carte a un titre problématisé, pas un simple intitulé du sujet",
+      "La légende est organisée en rubriques logiques",
+      "Chaque figuré cartographique respecte la sémiologie de Bertin",
+      "Le commentaire répond réellement à la problématique posée en introduction",
+      "La source des données (nom, date) est indiquée sur la carte ou en note",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/methodologie",
+    label: "Structurer le commentaire rendu",
+    description: "Le module La Méthode détaille la structure attendue d'un commentaire de document.",
+  },
+  {
+    type: "devoir",
+    format: "Carte et commentaire",
+    title: "Mini-projet complet",
+    prompt: "Réalise le mini-projet complet selon le cahier des charges ci-dessus, sur un territoire de ton choix.",
+    criteria: [
+      "Le sujet est clairement problématisé",
+      "Chaque section du barème est identifiable dans le rendu",
+      "Le commentaire respecte la structure introduction/parties/conclusion",
+    ],
+  },
+
+  // ============================================================================
+  // PISTE LICENCE/BUT — 12 séances, technique, Python, livrable professionnel.
+  // Progression : automatisation et géoréférencement (1-3) → analyse spatiale et
+  // bases de données (4-6) → classification et statistiques (7-8) → radar,
+  // audit qualité, rapport (9-11) → synthèse professionnelle (12).
+  // ============================================================================
+
+  { type: "heading", text: "Séance Licence/BUT 1 : Prise en main QGIS avancée et automatisation légère", level: "superieur" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Aller au-delà du clic-bouton : automatiser une chaîne de traitements répétitive dans QGIS avant de passer au code pur (séance Licence/BUT 5), un palier intermédiaire souvent sauté à tort.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Charger un jeu de couches vecteur (communes, cours d'eau, bâtiments) sur un territoire de ton choix",
+      "Construire un modèle de traitement dans QGIS (Traitement > Modeleur graphique) qui enchaîne reprojection, buffer et intersection en une seule opération réutilisable",
+      "Exécuter ce modèle sur deux territoires différents sans retoucher les paramètres un par un",
+      "Documenter le modèle (nom, description, paramètres) pour qu'un tiers puisse le réutiliser sans explication orale",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 1",
+    text: "Un modèle bien construit expose ses paramètres variables (couches d'entrée, distance de buffer) en haut du formulaire plutôt que de les figer en dur dans chaque sous-outil : c'est ce qui le rend réellement réutilisable sur un territoire différent, pas seulement rejouable à l'identique.",
+    items: [
+      "Critère 1 : le modèle s'exécute sans erreur sur un second territoire, sans modification manuelle des sous-outils",
+      "Critère 2 : les paramètres variables sont exposés en haut du formulaire, pas figés",
+    ],
   },
   {
     type: "link",
     to: "/module/outils-sig",
-    label: "Revoir : opérations spatiales et sources de données",
-    description: "Le module Le Compas détaille les opérations spatiales appliquées ici à une donnée interrogée en direct plutôt qu'à un fichier statique.",
+    label: "Revoir : automatisation dans QGIS",
+    description: "Le module Le Compas présente le modeleur graphique et l'automatisation Python avant de les pratiquer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Modèle documenté",
+    title: "Modèle de traitement réutilisable",
+    prompt: "Construis un modèle QGIS pour une chaîne de traitements de ton choix (au moins 3 étapes), documente-le, et fournis une capture d'écran de son exécution réussie sur deux territoires différents.",
+    criteria: [
+      "Le modèle comporte au moins 3 étapes enchaînées",
+      "Il s'exécute sans erreur sur deux territoires distincts",
+      "La documentation permet à un tiers de le réutiliser sans explication orale",
+    ],
   },
 
-  { type: "heading", text: "Séance 5 : Programmation géospatiale simple", level: "superieur" },
+  { type: "heading", text: "Séance Licence/BUT 2 : Géoréférencer une image par grille", level: "superieur" },
   {
     type: "paragraph",
-    text: "Quatre exercices courts, indépendants, qui couvrent les besoins les plus fréquents en géographie et télédétection : lire/transformer une donnée vecteur, mesurer, automatiser un calcul raster répétitif, et interroger une donnée en ligne de commande sans passer par une interface graphique.",
+    text: "Une image scannée ou une photo aérienne ancienne n'a, à l'origine, aucune coordonnée : ses pixels ne sont repérés que par leur ligne et leur colonne. La géoréférencer, c'est établir la correspondance entre ces pixels et de vraies coordonnées terrain.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Comprendre qu'un géoréférencement n'est fiable que s'il s'appuie sur des points de contrôle (GCP) à coordonnées réelles certaines, jamais sur un calage approximatif « à l'œil » contre un fond de carte.",
+  },
+  {
+    type: "paragraph",
+    text: "La méthode la plus fiable quand aucun repère topographique clair n'est disponible : utiliser une grille de coordonnées déjà imprimée sur le document (grille DFCI, grille Lambert, quadrillage kilométrique). Chaque intersection de la grille est un point de contrôle dont la coordonnée réelle se lit directement sur les codes affichés en marge.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Repérer sur l'image au moins 6 à 8 intersections de la grille, réparties sur toute l'étendue du document",
+      "Lire la coordonnée réelle de chaque intersection à partir des codes de la grille imprimée",
+      "Dans QGIS, ouvrir le Géoréférenceur (Raster > Géoréférencement), placer un point de contrôle sur chaque intersection repérée et saisir sa coordonnée réelle",
+      "Choisir une transformation adaptée (affine si la grille est régulière et sans rotation ; polynomiale d'ordre 2+ pour une distorsion non linéaire, au risque de sur-ajustement avec peu de points)",
+      "Lancer le géoréférencement et vérifier le résidu affiché par point",
+      "Exporter le raster géoréférencé (GeoTIFF, EPSG:2154)",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Vérifier, ne pas supposer",
+    text: "Un géoréférencement peut sembler correct visuellement tout en étant décalé de plusieurs dizaines de mètres. Toujours comparer le résultat à une couche de référence connue et indépendante avant de le considérer comme fiable.",
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 2",
+    text: "Sur une grille régulière sans rotation, une transformation affine à 6 points bien répartis donne typiquement un résidu par point inférieur à 1/100e de l'espacement réel de la grille. Une transformation polynomiale d'ordre 2 avec seulement 4-6 points donne souvent un résidu affiché plus faible, sans que ce soit un signe de meilleure qualité : c'est un sur-ajustement, à éviter en dessous d'une dizaine de points.",
+    items: [
+      "Critère 1 : au moins 6 GCP utilisés, répartis sur toute l'étendue de l'image",
+      "Critère 2 : le résidu par point reste très inférieur à l'espacement réel de la grille",
+      "Critère 3 : le résultat est comparé à une couche de référence indépendante",
+    ],
+  },
+  {
+    type: "devoir",
+    format: "Introduction",
+    title: "Rédiger l'introduction d'un compte-rendu de géoréférencement",
+    prompt: "Avant même d'avoir les résultats, rédige l'introduction (150 à 200 mots) du compte-rendu de cette séance : contexte, objectif précis, méthode annoncée (grille, nombre de points, transformation), sans anticiper les résultats.",
+    criteria: [
+      "Le contexte explique la nature du document et pourquoi un géoréférencement est nécessaire",
+      "La méthode est annoncée sans qu'aucun chiffre de résidu n'apparaisse encore",
+      "La fourchette de longueur (150-200 mots) est respectée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Licence/BUT 3 : De l'image géoréférencée à l'indice composé", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Cette séance part directement du résultat de la séance Licence/BUT 2 : une image auparavant sans coordonnées, maintenant géoréférencée.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Calculer le NDVI sur l'image nouvellement géoréférencée (calculatrice raster), sans géoréférencement préalable ce calcul serait exact en valeur mais inutilisable en position",
+      "Superposer une grille régulière (fishnet) sur l'emprise et calculer, pour chaque cellule, la moyenne du NDVI (Statistiques de zone, module Le Compas)",
+      "Répéter le géoréférencement et le calcul de NDVI sur une seconde image de la même zone, prise à une date différente",
+      "Composer ΔNDVI = NDVI(date 2) − NDVI(date 1), qui met en évidence les zones de changement",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Valider sa propre méthode contre un résultat déjà connu",
+    text: "Une fois l'étape 2 maîtrisée, la refaire sur sentinel2_2024-08-06_vitrolles_bands.tif permet une vraie vérification : grille_100m_indices.geojson donne déjà, pour 1122 cellules de 100 m, la moyenne réelle de NDVI/NDMI/NDBI calculée sur les mêmes bandes. Un fishnet + statistiques de zone fait correctement doit reproduire ces valeurs à peu de choses près.",
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 3",
+    text: "Un ΔNDVI se classe généralement en trois catégories à partir d'un seuil autour de ±0.05 à ±0.1 : une variation plus faible que ce seuil est considérée stable. Un ΔNDVI très négatif localisé (au-delà de -0.3) sur une zone auparavant boisée est la signature typique d'une coupe rase plutôt que d'un simple cycle saisonnier.",
+    items: [
+      "Critère 1 : le NDVI est calculé sur l'image géoréférencée",
+      "Critère 2 : les deux dates comparées sont prises à une saison comparable",
+      "Critère 3 : un seuil explicite sépare perte / stable / gain",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Revoir : indices composés et complexes",
+    description: "Le module Les Couleurs détaille la logique des indices composés avant de les mettre en pratique ici.",
+  },
+  {
+    type: "devoir",
+    format: "Analyse de texte",
+    title: "Analyser l'article fondateur d'un indice que tu viens d'utiliser",
+    prompt: "Trouve et lis le résumé de l'article original ayant introduit le NDVI (Rouse et al., 1974) ou le SAVI (Huete, 1988). Rédige une analyse de 300 à 400 mots : quel problème l'auteur cherchait-il à résoudre ? quelle est l'idée centrale de sa solution ? en quoi la limite qu'il identifie rejoint-elle ce que tu as observé toi-même en séance (ΔNDVI, confusion sol nu/végétation clairsemée) ?",
+    criteria: [
+      "La source exacte est citée",
+      "Le problème initial est reformulé avec ses propres mots",
+      "Un lien explicite est établi avec l'expérience concrète de la séance",
+      "La longueur (300-400 mots) est respectée",
+    ],
+  },
+  { type: "game" },
+
+  { type: "heading", text: "Séance Licence/BUT 4 : Analyse spatiale professionnelle, jointure et découpage", level: "superieur" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Aller au-delà du buffer/intersection de base : jointure spatiale et clip sont les deux opérations les plus fréquentes d'un vrai projet SIG professionnel, rarement pratiquées ensemble en formation.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Charger une couche de bâtiments et une couche de communes sur un même territoire",
+      "Réaliser une jointure spatiale (Vecteur > Gestion des données > Joindre les attributs par localisation) pour attribuer à chaque bâtiment sa commune",
+      "Découper (Clip) la couche de bâtiments jointe selon l'emprise d'un seul département, vérifier que le résultat ne contient plus que les entités concernées",
+      "Calculer, par commune, le nombre de bâtiments (Statistiques par attribut groupées) sans recompter manuellement",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Jointure spatiale n'est pas jointure attributaire",
+    text: "Une jointure spatiale associe des entités par leur position (contenance, intersection, proximité), une jointure attributaire les associe par un champ commun (un code identique dans les deux tables). Confondre les deux est une erreur fréquente qui produit un résultat vide ou aberrant sans message d'erreur explicite.",
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 4",
+    text: "Un bâtiment exactement sur une limite communale peut se voir attribué l'une ou l'autre commune selon la règle de jointure choisie (intersecte vs contient), un cas limite à documenter plutôt qu'à ignorer dans un vrai livrable professionnel.",
+    items: [
+      "Critère 1 : la jointure spatiale attribue correctement la commune à chaque bâtiment",
+      "Critère 2 : le clip ne conserve que les entités réellement dans l'emprise choisie",
+      "Critère 3 : le comptage par commune est vérifié sur au moins un cas connu",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/outils-sig",
+    label: "Revoir : jointure spatiale et opérations de découpage",
+    description: "Le module Le Compas détaille ces opérations avant de les pratiquer ici en contexte professionnel.",
+  },
+  {
+    type: "devoir",
+    format: "Tableau de bord",
+    title: "Comptage par commune, jointure + découpage",
+    prompt: "Sur un territoire de ton choix, produis un tableau (commune → nombre d'entités) obtenu par jointure spatiale et découpage, avec une carte qui l'illustre.",
+    criteria: [
+      "Le tableau est obtenu par jointure spatiale réelle, pas par comptage manuel",
+      "Le découpage préalable est justifié et documenté",
+    ],
+  },
+
+  { type: "heading", text: "Séance Licence/BUT 5 : Programmation géospatiale simple", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Quatre exercices courts, indépendants, qui couvrent les besoins les plus fréquents en géographie et télédétection : lire/transformer une donnée vecteur, mesurer, automatiser un calcul raster répétitif, et interroger une donnée en ligne de commande.",
   },
   {
     type: "formula",
-    label: "Exercice 1 (découverte) : d'un CSV à une carte",
+    label: "Exercice 1 : d'un CSV à une carte",
     formula: "gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs='EPSG:4326')",
     note: "Charger un CSV de points (colonnes lon/lat), le convertir en GeoDataFrame, le reprojeter en EPSG:2154, puis l'exporter en GeoJSON.",
   },
   {
     type: "formula",
-    label: "Exercice 2 (intermédiaire) : mesurer avec Shapely/GeoPandas",
+    label: "Exercice 2 : mesurer avec Shapely/GeoPandas",
     formula: "gdf['buffer_200m'] = gdf.to_crs(epsg=2154).geometry.buffer(200)",
-    note: "Reprendre le GeoDataFrame de l'exercice 1, créer un buffer de 200 m autour de chaque point, puis calculer l'aire cumulée de tous les buffers (attention aux chevauchements, non gérés par une simple somme, utiliser gdf.unary_union avant de mesurer l'aire réelle couverte).",
+    note: "Créer un buffer de 200 m autour de chaque point, puis calculer l'aire cumulée réelle (gdf.unary_union avant de mesurer, pour ne pas compter deux fois les chevauchements).",
   },
   {
     type: "formula",
-    label: "Exercice 3 (avancé) : automatiser un calcul NDVI par lot",
+    label: "Exercice 3 : automatiser un calcul NDVI par lot",
     formula: "for red, nir in zip(sorted(glob('*_B04.tif')), sorted(glob('*_B08.tif'))): ndvi = (read(nir) - read(red)) / (read(nir) + read(red))",
-    note: "Avec rasterio : parcourir un dossier contenant plusieurs paires de bandes rouge/NIR, calculer le NDVI de chacune, et enregistrer chaque résultat sous un nom dérivé du fichier source, la base de tout traitement par lot en télédétection.",
+    note: "Avec rasterio : parcourir un dossier de paires de bandes rouge/NIR, calculer le NDVI de chacune, enregistrer chaque résultat sous un nom dérivé du fichier source.",
   },
   {
     type: "formula",
-    label: "Exercice 4 (découverte) : inspecter une donnée en ligne de commande avec GDAL",
+    label: "Exercice 4 : inspecter une donnée en ligne de commande avec GDAL",
     formula: "gdalinfo -stats sentinel2_2024-08-06_vitrolles_indices.tif",
-    note: "GDAL/OGR (la bibliothèque sur laquelle repose la quasi-totalité des logiciels SIG, dont QGIS) fournit des utilitaires en ligne de commande pour inspecter rapidement une couche sans l'ouvrir dans une interface graphique : ogrinfo pour le vecteur (nombre d'entités, CRS, champs), gdalinfo pour le raster (dimensions, résolution, statistiques par bande). Sur le fichier réel du jeu de données canonique (bande 1 = NDVI), gdalinfo -stats doit afficher un minimum proche de -1, un maximum proche de 1 et une moyenne proche de 0.33 : les mêmes chiffres que le callout \"Valeurs réelles de référence\" en tête de ce module : un réflexe utile pour vérifier une donnée avant de l'intégrer à un traitement automatisé plus long, ou simplement pour confirmer qu'un fichier téléchargé n'est pas corrompu.",
+    note: "Sur le fichier réel du jeu de données canonique (bande 1 = NDVI), gdalinfo -stats doit afficher un minimum proche de -1, un maximum proche de 1 et une moyenne proche de 0.33 : un réflexe utile pour vérifier une donnée avant de l'intégrer à un traitement automatisé.",
   },
   {
     type: "solution",
-    title: "Séance 5",
-    text: "Exercice 1 : le piège le plus fréquent est d'oublier crs='EPSG:4326' à la construction du GeoDataFrame (les colonnes lon/lat n'étant que des nombres, GeoPandas ne devine jamais le CRS source), sans cette précision, la reprojection ultérieure vers EPSG:2154 produit un résultat silencieusement faux, sans erreur levée. Exercice 2 : gdf.to_crs(epsg=2154).geometry.buffer(200).unary_union.area donne l'aire réellement couverte (chevauchements fusionnés) ; gdf.buffer(200).area.sum() surestime dès que deux buffers se recouvrent, ce qui est fréquent sur des points rapprochés. Exercice 3 : diviser par np.where(denominateur==0, 1, denominateur) ou utiliser un masque évite une division par zéro sur les pixels où NIR+Rouge = 0 (bordures de l'image, valeurs nodata). Exercice 4 : gdalinfo -stats ajoute les statistiques (min/max/moyenne/écart-type) aux métadonnées du fichier, utile pour repérer d'un coup d'œil un NDVI hors de l'intervalle [-1, 1], signe d'une erreur en amont.",
+    title: "Séance Licence/BUT 5",
+    text: "Exercice 1 : oublier crs='EPSG:4326' à la construction du GeoDataFrame produit une reprojection ultérieure silencieusement fausse, sans erreur levée. Exercice 2 : gdf.buffer(200).area.sum() surestime dès que deux buffers se recouvrent, contrairement à .unary_union.area. Exercice 3 : diviser par np.where(denominateur==0, 1, denominateur) évite une division par zéro sur les pixels nodata. Exercice 4 : gdalinfo -stats repère d'un coup d'œil un NDVI hors de l'intervalle [-1, 1], signe d'une erreur en amont.",
   },
   {
     type: "link",
@@ -397,16 +879,66 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "devoir",
     format: "Étude bibliographique",
     title: "Comparer deux sources sur le choix PyQGIS vs GeoPandas",
-    prompt: "Trouve deux sources distinctes (documentation officielle, article de blog technique signé, présentation de conférence FOSS4G/PyData…) qui discutent, chacune à sa manière, du choix entre automatiser un traitement dans PyQGIS ou dans un pipeline Python autonome (GeoPandas, rasterio). Rédige une synthèse de 250 mots qui ne juxtapose pas les deux sources l'une après l'autre, mais les met en dialogue : sur quel critère sont-elles d'accord, sur lequel divergent-elles, et quelle est ta propre conclusion sur ce jeu de données précis (celui de Vitrolles) ?",
+    prompt: "Trouve deux sources distinctes qui discutent du choix entre automatiser un traitement dans PyQGIS ou dans un pipeline Python autonome. Rédige une synthèse de 250 mots qui met les deux sources en dialogue, avec une conclusion personnelle appliquée au jeu de données Vitrolles.",
     criteria: [
-      "Les deux sources sont identifiées précisément (auteur/organisation, titre, où les trouver), pas de « j'ai lu quelque part que »",
-      "La synthèse compare les deux sources entre elles, pas un résumé de la première puis un résumé de la seconde",
-      "Une conclusion personnelle et justifiée referme le texte, appliquée au cas du jeu de données Vitrolles",
+      "Les deux sources sont identifiées précisément",
+      "La synthèse compare les deux sources entre elles, pas un résumé successif",
       "La longueur (250 mots) est respectée",
     ],
   },
 
-  { type: "heading", text: "Séance 6 : Classification supervisée et évaluation de précision", level: "approfondissement" },
+  { type: "heading", text: "Séance Licence/BUT 6 : Bases de données géographiques, PostGIS", level: "superieur" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Un vrai projet SIG professionnel dépasse rapidement le fichier unique : PostGIS (extension spatiale de PostgreSQL) permet de stocker, interroger et croiser de grands volumes de données géographiques par SQL, la brique standard des SIG d'entreprise.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Installer PostgreSQL/PostGIS (ou utiliser une instance déjà fournie), créer une base et activer l'extension postgis",
+      "Importer une couche vecteur depuis QGIS (clic droit > Exporter > Enregistrer les entités sous, choisir PostgreSQL comme format)",
+      "Écrire une requête SQL spatiale simple : sélectionner les entités dans un rayon donné d'un point avec ST_DWithin",
+      "Écrire une requête qui calcule une surface totale par catégorie avec ST_Area et GROUP BY",
+      "Recharger le résultat de la requête comme couche dans QGIS (Couche > Ajouter une couche > Ajouter une couche PostGIS, avec une requête personnalisée)",
+    ],
+  },
+  {
+    type: "formula",
+    label: "Requête spatiale de base",
+    formula: "SELECT nom, ST_Area(geom) FROM parcelles WHERE ST_DWithin(geom, ST_MakePoint(x, y), 500)",
+    note: "ST_DWithin est plus performant qu'un calcul de distance suivi d'un filtre, car il peut utiliser l'index spatial de la table directement.",
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 6",
+    text: "Sans index spatial (CREATE INDEX ... USING GIST), une requête ST_DWithin sur une grande table scanne toutes les lignes une par une : la différence de performance devient flagrante au-delà de quelques dizaines de milliers d'entités, la vraie raison d'être de PostGIS par rapport à un simple fichier.",
+    items: [
+      "Critère 1 : l'extension postgis est activée et la couche importée avec succès",
+      "Critère 2 : les deux requêtes SQL spatiales s'exécutent et donnent un résultat cohérent",
+      "Critère 3 : le résultat est rechargé comme couche QGIS fonctionnelle",
+    ],
+  },
+  {
+    type: "link",
+    to: "/references",
+    label: "Documentation officielle PostGIS",
+    description: "Voir le thème « Géomatique, SIG et données géographiques » dans les Références.",
+  },
+  {
+    type: "devoir",
+    format: "Requêtes documentées",
+    title: "Trois requêtes SQL spatiales sur un jeu de données réel",
+    prompt: "Importe un jeu de données de ton choix dans PostGIS, écris et documente trois requêtes spatiales distinctes (sélection par distance, agrégation par zone, intersection), fournis leur résultat.",
+    criteria: [
+      "Les trois requêtes s'exécutent sans erreur et donnent un résultat plausible",
+      "Chaque requête est commentée (ce qu'elle fait, pourquoi ce choix de fonction spatiale)",
+    ],
+  },
+
+  { type: "heading", text: "Séance Licence/BUT 7 : Classification supervisée et évaluation de précision", level: "superieur" },
   {
     type: "callout",
     tone: "info",
@@ -417,27 +949,27 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "list",
     ordered: true,
     items: [
-      "Charger sentinel2_2024-08-06_vitrolles_bands.tif (jeu de données canonique ci-dessus) et sa bande SCL, la Scene Classification Layer, calculée par l'algorithme officiel ESA/Sen2Cor, une vérité terrain déjà disponible sans digitalisation manuelle pour 3 classes franches : végétation, sol nu/bâti, eau",
-      "Réserver un tiers de l'emprise (par exemple le tiers droit) comme jeu de test, jamais montré à l'entraînement, un découpage spatial, pas un tirage aléatoire pixel par pixel (voir module L'Intelligence, mise en garde sur la fuite de données)",
+      "Charger sentinel2_2024-08-06_vitrolles_bands.tif et sa bande SCL (Scene Classification Layer, ESA/Sen2Cor), une vérité terrain déjà disponible pour 3 classes franches : végétation, sol nu/bâti, eau",
+      "Réserver un tiers de l'emprise (par exemple le tiers droit) comme jeu de test, jamais montré à l'entraînement : un découpage spatial, pas un tirage aléatoire pixel par pixel (module L'Intelligence, fuite de données)",
       "Entraîner une classification supervisée (Random Forest, scikit-learn ou SCP dans QGIS) sur les deux tiers restants uniquement, avec les 6 bandes comme variables d'entrée",
       "Appliquer le classifieur à l'ensemble de l'emprise",
-      "Construire la matrice de confusion entre la classification obtenue et les pixels de test, puis calculer la précision globale et le coefficient kappa (formules détaillées au module L'Intelligence)",
+      "Construire la matrice de confusion entre la classification obtenue et les pixels de test, puis calculer la précision globale et le coefficient kappa",
     ],
   },
   {
     type: "callout",
     tone: "warning",
     title: "Ne jamais évaluer un modèle sur les données qui ont servi à l'entraîner",
-    text: "Calculer la précision d'une classification sur les mêmes pixels que ceux utilisés pour l'entraîner donne un chiffre optimiste, souvent proche de 100 %, qui ne dit rien de la performance réelle du modèle sur le reste de l'image. C'est l'erreur méthodologique la plus grave et la plus fréquente en classification supervisée, voir la mise en garde sur la fuite de données au module L'Intelligence.",
+    text: "Calculer la précision d'une classification sur les mêmes pixels que ceux utilisés pour l'entraîner donne un chiffre optimiste, souvent proche de 100 %, qui ne dit rien de la performance réelle sur le reste de l'image.",
   },
   {
     type: "solution",
-    title: "Séance 6 : résultat réel, mesuré sur le jeu de données Vitrolles (pas une estimation)",
-    text: "Sur ce jeu réel (113 000 pixels labellisés par la SCL, découpage spatial 2/3 gauche = entraînement / 1/3 droit = test) : un Random Forest à 200 arbres atteint 100 % de précision sur l'entraînement mais seulement 96.2 % sur le test, avec un kappa de 0.640 : l'écart net entre les deux confirme le sur-apprentissage attendu d'un Random Forest peu contraint (module L'Intelligence, section sur-apprentissage). La matrice de confusion réelle montre la quasi-totalité des erreurs sur la frontière végétation ↔ sol nu/bâti (1009 pixels de végétation classés sol nu/bâti sur 2390 pixels de végétation en test), cohérent avec la confusion bâti/sol nu déjà annoncée au module Les Couleurs.",
+    title: "Séance Licence/BUT 7 : résultat réel, mesuré sur le jeu de données Vitrolles",
+    text: "Sur ce jeu réel (découpage spatial 2/3 gauche = entraînement / 1/3 droit = test) : un Random Forest à 200 arbres atteint 100 % de précision sur l'entraînement mais seulement 96.2 % sur le test, avec un kappa de 0.640, l'écart net confirme le sur-apprentissage attendu d'un Random Forest peu contraint. La classe eau, présente uniquement dans l'étang de Berre en haut à gauche de l'emprise, se retrouve à 100 % du côté entraînement avec ce découpage par tiers verticaux : 0 pixel d'eau dans le jeu de test.",
     items: [
-      "Critère 1 : le découpage entraînement/test est spatial (par zone), jamais un tirage aléatoire pixel par pixel",
-      "Critère 2 : la matrice de confusion réelle est présentée avant toute interprétation, comme un vrai rapport technique (voir module La Méthode)",
-      "Critère 3 (piège réel rencontré sur ce jeu de données) : la classe eau, présente uniquement dans l'étang de Berre en haut à gauche de l'emprise, se retrouve à 100 % du côté entraînement avec ce découpage par tiers verticaux : 0 pixel d'eau dans le jeu de test. Un score de précision qui semble bon peut donc masquer une classe jamais réellement évaluée : toujours vérifier que chaque classe a des effectifs non nuls des deux côtés du découpage avant de faire confiance au score global.",
+      "Critère 1 : le découpage entraînement/test est spatial, jamais un tirage aléatoire pixel par pixel",
+      "Critère 2 : la matrice de confusion réelle est présentée avant toute interprétation",
+      "Critère 3 : chaque classe a des effectifs non nuls des deux côtés du découpage, vérifié explicitement",
     ],
   },
   {
@@ -448,110 +980,90 @@ export const travauxPratiquesContent: ContentBlock[] = [
   },
   {
     type: "devoir",
-    format: "Analyse de texte",
-    title: "Analyser une source méthodologique sur l'évaluation d'une classification",
-    prompt: "Cherche une source qui traite spécifiquement de l'évaluation de précision d'une classification (matrice de confusion, kappa, ou leurs limites, par exemple un article citant Congalton, 1991, référence classique du domaine, ou une documentation technique d'un organisme comme l'ESA/Copernicus). Rédige une analyse de 350 mots qui met en regard ce que dit la source et le résultat réel mesuré en séance 6 (kappa 0.640, erreurs concentrées sur la frontière végétation/sol nu, classe eau totalement absente du jeu de test) : la source permet-elle d'expliquer ou de relativiser ce résultat précis ?",
+    format: "Rapport technique",
+    title: "Rapport de classification sur le jeu Vitrolles",
+    prompt: "Rédige un rapport technique court (400 mots) qui présente la méthode, la matrice de confusion réelle obtenue, le kappa, et discute explicitement la limite de la classe eau absente du jeu de test.",
     criteria: [
-      "La source est identifiée précisément, pas anonyme",
-      "L'analyse convoque explicitement les chiffres réels de la séance 6 (kappa, matrice de confusion), pas seulement des généralités",
-      "Le texte distingue clairement ce qui vient de la source de ce qui est une interprétation personnelle",
-      "La longueur (350 mots) est respectée",
+      "La méthode est décrite avec assez de précision pour être reproduite",
+      "La matrice de confusion et le kappa réels sont présentés avant toute interprétation",
+      "La limite de la classe eau est explicitement discutée",
     ],
   },
 
-  { type: "heading", text: "Séance 7 : Classification par réseau de neurones simple", level: "approfondissement" },
-  {
-    type: "paragraph",
-    text: "Le module L'Intelligence détaille les CNN, U-Net et Transformers, mais la séance 6 n'a mis en pratique que des classificateurs classiques (maximum de vraisemblance, forêts aléatoires). Cette séance ferme cet écart avec le plus simple des réseaux de neurones, un perceptron multicouche (MLP), sur les mêmes données qu'en séance 6, pour comparer directement sa précision à celle d'un Random Forest sur un pied d'égalité.",
-  },
+  { type: "heading", text: "Séance Licence/BUT 8 : Statistiques de zone et algèbre raster", level: "superieur" },
   {
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Constater par la pratique qu'un réseau de neurones, même simple, s'entraîne et s'évalue exactement selon le même protocole qu'un classificateur classique (train/validation/test, matrice de confusion, kappa), la différence est dans le modèle, pas dans la méthodologie d'évaluation.",
+    text: "Combiner plusieurs rasters par calcul algébrique (module Le Compas, section 5) est une compétence distincte du simple calcul d'un indice sur une seule image : cette séance la pratique sur un cas à plusieurs couches.",
   },
   {
     type: "list",
     ordered: true,
     items: [
-      "Reprendre le jeu d'entraînement/test de la séance 6 (mêmes polygones, même découpage train/test, condition indispensable pour une comparaison honnête)",
-      "Entraîner un MLP à une couche cachée avec scikit-learn (MLPClassifier) sur les bandes brutes et/ou les indices calculés (NDVI, NDMI, NDBI) comme variables d'entrée",
-      "Faire varier le nombre de neurones de la couche cachée (ex. 10, 50, 200) et observer l'effet sur la précision d'entraînement vs la précision de test (voir module L'Intelligence, sur-apprentissage)",
-      "Comparer la matrice de confusion et le kappa obtenus à ceux du Random Forest de la séance 6, sur le même jeu de test",
-      "Tracer la courbe de perte (loss) au fil des itérations d'entraînement (scikit-learn expose loss_curve_) pour vérifier qu'elle décroît puis se stabilise, sans jamais ré-augmenter (signe de sur-apprentissage si le suivi se fait aussi sur un jeu de validation)",
+      "Charger le fichier d'indices précalculés du jeu Vitrolles (NDVI, NDMI, NDBI, NDRE, NDWI)",
+      "Construire un indice composite simple par combinaison algébrique (ex. score de végétation en stress = NDVI faible ET NDMI faible, avec la calculatrice raster et des conditions logiques)",
+      "Calculer, par cellule d'une grille de 100 m, la statistique de zone (moyenne, écart-type, min, max) de ce nouvel indice composite",
+      "Identifier les 10 cellules les plus extrêmes (les plus en stress) et vérifier leur cohérence visuelle avec la composition couleur naturelle",
     ],
   },
   {
-    type: "formula",
-    label: "Entraîner un MLP avec scikit-learn",
-    formula: "clf = MLPClassifier(hidden_layer_sizes=(50,), max_iter=500); clf.fit(X_train, y_train)",
-    note: "X_train : tableau des bandes/indices par pixel ou par polygone d'entraînement ; y_train : la classe correspondante. Contrairement à un CNN complet (module L'Intelligence), ce MLP ne voit aucun voisinage spatial : chaque pixel est classé indépendamment de ses voisins, exactement comme le Random Forest de la séance 6. La différence de précision observée, si elle existe, vient donc uniquement de la capacité du modèle à combiner les variables d'entrée, pas d'une information spatiale supplémentaire.",
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Ne pas présumer du vainqueur avant de mesurer",
-    text: "L'intuition générale (un Random Forest généralise souvent mieux qu'un MLP sur peu de données, l'avantage des réseaux de neurones apparaissant surtout à grande échelle) n'est qu'une tendance, pas une loi : elle peut être contredite sur un jeu de données précis, comme le montre le résultat réel ci-dessous. La bonne pratique n'est jamais de présumer lequel gagnera, mais de toujours mesurer sur son propre jeu de test.",
-  },
-  {
     type: "solution",
-    title: "Séance 7 : résultat réel, mesuré sur le même jeu de données que la séance 6",
-    text: "Contrairement à l'intuition générale : sur ce jeu réel, le MLP à 50 neurones cachés fait légèrement MIEUX que le Random Forest de la séance 6 sur le jeu de test : kappa 0.673 contre 0.640, pour une précision test quasi identique (96.3 % contre 96.2 %). Le MLP à 200 neurones cachés (kappa 0.672, précision test 96.4 %) n'apporte rien de plus que celui à 50 neurones : la capacité supplémentaire ne sert à rien ici, le facteur limitant n'est pas la taille du réseau mais l'ambiguïté spectrale intrinsèque entre végétation et sol nu/bâti à cette résolution. Autre différence réelle mesurée : le Random Forest atteint 100 % de précision sur l'entraînement (sur-apprentissage net) quand le MLP plafonne à 97.3 % sur l'entraînement : sa frontière de décision, plus lisse, colle moins parfaitement aux données d'entraînement, ce qui explique en partie sa meilleure tenue sur le test.",
+    title: "Séance Licence/BUT 8",
+    text: "Un indice composite construit par simple combinaison logique (ET/OU de seuils) reste sensible au choix arbitraire des seuils, contrairement à un indice à formule fermée comme le NDVI : documenter explicitement les seuils choisis, et idéalement tester leur sensibilité (un seuil légèrement différent change-t-il beaucoup le résultat ?), fait partie intégrante d'une analyse rigoureuse.",
     items: [
-      "Critère 1 : le même découpage train/test que la séance 6 est réutilisé à l'identique (comparaison valide)",
-      "Critère 2 : la courbe de perte est tracée et commentée, pas seulement le score final",
-      "Critère 3 : un écart de précision entre MLP et Random Forest est interprété (taille du jeu de données, absence de contexte spatial), pas seulement constaté",
+      "Critère 1 : les seuils utilisés pour l'indice composite sont explicitement documentés",
+      "Critère 2 : les statistiques de zone sont calculées correctement par cellule",
+      "Critère 3 : la cohérence visuelle des cellules extrêmes est vérifiée, pas seulement le chiffre",
     ],
   },
   {
     type: "link",
-    to: "/module/traitements-ia",
-    label: "Revoir : réseaux de neurones et sur-apprentissage",
-    description: "Le module L'Intelligence détaille la fonction de perte, le sur-apprentissage et les architectures plus avancées (CNN, U-Net) que cette séance ne fait qu'effleurer avec un MLP simple.",
+    to: "/module/outils-sig",
+    label: "Revoir : statistiques de zone et algèbre raster",
+    description: "Le module Le Compas détaille ces techniques avant de les pratiquer ici sur un cas composite.",
   },
   {
     type: "devoir",
-    format: "Dissertation",
-    title: "« Le deep learning rend-il obsolètes les méthodes de classification classiques en télédétection ? »",
-    prompt: "Traite ce sujet en une dissertation complète (plan dialectique conseillé, voir module La Méthode), 600 mots minimum. Ta partie centrale doit s'appuyer explicitement sur le résultat réel mesuré en séances 6 et 7 (le MLP, un réseau de neurones pourtant très simple, fait légèrement mieux qu'un Random Forest sur ce jeu précis) comme exemple concret, pas seulement sur des généralités issues du module L'Intelligence.",
+    format: "Note technique",
+    title: "Indice composite documenté",
+    prompt: "Construis ton propre indice composite (au moins deux indices combinés) sur le jeu Vitrolles ou un autre territoire, documente les seuils choisis et teste leur sensibilité (un seuil ±20 % change-t-il beaucoup le résultat ?).",
     criteria: [
-      "Le plan est explicite et démonstratif (voir module La Méthode) : introduction, problématique, parties, transitions",
-      "Le résultat réel RF vs MLP (séances 6-7) est utilisé comme argument concret dans au moins une partie, pas relégué en simple exemple décoratif",
-      "Une limite ou nuance est explicitement discutée (taille du jeu de données, absence de contexte spatial dans un MLP pixel-par-pixel, coût de calcul/données d'un deep learning plus complexe)",
-      "La longueur minimale (600 mots) est respectée",
+      "L'indice composite combine réellement au moins deux indices existants",
+      "Les seuils sont documentés et leur sensibilité testée",
     ],
   },
 
-  { type: "heading", text: "Séance 8 : Radar et interpolation spatiale", level: "approfondissement" },
+  { type: "heading", text: "Séance Licence/BUT 9 : Radar et interpolation spatiale", level: "superieur" },
   {
     type: "paragraph",
-    text: "Deux techniques présentées en théorie (module Le Regard pour le SAR, module Le Compas pour le krigeage) mais jamais pratiquées jusqu'ici. Cette séance les met en œuvre séparément, sur des données réelles.",
+    text: "Deux techniques présentées en théorie (module Le Regard pour le SAR, module Le Compas pour le krigeage) mais jamais pratiquées jusqu'ici.",
   },
   {
     type: "list",
     ordered: true,
     items: [
-      "Télécharger une scène Sentinel-1 (niveau GRD, Ground Range Detected) sur la même zone qu'une image Sentinel-2 déjà utilisée dans une séance précédente, via Copernicus Data Space Ecosystem",
-      "Charger la scène dans QGIS, afficher la polarisation VV en niveaux de gris, puis comparer visuellement une zone en eau libre (signal faible, sombre) à une zone urbaine (signal fort, claire), confirmer à l'œil ce que la section réflexion spéculaire/double-rebond du module Le Regard prédit",
-      "Sur un jeu de points de mesure ponctuels (ex. relevés de température ou de pluviométrie d'un réseau de stations, ou à défaut un sous-échantillon aléatoire de pixels NDVI comme substitut pédagogique), calculer un variogramme expérimental (plugin QGIS SAGA ou script Python avec la bibliothèque scikit-gstat)",
-      "Ajuster un modèle théorique (sphérique ou exponentiel) sur ce variogramme, puis interpoler par krigeage ordinaire sur toute l'emprise",
-      "Comparer visuellement la carte krigée à une simple interpolation IDW (Inverse Distance Weighting) sur les mêmes points, et comparer la carte de variance de krigeage à la simple distance au point le plus proche",
+      "Télécharger une scène Sentinel-1 (niveau GRD) sur la même zone qu'une image Sentinel-2 déjà utilisée, via Copernicus Data Space Ecosystem",
+      "Charger la scène dans QGIS, afficher la polarisation VV en niveaux de gris, comparer visuellement une zone en eau libre (signal faible, sombre) à une zone urbaine (signal fort, claire)",
+      "Sur un jeu de points de mesure ponctuels (relevés réels ou sous-échantillon de pixels NDVI comme substitut pédagogique), calculer un variogramme expérimental",
+      "Ajuster un modèle théorique (sphérique ou exponentiel) sur ce variogramme, puis interpoler par krigeage ordinaire",
+      "Comparer visuellement la carte krigée à une simple interpolation IDW sur les mêmes points",
     ],
   },
   {
     type: "callout",
     tone: "example",
     title: "Pourquoi comparer à l'IDW plutôt qu'accepter le krigeage sans recul",
-    text: "L'IDW et le krigeage donnent souvent des cartes de valeurs visuellement proches sur un jeu de points bien réparti : la vraie valeur ajoutée du krigeage n'est pas toujours flagrante sur la carte de valeurs elle-même. C'est la carte de variance de krigeage (que l'IDW ne produit pas) qui révèle l'apport réel : elle montre explicitement où l'estimation est fiable (près des points de mesure) et où elle ne l'est pas (zones peu échantillonnées), une information absente de toute interpolation déterministe.",
+    text: "L'IDW et le krigeage donnent souvent des cartes de valeurs visuellement proches sur un jeu de points bien réparti : c'est la carte de variance de krigeage (que l'IDW ne produit pas) qui révèle l'apport réel, en montrant explicitement où l'estimation est fiable.",
   },
   {
     type: "solution",
-    title: "Séance 8",
-    text: "Sur la scène Sentinel-1 : une surface en eau calme apparaît nettement plus sombre en VV qu'une zone bâtie, qui ressort au contraire très brillante (effet de coin, double rebond façade/sol), un contraste souvent plus net et plus rapide à lire que sur l'image optique correspondante, en particulier si celle-ci comporte des nuages ce jour-là. Sur le variogramme : un effet de pépite élevé par rapport au palier signale un point de mesure bruité ou une variabilité à une échelle plus fine que l'espacement du réseau de points, dans ce cas, le krigeage doit être interprété avec prudence quel que soit le modèle ajusté.",
+    title: "Séance Licence/BUT 9",
+    text: "Sur la scène Sentinel-1 : une surface en eau calme apparaît nettement plus sombre en VV qu'une zone bâtie, qui ressort au contraire très brillante (effet de coin, double rebond façade/sol). Sur le variogramme : un effet de pépite élevé par rapport au palier signale un point de mesure bruité ou une variabilité plus fine que l'espacement du réseau de points.",
     items: [
-      "Critère 1 : le contraste eau/bâti en polarisation VV est identifié et relié à la physique de rétrodiffusion (module Le Regard), pas seulement décrit visuellement",
-      "Critère 2 : le variogramme expérimental est ajusté avec un modèle théorique explicite (sphérique/exponentiel), pas laissé brut",
-      "Critère 3 : la carte de variance de krigeage est produite et interprétée, pas seulement la carte de valeurs interpolées",
+      "Critère 1 : le contraste eau/bâti en VV est identifié et relié à la physique de rétrodiffusion",
+      "Critère 2 : le variogramme est ajusté avec un modèle théorique explicite",
+      "Critère 3 : la carte de variance de krigeage est produite et interprétée",
     ],
   },
   {
@@ -564,203 +1076,46 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "devoir",
     format: "Étude bibliographique",
     title: "Un cas réel d'usage opérationnel du radar ou du krigeage",
-    prompt: "Recherche un cas réel et documenté d'usage opérationnel (pas académique/théorique) de l'une des deux techniques de cette séance : le service Copernicus Emergency Management Service (EMS) pour la cartographie rapide d'inondation par SAR, ou un exemple documenté de krigeage en agriculture de précision, hydrologie ou santé publique. Rédige une synthèse de 400 mots qui explique le contexte opérationnel (qui, pourquoi, avec quelle contrainte de délai), la méthode réellement employée, et compare-la à ta propre mise en œuvre de la séance 8.",
+    prompt: "Recherche un cas réel et documenté d'usage opérationnel (Copernicus Emergency Management Service pour le SAR, ou un exemple documenté de krigeage en agriculture de précision ou hydrologie). Rédige une synthèse de 400 mots qui compare ce cas à ta propre mise en œuvre.",
     criteria: [
-      "Le cas cité est réel et sourcé précisément (organisme, document, date), pas un exemple générique inventé",
-      "Le contexte opérationnel (contrainte de délai, décideur destinataire) est explicité, pas seulement la technique",
-      "Une comparaison explicite est faite avec la mise en œuvre personnelle de la séance 8",
-      "La longueur (400 mots) est respectée",
+      "Le cas cité est réel et sourcé précisément",
+      "Le contexte opérationnel est explicité, pas seulement la technique",
+      "Une comparaison explicite est faite avec la mise en œuvre personnelle",
     ],
   },
 
-  { type: "heading", text: "Séance 9 : Étude de cas et mini-projet final", level: "approfondissement" },
-  {
-    type: "paragraph",
-    text: "Les huit séances précédentes traitent chacune une compétence isolée. Le mini-projet les combine toutes, au service d'une vraie question : le rendu attendu ici est délibérément plus exigeant que celui de toute séance précédente : un vrai sujet, une vraie problématique, une analyse qui montre une compréhension réelle de l'outil et de la matière, pas seulement une carte techniquement correcte. Quatre familles de sujets reviennent le plus souvent :",
-  },
-  {
-    type: "list",
-    items: [
-      "Risques naturels : croiser indices d'humidité/de végétation, pente et vent pour cartographier un risque incendie (voir le module Les Couleurs pour un exemple réel d'indice composite de comportement du feu)",
-      "Agriculture de précision : suivi du NDVI d'une parcelle dans le temps pour cibler l'irrigation ou détecter un stress hydrique précoce",
-      "Urbanisme : NDBI et séries temporelles pour mesurer l'étalement urbain d'une commune sur dix ans",
-      "Climat et environnement : détection de changement (déforestation, recul d'un glacier) par comparaison de deux dates, comme en séance 3",
-    ],
-  },
-  {
-    type: "callout",
-    tone: "example",
-    title: "Trois sujets réels, déjà problématisés, à choisir tels quels ou à adapter à ton propre territoire",
-    text: "1. « La vulnérabilité à la surchauffe estivale d'une commune est-elle corrélée à la densité du bâti et au déficit de végétation ? » (croiser NDBI, NDVI et pente : risques naturels × urbanisme). 2. « Comment le stress hydrique d'un secteur agricole a-t-il évolué sur plusieurs années, lu à travers le NDVI en pleine saison sèche ? » (série temporelle NDVI : agriculture de précision). 3. « Le front urbain d'une commune littorale a-t-il progressé vers une zone à risque (submersion, incendie) entre deux dates ? » (détection de changement, comme en séance 3, croisée à une zone à aléa : urbanisme × risques naturels). Chacun de ces trois sujets mobilise volontairement plus d'une compétence isolée des séances précédentes : c'est cette combinaison, pas la difficulté technique d'une seule étape, qui distingue le mini-projet d'un simple exercice supplémentaire.",
-  },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Interdisciplinarité : un atout, jamais une obligation",
-    text: "Chacun des trois sujets ci-dessus admet une lecture purement physique (aléa, contrainte du milieu) ou peut être enrichi d'une dimension humaine (politique d'aménagement, inégalité d'exposition selon les quartiers, choix agricoles économiques), les deux angles, ou un seul, sont recevables. Un projet qui articule explicitement géographie physique et géographie humaine (ex. \"le risque est physique, mais son exposition sociale ne l'est pas\") démontre une compréhension plus large de la discipline, et cela se retrouve dans le barème ci-dessous, mais un projet mono-disciplinaire rigoureux et bien mené n'est pas pénalisé pour autant.",
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Cahier des charges du mini-projet",
-    text: "Choisir un territoire et un sujet (l'un des trois ci-dessus, ou une variante personnelle sur le même modèle). Produire une carte finale qui combine au minimum : une donnée vecteur, une donnée raster ou un indice spectral calculé, et au moins une analyse spatiale (buffer, intersection ou jointure spatiale). Le rendu attendu est une carte mise en page (légende organisée, échelle, source des données, sémiologie graphique justifiée) accompagnée d'un rapport complet structuré selon le module La Méthode (contexte, données et méthode, résultats, discussion, recommandations), pas un simple paragraphe de commentaire.",
-  },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Démarrer directement sur le jeu de données canonique",
-    text: "Sans territoire personnel en tête, le jeu de données Vitrolles présenté en tête de ce module se prête directement au sujet 1 (NDBI déjà calculé sur du bâti réel, dont l'aéroport Marseille-Provence, contraste net avec la garrigue environnante), un point de départ réel et déjà vérifié, plutôt qu'un jeu de données à dénicher soi-même avant de pouvoir commencer.",
-  },
-  {
-    type: "table",
-    headers: ["Section évaluée", "Barème indicatif"],
-    rows: [
-      ["Problématique et cadrage du sujet (précision, pertinence par rapport au territoire choisi)", "/3"],
-      ["Données et méthode (sources documentées, reproductible par un tiers)", "/4"],
-      ["Carte de synthèse (sémiologie de Bertin, légende, lisibilité)", "/5"],
-      ["Résultats présentés avant toute interprétation", "/3"],
-      ["Discussion (limites, incertitude, ouverture interdisciplinaire le cas échéant)", "/4"],
-      ["Forme du rendu (structure du rapport, présentation)", "/1"],
-    ],
-  },
-  {
-    type: "devoir",
-    format: "Rapport",
-    title: "Rapport complet du mini-projet",
-    prompt: "Rédige le rapport complet (pas seulement la carte) : contexte et objectif, données et méthode documentées de façon reproductible, résultats présentés avant toute interprétation, discussion des limites, et, si le sujet choisi s'y prête, une ouverture interdisciplinaire explicite (géographie humaine et/ou physique). Ce rapport est le rendu le plus exigeant de l'Atelier : il doit démontrer une vraie compréhension de l'outil et de la matière, pas seulement l'exécution correcte d'une suite d'étapes techniques.",
-    criteria: [
-      "Le sujet traité est l'un des trois problématisés ci-dessus, ou une variante personnelle construite sur le même modèle (pas un sujet vague du type \"étudier la végétation d'une zone\")",
-      "Chaque section du barème ci-dessus est identifiable dans le rendu (problématique, données/méthode, carte, résultats, discussion)",
-      "La discussion admet explicitement au moins une limite réelle du travail, pas une formule de politesse",
-      "Si une dimension interdisciplinaire est choisie, elle est articulée avec le résultat physique, pas juxtaposée en paragraphe séparé sans lien",
-    ],
-  },
-  {
-    type: "solution",
-    title: "Séance 9 : grille d'auto-évaluation du rendu",
-    items: [
-      "La carte a un titre problématisé (pas un simple intitulé du sujet), voir module La Méthode, section croquis",
-      "La légende est organisée en rubriques logiques, pas une liste de symboles dans l'ordre de création",
-      "Chaque figuré cartographique respecte la sémiologie de Bertin (variable adaptée au type de donnée qu'il porte)",
-      "Le rapport sépare nettement résultats (cartes, chiffres) et discussion (limites, incertitude), jamais mélangés dans le même paragraphe",
-      "Les sources de données (capteur, date, résolution) sont documentées, pas seulement citées de mémoire",
-      "Au moins une limite du résultat est explicitement discutée (résolution, incertitude, hypothèse simplificatrice)",
-    ],
-  },
-  {
-    type: "link",
-    to: "/module/methodologie",
-    label: "Structurer le rapport rendu",
-    description: "Le module La Méthode détaille la structure attendue d'un rapport technique (contexte, données et méthode, résultats, discussion, recommandations) et la sémiologie graphique d'une carte de synthèse.",
-  },
-
-  // Séances 10-12 : les neuf premières couvrent la production (cartographier,
-  // géoréférencer, classer) mais aucune ne pratique la lecture critique d'un
-  // document déjà produit (lycée), l'audit de qualité d'un jeu de données
-  // (licence/BUT, section "Qualité des données" du module Le Compas restée
-  // sans contrepartie pratique), ni la validation statistique d'un résultat
-  // (master/recherche — déjà promise par le parcours "Approfondissement /
-  // initiation à la recherche" sans séance correspondante jusqu'ici). Un
-  // semestre universitaire compte 12 séances : ces trois complètent le compte
-  // sans redire la séance 9 (déjà la synthèse cartographie + rapport).
-
-  { type: "heading", text: "Séance 10 : Commenter un document cartographique", level: "lycee" },
+  { type: "heading", text: "Séance Licence/BUT 10 : Auditer la qualité d'un jeu de données SIG", level: "superieur" },
   {
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Les séances précédentes produisent toutes un document (carte, indice, classification). Celle-ci fait l'inverse : lire et commenter par écrit un document déjà produit, l'exercice le plus fréquent en épreuve de lycée (voir module La Méthode, section 1). Un commentaire de document n'est pas une description : c'est une lecture organisée qui répond à une problématique.",
-  },
-  {
-    type: "list",
-    ordered: true,
-    items: [
-      "Télécharger la composition couleur naturelle et le NDVI du jeu de données Vitrolles (voir Ressources → Jeux de données)",
-      "Identifier, sans aucun calcul, les grands ensembles visibles sur la composition naturelle : bâti, végétation, eau, infrastructure (voir module Le Regard, section 9, les six clés de lecture de la photo-interprétation)",
-      "Comparer les mêmes zones sur le NDVI : formuler une problématique du type « le contraste bâti/végétation vu à l'œil sur la composition naturelle se confirme-t-il, et se précise-t-il, une fois l'indice calculé ? »",
-      "Rédiger un commentaire structuré (introduction avec problématique, deux ou trois parties, conclusion) qui répond à cette problématique, appuyé uniquement sur ce que montrent les deux documents",
-    ],
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "S'appuyer sur le document, pas sur une connaissance générale plaquée dessus",
-    text: "L'erreur la plus fréquente d'un commentaire de document consiste à réciter une connaissance générale sur le NDVI ou la télédétection sans jamais revenir au document précis fourni. Chaque affirmation doit pouvoir être localisée sur l'image (« la zone nord-ouest, plus sombre sur le NDVI, correspond à la piste de l'aéroport visible sur la composition naturelle »), pas rester générale.",
-  },
-  {
-    type: "comparison",
-    items: [
-      {
-        label: "Découverte",
-        points: ["Décrire ce que montrent les deux documents, zone par zone", "Une problématique simple suffit (ex. \"le NDVI confirme-t-il la lecture à l'œil ?\")"],
-      },
-      {
-        label: "Approfondissement",
-        points: ["Discuter un désaccord entre lecture à l'œil et NDVI, s'il en existe un (ex. végétation clairsemée visible mais NDVI faible)", "Relier ce désaccord à une limite connue de l'indice (voir module Les Couleurs, limites communes aux indices spectraux)"],
-      },
-    ],
-  },
-  {
-    type: "solution",
-    title: "Séance 10",
-    text: "Sur ce jeu de données, la piste de l'aéroport Marseille-Provence et le tissu urbain de Vitrolles se distinguent nettement en blanc à marron sur le NDVI, cohérent avec la lecture à l'œil de la composition naturelle. L'étang de Berre, en haut à gauche, apparaît en valeurs NDVI proches de zéro ou négatives (l'eau n'a pas de chlorophylle), une nuance qu'une lecture purement visuelle de la composition naturelle ne permet pas de chiffrer aussi précisément. Un bon commentaire relève cette complémentarité : le NDVI ne remplace pas la lecture à l'œil, il la précise et la rend mesurable.",
-    items: [
-      "Critère 1 : la problématique figure explicitement en introduction, pas seulement en filigrane",
-      "Critère 2 : chaque affirmation renvoie à un endroit précis du document (pas de généralité non localisée)",
-      "Critère 3 : la conclusion répond réellement à la problématique posée, sans ouvrir un sujet nouveau non traité",
-    ],
-  },
-  {
-    type: "link",
-    to: "/module/teledetection",
-    label: "Revoir : la photo-interprétation",
-    description: "Le module Le Regard détaille les six clés de lecture classiques mobilisées ici.",
-  },
-  {
-    type: "devoir",
-    format: "Commentaire de document",
-    title: "Commentaire structuré sur un document au choix",
-    prompt: "En reprenant la méthode de cette séance, rédige un commentaire structuré (400 à 600 mots) sur la composition naturelle et le NDVI du jeu de données Vitrolles, ou sur un autre couple image/indice de ton choix issu d'un module précédent (par exemple le ΔNDVI de la séance 3). Le commentaire doit répondre à une problématique explicite, formulée en introduction.",
-    criteria: [
-      "Une problématique explicite figure en introduction et structure tout le commentaire",
-      "Chaque partie s'appuie sur un élément localisable du document, jamais sur une généralité seule",
-      "La conclusion répond à la problématique posée",
-      "La longueur demandée (400-600 mots) est respectée",
-    ],
-  },
-
-  { type: "heading", text: "Séance 11 : Auditer la qualité d'un jeu de données SIG", level: "superieur" },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Objectif méthodologique",
-    text: "Un jeu de données n'est exploitable que si sa qualité a été vérifiée au préalable, pas supposée : c'est une compétence professionnelle distincte de celle de produire une carte (voir module Le Compas, section 10, qualité des données et métadonnées), jamais encore pratiquée dans l'Atelier jusqu'ici bien qu'annoncée dès la séance 1.",
+    text: "Un jeu de données n'est exploitable que si sa qualité a été vérifiée au préalable, pas supposée : une compétence professionnelle distincte de celle de produire une carte (module Le Compas, section 10, qualité des données et métadonnées).",
   },
   {
     type: "list",
     ordered: true,
     items: [
       "Télécharger les 6 fichiers du jeu de données Vitrolles (voir Ressources → Jeux de données)",
-      "Vérifier la complétude : le nombre de cellules de grille_100m_indices.geojson correspond-il à ce qu'annonce la documentation du module Travaux pratiques (1122 cellules) ?",
-      "Vérifier la cohérence du CRS : emprise.geojson et grille_100m_indices.geojson déclarent-ils bien EPSG:2154, et se superposent-ils réellement une fois chargés côte à côte dans QGIS ?",
-      "Vérifier la plausibilité des valeurs attributaires : les NDVI/NDMI/NDBI de la grille restent-ils dans leur plage théorique (-1 à 1) ? Une valeur hors plage signale une erreur de calcul ou d'encodage",
-      "Rédiger une fiche de métadonnées courte (source, date, CRS, résolution, limites connues) au format du standard ISO 19115 simplifié, telle qu'un tiers pourrait la lire sans avoir jamais vu le jeu de données",
+      "Vérifier la complétude : le nombre de cellules de grille_100m_indices.geojson correspond-il à ce qu'annonce la documentation (1122 cellules) ?",
+      "Vérifier la cohérence du CRS : emprise.geojson et grille_100m_indices.geojson déclarent-ils bien EPSG:2154, et se superposent-ils réellement une fois chargés côte à côte ?",
+      "Vérifier la plausibilité des valeurs attributaires : les NDVI/NDMI/NDBI de la grille restent-ils dans leur plage théorique (-1 à 1) ?",
+      "Rédiger une fiche de métadonnées courte (source, date, CRS, résolution, limites connues) au format ISO 19115 simplifié",
     ],
   },
   {
     type: "callout",
     tone: "example",
     title: "Une anomalie réelle à chercher : la classe eau dans classification_reference.json",
-    text: "classification_reference.json (utilisé en séance 6) recense trois classes (végétation, sol nu/bâti, eau), mais sa matrice de confusion sur le jeu de test présente une ligne \"eau\" entièrement à zéro pour les trois modèles fournis. Un audit de qualité doit repérer cette anomalie et formuler une hypothèse plausible (classe totalement absente du découpage spatial train/test choisi, plutôt qu'un modèle qui échouerait totalement sur l'eau) : sans vérifier cette hypothèse ici, la repérer et la documenter est déjà le geste professionnel attendu.",
+    text: "classification_reference.json recense trois classes (végétation, sol nu/bâti, eau), mais sa matrice de confusion sur le jeu de test présente une ligne \"eau\" entièrement à zéro pour les trois modèles fournis. Un audit de qualité doit repérer cette anomalie et formuler une hypothèse plausible (classe absente du découpage spatial train/test, pas un modèle qui échouerait totalement sur l'eau).",
   },
   {
     type: "solution",
-    title: "Séance 11",
-    text: "Les 5 fichiers géographiques du jeu de données sont mutuellement cohérents (même CRS EPSG:2154, même emprise), une garantie apportée par leur origine commune (même pipeline d'extraction Sentinel-2). Le point d'audit le plus instructif reste la ligne \"eau\" vide de classification_reference.json : elle rappelle qu'un jeu de données peut être par ailleurs parfaitement cohérent (CRS, plages de valeurs) tout en portant une limite structurelle qu'aucune vérification de format ne révèle, seule une lecture attentive du contenu la fait apparaître.",
+    title: "Séance Licence/BUT 10",
+    text: "Les 5 fichiers géographiques du jeu de données sont mutuellement cohérents (même CRS EPSG:2154, même emprise). Le point d'audit le plus instructif reste la ligne \"eau\" vide de classification_reference.json : elle rappelle qu'un jeu de données peut être par ailleurs parfaitement cohérent tout en portant une limite structurelle qu'aucune vérification de format ne révèle.",
     items: [
-      "Critère 1 : la fiche de métadonnées mentionne explicitement le CRS, la date d'acquisition et la résolution, pas seulement le nom du fichier",
-      "Critère 2 : au moins une vérification de plausibilité (plage de valeurs, nombre d'entités) est réellement effectuée, pas seulement annoncée",
-      "Critère 3 : l'anomalie de la classe eau (ou toute autre anomalie réelle trouvée) est documentée avec une hypothèse, pas ignorée",
+      "Critère 1 : la fiche de métadonnées mentionne CRS, date d'acquisition et résolution",
+      "Critère 2 : au moins une vérification de plausibilité est réellement effectuée",
+      "Critère 3 : l'anomalie de la classe eau est documentée avec une hypothèse",
     ],
   },
   {
@@ -773,20 +1128,376 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "devoir",
     format: "Fiche de métadonnées",
     title: "Fiche de métadonnées et rapport d'audit",
-    prompt: "Produis une fiche de métadonnées complète du jeu de données Vitrolles (source, licence, CRS, résolution, emprise, date, limites connues) accompagnée d'un court rapport d'audit (une page) qui documente au moins deux vérifications de qualité réellement effectuées, avec leur résultat.",
+    prompt: "Produis une fiche de métadonnées complète du jeu de données Vitrolles accompagnée d'un court rapport d'audit (une page) qui documente au moins deux vérifications de qualité réellement effectuées.",
     criteria: [
-      "La fiche de métadonnées couvre au moins six champs (source, licence, CRS, résolution, emprise, date)",
-      "Au moins deux vérifications de qualité distinctes sont documentées avec leur résultat réel, pas supposé",
-      "Toute anomalie trouvée est décrite avec une hypothèse plausible, pas seulement signalée",
+      "La fiche couvre au moins six champs (source, licence, CRS, résolution, emprise, date)",
+      "Au moins deux vérifications de qualité distinctes sont documentées avec leur résultat réel",
+      "Toute anomalie trouvée est décrite avec une hypothèse plausible",
     ],
   },
 
-  { type: "heading", text: "Séance 12 : Valider statistiquement une classification", level: "approfondissement" },
+  { type: "heading", text: "Séance Licence/BUT 11 : Rédiger un rapport technique SIG", level: "superieur" },
   {
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "La séance 6 a comparé Random Forest et un perceptron multicouche (MLP) sur le même jeu de test : le MLP obtient un kappa supérieur. Mais un écart de kappa observé sur un seul jeu de test suffit-il à conclure qu'un modèle est réellement meilleur que l'autre, ou peut-il s'expliquer par le hasard de ce découpage particulier ? C'est la question que pose toute validation statistique (voir module La Méthode, section 7, rigueur statistique d'un mémoire de recherche), rarement posée avant d'annoncer un résultat.",
+    text: "Les séances précédentes produisent des résultats techniques (cartes, classifications, audits). Celle-ci les fait rédiger dans le format attendu d'un vrai livrable professionnel (module La Méthode, section 3), grille Professionnel de la page Évaluation.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Choisir un résultat déjà produit dans une séance précédente de cette piste (classification, audit qualité, indice composite)",
+      "Rédiger une synthèse exécutive de 5 lignes maximum, lisible par un non-spécialiste, en tête du rapport",
+      "Structurer le corps du rapport : contexte, données et méthode (reproductible par un tiers), résultats, discussion des limites, recommandations opérationnelles",
+      "Vérifier que chaque source de donnée est citée avec sa limite de fiabilité, pas seulement son nom",
+      "Confronter le rapport à la grille Professionnel de la page Évaluation avant de le considérer terminé",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 11",
+    text: "L'erreur la plus fréquente d'un premier rapport technique est de mélanger résultats et discussion dans le même paragraphe : un lecteur pressé doit pouvoir lire uniquement les résultats (faits, chiffres, cartes) sans se demander si une phrase donnée est un fait ou une interprétation. Séparer nettement les deux sections est le geste professionnel le plus simple à appliquer et le plus souvent négligé.",
+    items: [
+      "Critère 1 : la synthèse exécutive tient en 5 lignes et reste compréhensible sans jargon",
+      "Critère 2 : résultats et discussion sont nettement séparés",
+      "Critère 3 : les recommandations sont réalistes et formulées pour un décideur",
+    ],
+  },
+  {
+    type: "link",
+    to: "/magister/evaluation",
+    label: "Voir la grille de correction Professionnel",
+    description: "La page Évaluation détaille les critères attendus d'un rapport technique SIG.",
+  },
+  {
+    type: "devoir",
+    format: "Rapport",
+    title: "Rapport technique complet sur un résultat déjà produit",
+    prompt: "Reprends un résultat d'une séance précédente et rédige-en le rapport technique complet selon la structure ci-dessus (600 mots minimum).",
+    criteria: [
+      "Toutes les sections attendues sont présentes et identifiables",
+      "Résultats et discussion sont nettement séparés",
+      "Au moins une limite réelle est explicitement discutée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Licence/BUT 12 : Mini-projet, un livrable professionnel complet", level: "superieur" },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Cahier des charges",
+    text: "Choisir un territoire et un sujet technique (croisement d'indices, classification, ou audit de qualité appliqué à un cas réel). Produire un livrable professionnel complet : carte de synthèse mise en page, rapport technique structuré (synthèse exécutive, contexte, méthode reproductible, résultats, discussion, recommandations), conforme à la grille Professionnel de la page Évaluation.",
+  },
+  {
+    type: "table",
+    headers: ["Section évaluée", "Barème indicatif"],
+    rows: [
+      ["Cadrage du sujet et synthèse exécutive", "/3"],
+      ["Méthode reproductible, données citées avec leurs limites", "/5"],
+      ["Carte de synthèse (sémiologie, légende, lisibilité)", "/4"],
+      ["Résultats présentés avant toute interprétation", "/3"],
+      ["Discussion et recommandations opérationnelles", "/5"],
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Licence/BUT 12 : grille d'auto-évaluation",
+    items: [
+      "La synthèse exécutive est lisible par un non-spécialiste en moins d'une minute",
+      "Chaque source de donnée est citée avec sa limite de fiabilité",
+      "La carte respecte la sémiologie de Bertin",
+      "Résultats et discussion sont nettement séparés",
+      "Les recommandations sont réalistes, formulées pour un décideur",
+    ],
+  },
+  {
+    type: "link",
+    to: "/magister/evaluation",
+    label: "Confronter le rendu à la grille Professionnel",
+    description: "La page Évaluation détaille les critères de correction attendus pour ce livrable.",
+  },
+  {
+    type: "devoir",
+    format: "Livrable professionnel",
+    title: "Mini-projet complet",
+    prompt: "Réalise le livrable professionnel complet selon le cahier des charges ci-dessus, sur un territoire de ton choix.",
+    criteria: [
+      "Chaque section du barème est identifiable dans le rendu",
+      "La méthode est décrite avec assez de précision pour être reproduite par un tiers",
+      "Au moins une limite réelle est explicitement discutée",
+    ],
+  },
+
+  // ============================================================================
+  // PISTE MASTER/RECHERCHE — 12 séances, rigueur statistique, IMRaD, techniques
+  // avancées. Progression : cadrage et prétraitement rigoureux (1-2) →
+  // validation d'indices et séries temporelles (3-4) → apprentissage automatique
+  // et validation statistique (5-6) → géostatistique et décision avancées (7-8)
+  // → physique du signal (9-10) → synthèse recherche (11-12).
+  // ============================================================================
+
+  { type: "heading", text: "Séance Master/Recherche 1 : Cadrer une question de recherche", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Avant tout traitement, une vraie démarche de recherche part d'une question précise et falsifiable, pas d'un thème vague (module La Méthode, section 7, structure IMRaD).",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Choisir un thème large en lien avec le jeu de données Vitrolles ou un territoire personnel (végétation, bâti, eau, changement)",
+      "Reformuler ce thème en une question précise, répondable par une mesure (pas « étudier la végétation », mais « le NDVI moyen d'un secteur est-il corrélé à la distance au centre urbain ? »)",
+      "Formuler une hypothèse testable, en précisant ce qui la confirmerait et ce qui l'infirmerait",
+      "Esquisser le protocole (données nécessaires, méthode de mesure, méthode de validation) sans encore l'exécuter",
+      "Faire relire la question par un pair : est-elle réellement répondable avec les données disponibles ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 1",
+    text: "Une question de recherche mal cadrée se reconnaît à l'absence de mesure possible en réponse : « la ville est-elle en stress hydrique ? » n'est pas répondable directement, « le NDMI moyen de la ville a-t-il diminué de plus de 0.05 entre deux dates estivales comparables ? » l'est. Le passage de l'un à l'autre est le vrai travail de cette séance.",
+    items: [
+      "Critère 1 : la question est formulée de façon à être répondable par une mesure précise",
+      "Critère 2 : l'hypothèse précise explicitement ce qui la confirmerait et ce qui l'infirmerait",
+      "Critère 3 : le protocole esquissé est réalisable avec des données réellement accessibles",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/methodologie",
+    label: "Revoir : structure IMRaD et rigueur statistique",
+    description: "Le module La Méthode détaille les exigences de cadrage d'un travail de recherche.",
+  },
+  {
+    type: "devoir",
+    format: "Note de cadrage",
+    title: "Cadrage complet d'une question de recherche",
+    prompt: "Rédige la note de cadrage complète (300 mots) de ta question de recherche : question précise, hypothèse falsifiable, protocole esquissé.",
+    criteria: [
+      "La question est répondable par une mesure",
+      "L'hypothèse est falsifiable, pas une évidence non testable",
+      "Le protocole esquissé est réaliste",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 2 : Prétraitement rigoureux, de la valeur brute à la réflectance", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Une image satellite brute (DN, Digital Number) n'est pas directement une réflectance physique comparable entre capteurs ou dates (module Le Regard, section 10). Un travail de recherche exige de documenter explicitement ce prétraitement, jamais de le supposer déjà fait.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Vérifier le niveau de traitement de l'image utilisée (L1C brut vs L2A corrigé atmosphériquement, pour Sentinel-2) et le documenter explicitement",
+      "Pour une image L1C, appliquer la formule DN → radiance → réflectance TOA (module Le Regard, section 10)",
+      "Comparer, sur une même zone, une réflectance TOA (L1C corrigé) à une réflectance BOA déjà fournie (L2A) : quantifier l'écart",
+      "Documenter dans un tableau chaque étape de correction appliquée, avec la formule et les paramètres utilisés",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne jamais comparer deux images à des niveaux de traitement différents",
+    text: "Comparer un NDVI calculé sur une image L1C brute à un NDVI calculé sur une image L2A corrigée introduit un biais systématique lié à l'atmosphère, indépendant du phénomène étudié : un piège fréquent quand les images de deux dates proviennent de sources différentes.",
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 2",
+    text: "L'écart entre réflectance TOA et BOA est généralement plus marqué dans les bandes courtes longueurs d'onde (bleu) que dans le proche infrarouge, la diffusion atmosphérique de Rayleigh étant plus forte aux courtes longueurs d'onde : un indice qui n'utilise que le rouge et le NIR (comme le NDVI) est donc moins sensible à ce choix qu'un indice utilisant le bleu.",
+    items: [
+      "Critère 1 : le niveau de traitement de chaque image utilisée est explicitement documenté",
+      "Critère 2 : l'écart TOA/BOA est réellement quantifié, pas seulement mentionné",
+      "Critère 3 : chaque étape de correction est documentée avec formule et paramètres",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Revoir : de la valeur brute à la réflectance physique",
+    description: "Le module Le Regard détaille la chaîne de correction radiométrique et atmosphérique avant cette mise en pratique.",
+  },
+  {
+    type: "devoir",
+    format: "Note méthodologique",
+    title: "Documentation complète d'une chaîne de prétraitement",
+    prompt: "Documente, formule et paramètres à l'appui, la chaîne de prétraitement complète appliquée à une image de ton choix, avec la quantification de l'écart TOA/BOA si les deux niveaux sont disponibles.",
+    criteria: [
+      "Chaque étape est documentée avec sa formule",
+      "L'écart TOA/BOA est quantifié quand les deux niveaux sont disponibles",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 3 : Valider un indice face à une mesure biophysique", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Un indice spectral n'est qu'une approximation optique d'une grandeur biophysique réelle (module Les Couleurs, section 11) : sa valeur n'a de sens scientifique que confrontée à une mesure de terrain indépendante.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Choisir une grandeur biophysique mesurable (humidité du sol, biomasse, LAI) et une source de mesure de terrain existante (réseau de stations, jeu de données publié) ou un substitut documenté si aucune mesure réelle n'est accessible",
+      "Extraire la valeur d'indice spectral (NDVI, NDMI) au même point et à la même date que chaque mesure de terrain",
+      "Calculer le coefficient de corrélation entre indice et mesure biophysique, ainsi que l'erreur quadratique moyenne (RMSE)",
+      "Discuter la force de la corrélation obtenue à la lumière de la littérature (les corrélations NDVI/biomasse publiées dépassent rarement 0.7-0.8 en conditions réelles)",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Corrélation n'est pas validation universelle",
+    text: "Une corrélation forte obtenue sur un seul site et une seule saison ne se généralise pas automatiquement à un autre contexte (type de sol, espèce végétale, saison) : la limiter explicitement au contexte testé est une exigence de rigueur, pas une prudence excessive.",
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 3",
+    text: "Un indice comme le NDVI sature à forte densité de végétation (au-delà d'un certain LAI, une augmentation de biomasse ne change presque plus le NDVI) : une corrélation qui s'affaiblit nettement aux valeurs élevées de la mesure biophysique est la signature attendue de cette saturation, pas une erreur de mesure.",
+    items: [
+      "Critère 1 : la corrélation et la RMSE sont calculées correctement",
+      "Critère 2 : le résultat est discuté à la lumière de valeurs publiées comparables",
+      "Critère 3 : la portée du résultat est explicitement limitée au contexte testé",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Revoir : valider un indice contre une mesure biophysique",
+    description: "Le module Les Couleurs détaille cette démarche de validation avant de la pratiquer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Note d'analyse",
+    title: "Validation d'un indice contre une mesure réelle ou publiée",
+    prompt: "Rédige une note d'analyse (400 mots) qui présente la corrélation obtenue entre un indice spectral et une mesure biophysique, la discute face à la littérature, et conclut sur la portée limitée du résultat.",
+    criteria: [
+      "La corrélation et la RMSE sont présentées avant toute interprétation",
+      "Une comparaison avec des valeurs publiées est explicitement faite",
+      "La conclusion limite la portée du résultat au contexte testé",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 4 : Séries temporelles et phénologie", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Une seule date ne renseigne qu'un instant. Une série temporelle d'un indice (module Les Couleurs, section 12) permet d'étudier la phénologie (le cycle saisonnier de la végétation) et de détecter une rupture réelle plutôt qu'une simple variation saisonnière.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Constituer une série temporelle de NDVI sur un même point ou une même parcelle, à partir d'images multi-dates (Copernicus Data Space, ou données déjà disponibles)",
+      "Tracer la courbe NDVI en fonction du temps, identifier les phases (montée, pic, sénescence) du cycle végétatif",
+      "Appliquer une détection de rupture simple sur la série (test de tendance, ou méthode plus avancée type BFAST si les outils sont disponibles)",
+      "Distinguer, sur la courbe, ce qui relève du cycle saisonnier normal de ce qui pourrait signaler un changement réel (coupe, stress durable)",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 4",
+    text: "Une rupture phénologique réelle (coupe, dépérissement) se manifeste par une chute qui ne suit PAS le calendrier saisonnier habituel de la zone (ex. chute en plein printemps, période de pousse normale), alors qu'une simple sénescence automnale suit fidèlement le même calendrier chaque année : comparer plusieurs années de la même série est le seul moyen fiable de distinguer les deux.",
+    items: [
+      "Critère 1 : la série temporelle couvre au moins un cycle annuel complet",
+      "Critère 2 : les phases phénologiques sont correctement identifiées sur la courbe",
+      "Critère 3 : la distinction cycle normal / rupture réelle est argumentée, pas seulement affirmée",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Revoir : séries temporelles et phénologie",
+    description: "Le module Les Couleurs détaille cette approche avant de la pratiquer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Analyse de série",
+    title: "Analyse phénologique d'une série temporelle réelle",
+    prompt: "Constitue et analyse une série temporelle de NDVI sur un point ou une parcelle de ton choix, identifie les phases phénologiques et discute toute rupture éventuelle observée.",
+    criteria: [
+      "La série couvre au moins un cycle annuel",
+      "Les phases sont correctement identifiées",
+      "Toute rupture discutée est argumentée face au cycle saisonnier normal",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 5 : Classification par réseau de neurones simple", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Le module L'Intelligence détaille les CNN, U-Net et Transformers. Cette séance pratique le plus simple des réseaux de neurones, un perceptron multicouche (MLP), sur les mêmes données que la classification supervisée classique, pour comparer directement sa précision à celle d'un Random Forest sur un pied d'égalité.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Constater par la pratique qu'un réseau de neurones, même simple, s'entraîne et s'évalue exactement selon le même protocole qu'un classificateur classique (train/validation/test, matrice de confusion, kappa), la différence est dans le modèle, pas dans la méthodologie d'évaluation.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Reprendre le jeu d'entraînement/test du jeu de données Vitrolles (mêmes polygones, même découpage train/test, indispensable pour une comparaison honnête)",
+      "Entraîner un MLP à une couche cachée avec scikit-learn (MLPClassifier) sur les bandes brutes et/ou les indices calculés comme variables d'entrée",
+      "Faire varier le nombre de neurones de la couche cachée (10, 50, 200) et observer l'effet sur la précision d'entraînement vs de test",
+      "Comparer la matrice de confusion et le kappa obtenus à ceux d'un Random Forest sur le même jeu de test",
+      "Tracer la courbe de perte (loss_curve_) au fil des itérations, vérifier qu'elle décroît puis se stabilise sans jamais ré-augmenter",
+    ],
+  },
+  {
+    type: "formula",
+    label: "Entraîner un MLP avec scikit-learn",
+    formula: "clf = MLPClassifier(hidden_layer_sizes=(50,), max_iter=500); clf.fit(X_train, y_train)",
+    note: "Contrairement à un CNN complet, ce MLP ne voit aucun voisinage spatial : chaque pixel est classé indépendamment de ses voisins, exactement comme un Random Forest pixel par pixel.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne pas présumer du vainqueur avant de mesurer",
+    text: "L'intuition générale (un Random Forest généralise souvent mieux qu'un MLP sur peu de données) n'est qu'une tendance, pas une loi : elle peut être contredite sur un jeu de données précis, comme le montre le résultat réel ci-dessous.",
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 5 : résultat réel, mesuré sur le jeu de données Vitrolles",
+    text: "Contrairement à l'intuition générale : le MLP à 50 neurones cachés fait légèrement MIEUX que le Random Forest sur le jeu de test : kappa 0.673 contre 0.640, pour une précision test quasi identique (96.3 % contre 96.2 %). Le MLP à 200 neurones (kappa 0.672) n'apporte rien de plus que celui à 50 : la capacité supplémentaire ne sert à rien ici, le facteur limitant est l'ambiguïté spectrale intrinsèque entre végétation et sol nu/bâti, pas la taille du réseau. Le Random Forest atteint 100 % de précision sur l'entraînement (sur-apprentissage net) quand le MLP plafonne à 97.3 %.",
+    items: [
+      "Critère 1 : le même découpage train/test est réutilisé à l'identique pour une comparaison valide",
+      "Critère 2 : la courbe de perte est tracée et commentée",
+      "Critère 3 : l'écart de précision entre MLP et Random Forest est interprété, pas seulement constaté",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/traitements-ia",
+    label: "Revoir : réseaux de neurones et sur-apprentissage",
+    description: "Le module L'Intelligence détaille la fonction de perte, le sur-apprentissage et les architectures plus avancées.",
+  },
+  {
+    type: "devoir",
+    format: "Dissertation",
+    title: "« Le deep learning rend-il obsolètes les méthodes de classification classiques en télédétection ? »",
+    prompt: "Traite ce sujet en dissertation complète (plan dialectique conseillé), 600 mots minimum, en t'appuyant explicitement sur le résultat réel mesuré en séance (le MLP fait légèrement mieux qu'un Random Forest sur ce jeu précis) comme exemple concret.",
+    criteria: [
+      "Le plan est explicite et démonstratif",
+      "Le résultat réel RF vs MLP est utilisé comme argument concret",
+      "Une limite ou nuance est explicitement discutée",
+      "La longueur minimale (600 mots) est respectée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 6 : Valider statistiquement une classification", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "La séance précédente a comparé Random Forest et MLP sur le même jeu de test : le MLP obtient un kappa supérieur. Mais un écart de kappa observé sur un seul jeu de test suffit-il à conclure qu'un modèle est réellement meilleur, ou peut-il s'expliquer par le hasard de ce découpage particulier ? (module La Méthode, section 7, rigueur statistique).",
   },
   {
     type: "table",
@@ -801,26 +1512,26 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "list",
     ordered: true,
     items: [
-      "Télécharger classification_reference.json (voir Ressources → Jeux de données) : il contient les trois matrices de confusion complètes, pas seulement les scores agrégés du tableau ci-dessus",
-      "À partir des deux matrices de confusion Random Forest et MLP(50), identifier les pixels que les deux modèles classent différemment (désaccords) : c'est la donnée nécessaire à un test de McNemar, le test standard pour comparer deux classifieurs évalués sur le même jeu de test",
+      "Télécharger classification_reference.json (voir Ressources → Jeux de données) : il contient les trois matrices de confusion complètes",
+      "À partir des matrices Random Forest et MLP(50), identifier les pixels que les deux modèles classent différemment : c'est la donnée nécessaire à un test de McNemar, le test standard pour comparer deux classifieurs évalués sur le même jeu de test",
       "Formuler l'hypothèse nulle explicitement : « les deux modèles se trompent avec la même fréquence, l'écart de kappa observé est compatible avec le hasard »",
-      "Discuter, sans nécessairement calculer la statistique exacte, ce qui rendrait cet écart de kappa (0.6402 contre 0.6732) plus ou moins convaincant : un grand nombre de désaccords cohérents dans un sens penche contre l'hypothèse nulle, un faible nombre de désaccords dispersés ne permet pas de trancher",
+      "Discuter ce qui rendrait cet écart de kappa (0.6402 contre 0.6732) plus ou moins convaincant : un grand nombre de désaccords cohérents dans un sens penche contre l'hypothèse nulle",
     ],
   },
   {
     type: "callout",
     tone: "warning",
     title: "Un seul jeu de test ne prouve jamais une supériorité générale",
-    text: "Même si l'écart de kappa se révèle statistiquement significatif sur ce jeu de test précis, cela ne prouve pas que le MLP est supérieur au Random Forest en général, seulement sur cette scène, ce découpage spatial train/test et ces trois classes. Une conclusion générale nécessiterait de répéter la comparaison sur plusieurs scènes et découpages indépendants, exactement la mise en garde déjà formulée dans le quiz de cette salle (résultat mesuré, pas une règle générale à présumer).",
+    text: "Même si l'écart de kappa se révèle statistiquement significatif sur ce jeu de test précis, cela ne prouve pas que le MLP est supérieur au Random Forest en général, seulement sur cette scène, ce découpage et ces trois classes.",
   },
   {
     type: "solution",
-    title: "Séance 12",
-    text: "Le test de McNemar ne compare pas les scores agrégés (0.9617 contre 0.9632) mais spécifiquement les pixels où les deux modèles sont en désaccord : il ignore, à raison, tous les pixels que les deux modèles classent correctement ou incorrectement de la même façon, car ces cas ne renseignent en rien sur une différence entre les deux modèles. C'est une erreur fréquente de vouloir comparer deux exactitudes globales avec un test de Student ou un simple écart en points de pourcentage : les deux échantillons ne sont pas indépendants (même jeu de test, mêmes pixels), condition que ces tests supposent et que McNemar, conçu justement pour des données appariées, respecte.",
+    title: "Séance Master/Recherche 6",
+    text: "Le test de McNemar ne compare pas les scores agrégés (0.9617 contre 0.9632) mais spécifiquement les pixels où les deux modèles sont en désaccord : il ignore, à raison, tous les pixels classés de la même façon par les deux modèles, car ces cas ne renseignent en rien sur une différence entre eux. C'est une erreur fréquente de vouloir comparer deux exactitudes globales avec un test de Student : les deux échantillons ne sont pas indépendants (même jeu de test), condition que McNemar, conçu pour des données appariées, respecte.",
     items: [
       "Critère 1 : l'hypothèse nulle est formulée explicitement avant toute discussion du résultat",
-      "Critère 2 : le raisonnement distingue clairement désaccords (pertinents pour la comparaison) et accords (non pertinents), pas une simple comparaison des deux exactitudes globales",
-      "Critère 3 : la conclusion reste prudente sur la portée du résultat (une scène, un découpage), sans généraliser abusivement",
+      "Critère 2 : le raisonnement distingue clairement désaccords et accords",
+      "Critère 3 : la conclusion reste prudente sur la portée du résultat",
     ],
   },
   {
@@ -830,21 +1541,314 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module L'Intelligence détaille le calcul du kappa et les pièges classiques de l'évaluation d'une classification.",
   },
   {
+    type: "devoir",
+    format: "Note d'analyse",
+    title: "Note d'analyse statistique de la comparaison RF / MLP",
+    prompt: "Rédige une note d'analyse (300 à 500 mots) qui formule l'hypothèse nulle du test de McNemar, discute qualitativement ce qui rendrait l'écart de kappa observé plus ou moins convaincant, et conclut en rappelant la portée limitée du résultat.",
+    criteria: [
+      "L'hypothèse nulle est formulée correctement",
+      "L'argument s'appuie sur les désaccords entre modèles, pas sur la simple différence d'exactitude globale",
+      "La longueur demandée (300-500 mots) est respectée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 7 : Krigeage avancé, validation croisée du variogramme", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Un krigeage se juge sur sa capacité prédictive réelle, pas sur la seule qualité visuelle de la carte produite : la validation croisée (leave-one-out) mesure objectivement cette capacité, une étape rarement pratiquée en dehors d'un contexte de recherche.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Reprendre un jeu de points avec variogramme déjà ajusté (ou en construire un nouveau sur un jeu de mesures réel)",
+      "Retirer un point du jeu, prédire sa valeur par krigeage à partir des points restants, comparer à sa vraie valeur mesurée",
+      "Répéter cette opération pour chaque point du jeu (validation croisée leave-one-out complète)",
+      "Calculer l'erreur quadratique moyenne de validation croisée, et comparer plusieurs modèles de variogramme (sphérique, exponentiel, gaussien) sur ce critère plutôt qu'à l'œil",
+      "Choisir le modèle final sur la base de cette validation, pas sur la seule apparence visuelle de l'ajustement",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un ajustement visuel n'est pas une validation",
+    text: "Un variogramme qui semble bien ajusté à l'œil peut donner une moins bonne capacité prédictive réelle qu'un modèle légèrement moins élégant visuellement : seule la validation croisée tranche objectivement, jamais l'apparence de la courbe seule.",
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 7",
+    text: "Le modèle de variogramme qui minimise l'erreur quadratique moyenne de validation croisée n'est pas toujours celui qui produit la carte visuellement la plus lisse : un compromis existe entre fidélité prédictive (ce que mesure la validation croisée) et lisibilité de la carte produite, à documenter explicitement dans le choix final.",
+    items: [
+      "Critère 1 : la validation croisée leave-one-out est réellement effectuée sur tous les points, pas un sous-échantillon",
+      "Critère 2 : au moins deux modèles de variogramme sont comparés sur ce critère objectif",
+      "Critère 3 : le choix final est justifié par le résultat de validation, pas par l'apparence seule",
+    ],
+  },
+  {
     type: "link",
-    to: "/module/methodologie",
-    label: "Approfondir : rigueur statistique d'un mémoire",
-    description: "Le module La Méthode (section 7, structure IMRaD) détaille les exigences de rigueur statistique attendues dans un travail de recherche.",
+    to: "/module/outils-sig",
+    label: "Revoir : géostatistique et krigeage",
+    description: "Le module Le Compas détaille le variogramme et la théorie du krigeage avant cette validation avancée.",
   },
   {
     type: "devoir",
     format: "Note d'analyse",
-    title: "Note d'analyse statistique de la comparaison RF / MLP",
-    prompt: "Rédige une note d'analyse (300 à 500 mots) qui formule l'hypothèse nulle du test de McNemar appliqué à la comparaison Random Forest / MLP(50) de la séance 6, discute qualitativement ce qui rendrait l'écart de kappa observé plus ou moins convaincant à partir des matrices de confusion fournies, et conclut en rappelant explicitement la portée limitée du résultat (une seule scène, un seul découpage train/test).",
+    title: "Comparaison de modèles de variogramme par validation croisée",
+    prompt: "Compare au moins deux modèles de variogramme par validation croisée leave-one-out sur un jeu de points réel, justifie ton choix final par le résultat obtenu.",
     criteria: [
-      "L'hypothèse nulle est formulée correctement (les deux modèles se trompent avec la même fréquence)",
-      "L'argument s'appuie sur les désaccords entre modèles, pas sur la simple différence d'exactitude globale",
-      "La conclusion rappelle explicitement que le résultat ne vaut que pour cette scène et ce découpage",
-      "La longueur demandée (300-500 mots) est respectée",
+      "La validation croisée est réellement effectuée sur l'ensemble des points",
+      "Au moins deux modèles sont comparés sur ce critère",
+      "Le choix final est justifié par la validation, pas par l'apparence",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 8 : Analyse réseau et décision multicritère", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Certaines décisions territoriales combinent plusieurs critères de nature différente (module Le Compas, section 9) : l'analyse multicritère (AHP, Analytic Hierarchy Process) structure ce type de décision de façon reproductible, plutôt que par jugement intuitif non documenté.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Définir un problème de décision territoriale à plusieurs critères (ex. localisation optimale d'un équipement, en croisant distance au réseau routier, pente, exposition au risque)",
+      "Construire une matrice de comparaison par paires entre les critères (méthode AHP, Saaty 1980) et en dériver des poids relatifs",
+      "Calculer le ratio de cohérence de la matrice de comparaison, le vérifier acceptable (< 0.10) avant de poursuivre",
+      "Combiner les critères pondérés en une carte de score final (algèbre raster, module Le Compas)",
+      "Faire une analyse de sensibilité : les zones les mieux classées changent-elles significativement si un poids varie de ±20 % ?",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un ratio de cohérence trop élevé invalide la matrice",
+    text: "Une matrice de comparaison par paires incohérente (A préféré à B, B préféré à C, mais C préféré à A) produit des poids qui ne reflètent aucun jugement stable : un ratio de cohérence supérieur à 0.10 signale qu'il faut revoir les comparaisons, pas poursuivre malgré tout.",
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 8",
+    text: "L'analyse de sensibilité révèle souvent qu'une partie du territoire reste bien classée quel que soit le poids relatif des critères (zone robuste), tandis qu'une autre partie change de classement selon la pondération choisie (zone sensible au jugement de l'analyste) : distinguer les deux dans la restitution finale est plus honnête qu'une carte unique sans cette nuance.",
+    items: [
+      "Critère 1 : le ratio de cohérence de la matrice AHP est calculé et vérifié acceptable",
+      "Critère 2 : l'analyse de sensibilité est réellement effectuée, pas seulement mentionnée",
+      "Critère 3 : la restitution distingue zones robustes et zones sensibles au jugement",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/outils-sig",
+    label: "Revoir : analyse réseau et décision multicritère",
+    description: "Le module Le Compas détaille l'AHP et l'analyse réseau avant de les pratiquer ici.",
+  },
+  {
+    type: "devoir",
+    format: "Rapport d'analyse multicritère",
+    title: "Analyse multicritère complète avec sensibilité",
+    prompt: "Réalise une analyse multicritère complète (AHP) sur un problème de décision territoriale de ton choix, avec vérification du ratio de cohérence et analyse de sensibilité.",
+    criteria: [
+      "Le ratio de cohérence est calculé et acceptable",
+      "L'analyse de sensibilité distingue zones robustes et zones sensibles",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 9 : Au-delà du multispectral, l'imagerie hyperspectrale", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le multispectral (6 bandes, comme le jeu Vitrolles) résume le spectre en quelques bandes larges. L'hyperspectral (module Le Regard, section 12) mesure des centaines de bandes contiguës très fines : cette séance manipule une vraie signature spectrale complète plutôt qu'un simple indice à deux bandes.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger un extrait de données hyperspectrales publiques (ex. jeu AVIRIS, Pavia University, ou EnMAP, largement documentés et utilisés comme benchmarks académiques)",
+      "Extraire la signature spectrale complète (réflectance en fonction de la longueur d'onde) de plusieurs pixels de classes différentes (végétation, sol, bâti)",
+      "Comparer ces signatures complètes à ce qu'un capteur multispectral à 6 bandes aurait mesuré sur les mêmes pixels (sous-échantillonner les bandes hyperspectrales aux longueurs d'onde du multispectral)",
+      "Identifier une caractéristique spectrale fine (absorption spécifique) visible en hyperspectral mais invisible en multispectral",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 9",
+    text: "Les bandes d'absorption étroites (ex. certaines signatures minérales, ou les red-edge fins de la végétation stressée) disparaissent complètement une fois les données sous-échantillonnées aux quelques bandes larges d'un capteur multispectral : c'est le compromis fondamental entre résolution spectrale et volume de données, déjà annoncé au module Le Regard (compromis résolution spatiale/spectrale/temporelle/radiométrique).",
+    items: [
+      "Critère 1 : la signature spectrale complète est réellement extraite pour plusieurs classes",
+      "Critère 2 : la comparaison hyperspectral/multispectral sous-échantillonné est effectuée, pas seulement affirmée",
+      "Critère 3 : une caractéristique fine perdue en multispectral est identifiée précisément",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Revoir : l'imagerie hyperspectrale",
+    description: "Le module Le Regard détaille les principes de l'hyperspectral avant cette manipulation pratique.",
+  },
+  {
+    type: "devoir",
+    format: "Note d'analyse",
+    title: "Signature spectrale comparée, hyperspectral vs multispectral",
+    prompt: "Sur un jeu hyperspectral public de ton choix, compare les signatures spectrales complètes de deux classes à ce qu'un capteur multispectral en aurait vu, identifie ce qui se perd.",
+    criteria: [
+      "Les signatures complètes sont réellement extraites et présentées",
+      "La comparaison au multispectral sous-échantillonné est effectuée",
+      "Une perte d'information précise est identifiée",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 10 : Transfert radiatif et polarimétrie SAR", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le module Le Regard présente la physique complète du transfert radiatif et de la polarimétrie SAR (section 13) : cette séance en pratique un aspect concret, la décomposition polarimétrique.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger une scène Sentinel-1 en mode double polarisation (VV+VH) sur une zone mêlant eau, végétation et bâti",
+      "Calculer le ratio VH/VV, un indicateur classique de structure de végétation (une végétation dense dépolarise davantage le signal)",
+      "Mettre en œuvre une décomposition polarimétrique simple (Freeman-Durden à 3 composantes si les données quad-pol sont disponibles, sinon une approche double-pol simplifiée)",
+      "Identifier, sur la carte de décomposition, les zones dominées par la réflexion de surface, le double rebond, et la diffusion volumique",
+      "Relier chaque composante dominante au type de couverture au sol observé (module Le Regard, réflexion spéculaire/double rebond/diffusion)",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 10",
+    text: "L'eau calme domine par réflexion de surface (spéculaire, signal renvoyé loin du capteur, donc sombre), le bâti dense par double rebond (façade + sol, signal fort), la végétation par diffusion volumique (dépolarisation dans le couvert), une lecture directement dérivée de la physique du transfert radiatif présentée au module Le Regard, ici mesurée plutôt qu'affirmée.",
+    items: [
+      "Critère 1 : le ratio VH/VV est calculé et cartographié correctement",
+      "Critère 2 : la décomposition polarimétrique identifie les trois mécanismes dominants",
+      "Critère 3 : chaque mécanisme est relié explicitement à la physique du transfert radiatif",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Revoir : transfert radiatif et polarimétrie SAR",
+    description: "Le module Le Regard détaille cette physique complète avant sa mise en pratique ici.",
+  },
+  {
+    type: "devoir",
+    format: "Note d'analyse",
+    title: "Décomposition polarimétrique commentée",
+    prompt: "Réalise et commente une décomposition polarimétrique sur une scène Sentinel-1 double-pol de ton choix, en reliant chaque mécanisme dominant identifié au type de couverture au sol réel.",
+    criteria: [
+      "La décomposition est réellement effectuée, pas seulement décrite en théorie",
+      "Chaque mécanisme est relié à une observation réelle du terrain",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 11 : Étude de cas, mini-projet de recherche", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Les dix séances précédentes traitent chacune une compétence isolée. Ce mini-projet les combine, au service d'une vraie question de recherche cadrée dès la séance Master/Recherche 1 : le rendu attendu est délibérément plus exigeant, une analyse qui montre une compréhension réelle de l'outil et de la matière, pas seulement une carte techniquement correcte.",
+  },
+  {
+    type: "list",
+    items: [
+      "Risques naturels : croiser indices d'humidité/de végétation, pente et vent pour cartographier un risque incendie (voir le module Les Couleurs pour un exemple réel d'indice composite de comportement du feu)",
+      "Agriculture de précision : suivi du NDVI d'une parcelle dans le temps pour cibler l'irrigation ou détecter un stress hydrique précoce",
+      "Urbanisme : NDBI et séries temporelles pour mesurer l'étalement urbain d'une commune sur dix ans",
+      "Climat et environnement : détection de changement (déforestation, recul d'un glacier) par comparaison de deux dates, avec validation statistique de la significativité du changement",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Cahier des charges du mini-projet de recherche",
+    text: "Reprendre la question de recherche cadrée en séance Master/Recherche 1 (ou en formuler une nouvelle sur le même modèle). Produire une carte finale combinant au minimum une donnée vecteur, un indice ou une classification, et au moins une validation statistique du résultat (corrélation, test de significativité, ou validation croisée selon le sujet). Le rendu est une carte mise en page accompagnée d'un rapport structuré selon le module La Méthode et la grille Recherche de la page Évaluation.",
+  },
+  {
+    type: "table",
+    headers: ["Section évaluée", "Barème indicatif"],
+    rows: [
+      ["Question de recherche et hypothèse (précision, falsifiabilité)", "/3"],
+      ["Données et méthode (reproductible, prétraitement documenté)", "/4"],
+      ["Validation statistique du résultat", "/4"],
+      ["Carte de synthèse (sémiologie, légende, lisibilité)", "/3"],
+      ["Discussion (limites, portée du résultat, ouverture)", "/4"],
+      ["Forme du rendu", "/2"],
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 11 : grille d'auto-évaluation du rendu",
+    items: [
+      "La question de recherche est répondable par une mesure précise, formulée dès l'introduction",
+      "Le prétraitement des données est explicitement documenté (niveau de correction, CRS, résolution)",
+      "Une validation statistique réelle accompagne le résultat, pas une simple affirmation qualitative",
+      "La discussion sépare nettement résultats et interprétation",
+      "La portée du résultat est explicitement limitée au contexte testé",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/methodologie",
+    label: "Structurer le rapport selon IMRaD",
+    description: "Le module La Méthode détaille la structure IMRaD et la rigueur statistique attendue d'un travail de recherche.",
+  },
+  {
+    type: "devoir",
+    format: "Rapport de recherche",
+    title: "Rapport complet du mini-projet de recherche",
+    prompt: "Rédige le rapport complet de ton mini-projet : question de recherche, données et méthode documentées, résultats présentés avant interprétation, validation statistique explicite, discussion des limites.",
+    criteria: [
+      "Chaque section du barème ci-dessus est identifiable dans le rendu",
+      "Une validation statistique réelle accompagne le résultat principal",
+      "La discussion admet explicitement au moins une limite réelle",
+    ],
+  },
+
+  { type: "heading", text: "Séance Master/Recherche 12 : Rédiger un mémoire structuré IMRaD", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Le mini-projet de la séance précédente produit un résultat. Celle-ci le fait rédiger dans le format standard de la publication scientifique, IMRaD (Introduction, Méthode, Résultats, Discussion), module La Méthode section 7, grille Recherche de la page Évaluation.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Reprendre le résultat du mini-projet de recherche (séance Master/Recherche 11)",
+      "Rédiger une revue de littérature courte qui situe le travail par rapport à l'existant (au moins 3 sources réelles citées), pas une simple liste de résumés juxtaposés",
+      "Structurer le corps en IMRaD strict : introduction (contexte, question, hypothèse), méthode (reproductible), résultats (sans interprétation), discussion (interprétation, limites, ouverture)",
+      "Vérifier la cohérence entre la méthode annoncée en introduction et celle réellement décrite en section méthode",
+      "Constituer une bibliographie complète et normée, effectivement citée dans le corps du texte",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance Master/Recherche 12",
+    text: "L'erreur la plus fréquente d'un premier mémoire IMRaD est de laisser filtrer de l'interprétation dans la section résultats (« le NDVI, en forte baisse, révèle un stress hydrique préoccupant » mélange un fait et une interprétation) : la section résultats doit se limiter au fait mesuré (« le NDVI moyen a baissé de 0.12 entre les deux dates »), l'interprétation n'apparaissant qu'en discussion.",
+    items: [
+      "Critère 1 : la revue de littérature situe réellement le travail, pas une juxtaposition de résumés",
+      "Critère 2 : la section résultats ne contient aucune interprétation, strictement séparée de la discussion",
+      "Critère 3 : la bibliographie est complète, normée, et effectivement citée dans le texte",
+    ],
+  },
+  {
+    type: "link",
+    to: "/magister/evaluation",
+    label: "Confronter le mémoire à la grille Recherche",
+    description: "La page Évaluation détaille les critères de correction attendus pour un mémoire structuré IMRaD.",
+  },
+  {
+    type: "devoir",
+    format: "Mémoire",
+    title: "Mémoire complet structuré IMRaD",
+    prompt: "Rédige le mémoire complet de ton mini-projet de recherche selon la structure IMRaD stricte, avec revue de littérature et bibliographie normée.",
+    criteria: [
+      "La structure IMRaD est strictement respectée",
+      "La section résultats ne contient aucune interprétation",
+      "La bibliographie est complète, normée et effectivement citée",
     ],
   },
 ]

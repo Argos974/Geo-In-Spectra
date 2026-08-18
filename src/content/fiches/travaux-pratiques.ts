@@ -4,24 +4,37 @@ export const travauxPratiquesFiche: ContentBlock[] = [
   {
     type: "diagram",
     name: "workflow-tp",
-    caption: "La marche à suivre, commune à la plupart des séances.",
+    caption: "Le fil directeur, commun aux trois pistes.",
+  },
+  {
+    type: "paragraph",
+    text: "Trois pistes indépendantes de 12 séances, un semestre chacune (filtre « Afficher » de la page pour n'en voir qu'une) : Lycée (socle, sans code), Licence/BUT (technique, Python, livrable professionnel), Master/Recherche (rigueur statistique, IMRaD, techniques avancées).",
   },
   {
     type: "list",
     ordered: true,
     items: [
-      "Séance 1 : cartographie de base (charger, reprojeter, styliser, mettre en page)",
-      "Séance 2 : géoréférencement par grille (points de contrôle, transformation affine)",
-      "Séance 3 : NDVI sur l'image géoréférencée, moyenne par cellule, ΔNDVI multi-dates",
-      "Séance 4 : buffer + intersection (200 m, zone réglementaire)",
-      "Séance 5 : programmation (GeoPandas, Shapely, rasterio par lot)",
-      "Séance 6 : classification supervisée, jeu test réservé, matrice de confusion + kappa",
-      "Séance 7 : réseau de neurones simple (MLP), comparé au Random Forest de la séance 6",
-      "Séance 8 : radar (signature VV eau/bâti) et krigeage (variogramme, carte d'incertitude)",
-      "Séance 9 : étude de cas + mini-projet, rapport structuré (voir La Méthode)",
-      "Séance 10 : commenter un document cartographique (lecture critique, pas de production)",
-      "Séance 11 : auditer la qualité d'un jeu de données SIG (complétude, CRS, métadonnées ISO 19115)",
-      "Séance 12 : valider statistiquement une classification (test de McNemar, RF vs MLP de la séance 6)",
+      "Lycée 1-4 : cartographie de base, coordonnées Lambert-93, vecteur/raster, buffer + intersection",
+      "Lycée 5-8 : photo-interprétation, NDVI, NDBI/NDWI, mise en page et sémiologie",
+      "Lycée 9-12 : commenter un document, carte ancienne vs récente, Mercator/Peters, mini-projet",
+    ],
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Licence/BUT 1-4 : automatisation QGIS, géoréférencement par grille, ΔNDVI, jointure spatiale",
+      "Licence/BUT 5-8 : GeoPandas/rasterio, PostGIS, classification supervisée (RF), algèbre raster",
+      "Licence/BUT 9-12 : radar + krigeage, audit qualité ISO 19115, rapport technique SIG, mini-projet professionnel",
+    ],
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Master/Recherche 1-4 : cadrage IMRaD, réflectance TOA/BOA, validation d'indice, séries temporelles",
+      "Master/Recherche 5-8 : MLP vs Random Forest, test de McNemar, krigeage avancé (validation croisée), AHP",
+      "Master/Recherche 9-12 : hyperspectral, polarimétrie SAR, mini-projet recherche, mémoire IMRaD",
     ],
   },
   {
@@ -39,6 +52,6 @@ export const travauxPratiquesFiche: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Jeu de données canonique (réel, fourni avec le site)",
-    text: "Scène Sentinel-2 réelle (Vitrolles, 6 août 2024, /data/sample-vitrolles-2024/) : NDVI moyen 0.33, NDMI -0.09, NDBI +0.09. Résultat réel mesuré (séances 6/7) : MLP à 50 neurones légèrement meilleur que Random Forest sur ce jeu (kappa 0.673 contre 0.640), contredit l'intuition générale, à vérifier sur son propre jeu plutôt qu'à présumer.",
+    text: "Scène Sentinel-2 réelle (Vitrolles, 6 août 2024, /data/sample-vitrolles-2024/) : NDVI moyen 0.33, NDMI -0.09, NDBI +0.09. Résultat réel mesuré (classification) : MLP à 50 neurones légèrement meilleur que Random Forest sur ce jeu (kappa 0.673 contre 0.640), contredit l'intuition générale, à vérifier sur son propre jeu plutôt qu'à présumer.",
   },
 ]
