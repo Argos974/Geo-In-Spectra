@@ -37,6 +37,6 @@ export const teledetectionFiche: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Hyperspectral vs multispectral, et signature radar",
-    text: "Hyperspectral (PRISMA, EnMAP) : plusieurs centaines de bandes contiguës très fines, vs une dizaine de bandes larges en multispectral (Sentinel-2). En polarimétrie SAR, le double-rebond (façade + sol, tronc + eau) est une signature caractéristique — utile pour distinguer une forêt inondée d'une forêt sur sol sec.",
+    text: "Hyperspectral (PRISMA, EnMAP) : plusieurs centaines de bandes contiguës très fines, vs une dizaine de bandes larges en multispectral (Sentinel-2). En polarimétrie SAR, le double-rebond (façade + sol, tronc + eau) est une signature caractéristique, utile pour distinguer une forêt inondée d'une forêt sur sol sec.",
   },
 ]

@@ -3,7 +3,7 @@ import type { ContentBlock } from "./types"
 export const traitementsIaContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "Le module Les Couleurs s'arrête aux indices, simples ou composés, calculés pixel par pixel. Cette salle va plus loin : comment exploiter le voisinage d'un pixel plutôt que le pixel seul, et comment une machine peut apprendre à reconnaître un type de terrain plutôt que suivre une règle écrite à la main. Chaque partie indique le public auquel elle s'adresse en priorité — les parties « Approfondissement » supposent les précédentes acquises.",
+    text: "Le module Les Couleurs s'arrête aux indices, simples ou composés, calculés pixel par pixel. Cette salle va plus loin : comment exploiter le voisinage d'un pixel plutôt que le pixel seul, et comment une machine peut apprendre à reconnaître un type de terrain plutôt que suivre une règle écrite à la main. Chaque partie indique le public auquel elle s'adresse en priorité : les parties « Approfondissement » supposent les précédentes acquises.",
   },
   {
     type: "link",
@@ -12,7 +12,7 @@ export const traitementsIaContent: ContentBlock[] = [
     description: "Si les notions d'indice composé (Tasseled Cap, ACP) ne sont pas encore vues, elles sont présentées dans le module Les Couleurs.",
   },
 
-  { type: "heading", text: "1. Le filtre à noyau (kernel)", level: "college-lycee" },
+  { type: "heading", text: "1. Le filtre à noyau (kernel)", level: "lycee" },
   {
     type: "paragraph",
     text: "Imagine une photo légèrement floutée exprès sur une application : chaque pixel de la nouvelle image est calculé en mélangeant le pixel d'origine avec ceux juste autour de lui, plutôt qu'en le recopiant tel quel. C'est exactement ce que fait un filtre à noyau (ou filtre de convolution) sur une image satellite : jusqu'ici, chaque pixel était traité indépendamment de ses voisins ; un filtre à noyau fait l'inverse. Il recalcule la valeur d'un pixel à partir de lui-même et de son voisinage immédiat, pondérés par une petite matrice de coefficients (le noyau), le plus souvent 3×3.",
@@ -41,22 +41,22 @@ export const traitementsIaContent: ContentBlock[] = [
     caption: "Un noyau 3×3 glissé sur la grille de pixels : chaque pixel de sortie dépend de son voisinage, pas de lui seul.",
   },
 
-  { type: "heading", text: "3. Classification non supervisée", level: "college-lycee" },
+  { type: "heading", text: "3. Classification non supervisée", level: "lycee" },
   {
     type: "paragraph",
-    text: "Classer une image, c'est attribuer une catégorie (forêt, eau, bâti, culture…) à chaque pixel plutôt qu'une simple valeur numérique — un peu comme trier des bonbons de couleurs différentes en tas, sans savoir à l'avance quel tas correspond à quelle saveur : on regroupe d'abord ce qui se ressemble, on identifie le tas après coup. La classification non supervisée fait exactement ça : elle regroupe automatiquement les pixels aux signatures spectrales proches (algorithme des k-moyennes, par exemple), sans qu'aucun exemple étiqueté ne soit fourni au préalable. L'opérateur nomme les classes après coup, en les comparant à des images ou des relevés de terrain.",
+    text: "Classer une image, c'est attribuer une catégorie (forêt, eau, bâti, culture…) à chaque pixel plutôt qu'une simple valeur numérique, un peu comme trier des bonbons de couleurs différentes en tas, sans savoir à l'avance quel tas correspond à quelle saveur : on regroupe d'abord ce qui se ressemble, on identifie le tas après coup. La classification non supervisée fait exactement ça : elle regroupe automatiquement les pixels aux signatures spectrales proches (algorithme des k-moyennes, par exemple), sans qu'aucun exemple étiqueté ne soit fourni au préalable. L'opérateur nomme les classes après coup, en les comparant à des images ou des relevés de terrain.",
   },
   {
     type: "formula",
     label: "Principe des k-moyennes (k-means)",
     formula: "1) placer k centres au hasard  2) assigner chaque pixel au centre le plus proche  3) recalculer chaque centre comme la moyenne de ses pixels  4) répéter 2-3 jusqu'à stabilité",
-    note: "k (le nombre de classes recherchées) est choisi par l'opérateur avant de lancer l'algorithme — un choix arbitraire qui influence fortement le résultat, à documenter dans toute méthode.",
+    note: "k (le nombre de classes recherchées) est choisi par l'opérateur avant de lancer l'algorithme, un choix arbitraire qui influence fortement le résultat, à documenter dans toute méthode.",
   },
 
   { type: "heading", text: "4. Classification supervisée", level: "superieur" },
   {
     type: "paragraph",
-    text: "La classification supervisée part, à l'inverse, d'échantillons d'entraînement : des zones où la classe réelle est déjà connue (relevé de terrain, photo-interprétation). L'algorithme apprend à partir de ces exemples, puis l'applique au reste de l'image. Méthodes classiques : maximum de vraisemblance (fait l'hypothèse d'une distribution statistique par classe), forêts aléatoires (Random Forest, Breiman, 2001 — assemble de nombreux arbres de décision entraînés sur des sous-échantillons aléatoires, dont le vote majoritaire réduit le risque de surapprentissage d'un arbre isolé), machines à vecteurs de support (SVM, Cortes & Vapnik, 1995 — cherche la frontière qui sépare au mieux les classes dans un espace de caractéristiques).",
+    text: "La classification supervisée part, à l'inverse, d'échantillons d'entraînement : des zones où la classe réelle est déjà connue (relevé de terrain, photo-interprétation). L'algorithme apprend à partir de ces exemples, puis l'applique au reste de l'image. Méthodes classiques : maximum de vraisemblance (fait l'hypothèse d'une distribution statistique par classe), forêts aléatoires (Random Forest, Breiman, 2001, assemble de nombreux arbres de décision entraînés sur des sous-échantillons aléatoires, dont le vote majoritaire réduit le risque de surapprentissage d'un arbre isolé), machines à vecteurs de support (SVM, Cortes & Vapnik, 1995, cherche la frontière qui sépare au mieux les classes dans un espace de caractéristiques).",
   },
   {
     type: "formula",
@@ -89,7 +89,7 @@ export const traitementsIaContent: ContentBlock[] = [
   { type: "heading", text: "5. Sur-apprentissage, sous-apprentissage et découpage des données", level: "superieur" },
   {
     type: "paragraph",
-    text: "Un modèle qui apprend « trop bien » ses exemples d'entraînement, au point de mémoriser leurs particularités plutôt que la règle générale, est en situation de surapprentissage (overfitting) : sa précision sur les données d'entraînement est excellente, mais s'effondre sur des données nouvelles. À l'inverse, un modèle trop simple pour capturer la structure réelle des données est en sous-apprentissage (underfitting) — ses deux précisions, entraînement et test, restent médiocres.",
+    text: "Un modèle qui apprend « trop bien » ses exemples d'entraînement, au point de mémoriser leurs particularités plutôt que la règle générale, est en situation de surapprentissage (overfitting) : sa précision sur les données d'entraînement est excellente, mais s'effondre sur des données nouvelles. À l'inverse, un modèle trop simple pour capturer la structure réelle des données est en sous-apprentissage (underfitting) : ses deux précisions, entraînement et test, restent médiocres.",
   },
   {
     type: "list",
@@ -122,7 +122,7 @@ export const traitementsIaContent: ContentBlock[] = [
     type: "formula",
     label: "Ce que le réseau optimise réellement : la fonction de perte",
     formula: "Entropie croisée : L = − Σ_c y_c · log(ŷ_c)",
-    note: "y_c = 1 si la classe réelle du pixel est c, 0 sinon (encodage \"one-hot\") ; ŷ_c = probabilité prédite par le réseau pour cette classe. L'entraînement (rétropropagation du gradient, descente de gradient stochastique) ajuste les coefficients du réseau pour minimiser cette perte sur le jeu d'entraînement — c'est cette quantité, pas la précision elle-même, que le réseau optimise directement à chaque itération ; la précision n'est qu'une mesure de suivi calculée à côté.",
+    note: "y_c = 1 si la classe réelle du pixel est c, 0 sinon (encodage \"one-hot\") ; ŷ_c = probabilité prédite par le réseau pour cette classe. L'entraînement (rétropropagation du gradient, descente de gradient stochastique) ajuste les coefficients du réseau pour minimiser cette perte sur le jeu d'entraînement : c'est cette quantité, pas la précision elle-même, que le réseau optimise directement à chaque itération ; la précision n'est qu'une mesure de suivi calculée à côté.",
   },
   {
     type: "diagram",
@@ -145,17 +145,22 @@ export const traitementsIaContent: ContentBlock[] = [
     type: "formula",
     label: "Évaluer une segmentation : l'IoU (Intersection over Union), pas le kappa",
     formula: "IoU = Aire(prédiction ∩ vérité terrain) / Aire(prédiction ∪ vérité terrain)",
-    note: "Le kappa et la précision globale (section 4) évaluent une classification pixel par pixel indépendamment de la géométrie ; ils sont mal adaptés à une segmentation, où ce qui compte est le recouvrement entre la forme prédite et la forme réelle d'un objet (un bâtiment). L'IoU (aussi appelé indice de Jaccard) vaut 1 pour un recouvrement parfait, 0 pour aucun recouvrement — c'est la métrique standard des benchmarks de segmentation (dont U-Net lui-même a été évalué). Le F1-score (moyenne harmonique de la précision et du rappel) est l'autre métrique de référence, plus adaptée quand les classes sont très déséquilibrées (ex. peu de pixels \"bâtiment\" au milieu de beaucoup de pixels \"fond\").",
+    note: "Le kappa et la précision globale (section 4) évaluent une classification pixel par pixel indépendamment de la géométrie ; ils sont mal adaptés à une segmentation, où ce qui compte est le recouvrement entre la forme prédite et la forme réelle d'un objet (un bâtiment). L'IoU (aussi appelé indice de Jaccard) vaut 1 pour un recouvrement parfait, 0 pour aucun recouvrement : c'est la métrique standard des benchmarks de segmentation (dont U-Net lui-même a été évalué). Le F1-score (moyenne harmonique de la précision et du rappel) est l'autre métrique de référence, plus adaptée quand les classes sont très déséquilibrées (ex. peu de pixels \"bâtiment\" au milieu de beaucoup de pixels \"fond\").",
+  },
+  {
+    type: "diagram",
+    name: "iou",
+    caption: "L'IoU visuellement : le rapport entre la zone de recouvrement (intersection) et l'ensemble des deux zones colorées (union).",
   },
   {
     type: "paragraph",
-    text: "Plus récemment, les architectures Transformer (Vaswani et al., 2017, mécanisme d'attention initialement conçu pour le traitement du langage) ont été adaptées à l'image (Vision Transformer, Dosovitskiy et al., 2021) puis spécifiquement à l'imagerie satellite multi-bandes et multi-temporelle. Des modèles fondateurs pré-entraînés sur de très larges archives Sentinel-2/Landsat (par exemple Prithvi de la NASA/IBM, ou SatMAE) commencent à être réutilisés par transfert d'apprentissage plutôt que ré-entraînés de zéro pour chaque nouvelle tâche — une évolution encore active du domaine, à considérer comme un axe de recherche en cours plutôt qu'un standard stabilisé.",
+    text: "Plus récemment, les architectures Transformer (Vaswani et al., 2017, mécanisme d'attention initialement conçu pour le traitement du langage) ont été adaptées à l'image (Vision Transformer, Dosovitskiy et al., 2021) puis spécifiquement à l'imagerie satellite multi-bandes et multi-temporelle. Des modèles fondateurs pré-entraînés sur de très larges archives Sentinel-2/Landsat (par exemple Prithvi de la NASA/IBM, ou SatMAE) commencent à être réutilisés par transfert d'apprentissage plutôt que ré-entraînés de zéro pour chaque nouvelle tâche, une évolution encore active du domaine, à considérer comme un axe de recherche en cours plutôt qu'un standard stabilisé.",
   },
   {
     type: "callout",
     tone: "info",
     title: "Le transfert d'apprentissage (transfer learning)",
-    text: "Ré-entraîner un réseau profond de zéro nécessite des dizaines de milliers d'exemples étiquetés, rarement disponibles pour un projet précis. Le transfert d'apprentissage part d'un modèle déjà entraîné sur une tâche large (classification générale d'images, ou un modèle fondateur satellite), puis ne ré-ajuste que ses dernières couches sur un jeu de données spécifique, beaucoup plus petit — une pratique aujourd'hui standard, qui réduit d'un facteur souvent supérieur à 10 le volume de données d'entraînement nécessaire.",
+    text: "Ré-entraîner un réseau profond de zéro nécessite des dizaines de milliers d'exemples étiquetés, rarement disponibles pour un projet précis. Le transfert d'apprentissage part d'un modèle déjà entraîné sur une tâche large (classification générale d'images, ou un modèle fondateur satellite), puis ne ré-ajuste que ses dernières couches sur un jeu de données spécifique, beaucoup plus petit, une pratique aujourd'hui standard, qui réduit d'un facteur souvent supérieur à 10 le volume de données d'entraînement nécessaire.",
   },
 
   { type: "heading", text: "9. Où l'IA change déjà la pratique", level: "superieur" },
@@ -172,7 +177,7 @@ export const traitementsIaContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Où s'entraîner sur des données réelles et un jeu de référence",
-    text: "La recherche en télédétection compare ses modèles sur des jeux de données publics de référence, plutôt que sur des données propriétaires impossibles à reproduire : BigEarthNet (590 000 patches Sentinel-1/2 annotés par occupation du sol, Sumbul et al., 2019), EuroSAT (27 000 patches Sentinel-2, 10 classes, conçu comme benchmark d'entrée simple), SEN12MS (données appariées Sentinel-1/Sentinel-2/MODIS pour la fusion multi-capteurs). Ces jeux permettent de comparer une nouvelle méthode à l'état de l'art publié sur un pied d'égalité — la même logique qu'un jeu de test indépendant (module Travaux pratiques), mais partagé par toute une communauté de recherche plutôt que propre à un seul projet.",
+    text: "La recherche en télédétection compare ses modèles sur des jeux de données publics de référence, plutôt que sur des données propriétaires impossibles à reproduire : BigEarthNet (590 000 patches Sentinel-1/2 annotés par occupation du sol, Sumbul et al., 2019), EuroSAT (27 000 patches Sentinel-2, 10 classes, conçu comme benchmark d'entrée simple), SEN12MS (données appariées Sentinel-1/Sentinel-2/MODIS pour la fusion multi-capteurs). Ces jeux permettent de comparer une nouvelle méthode à l'état de l'art publié sur un pied d'égalité : la même logique qu'un jeu de test indépendant (module Travaux pratiques), mais partagé par toute une communauté de recherche plutôt que propre à un seul projet.",
   },
 
   { type: "heading", text: "10. Limites et vigilance", level: "approfondissement" },
@@ -180,7 +185,7 @@ export const traitementsIaContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "Ce que l'IA en télédétection ne résout pas automatiquement",
-    text: "Un modèle appris sur des données d'une région ou d'une saison se généralise mal ailleurs si le paysage ou l'éclairage diffère (biais du jeu d'entraînement, décalage de distribution ou \"domain shift\"). Un réseau profond reste largement une boîte noire : difficile d'expliquer pourquoi un pixel précis a été classé d'une certaine façon, ce qui pose un vrai problème dans un usage réglementaire ou juridique — un enjeu qui a donné naissance à un sous-champ actif, l'IA explicable (XAI). Enfin, aucun modèle ne remplace la vérité terrain : il faut toujours des relevés réels pour entraîner et vérifier un modèle, jamais seulement d'autres prédictions.",
+    text: "Un modèle appris sur des données d'une région ou d'une saison se généralise mal ailleurs si le paysage ou l'éclairage diffère (biais du jeu d'entraînement, décalage de distribution ou \"domain shift\"). Un réseau profond reste largement une boîte noire : difficile d'expliquer pourquoi un pixel précis a été classé d'une certaine façon, ce qui pose un vrai problème dans un usage réglementaire ou juridique : un enjeu qui a donné naissance à un sous-champ actif, l'IA explicable (XAI). Enfin, aucun modèle ne remplace la vérité terrain : il faut toujours des relevés réels pour entraîner et vérifier un modèle, jamais seulement d'autres prédictions.",
   },
   {
     type: "link",

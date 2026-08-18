@@ -1,0 +1,160 @@
+import { useEffect, useState } from "react"
+
+// Emprise exacte du jeu de données canonique (emprise.geojson, séance 1-9 de
+// l'Atelier) — mêmes bornes, pour que l'élève compare directement la même
+// zone en donnée figée (Sentinel-2 du 06/08/2024) et en donnée vivante (OSM,
+// mise à jour en continu par des contributeurs).
+const BBOX = { s: 43.42921, w: 5.21384, n: 43.46083, e: 5.25627 }
+// L'instance historique (overpass-api.de) sature régulièrement sous sa propre
+// charge globale (HTTP 504, indépendant de notre requête — vérifié par un
+// appel curl direct pendant le développement de ce composant). maps.mail.ru
+// héberge un miroir Overpass public à jour (vérifié : timestamp_osm_base
+// récent et comptages non nuls sur cette emprise, contrairement à d'autres
+// miroirs testés dont la base s'est avérée tronquée/obsolète) — utilisé en
+// secours si le premier échoue ou sature.
+const OVERPASS_URLS = ["https://overpass-api.de/api/interpreter", "https://maps.mail.ru/osm/tools/overpass/api/interpreter"]
+const CACHE_KEY = "geo-in-spectra-osm-vitrolles-v1"
+const CACHE_TTL_MS = 30 * 60 * 1000
+
+interface Counts {
+  buildings: number
+  water: number
+  roads: number
+  fetchedAt: string
+}
+
+// Une seule requête combinée (3 jeux nommés, 3 "out count;" en série) plutôt
+// que 3 requêtes séparées — Overpass est une infrastructure publique partagée
+// et gratuite ; limiter le nombre d'appels HTTP est un minimum de politesse
+// envers elle, et réduit d'autant le risque de 429 (trop de requêtes).
+function combinedCountQuery(): string {
+  const { s, w, n, e } = BBOX
+  const b = `${s},${w},${n},${e}`
+  return [
+    "[out:json][timeout:25];",
+    `way["building"](${b})->.b;`,
+    `(way["natural"="water"](${b});relation["natural"="water"](${b});)->.w;`,
+    `way["highway"](${b})->.h;`,
+    ".b out count;",
+    ".w out count;",
+    ".h out count;",
+  ].join("")
+}
+
+async function fetchCounts(): Promise<{ buildings: number; water: number; roads: number }> {
+  const body = `data=${encodeURIComponent(combinedCountQuery())}`
+  let lastError = "erreur inconnue"
+  for (const url of OVERPASS_URLS) {
+    try {
+      // Sans délai côté client, un serveur qui ne répond jamais (plutôt que de
+      // renvoyer une erreur HTTP franche) bloquerait indéfiniment sur "en
+      // cours" sans jamais essayer le miroir suivant ni proposer de réessayer.
+      const res = await fetch(url, { method: "POST", body, signal: AbortSignal.timeout(15000) })
+      if (!res.ok) {
+        lastError = `HTTP ${res.status}`
+        continue
+      }
+      const json = await res.json()
+      const counts = (json.elements ?? []).filter((e: { type: string }) => e.type === "count").map((e: { tags: { total: string } }) => Number(e.tags.total))
+      const [buildings = 0, water = 0, roads = 0] = counts
+      return { buildings, water, roads }
+    } catch (err) {
+      lastError = err instanceof Error ? err.message : "erreur réseau"
+    }
+  }
+  throw new Error(lastError)
+}
+
+/**
+ * Interroge en direct l'API Overpass (OpenStreetMap) sur l'emprise exacte du
+ * jeu de données canonique — publique, sans clé, CORS activé. Les nombres
+ * affichés ne sont volontairement PAS fixes : OSM est une donnée vivante
+ * (VGI, volunteered geographic information), modifiée en continu par des
+ * contributeurs. C'est le point pédagogique de l'exercice, pas une gêne —
+ * voir la consigne sous le composant.
+ */
+export function OsmBufferVitrolles() {
+  const [state, setState] = useState<{ status: "loading" | "error" | "done"; counts?: Counts; error?: string }>({ status: "loading" })
+
+  async function load(force = false) {
+    if (!force) {
+      try {
+        const cached = sessionStorage.getItem(CACHE_KEY)
+        if (cached) {
+          const parsed = JSON.parse(cached) as Counts & { cachedAt: number }
+          if (Date.now() - parsed.cachedAt < CACHE_TTL_MS) {
+            setState({ status: "done", counts: parsed })
+            return
+          }
+        }
+      } catch {
+        // sessionStorage indisponible : on retente simplement un fetch réseau
+      }
+    }
+    setState({ status: "loading" })
+    try {
+      const { buildings, water, roads } = await fetchCounts()
+      const counts: Counts = { buildings, water, roads, fetchedAt: new Date().toLocaleString("fr-FR") }
+      setState({ status: "done", counts })
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ...counts, cachedAt: Date.now() }))
+      } catch {
+        // idem
+      }
+    } catch (err) {
+      setState({ status: "error", error: err instanceof Error ? err.message : "erreur réseau" })
+    }
+  }
+
+  useEffect(() => {
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
+      <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Requête en direct · API Overpass (OpenStreetMap)</p>
+      <p className="font-mono text-[11px] text-parchment-dim mb-5">
+        Emprise : {BBOX.s.toFixed(4)}, {BBOX.w.toFixed(4)} → {BBOX.n.toFixed(4)}, {BBOX.e.toFixed(4)} (identique au jeu de données canonique)
+      </p>
+
+      {state.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Interrogation d'Overpass (OpenStreetMap)…</p>}
+
+      {state.status === "error" && (
+        <div>
+          <p className="font-mono text-sm text-oxblood-bright mb-3">Échec de la requête ({state.error}) sur les instances publiques essayées. L'API Overpass est une infrastructure gratuite et partagée par toute la communauté OSM, elle sature parfois en période de forte charge, indépendamment de ce site.</p>
+          <button type="button" onClick={() => load(true)} className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-1.5 hover:bg-gilt/10 transition-colors">
+            Réessayer
+          </button>
+        </div>
+      )}
+
+      {state.status === "done" && state.counts && (
+        <div>
+          <table className="w-full font-mono text-sm mb-4">
+            <tbody>
+              <tr className="border-b border-gilt/10">
+                <td className="py-2 text-parchment-dim">Bâtiments recensés (way[building])</td>
+                <td className="py-2 text-right text-parchment tabular-nums">{state.counts.buildings.toLocaleString("fr-FR")}</td>
+              </tr>
+              <tr className="border-b border-gilt/10">
+                <td className="py-2 text-parchment-dim">Segments de route (way[highway])</td>
+                <td className="py-2 text-right text-parchment tabular-nums">{state.counts.roads.toLocaleString("fr-FR")}</td>
+              </tr>
+              <tr>
+                <td className="py-2 text-parchment-dim">Entités « plan d'eau » (natural=water)</td>
+                <td className="py-2 text-right text-parchment tabular-nums">{state.counts.water.toLocaleString("fr-FR")}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-[10px] text-parchment-dim/80">Interrogé le {state.counts.fetchedAt}</p>
+            <button type="button" onClick={() => load(true)} className="font-mono text-[10px] uppercase tracking-wider text-gilt/70 hover:text-gilt transition-colors">
+              ↻ Rafraîchir
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}

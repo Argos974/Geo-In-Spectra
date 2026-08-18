@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 import { cn } from "@/lib/utils"
+import { recordQuizScore } from "@/lib/progress"
 
 export function QuizPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -25,6 +26,7 @@ export function QuizPage() {
 
   const quizQuestions = questions
   const q = quizQuestions[index]
+  const moduleSlug = module.slug
 
   function choose(i: number) {
     if (selected !== null) return
@@ -35,6 +37,7 @@ export function QuizPage() {
   function next() {
     if (index + 1 >= quizQuestions.length) {
       setDone(true)
+      recordQuizScore(moduleSlug, score, quizQuestions.length)
       return
     }
     setIndex((n) => n + 1)
@@ -88,7 +91,7 @@ export function QuizPage() {
           </div>
         ) : (
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 mb-4">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-4">
               Question {index + 1} / {questions.length}
             </p>
             <p className="font-heading text-xl mb-6">{q.question}</p>
@@ -108,7 +111,7 @@ export function QuizPage() {
                       "w-full text-left px-4 py-3 border transition-colors",
                       !revealed && "border-gilt/20 text-parchment-dim hover:border-gilt/50 hover:text-parchment",
                       revealed && isCorrect && "border-gilt bg-gilt/10 text-gilt",
-                      revealed && isSelected && !isCorrect && "border-oxblood bg-oxblood/10 text-oxblood",
+                      revealed && isSelected && !isCorrect && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                       revealed && !isSelected && !isCorrect && "border-gilt/10 text-parchment-dim/40",
                     )}
                   >
@@ -121,7 +124,7 @@ export function QuizPage() {
             {selected !== null && (
               <div className="border border-gilt/20 bg-white/[0.02] p-5 mb-6">
                 <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">Explication</p>
-                <p className="text-parchment-dim leading-relaxed">{q.explanation}</p>
+                <p className="text-parchment-dim leading-relaxed text-justify">{q.explanation}</p>
               </div>
             )}
 

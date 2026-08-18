@@ -53,7 +53,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Conséquence pratique",
-    text: "Une bande visible ou NIR est inutilisable de nuit (pas de rayonnement solaire à réfléchir). Une bande thermique, elle, mesure une température de surface aussi bien de jour que de nuit — c'est pourquoi les capteurs thermiques (Landsat TIRS, MODIS LST) sont la source privilégiée pour cartographier des îlots de chaleur urbains ou détecter un foyer d'incendie actif, y compris nocturne.",
+    text: "Une bande visible ou NIR est inutilisable de nuit (pas de rayonnement solaire à réfléchir). Une bande thermique, elle, mesure une température de surface aussi bien de jour que de nuit : c'est pourquoi les capteurs thermiques (Landsat TIRS, MODIS LST) sont la source privilégiée pour cartographier des îlots de chaleur urbains ou détecter un foyer d'incendie actif, y compris nocturne.",
   },
 
   { type: "heading", text: "3. Les fenêtres atmosphériques", level: "superieur" },
@@ -65,7 +65,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Pourquoi le SWIR de Sentinel-2 est centré à 1.61 µm et non à 1.9 µm",
-    text: "La bande B11 (SWIR) de Sentinel-2 est calée à 1.61 µm précisément parce que cette longueur d'onde tombe dans une fenêtre atmosphérique propre, entre deux bandes d'absorption de la vapeur d'eau. Un capteur mal positionné spectralement mesurerait surtout l'humidité de l'atmosphère traversée, pas celle de la végétation au sol — ce qui invaliderait un indice comme le NDMI.",
+    text: "La bande B11 (SWIR) de Sentinel-2 est calée à 1.61 µm précisément parce que cette longueur d'onde tombe dans une fenêtre atmosphérique propre, entre deux bandes d'absorption de la vapeur d'eau. Un capteur mal positionné spectralement mesurerait surtout l'humidité de l'atmosphère traversée, pas celle de la végétation au sol : ce qui invaliderait un indice comme le NDMI.",
   },
 
   { type: "heading", text: "4. Capteurs optiques vs radar (SAR)" },
@@ -138,7 +138,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "Angle d'observation et effets BRDF",
-    text: "La réflectance mesurée d'une même surface varie selon l'angle d'éclairage solaire et l'angle de visée du capteur — un effet décrit par la fonction de distribution de réflectance bidirectionnelle (BRDF). Deux images d'un même champ, prises à des heures ou des saisons différentes, ne sont donc jamais strictement comparables sans en tenir compte : c'est une des raisons pour lesquelles les grands producteurs de données (Copernicus, USGS) livrent des composites normalisés BRDF pour les analyses de longues séries temporelles.",
+    text: "La réflectance mesurée d'une même surface varie selon l'angle d'éclairage solaire et l'angle de visée du capteur, un effet décrit par la fonction de distribution de réflectance bidirectionnelle (BRDF). Deux images d'un même champ, prises à des heures ou des saisons différentes, ne sont donc jamais strictement comparables sans en tenir compte : c'est une des raisons pour lesquelles les grands producteurs de données (Copernicus, USGS) livrent des composites normalisés BRDF pour les analyses de longues séries temporelles.",
   },
 
   { type: "heading", text: "6. Les quatre résolutions d'une image satellite" },
@@ -155,7 +155,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "formula",
     label: "Résolution radiométrique : le nombre de niveaux codables",
     formula: "Nombre de niveaux = 2^(nombre de bits)",
-    note: "8 bits → 256 niveaux (image classique) ; 10 bits → 1024 niveaux ; 12 bits → 4096 niveaux (Sentinel-2) ; 16 bits → 65 536 niveaux. Plus la résolution radiométrique est élevée, plus le capteur distingue de nuances fines de réflectance — un enjeu direct pour la sensibilité d'un indice comme le NDVI dans les valeurs intermédiaires.",
+    note: "8 bits → 256 niveaux (image classique) ; 10 bits → 1024 niveaux ; 12 bits → 4096 niveaux (Sentinel-2) ; 16 bits → 65 536 niveaux. Plus la résolution radiométrique est élevée, plus le capteur distingue de nuances fines de réflectance, un enjeu direct pour la sensibilité d'un indice comme le NDVI dans les valeurs intermédiaires.",
   },
   {
     type: "callout",
@@ -207,11 +207,16 @@ export const teledetectionContent: ContentBlock[] = [
     title: "Lien avec le module Indices spectraux",
     text: "Sentinel-2 est la référence utilisée dans quasiment tous les cas pratiques de ce cours : gratuite, résolution spatiale suffisante pour du travail à l'échelle d'une parcelle ou d'un massif, et dotée des bandes rouge/NIR/SWIR nécessaires au calcul du NDVI, NDMI et NDBI présentés dans le module suivant.",
   },
+  {
+    type: "marginnote",
+    title: "Anecdote : Landsat 1 ne s'est jamais appelé Landsat 1",
+    text: "Lancé le 23 juillet 1972, le tout premier satellite civil d'observation de la Terre s'appelait ERTS-1 (Earth Resources Technology Satellite). La NASA le rebaptise \"Landsat 1\" en 1975, seulement après le lancement d'ERTS-2, pour donner à toute la future famille de satellites un nom de programme cohérent. Le nom d'origine ne survit aujourd'hui que dans les archives scientifiques les plus anciennes.",
+  },
 
-  { type: "heading", text: "9. La photo-interprétation", level: "college-lycee" },
+  { type: "heading", text: "9. La photo-interprétation", level: "lycee" },
   {
     type: "paragraph",
-    text: "Avant tout calcul d'indice, la première compétence en télédétection reste la lecture directe de l'image à l'œil — une compétence qui reste précieuse aujourd'hui pour vérifier un résultat automatique, et directement utile en épreuve de commentaire de document. Six clés de lecture classiques, héritées de la photo-interprétation aérienne militaire et civile du XXᵉ siècle :",
+    text: "Avant tout calcul d'indice, la première compétence en télédétection reste la lecture directe de l'image à l'œil, une compétence qui reste précieuse aujourd'hui pour vérifier un résultat automatique, et directement utile en épreuve de commentaire de document. Six clés de lecture classiques, héritées de la photo-interprétation aérienne militaire et civile du XXᵉ siècle :",
   },
   {
     type: "list",
@@ -228,7 +233,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Composition naturelle vs fausse couleur",
-    text: "Une composition \"fausse couleur\" affiche le proche infrarouge à la place du rouge visible : la végétation, très réfléchissante en NIR, apparaît alors en rouge vif plutôt qu'en vert. Ce n'est pas une erreur de calibration — c'est un choix délibéré, hérité des premiers films infrarouges aériens des années 1940, qui rend la végétation immédiatement identifiable à l'œil, sans calculer le moindre indice.",
+    text: "Une composition \"fausse couleur\" affiche le proche infrarouge à la place du rouge visible : la végétation, très réfléchissante en NIR, apparaît alors en rouge vif plutôt qu'en vert. Ce n'est pas une erreur de calibration : c'est un choix délibéré, hérité des premiers films infrarouges aériens des années 1940, qui rend la végétation immédiatement identifiable à l'œil, sans calculer le moindre indice.",
   },
 
   { type: "heading", text: "10. De la valeur brute (DN) à la réflectance physique", level: "superieur" },
@@ -252,7 +257,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "list",
     items: [
       "Correction radiométrique : compense les différences de sensibilité entre capteurs et dans le temps, via la formule DN → réflectance TOA ci-dessus",
-      "Correction atmosphérique : retire l'effet de la vapeur d'eau, des aérosols et des nuages fins sur la réflectance mesurée, pour obtenir une réflectance de surface (BOA, bottom-of-atmosphere) — c'est ce qui distingue le niveau L2A du L1C pour Sentinel-2",
+      "Correction atmosphérique : retire l'effet de la vapeur d'eau, des aérosols et des nuages fins sur la réflectance mesurée, pour obtenir une réflectance de surface (BOA, bottom-of-atmosphere) : c'est ce qui distingue le niveau L2A du L1C pour Sentinel-2",
       "Correction géométrique (orthorectification) : recale précisément l'image sur un système de coordonnées en tenant compte du relief, pour qu'elle se superpose exactement à d'autres couches sans décalage lié au terrain",
       "Mosaïquage : assemble plusieurs scènes adjacentes en une seule image continue, en harmonisant leurs teintes aux raccords",
     ],
@@ -261,7 +266,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "table",
     headers: ["Méthode de rééchantillonnage", "Principe", "Effet sur les valeurs"],
     rows: [
-      ["Plus proche voisin (nearest neighbor)", "Reprend telle quelle la valeur du pixel source le plus proche", "Aucune valeur inventée — seule méthode correcte pour une donnée catégorielle (classification, masque)"],
+      ["Plus proche voisin (nearest neighbor)", "Reprend telle quelle la valeur du pixel source le plus proche", "Aucune valeur inventée : seule méthode correcte pour une donnée catégorielle (classification, masque)"],
       ["Bilinéaire", "Moyenne pondérée des 4 pixels sources les plus proches", "Lisse légèrement l'image ; correct pour une donnée continue (réflectance) mais fausse une classification"],
       ["Cubique (convolution cubique)", "Moyenne pondérée sur 16 pixels sources (4×4), avec des poids négatifs possibles", "Rendu visuel plus net que le bilinéaire, au prix d'un léger risque de dépassement (overshoot) hors de la plage de valeurs d'origine"],
     ],
@@ -281,7 +286,7 @@ export const teledetectionContent: ContentBlock[] = [
           "Méthode empirique simple (Chavez, 1988)",
           "Suppose qu'au moins un pixel de la scène (eau profonde, ombre) devrait avoir une réflectance nulle",
           "Soustrait à toute la bande la valeur minimale observée, jugée due à la diffusion atmosphérique",
-          "Rapide, mais approximative — ne modélise pas la physique de l'atmosphère",
+          "Rapide, mais approximative : ne modélise pas la physique de l'atmosphère",
         ],
       },
       {
@@ -305,7 +310,7 @@ export const teledetectionContent: ContentBlock[] = [
   { type: "heading", text: "12. Au-delà du multispectral : l'imagerie hyperspectrale", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "Un capteur multispectral comme Sentinel-2 mesure une dizaine de bandes larges (quelques dizaines à une centaine de nanomètres chacune). Un capteur hyperspectral (ex. PRISMA de l'agence spatiale italienne, EnMAP allemand, ou l'instrument aéroporté AVIRIS de la NASA) mesure plusieurs centaines de bandes contiguës, chacune large de quelques nanomètres seulement — une courbe de réflectance quasi continue par pixel plutôt qu'un échantillonnage épars.",
+    text: "Un capteur multispectral comme Sentinel-2 mesure une dizaine de bandes larges (quelques dizaines à une centaine de nanomètres chacune). Un capteur hyperspectral (ex. PRISMA de l'agence spatiale italienne, EnMAP allemand, ou l'instrument aéroporté AVIRIS de la NASA) mesure plusieurs centaines de bandes contiguës, chacune large de quelques nanomètres seulement, une courbe de réflectance quasi continue par pixel plutôt qu'un échantillonnage épars.",
   },
   {
     type: "list",
@@ -319,7 +324,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Le mélange spectral, un problème que l'hyperspectral rend justement traitable",
-    text: "Un pixel de 20-30 m (résolution typique des capteurs hyperspectraux actuels) contient presque toujours plusieurs matériaux mélangés. Le démélange spectral (spectral unmixing) exploite la richesse des centaines de bandes pour estimer la proportion de chaque matériau \"pur\" (endmember) dans un pixel — un problème mal posé avec seulement une dizaine de bandes multispectrales, mais abordable avec un vrai spectre hyperspectral.",
+    text: "Un pixel de 20-30 m (résolution typique des capteurs hyperspectraux actuels) contient presque toujours plusieurs matériaux mélangés. Le démélange spectral (spectral unmixing) exploite la richesse des centaines de bandes pour estimer la proportion de chaque matériau \"pur\" (endmember) dans un pixel, un problème mal posé avec seulement une dizaine de bandes multispectrales, mais abordable avec un vrai spectre hyperspectral.",
   },
 
   { type: "heading", text: "13. La physique complète : équation de transfert radiatif et polarimétrie SAR", level: "approfondissement" },
@@ -331,7 +336,7 @@ export const teledetectionContent: ContentBlock[] = [
     type: "formula",
     label: "Équation de transfert radiatif simplifiée (cas optique)",
     formula: "L_capteur = L_surface · T_atm + L_path",
-    note: "L_surface = radiance réellement issue de la surface (ce qu'on veut mesurer), T_atm = transmittance de l'atmosphère (fraction du signal qui la traverse sans être diffusée ni absorbée), L_path = radiance de trajet (\"path radiance\", la lumière diffusée par l'atmosphère elle-même qui atteint le capteur sans jamais avoir touché le sol — c'est ce terme, non nul même au-dessus d'une surface parfaitement noire, qui justifie la Dark Object Subtraction de la section précédente). Un modèle comme 6S (Vermote et al., 1997) résout cette équation en modélisant T_atm et L_path à partir de la composition atmosphérique réelle, plutôt que de l'estimer empiriquement comme le fait la DOS.",
+    note: "L_surface = radiance réellement issue de la surface (ce qu'on veut mesurer), T_atm = transmittance de l'atmosphère (fraction du signal qui la traverse sans être diffusée ni absorbée), L_path = radiance de trajet (\"path radiance\", la lumière diffusée par l'atmosphère elle-même qui atteint le capteur sans jamais avoir touché le sol : c'est ce terme, non nul même au-dessus d'une surface parfaitement noire, qui justifie la Dark Object Subtraction de la section précédente). Un modèle comme 6S (Vermote et al., 1997) résout cette équation en modélisant T_atm et L_path à partir de la composition atmosphérique réelle, plutôt que de l'estimer empiriquement comme le fait la DOS.",
   },
   {
     type: "paragraph",
@@ -340,16 +345,16 @@ export const teledetectionContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Diffusion de surface (Bragg) : dominante sur une surface lisse à l'échelle de la longueur d'onde radar (eau calme, sol nu lisse) — signal fort en co-polarisation (HH ou VV), faible en polarisation croisée",
-      "Diffusion de volume : dominante dans un milieu structuré en trois dimensions (canopée forestière, culture dense) — dépolarise fortement le signal, augmentant la polarisation croisée (HV/VH)",
-      "Double rebond (double-bounce) : réflexion en coin, typique d'une surface verticale au-dessus d'une surface horizontale (façade de bâtiment + sol, tronc + sol inondé en forêt) — signature très caractéristique en HH",
+      "Diffusion de surface (Bragg) : dominante sur une surface lisse à l'échelle de la longueur d'onde radar (eau calme, sol nu lisse) ; signal fort en co-polarisation (HH ou VV), faible en polarisation croisée",
+      "Diffusion de volume : dominante dans un milieu structuré en trois dimensions (canopée forestière, culture dense) ; dépolarise fortement le signal, augmentant la polarisation croisée (HV/VH)",
+      "Double rebond (double-bounce) : réflexion en coin, typique d'une surface verticale au-dessus d'une surface horizontale (façade de bâtiment + sol, tronc + sol inondé en forêt) ; signature très caractéristique en HH",
     ],
   },
   {
     type: "callout",
     tone: "example",
     title: "La décomposition de Freeman-Durden",
-    text: "La décomposition de Freeman-Durden (1998) exploite précisément ces trois mécanismes pour recomposer, à partir des polarisations mesurées, la contribution relative de la diffusion de surface, de volume et du double rebond dans chaque pixel — une méthode qui permet, par exemple, de distinguer une forêt inondée (double rebond tronc/eau, signature radar unique) d'une forêt sur sol sec (diffusion de volume dominante), invisible en optique sous la canopée.",
+    text: "La décomposition de Freeman-Durden (1998) exploite précisément ces trois mécanismes pour recomposer, à partir des polarisations mesurées, la contribution relative de la diffusion de surface, de volume et du double rebond dans chaque pixel, une méthode qui permet, par exemple, de distinguer une forêt inondée (double rebond tronc/eau, signature radar unique) d'une forêt sur sol sec (diffusion de volume dominante), invisible en optique sous la canopée.",
   },
 
   { type: "heading", text: "14. Température de brillance : de la radiance thermique à la température", level: "approfondissement" },

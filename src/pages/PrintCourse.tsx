@@ -4,6 +4,7 @@ import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { GalleryFrame } from "@/components/gallery/GalleryFrame"
+import { slugify } from "@/lib/slug"
 import type { ContentBlock } from "@/content/types"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
@@ -35,7 +36,7 @@ export function PrintCourse() {
           Geo-In-Spectra · Salle {numeral}
         </p>
         <h1 className="font-heading text-5xl mb-8 max-w-2xl">{module.title}</h1>
-        <p className="font-body italic text-[#5c5140] max-w-lg mb-12 leading-relaxed">{module.epigraph}</p>
+        <p className="font-body italic text-[#5c5140] max-w-lg mb-12 leading-relaxed text-justify">{module.epigraph}</p>
 
         {art && (
           <GalleryFrame
@@ -51,17 +52,24 @@ export function PrintCourse() {
           />
         )}
 
-        <p className="text-[#5c5140] max-w-lg mt-12 leading-relaxed">{module.summary}</p>
+        <p className="text-[#5c5140] max-w-lg mt-12 leading-relaxed text-justify">{module.summary}</p>
       </section>
 
-      {/* Sommaire */}
+      {/* Sommaire — pas de min-h-screen ici : contrairement à la page de garde
+          (page de titre volontairement spacieuse, un vrai choix de mise en
+          page), un sommaire à peu d'entrées forcé sur une hauteur de
+          viewport complète laisse une grande zone vide en bas de page sans
+          raison. La page se referme sur son contenu réel, break-after:page
+          garantit quand même qu'elle reste séparée du contenu qui suit. */}
       {headings.length > 0 && (
-        <section className="print-toc min-h-screen px-16 py-24">
+        <section className="print-toc px-16 pt-24 pb-16">
           <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-[#8a6a2f] mb-8">Sommaire</p>
           <ol className="space-y-4">
             {headings.map((h) => (
-              <li key={h.text} className="font-heading text-xl border-b border-[#8a6a2f]/20 pb-4">
-                {h.text}
+              <li key={h.text} className="border-b border-[#8a6a2f]/20 pb-4">
+                <a href={`#${slugify(h.text)}`} className="font-heading text-xl text-[#2b2116] no-underline">
+                  {h.text}
+                </a>
               </li>
             ))}
           </ol>

@@ -27,13 +27,18 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "formula",
     label: "Altitude géodésique vs altitude orthométrique",
     formula: "h (altitude ellipsoïdale, GPS brut) = H (altitude orthométrique, \"vraie\" altitude au sens de l'écoulement de l'eau) + N (ondulation du géoïde)",
-    note: "Un GPS mesure directement h, une altitude par rapport à l'ellipsoïde mathématique — pas l'altitude affichée sur une carte IGN, qui est une altitude orthométrique H, rattachée au niveau moyen des mers (repère altimétrique NGF-IGN69 en France). Ignorer cette différence peut introduire des écarts d'altitude de plusieurs dizaines de mètres entre une mesure GPS brute et une carte topographique.",
+    note: "Un GPS mesure directement h, une altitude par rapport à l'ellipsoïde mathématique, et non l'altitude affichée sur une carte IGN, qui est une altitude orthométrique H, rattachée au niveau moyen des mers (repère altimétrique NGF-IGN69 en France). Ignorer cette différence peut introduire des écarts d'altitude de plusieurs dizaines de mètres entre une mesure GPS brute et une carte topographique.",
+  },
+  {
+    type: "marginnote",
+    title: "Anecdote : la Terre est-elle allongée ou aplatie ?",
+    text: "Au XVIIIe siècle, Newton prédisait une Terre aplatie aux pôles ; Cassini (voir plus bas), depuis ses mesures françaises, penchait pour l'inverse. Pour trancher, l'Académie des sciences envoie deux expéditions mesurer un degré de méridien : Maupertuis en Laponie (1736), La Condamine au Pérou (1735-1744). Verdict : Newton avait raison. C'est cette controverse, pas un calcul de bureau, qui a fixé la forme ellipsoïdale de la Terre.",
   },
 
   { type: "heading", text: "3. Comment un GPS calcule une position : la trilatération", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "Un récepteur GPS (ou plus largement GNSS — Global Navigation Satellite System, qui inclut aussi le système européen Galileo, le russe GLONASS et le chinois BeiDou) ne connaît jamais sa position directement : il la déduit par trilatération, à partir de la distance qui le sépare de plusieurs satellites dont la position orbitale est connue à chaque instant.",
+    text: "Un récepteur GPS (ou plus largement GNSS, Global Navigation Satellite System, qui inclut aussi le système européen Galileo, le russe GLONASS et le chinois BeiDou) ne connaît jamais sa position directement : il la déduit par trilatération, à partir de la distance qui le sépare de plusieurs satellites dont la position orbitale est connue à chaque instant.",
   },
   {
     type: "list",
@@ -63,7 +68,12 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "RTK vs PPK : le compromis temps réel / robustesse",
-    text: "Le RTK exige une liaison de correction continue (radio ou internet) au moment même de la mesure : une coupure, même brève, dégrade instantanément la précision. Le PPK enregistre les données brutes sur le terrain et applique la correction ensuite, en bureau — plus robuste (aucune dépendance à un lien temps réel sur site), au prix de ne pas connaître la position précise avant le retour au bureau. C'est le compromis typique des relevés par drone en zone isolée.",
+    text: "Le RTK exige une liaison de correction continue (radio ou internet) au moment même de la mesure : une coupure, même brève, dégrade instantanément la précision. Le PPK enregistre les données brutes sur le terrain et applique la correction ensuite, en bureau : plus robuste (aucune dépendance à un lien temps réel sur site), au prix de ne pas connaître la position précise avant le retour au bureau. C'est le compromis typique des relevés par drone en zone isolée.",
+  },
+  {
+    type: "marginnote",
+    title: "Anecdote : la nuit où le GPS civil a gagné 10x en précision",
+    text: "Jusqu'en mai 2000, le signal GPS civil était volontairement dégradé par l'armée américaine (Selective Availability), limitant la précision à ~100 m, pour empêcher un usage militaire hostile. Le président Clinton ordonne sa désactivation dans la nuit du 1er au 2 mai 2000 : la précision civile passe quasi instantanément à ~10-20 m, sans qu'aucun récepteur n'ait changé.",
   },
 
   { type: "heading", text: "4. Coordonnées géographiques vs coordonnées projetées" },
@@ -106,7 +116,7 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "5. Les projections cartographiques" },
   {
     type: "paragraph",
-    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois — c'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss (une surface courbe ne peut être développée sur un plan sans déformation). Le choix d'une projection dépend donc de l'usage :",
+    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois : c'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss (une surface courbe ne peut être développée sur un plan sans déformation). Le choix d'une projection dépend donc de l'usage :",
   },
   {
     type: "list",
@@ -118,14 +128,19 @@ export const fondamentauxContent: ContentBlock[] = [
     ],
   },
   {
+    type: "marginnote",
+    title: "Anecdote : un cartographe flamand, pas un mathématicien",
+    text: "Gerardus Mercator (latinisation de Gerard de Kremer, né en 1512 dans l'actuelle Belgique) publie sa projection en 1569 sous le titre \"Nova et Aucta Orbis Terrae Descriptio\", un outil pensé pour les marins : suivre un cap constant à la boussole y trace toujours une ligne droite (loxodromie), au prix de surfaces trahies aux hautes latitudes. Quatre siècles plus tard, c'est exactement ce même compromis qu'hérite le Web Mercator de Google Maps.",
+  },
+  {
     type: "paragraph",
-    text: "Lambert-93 appartient à la famille des projections coniques conformes : on imagine un cône posé sur l'ellipsoïde le long de deux parallèles de référence (dits parallèles standards, 44° N et 49° N pour Lambert-93), sur lesquels la déformation d'échelle est nulle par construction. Elle augmente ensuite progressivement en s'éloignant de ces deux parallèles vers le nord ou le sud — un compromis pensé spécifiquement pour l'étendue en latitude de la France métropolitaine, et inadapté tel quel à un territoire qui s'étend surtout en longitude ou situé à une autre latitude (d'où l'existence de projections UTM par fuseaux, utilisées par exemple pour les territoires d'outre-mer français).",
+    text: "Lambert-93 appartient à la famille des projections coniques conformes : on imagine un cône posé sur l'ellipsoïde le long de deux parallèles de référence (dits parallèles standards, 44° N et 49° N pour Lambert-93), sur lesquels la déformation d'échelle est nulle par construction. Elle augmente ensuite progressivement en s'éloignant de ces deux parallèles vers le nord ou le sud, un compromis pensé spécifiquement pour l'étendue en latitude de la France métropolitaine, et inadapté tel quel à un territoire qui s'étend surtout en longitude ou situé à une autre latitude (d'où l'existence de projections UTM par fuseaux, utilisées par exemple pour les territoires d'outre-mer français).",
   },
   {
     type: "formula",
     label: "Le facteur d'échelle k : quantifier la déformation en un point",
     formula: "k(φ) = 1 exactement aux deux parallèles standards (44° N, 49° N)   ·   k(φ) > 1 hors de cet intervalle, k(φ) < 1 entre les deux",
-    note: "k est le rapport entre une distance mesurée sur la carte projetée et la distance réelle sur l'ellipsoïde en ce point : k = 1 signifie aucune déformation locale d'échelle. Pour une projection conique conforme, la formule complète de k(φ) en fonction de la latitude et des deux parallèles standards est donnée par Snyder (1987, USGS Professional Paper 1395) — la retenir ici : l'écart de k à 1 mesure directement, en un point donné, l'erreur relative qu'introduit la projection sur une distance mesurée à la règle sur la carte plutôt que calculée sur l'ellipsoïde.",
+    note: "k est le rapport entre une distance mesurée sur la carte projetée et la distance réelle sur l'ellipsoïde en ce point : k = 1 signifie aucune déformation locale d'échelle. Pour une projection conique conforme, la formule complète de k(φ) en fonction de la latitude et des deux parallèles standards est donnée par Snyder (1987, USGS Professional Paper 1395). À retenir ici : l'écart de k à 1 mesure directement, en un point donné, l'erreur relative qu'introduit la projection sur une distance mesurée à la règle sur la carte plutôt que calculée sur l'ellipsoïde.",
   },
   {
     type: "formula",
@@ -170,10 +185,10 @@ export const fondamentauxContent: ContentBlock[] = [
     text: "Une zone forestière peut être représentée en vecteur (un polygone \"forêt\" avec un attribut essence dominante) ou en raster (un indice de végétation calculé pixel par pixel depuis une image satellite). Le choix dépend de la précision recherchée et de la source de donnée disponible : c'est un fil conducteur qu'on retrouvera dans le module Télédétection.",
   },
 
-  { type: "heading", text: "7. Formats de données courants", level: "college-lycee" },
+  { type: "heading", text: "7. Formats de données courants", level: "lycee" },
   {
     type: "paragraph",
-    text: "De la même façon qu'un texte peut être un .docx, un .pdf ou un simple .txt selon l'usage, une donnée géographique existe sous plusieurs formats de fichier selon ce qu'on veut en faire — les quatre ci-dessous sont les plus courants.",
+    text: "De la même façon qu'un texte peut être un .docx, un .pdf ou un simple .txt selon l'usage, une donnée géographique existe sous plusieurs formats de fichier selon ce qu'on veut en faire : les quatre ci-dessous sont les plus courants.",
   },
   {
     type: "table",
@@ -233,11 +248,11 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "link",
     to: "/jeu/fondamentaux",
-    label: "S'entraîner : la Chasse aux EPSG",
-    description: "Un jeu court pour associer les codes EPSG de cette section à leur système, en pratique plutôt qu'en lecture.",
+    label: "S'entraîner : le Compas des Coordonnées",
+    description: "Un jeu court pour déduire la position d'une ville à partir de ses vraies coordonnées Lambert-93, en pratique plutôt qu'en lecture.",
   },
 
-  { type: "heading", text: "10. Petite histoire de la cartographie", level: "college-lycee" },
+  { type: "heading", text: "10. Petite histoire de la cartographie", level: "lycee" },
   {
     type: "paragraph",
     text: "Mesurer et représenter la Terre n'a rien d'une invention récente. Le fil qui va de Ptolémée aux satellites d'observation actuels est continu : à chaque époque, un instrument nouveau a permis de mesurer un peu plus précisément ce que l'époque précédente ne pouvait qu'estimer.",
@@ -258,8 +273,18 @@ export const fondamentauxContent: ContentBlock[] = [
       "XXᵉ – XXIᵉ siècle : de Landsat 1 (1972, premier satellite civil d'observation) à Sentinel-2 (2015, données ouvertes et gratuites)",
     ],
   },
+  {
+    type: "marginnote",
+    title: "Moyen mnémotechnique : la méthode d'Ératosthène",
+    text: "À midi au solstice d'été, le Soleil est exactement au zénith à Syène (Assouan) : aucune ombre. Au même instant à Alexandrie, un bâton projette une ombre d'environ 7,2°. Sachant la distance Alexandrie-Syène (mesurée en jours de marche de caravane), Ératosthène en déduit la circonférence terrestre : règle de trois entre 7,2° (soit 1/50 de cercle) et la distance mesurée. Sans satellite, ni horloge, ni GPS.",
+  },
+  {
+    type: "marginnote",
+    title: "Anecdote : une dynastie sur quatre générations",
+    text: "La Carte de Cassini n'est pas l'œuvre d'un seul homme : Jean-Dominique Cassini (Cassini Iᵉʳ) lance le projet, son fils Jacques (Cassini II) le poursuit, son petit-fils César-François (Cassini III) en dresse le plan général, et son arrière-petit-fils Jean-Dominique (Cassini IV) l'achève : plus d'un siècle de relevés (1683-1789) porté par la même famille, quatre générations de suite.",
+  },
 
-  { type: "heading", text: "11. Lire une carte", level: "college-lycee" },
+  { type: "heading", text: "11. Lire une carte", level: "lycee" },
   {
     type: "paragraph",
     text: "Une carte topographique se lit avec une méthode, pas au hasard. Quatre éléments à vérifier systématiquement avant d'interpréter le contenu lui-même :",
@@ -267,7 +292,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "La légende : sans elle, aucun symbole n'a de sens garanti — ne jamais supposer qu'une couleur ou un pictogramme signifie la même chose d'une carte à l'autre",
+      "La légende : sans elle, aucun symbole n'a de sens garanti. Ne jamais supposer qu'une couleur ou un pictogramme signifie la même chose d'une carte à l'autre",
       "L'échelle : le rapport entre une distance sur la carte et la distance réelle (ex. 1:25 000 = 1 cm sur la carte pour 250 m sur le terrain)",
       "L'orientation : par convention le nord est en haut, sauf mention contraire explicite (flèche du nord)",
       "Les courbes de niveau : relient les points de même altitude ; plus elles sont rapprochées, plus la pente est forte",
@@ -316,7 +341,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "warning",
     title: "Le piège d'un relevé GNSS de précision comparé à un ancien relevé",
-    text: "Un récepteur GNSS professionnel donne nativement une position en ITRF (référentiel de calcul des orbites satellites), pas en ETRS89/RGF93. Comparer directement une coordonnée ITRF récente à une coordonnée RGF93 ancienne, sans passer par la transformation officielle (grille de conversion IGN), introduit une erreur systématique de plusieurs centimètres — négligeable pour une carte grand public, rédhibitoire pour un relevé topographique de précision ou une étude de déformation du sol.",
+    text: "Un récepteur GNSS professionnel donne nativement une position en ITRF (référentiel de calcul des orbites satellites), pas en ETRS89/RGF93. Comparer directement une coordonnée ITRF récente à une coordonnée RGF93 ancienne, sans passer par la transformation officielle (grille de conversion IGN), introduit une erreur systématique de plusieurs centimètres : négligeable pour une carte grand public, rédhibitoire pour un relevé topographique de précision ou une étude de déformation du sol.",
   },
 
   { type: "heading", text: "14. Passer d'un référentiel à un autre : la transformation à 7 paramètres de Helmert", level: "approfondissement" },
@@ -328,7 +353,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "formula",
     label: "Transformation de Helmert à 7 paramètres",
     formula: "X' = (1 + s) · R(rx, ry, rz) · X + T",
-    note: "3 paramètres de translation (T : décalage d'origine en X/Y/Z), 3 de rotation (R : rx/ry/rz, désalignement des axes) et 1 facteur d'échelle (s, différence de taille entre les deux ellipsoïdes) — 7 paramètres en tout, déterminés empiriquement à partir de points communs mesurés dans les deux référentiels. En France, l'IGN diffuse une grille de conversion (plus précise qu'un simple Helmert à 7 paramètres uniforme, car elle absorbe aussi les distorsions locales historiques des anciens réseaux géodésiques) plutôt qu'une formule unique nationale.",
+    note: "3 paramètres de translation (T : décalage d'origine en X/Y/Z), 3 de rotation (R : rx/ry/rz, désalignement des axes) et 1 facteur d'échelle (s, différence de taille entre les deux ellipsoïdes) : 7 paramètres en tout, déterminés empiriquement à partir de points communs mesurés dans les deux référentiels. En France, l'IGN diffuse une grille de conversion (plus précise qu'un simple Helmert à 7 paramètres uniforme, car elle absorbe aussi les distorsions locales historiques des anciens réseaux géodésiques) plutôt qu'une formule unique nationale.",
   },
   {
     type: "callout",

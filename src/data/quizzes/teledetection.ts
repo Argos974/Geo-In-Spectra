@@ -60,7 +60,7 @@ export const teledetectionQuiz: QuizQuestion[] = [
       "Elle capte la lumière de la Lune",
     ],
     correctIndex: 0,
-    explanation: "Selon la loi de Wien, un corps à ~288 K (la Terre) émet un maximum de rayonnement vers 10 µm (thermique), indépendamment de tout éclairage solaire — contrairement au visible/NIR/SWIR, qui mesurent la lumière solaire réfléchie.",
+    explanation: "Selon la loi de Wien, un corps à ~288 K (la Terre) émet un maximum de rayonnement vers 10 µm (thermique), indépendamment de tout éclairage solaire, contrairement au visible/NIR/SWIR, qui mesurent la lumière solaire réfléchie.",
   },
   {
     question: "Le niveau L2A de Sentinel-2, contrairement au L1C, a été :",
@@ -93,6 +93,17 @@ export const teledetectionQuiz: QuizQuestion[] = [
       "Un sol nu totalement plat",
     ],
     correctIndex: 1,
-    explanation: "Le double rebond (réflexion en coin) est la signature caractéristique d'une surface verticale posée sur une surface horizontale — c'est ce mécanisme que la décomposition de Freeman-Durden isole pour distinguer, par exemple, une forêt inondée d'une forêt sur sol sec.",
+    explanation: "Le double rebond (réflexion en coin) est la signature caractéristique d'une surface verticale posée sur une surface horizontale : c'est ce mécanisme que la décomposition de Freeman-Durden isole pour distinguer, par exemple, une forêt inondée d'une forêt sur sol sec.",
+  },
+  {
+    question: "Une image Sentinel-2 acquise à midi en été et une autre à 9h en hiver, sur le même lieu, ne sont pas directement comparables pixel à pixel parce que :",
+    choices: [
+      "Sentinel-2 change de bandes spectrales selon la saison",
+      "L'angle d'éclairage solaire diffère (effets BRDF, ombres portées) et la végétation change de phénologie",
+      "La résolution spatiale du capteur varie avec l'heure d'acquisition",
+      "Ce n'est pas vrai, deux images Sentinel-2 sont toujours directement comparables",
+    ],
+    correctIndex: 1,
+    explanation: "La hauteur et l'azimut du soleil changent la réflectance mesurée d'une même surface (BRDF) et la longueur des ombres ; la saison change aussi l'état de la végétation. Sans correction, ces effets se confondent avec un vrai changement.",
   },
 ]

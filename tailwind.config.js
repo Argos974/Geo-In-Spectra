@@ -34,21 +34,34 @@ module.exports = {
         // Le lapis en particulier est le pigment réellement utilisé pour les ciels/robes
         // dans les toiles reproduites sur ce site (Vermeer, Cellarius) — pas une couleur
         // décorative arbitraire.
+        // Chaque teinte pointe vers une variable CSS "R G B" (voir index.css, :root
+        // pour le thème sombre par défaut et [data-theme="light"] pour la variante
+        // claire) plutôt qu'un hex figé — c'est ce qui permet au bouton de thème de
+        // faire basculer tout le site (des centaines de classes bg-x/10, border-x/30…
+        // déjà écrites) sans toucher un seul composant. Le format "R G B" (sans
+        // virgules) est requis par Tailwind pour que les modificateurs d'opacité
+        // (/10, /30…) continuent de fonctionner avec une couleur dynamique.
         ink: {
-          DEFAULT: "#0d0e12",
-          deep: "#07080a",
+          DEFAULT: "rgb(var(--color-ink) / <alpha-value>)",
+          deep: "rgb(var(--color-ink-deep) / <alpha-value>)",
         },
-        canvas: "#17140f",
+        canvas: "rgb(var(--color-canvas) / <alpha-value>)",
         parchment: {
-          DEFAULT: "#ece3cf",
-          dim: "#a89f8c",
+          DEFAULT: "rgb(var(--color-parchment) / <alpha-value>)",
+          dim: "rgb(var(--color-parchment-dim) / <alpha-value>)",
         },
         gilt: {
-          DEFAULT: "#b8934f",
-          bright: "#d9b46a",
+          DEFAULT: "rgb(var(--color-gilt) / <alpha-value>)",
+          bright: "rgb(var(--color-gilt-bright) / <alpha-value>)",
         },
-        lapis: "#3f5066",
-        oxblood: "#7a2f24",
+        lapis: {
+          DEFAULT: "rgb(var(--color-lapis) / <alpha-value>)",
+          bright: "rgb(var(--color-lapis-bright) / <alpha-value>)",
+        },
+        oxblood: {
+          DEFAULT: "rgb(var(--color-oxblood) / <alpha-value>)",
+          bright: "rgb(var(--color-oxblood-bright) / <alpha-value>)",
+        },
       },
       fontFamily: {
         heading: ['Cinzel', 'serif'],

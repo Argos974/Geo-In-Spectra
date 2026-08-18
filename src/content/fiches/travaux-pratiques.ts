@@ -32,4 +32,10 @@ export const travauxPratiquesFiche: ContentBlock[] = [
     title: "À ne pas confondre",
     text: "Niveau L1C (non corrigé) vs L2A (corrigé des effets atmosphériques) : toujours utiliser L2A pour un calcul d'indice fiable. Et : un géoréférencement approximatif « à l'œil » n'est jamais fiable, seuls des points de contrôle à coordonnée réelle certaine le sont.",
   },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Jeu de données canonique (réel, fourni avec le site)",
+    text: "Scène Sentinel-2 réelle (Vitrolles, 6 août 2024, /data/sample-vitrolles-2024/) : NDVI moyen 0.33, NDMI -0.09, NDBI +0.09. Résultat réel mesuré (séances 6/7) : MLP à 50 neurones légèrement meilleur que Random Forest sur ce jeu (kappa 0.673 contre 0.640), contredit l'intuition générale, à vérifier sur son propre jeu plutôt qu'à présumer.",
+  },
 ]

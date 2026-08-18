@@ -26,7 +26,7 @@ export function PrintFiche() {
         Geo-In-Spectra · Fiche mémo · Salle {numeral}
       </p>
       <h1 className="font-heading text-3xl mb-2">{module.title}</h1>
-      <p className="text-[#5c5140] mb-10">{module.summary}</p>
+      <p className="text-[#5c5140] mb-10 text-justify">{module.summary}</p>
 
       <ContentBlocks blocks={blocks} variant="print" />
     </div>

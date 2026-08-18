@@ -25,7 +25,7 @@ export function NeuralNetwork() {
       {layers.map((_, li) => (
         <g key={li}>
           {positions[li].map((y, i) => (
-            <circle key={i} cx={layerX[li]} cy={y + 10} r="6" fill="#0d0e12" stroke="currentColor" strokeWidth="1.3" />
+            <circle key={i} cx={layerX[li]} cy={y + 10} r="6" fill="rgb(var(--color-ink))" stroke="currentColor" strokeWidth="1.3" />
           ))}
         </g>
       ))}

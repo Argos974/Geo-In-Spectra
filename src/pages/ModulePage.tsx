@@ -1,12 +1,15 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { markVisited } from "@/lib/progress"
 import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { moduleContent } from "@/content"
 import { quizzes } from "@/data/quizzes"
 import { games } from "@/data/games"
+import { exercises } from "@/data/exercises"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
+import { AtelierIndex } from "@/components/content/AtelierIndex"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { ALL_LEVELS, filterBlocksByLevel } from "@/lib/levelFilter"
 import type { ContentLevel } from "@/content/types"
@@ -15,7 +18,7 @@ import { cn } from "@/lib/utils"
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
 
 const LEVEL_TOGGLE_LABEL: Record<ContentLevel, string> = {
-  "college-lycee": "Collège / lycée",
+  "lycee": "Lycée",
   superieur: "Supérieur",
   approfondissement: "Approfondissement",
 }
@@ -24,6 +27,10 @@ export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()
   const module = modules.find((m) => m.slug === slug)
   const [activeLevels, setActiveLevels] = useState<Set<ContentLevel>>(new Set(ALL_LEVELS))
+
+  useEffect(() => {
+    if (module) markVisited(module.slug)
+  }, [module])
 
   const blocks = module ? moduleContent[module.slug] : undefined
   const filteredBlocks = useMemo(
@@ -63,6 +70,7 @@ export function ModulePage() {
   const ficheName = `${order}-${module.slug}-fiche-memo.pdf`
   const hasQuiz = Boolean(quizzes[module.slug])
   const hasGame = Boolean(games[module.slug])
+  const hasExercises = Boolean(exercises[module.slug])
 
   return (
     <div className="print-page min-h-screen bg-ink text-parchment">
@@ -74,35 +82,43 @@ export function ModulePage() {
             </Link>
             <p className="font-mono text-[12px] text-gilt mb-3">Salle {numeral}</p>
             <h1 className="font-heading text-4xl md:text-5xl mb-4">{module.title}</h1>
-            <p className="font-body italic text-parchment-dim leading-relaxed border-l-2 border-gilt/30 pl-4">
+            <p className="font-body italic text-parchment-dim leading-relaxed text-justify border-l-2 border-gilt/30 pl-4">
               {module.epigraph}
             </p>
           </div>
         </ArtworkBackdrop>
       )}
 
-      <div className="mx-auto max-w-3xl px-6 pt-16 pb-24">
-        <p className="text-parchment-dim text-lg mb-6">{module.summary}</p>
+      <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
+        <p className="text-parchment-dim text-lg mb-6 text-justify">{module.summary}</p>
 
-        <div className="print:hidden flex flex-wrap items-center gap-3 mb-6">
+        <div className="print:hidden flex flex-nowrap items-center gap-2 mb-6 overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
           <a
             href={`/pdf/${module.slug}/${coursName}`}
             download={coursName}
-            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
           >
-            ↓ Télécharger le cours (PDF)
+            ↓ Cours (PDF)
           </a>
           <a
             href={`/pdf/${module.slug}/${ficheName}`}
             download={ficheName}
-            className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-lapis border border-lapis/40 px-4 py-2 hover:bg-lapis/10 transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
           >
-            ↓ Télécharger la fiche mémo (PDF)
+            ↓ Fiche mémo (PDF)
           </a>
+          {hasExercises && (
+            <Link
+              to={`/module/${module.slug}/exercices`}
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
+            >
+              S'entraîner →
+            </Link>
+          )}
           {hasQuiz && (
             <Link
               to={`/module/${module.slug}/quiz`}
-              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-4 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
             >
               Faire le quiz →
             </Link>
@@ -110,7 +126,7 @@ export function ModulePage() {
           {hasGame && (
             <Link
               to={`/jeu/${module.slug}`}
-              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-oxblood border border-oxblood/40 px-4 py-2 hover:bg-oxblood/10 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-oxblood-bright border border-oxblood/40 px-3 py-2 hover:bg-oxblood/10 transition-colors"
             >
               Jouer →
             </Link>
@@ -118,7 +134,7 @@ export function ModulePage() {
         </div>
 
         <div className="print:hidden flex flex-wrap items-center gap-2 mb-10">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/60 mr-1">Afficher :</span>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mr-1">Afficher :</span>
           {ALL_LEVELS.map((level) => {
             const active = activeLevels.has(level)
             return (
@@ -129,7 +145,7 @@ export function ModulePage() {
                 aria-pressed={active}
                 className={cn(
                   "font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
-                  active ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/50 hover:text-parchment-dim hover:border-gilt/30",
+                  active ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/80 hover:text-parchment-dim hover:border-gilt/30",
                 )}
               >
                 {LEVEL_TOGGLE_LABEL[level]}
@@ -138,14 +154,14 @@ export function ModulePage() {
           })}
         </div>
 
-        {filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
+        {module.slug === "travaux-pratiques" ? <AtelierIndex /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
 
         {filteredBlocks ? (
           filteredBlocks.length > 0 ? (
             <ContentBlocks blocks={filteredBlocks} />
           ) : (
             <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
-              <p className="font-mono text-sm">Aucun contenu à ce niveau — élargis le filtre ci-dessus.</p>
+              <p className="font-mono text-sm">Aucun contenu à ce niveau, élargis le filtre ci-dessus.</p>
             </div>
           )
         ) : (

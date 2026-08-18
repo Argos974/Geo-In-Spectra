@@ -20,7 +20,7 @@ export function SpectralSignatures() {
         <text x="20" y="30" fontSize="10" textAnchor="end">100%</text>
         <text x="20" y="224" fontSize="10" textAnchor="end">0%</text>
         {curves.map((c, i) => (
-          <text key={c.label} x={440} y={40 + i * 16} fontSize="10">{c.label}</text>
+          <text key={c.label} x={555} y={18 + i * 13} fontSize="10" textAnchor="end">{c.label}</text>
         ))}
       </g>
     </svg>

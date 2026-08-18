@@ -79,4 +79,26 @@ export const indicesSpectrauxQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "Le NDRE exploite les bandes red-edge (uniques à des capteurs comme Sentinel-2, absentes de Landsat) : sensible à la teneur en chlorophylle, il sature beaucoup plus tard que le NDVI en forte biomasse.",
   },
+  {
+    question: "Pourquoi faut-il toujours préciser quelle bande red-edge (B5 ou B6) a servi à calculer un NDRE ?",
+    choices: [
+      "Ce n'est pas nécessaire, les deux donnent rigoureusement le même résultat",
+      "La publication d'origine teste les deux (705 et 750 nm), et un NDRE \"B5\" n'est pas strictement le même indice qu'un NDRE \"B6\"",
+      "B6 n'existe pas sur Sentinel-2",
+      "Seul B5 est autorisé par la définition officielle du NDRE",
+    ],
+    correctIndex: 1,
+    explanation: "Gitelson & Merzlyak (1994) testent 705 nm et 750 nm sans trancher définitivement. En pratique B5 (705 nm) ou B6 (740 nm) sont tous deux utilisés selon les études, un rapport ou une publication doit toujours préciser laquelle des deux a été utilisée.",
+  },
+  {
+    question: "Un capteur radar (SAR) ne mesure pas de réflectance : pourquoi ne peut-on pas y calculer un NDVI au sens strict ?",
+    choices: [
+      "Le radar mesure un coefficient de rétrodiffusion (σ°), pas une réflectance optique, des indicateurs équivalents (ratio de polarisation, RVI) jouent un rôle comparable",
+      "Le NDVI se calcule exactement pareil, il suffit de remplacer NIR et Rouge par les polarisations VH et VV",
+      "C'est faux, le NDVI radar est identique au NDVI optique",
+      "Le radar ne peut mesurer aucune information sur la végétation",
+    ],
+    correctIndex: 0,
+    explanation: "Une chute marquée du ratio de polarisation VH/VV signale souvent une surface en eau libre (réflexion spéculaire) ; le RVI (Radar Vegetation Index) combine les polarisations pour approcher une structure de végétation, mais ce sont des indicateurs distincts du NDVI optique, pas une simple substitution de bandes.",
+  },
 ]

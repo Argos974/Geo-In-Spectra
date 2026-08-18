@@ -10,7 +10,7 @@ describe("filterBlocksByLevel", () => {
   it("keeps everything when all levels are active", () => {
     const blocks: ContentBlock[] = [
       paragraph("intro"),
-      heading("1. Base", "college-lycee"),
+      heading("1. Base", "lycee"),
       paragraph("base content"),
       heading("2. Avancé", "approfondissement"),
       paragraph("advanced content"),
@@ -21,13 +21,13 @@ describe("filterBlocksByLevel", () => {
 
   it("drops a leveled heading and its following blocks when its level is inactive", () => {
     const blocks: ContentBlock[] = [
-      heading("1. Base", "college-lycee"),
+      heading("1. Base", "lycee"),
       paragraph("base content"),
       heading("2. Avancé", "approfondissement"),
       paragraph("advanced content"),
     ]
-    const result = filterBlocksByLevel(blocks, new Set(["college-lycee"]))
-    expect(result).toEqual([heading("1. Base", "college-lycee"), paragraph("base content")])
+    const result = filterBlocksByLevel(blocks, new Set(["lycee"]))
+    expect(result).toEqual([heading("1. Base", "lycee"), paragraph("base content")])
   })
 
   it("always keeps blocks with no preceding leveled heading (socle content)", () => {
@@ -36,7 +36,7 @@ describe("filterBlocksByLevel", () => {
       heading("1. Approfondi", "approfondissement"),
       paragraph("hidden if approfondissement inactive"),
     ]
-    const result = filterBlocksByLevel(blocks, new Set(["college-lycee"]))
+    const result = filterBlocksByLevel(blocks, new Set(["lycee"]))
     expect(result).toEqual([paragraph("intro socle")])
   })
 
@@ -47,7 +47,7 @@ describe("filterBlocksByLevel", () => {
       heading("2. Socle", undefined),
       paragraph("always visible"),
     ]
-    const result = filterBlocksByLevel(blocks, new Set(["college-lycee"]))
+    const result = filterBlocksByLevel(blocks, new Set(["lycee"]))
     expect(result).toEqual([heading("2. Socle", undefined), paragraph("always visible")])
   })
 

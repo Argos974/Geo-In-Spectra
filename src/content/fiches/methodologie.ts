@@ -25,7 +25,7 @@ export const methodologieFiche: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "En rapport technique",
-    text: "Toujours séparer les résultats bruts de leur discussion/interprétation — deux sections distinctes, jamais mélangées.",
+    text: "Toujours séparer les résultats bruts de leur discussion/interprétation : deux sections distinctes, jamais mélangées.",
   },
   {
     type: "callout",

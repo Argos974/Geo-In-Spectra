@@ -9,7 +9,7 @@ const events = [
 
 export function CartographyTimeline() {
   const width = 560
-  const marginX = 20
+  const marginX = 45
   const y = 80
   const step = (width - marginX * 2) / (events.length - 1)
 

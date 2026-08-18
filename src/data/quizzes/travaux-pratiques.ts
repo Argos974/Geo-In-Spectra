@@ -73,4 +73,37 @@ export const travauxPratiquesQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "ogrinfo (GDAL/OGR) inspecte une couche vecteur en ligne de commande : nombre d'entités, CRS, champs. gdalinfo joue le même rôle pour un raster.",
   },
+  {
+    question: "Sur le jeu de données réel Vitrolles, la comparaison mesurée (pas estimée) entre Random Forest et MLP a montré :",
+    choices: [
+      "Le Random Forest gagne largement, comme l'intuition générale le prédit toujours",
+      "Le MLP à 50 neurones fait légèrement mieux (kappa 0.673 contre 0.640), contredisant l'intuition générale sur petits jeux de données",
+      "Les deux modèles échouent totalement sur ce jeu",
+      "Impossible de les comparer sans jeu de test",
+    ],
+    correctIndex: 1,
+    explanation: "Résultat réel mesuré sur les pixels Vitrolles (labels SCL réels, découpage spatial train/test) : le MLP(50) obtient un kappa légèrement supérieur au Random Forest : la bonne pratique est de toujours mesurer sur son propre jeu, pas de présumer selon une règle générale.",
+  },
+  {
+    question: "Dans la séance radar et interpolation spatiale, pourquoi télécharger une scène Sentinel-1 sur la même zone qu'une image Sentinel-2 déjà utilisée ?",
+    choices: [
+      "Pour remplacer entièrement l'image optique, jugée obsolète",
+      "Pour pratiquer séparément deux techniques vues en théorie (SAR, krigeage) sur un terrain déjà familier plutôt que sur une zone à découvrir en plus",
+      "Sentinel-1 est nécessaire pour ouvrir un fichier Sentinel-2 dans QGIS",
+      "Il n'y a aucune raison particulière, le choix est arbitraire",
+    ],
+    correctIndex: 1,
+    explanation: "Réutiliser une zone déjà connue (au lieu d'une zone entièrement nouvelle) permet de concentrer l'effort sur la technique elle-même (lecture SAR, variogramme/krigeage), pas sur la découverte d'un nouveau terrain.",
+  },
+  {
+    question: "Dans le bonus « donnée vivante » de la séance 4, interroger OpenStreetMap sur l'emprise exacte du jeu de données Vitrolles illustre surtout :",
+    choices: [
+      "Qu'OSM est toujours plus précis qu'une image satellite",
+      "La différence entre donnée autoritative (Sentinel-2, homogène sur tout le territoire) et donnée participative (OSM, aussi complète que ses contributeurs locaux)",
+      "Qu'il est impossible d'obtenir de vraies données sans passer par un capteur satellite",
+      "Que le nombre de bâtiments recensés est toujours identique d'une requête à l'autre",
+    ],
+    correctIndex: 1,
+    explanation: "Le nombre de bâtiments OSM affiché peut évoluer d'une requête à l'autre (contribution continue) et être plus ou moins complet selon la zone, contrairement à une donnée satellite qui couvre uniformément tout le territoire à chaque passage.",
+  },
 ]

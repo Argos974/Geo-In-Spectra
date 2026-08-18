@@ -20,6 +20,45 @@
   --input: 32 12% 18%;
   --ring: 38 40% 52%;
   --radius: 0.2rem;
+
+  /* Thème sombre (par défaut) — triplets "R G B" sans virgule, format requis par
+     Tailwind pour rgb(var(--x) / <alpha-value>). Bascule vers le thème clair via
+     [data-theme="light"] plus bas — même palette de couleurs nommées, valeurs
+     réajustées pour un fond clair (reprend les tons déjà utilisés côté export PDF). */
+  --color-ink: 13 14 18;
+  --color-ink-deep: 7 8 10;
+  --color-canvas: 23 20 15;
+  --color-parchment: 236 227 207;
+  --color-parchment-dim: 168 159 140;
+  --color-gilt: 184 147 79;
+  --color-gilt-bright: 217 180 106;
+  --color-lapis: 63 80 102;
+  --color-oxblood: 122 47 36;
+  /* Variantes "bright" réservées au TEXTE (pas aux bordures/fonds, qui restent
+     sur la teinte sourde ci-dessus) : lapis et oxblood, en tant que couleurs de
+     texte sur fond sombre, tombent à un contraste WCAG de 2.3:1 et 2.1:1
+     respectivement — bien en dessous du seuil AA de 4.5:1 (mesuré, pas estimé —
+     voir l'audit accessibilité). Ces variantes atteignent 8.55:1 et 6.49:1 tout
+     en restant reconnaissables dans la même famille de teinte.
+     Uniquement nécessaire ici (thème sombre) : sur fond clair, lapis/oxblood
+     à pleine teinte contrastent déjà très bien (6.99:1 et 7.90:1) — la variante
+     "bright" y vaut donc simplement la couleur normale, voir plus bas. */
+  --color-lapis-bright: 150 175 205;
+  --color-oxblood-bright: 217 125 100;
+}
+
+[data-theme="light"] {
+  --color-ink: 243 236 221;
+  --color-ink-deep: 232 220 192;
+  --color-canvas: 236 224 200;
+  --color-parchment: 43 33 22;
+  --color-parchment-dim: 92 81 64;
+  --color-gilt: 138 106 47;
+  --color-gilt-bright: 166 127 61;
+  --color-lapis: 51 70 92;
+  --color-oxblood: 122 47 36;
+  --color-lapis-bright: 51 70 92;
+  --color-oxblood-bright: 122 47 36;
 }
 
 * {
@@ -31,11 +70,12 @@ html {
 }
 
 body {
-  background: #0d0e12;
-  color: #ece3cf;
+  background: rgb(var(--color-ink));
+  color: rgb(var(--color-parchment));
   font-family: 'EB Garamond', serif;
   -webkit-font-smoothing: antialiased;
   position: relative;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Grain de toile — texture d'huile ancienne, appliquée une seule fois sur tout le site */
@@ -62,13 +102,13 @@ body {
 }
 
 ::selection {
-  background: rgba(184, 147, 79, 0.35);
-  color: #ece3cf;
+  background: rgb(var(--color-gilt) / 0.35);
+  color: rgb(var(--color-parchment));
 }
 
 /* Flash bref quand on arrive sur une partie via le plan de la salle (RoomIndex) */
 @keyframes anchor-flash {
-  0% { background-color: rgba(184, 147, 79, 0.22); }
+  0% { background-color: rgb(var(--color-gilt) / 0.22); }
   100% { background-color: transparent; }
 }
 
@@ -93,7 +133,17 @@ body {
   figure, table, .avoid-break {
     break-inside: avoid;
   }
-  .print-cover, .print-toc {
+  /* Seule la page de garde force sa propre page (convention normale d'une page
+     de titre, volontairement spacieuse). Le sommaire, lui, ne force plus de
+     saut de page après lui : un saut forcé (break-after) réserve toujours une
+     page A4 entière au moment de l'impression, quelle que soit la hauteur
+     réelle du contenu qui le précède — sur un sommaire court (peu de titres),
+     ça laissait une grande zone vide en bas de page pour rien. Sans le saut
+     forcé, le contenu qui suit remonte directement sur l'espace restant.
+     Retirer un simple min-h-screen sur l'élément HTML ne suffisait pas à
+     corriger ça : la pagination Chromium respecte le saut forcé, pas la
+     hauteur du bloc source. */
+  .print-cover {
     break-after: page;
   }
 }

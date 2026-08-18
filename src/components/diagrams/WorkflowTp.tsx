@@ -15,7 +15,7 @@ export function WorkflowTp() {
           strokeWidth="1.4"
         />
         {steps.map((_, i) => (
-          <circle key={i} cx={startX + i * spacing} cy={y} r="22" strokeWidth="1.3" />
+          <circle key={i} cx={startX + i * spacing} cy={y} r="22" strokeWidth="1.3" fill="rgb(var(--color-ink))" />
         ))}
       </g>
       <g fontFamily="'IBM Plex Mono', monospace" fill="currentColor" stroke="none">

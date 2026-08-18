@@ -54,7 +54,7 @@ export const methodologieQuiz: QuizQuestion[] = [
       "N'importe quelle variable, elles sont interchangeables",
     ],
     correctIndex: 1,
-    explanation: "Une donnée ordonnée doit être portée par une variable qui a elle-même un ordre perceptif (valeur, taille) — une succession de teintes qualitatives sans ordre naturel brouille la lecture d'une quantité.",
+    explanation: "Une donnée ordonnée doit être portée par une variable qui a elle-même un ordre perceptif (valeur, taille) : une succession de teintes qualitatives sans ordre naturel brouille la lecture d'une quantité.",
   },
   {
     question: "Un plan dialectique (thèse / antithèse / synthèse) convient particulièrement à un sujet :",
@@ -66,5 +66,49 @@ export const methodologieQuiz: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation: "Le plan dialectique répond à un sujet qui pose un débat (\"le satellite peut-il remplacer le terrain ?\") ; un plan thématique convient mieux à l'exploration de plusieurs aspects d'un même phénomène.",
+  },
+  {
+    question: "Selon la sémiologie de Bertin, quelle variable visuelle convient à une donnée qualitative SANS ordre (ex. type d'occupation du sol) ?",
+    choices: [
+      "La taille (ronds proportionnels)",
+      "La valeur (dégradé clair → foncé)",
+      "La couleur (teinte)",
+      "N'importe laquelle, le choix n'a aucune conséquence",
+    ],
+    correctIndex: 2,
+    explanation: "La couleur (teinte) n'a pas d'ordre perceptif naturel, adaptée à une catégorie sans hiérarchie (forêt, culture, bâti). Taille et valeur, elles, portent une notion d'ordre ou de quantité.",
+  },
+  {
+    question: "Pour calibrer précisément le niveau d'exigence attendu à un concours d'enseignement (CAPES/Agrégation), la ressource la plus utile est :",
+    choices: [
+      "Un manuel scolaire générique",
+      "Les rapports de jury publiés après chaque session",
+      "Un forum d'entraide en ligne",
+      "Aucune ressource externe n'est utile, seul l'entraînement compte",
+    ],
+    correctIndex: 1,
+    explanation: "Les rapports de jury détaillent précisément ce qui a été valorisé et sanctionné lors de la session, une information bien plus calibrée qu'un manuel générique.",
+  },
+  {
+    question: "Dans la structure IMRaD d'un mémoire de recherche, la section Discussion doit :",
+    choices: [
+      "Présenter les données obtenues sans aucune interprétation",
+      "Interpréter les résultats, les comparer à la littérature existante, et en admettre les limites",
+      "Reformuler intégralement l'introduction",
+      "Ne contenir aucune référence à la littérature existante",
+    ],
+    correctIndex: 1,
+    explanation: "La Discussion interprète et met en perspective (littérature, limites) ; c'est la section Résultats, séparée, qui présente les données sans interprétation.",
+  },
+  {
+    question: "Une valeur de p (p-value) mesure :",
+    choices: [
+      "La probabilité que l'hypothèse étudiée soit vraie",
+      "La probabilité d'observer un résultat au moins aussi extrême que celui obtenu, si l'hypothèse nulle était vraie",
+      "Le pourcentage de variance expliquée par le modèle",
+      "La taille de l'échantillon nécessaire pour publier",
+    ],
+    correctIndex: 1,
+    explanation: "Erreur d'interprétation très fréquente : p < 0.05 ne prouve pas que l'effet étudié est réel, seulement qu'un résultat aussi extrême serait rare sous l'hypothèse \"aucun effet\".",
   },
 ]

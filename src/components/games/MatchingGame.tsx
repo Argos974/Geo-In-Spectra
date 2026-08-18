@@ -74,7 +74,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 mb-10">
+      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         {solved.size} / {pairs.length} trouvés · {attempts} essai{attempts !== 1 ? "s" : ""}
       </p>
 
@@ -108,7 +108,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
                     "w-full font-mono text-sm text-left px-4 py-3 border transition-colors",
                     isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/50",
                     !isSolved && isSelected && !wrongFlash && "border-gilt bg-gilt/10 text-gilt",
-                    !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood",
+                    !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                     !isSolved && !isSelected && "border-gilt/20 text-parchment hover:border-gilt/50",
                   )}
                 >
@@ -132,7 +132,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
                     "w-full text-sm text-left px-4 py-3 border transition-colors",
                     isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/50",
                     !isSolved && isSelected && !wrongFlash && "border-gilt bg-gilt/10 text-gilt",
-                    !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood",
+                    !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                     !isSolved && !isSelected && "border-gilt/20 text-parchment-dim hover:border-gilt/50",
                   )}
                 >

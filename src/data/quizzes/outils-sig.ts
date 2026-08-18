@@ -17,7 +17,7 @@ export const outilsSigQuiz: QuizQuestion[] = [
     question: "Dans QGIS, où vérifie-t-on le système de coordonnées (CRS) du projet ?",
     choices: ["Dans la table attributaire", "En bas à droite de la fenêtre", "Dans le menu Aide", "Il n'est jamais affiché"],
     correctIndex: 1,
-    explanation: "Le CRS du projet est affiché en bas à droite de la fenêtre QGIS — à vérifier avant tout calcul de distance ou de surface.",
+    explanation: "Le CRS du projet est affiché en bas à droite de la fenêtre QGIS, à vérifier avant tout calcul de distance ou de surface.",
   },
   {
     question: "PyQGIS et GeoPandas se distinguent principalement par :",
@@ -50,7 +50,7 @@ export const outilsSigQuiz: QuizQuestion[] = [
       "Un SIG ne peut traiter qu'un seul découpage administratif à la fois",
     ],
     correctIndex: 1,
-    explanation: "Formalisé par Openshaw (1984), le MAUP montre que le choix d'une maille ou d'un zonage (commune, canton, carreau) influence directement le résultat statistique obtenu — une propriété structurelle, pas une erreur de calcul.",
+    explanation: "Formalisé par Openshaw (1984), le MAUP montre que le choix d'une maille ou d'un zonage (commune, canton, carreau) influence directement le résultat statistique obtenu : une propriété structurelle, pas une erreur de calcul.",
   },
   {
     question: "Que mesure l'indice de Moran en analyse spatiale ?",
@@ -72,6 +72,28 @@ export const outilsSigQuiz: QuizQuestion[] = [
       "Une résolution spatiale automatiquement plus fine",
     ],
     correctIndex: 1,
-    explanation: "Le krigeage estime d'abord la structure spatiale du phénomène via un variogramme, puis fournit à la fois une carte de valeurs et une carte d'incertitude — l'IDW, purement déterministe, ne produit que des valeurs, sans mesure de fiabilité.",
+    explanation: "Le krigeage estime d'abord la structure spatiale du phénomène via un variogramme, puis fournit à la fois une carte de valeurs et une carte d'incertitude : l'IDW, purement déterministe, ne produit que des valeurs, sans mesure de fiabilité.",
+  },
+  {
+    question: "En SQL spatial PostGIS, `ST_Intersects(geom, ST_Buffer(riviere_geom, 200))` exécute quelle opération vue plus haut dans le module ?",
+    choices: [
+      "Un simple export de couche, sans opération spatiale",
+      "La même logique que buffer + intersection, exprimée directement en SQL exécutable sur des millions d'entités",
+      "Un calcul de kappa",
+      "Une reprojection de couche",
+    ],
+    correctIndex: 1,
+    explanation: "C'est exactement la séquence buffer (zone tampon de 200 m) puis intersection (ST_Intersects), mais exprimée en SQL spatial, exécutable directement sur une base de données, sans passer par une interface graphique.",
+  },
+  {
+    question: "Un index spatial (GiST) dans PostGIS sert principalement à :",
+    choices: [
+      "Corriger automatiquement les géométries invalides",
+      "Accélérer considérablement les requêtes spatiales sur de grands volumes d'entités",
+      "Reprojeter automatiquement toutes les couches dans le même CRS",
+      "Compresser le fichier de la base de données",
+    ],
+    correctIndex: 1,
+    explanation: "Sans index spatial, chaque requête géométrique (intersection, contient, distance) doit comparer l'entité à toutes les autres une par une, un index GiST accélère cette recherche, indispensable au-delà de quelques dizaines de milliers d'entités.",
   },
 ]

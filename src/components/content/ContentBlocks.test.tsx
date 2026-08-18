@@ -14,7 +14,7 @@ const solutionBlock: ContentBlock = {
 describe("ContentBlocks — solution disclosure", () => {
   it("hides the corrigé text behind a closed toggle by default (dark variant)", () => {
     render(<ContentBlocks blocks={[solutionBlock]} />)
-    expect(screen.getByRole("button", { name: /Voir le corrigé — Séance 1/ })).toHaveAttribute("aria-expanded", "false")
+    expect(screen.getByRole("button", { name: /Voir le corrigé : Séance 1/ })).toHaveAttribute("aria-expanded", "false")
     expect(screen.queryByText(/Lambert-93 avant tout calcul/)).not.toBeInTheDocument()
   })
 
@@ -22,12 +22,12 @@ describe("ContentBlocks — solution disclosure", () => {
     const user = userEvent.setup()
     render(<ContentBlocks blocks={[solutionBlock]} />)
 
-    const toggle = screen.getByRole("button", { name: /Voir le corrigé — Séance 1/ })
+    const toggle = screen.getByRole("button", { name: /Voir le corrigé : Séance 1/ })
     await user.click(toggle)
 
     expect(screen.getByText(/Lambert-93 avant tout calcul/)).toBeInTheDocument()
     expect(screen.getByText("Critère 1 : CRS vérifié")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Corrigé — Séance 1/ })).toHaveAttribute("aria-expanded", "true")
+    expect(screen.getByRole("button", { name: /Corrigé : Séance 1/ })).toHaveAttribute("aria-expanded", "true")
   })
 
   it("always renders the corrigé expanded, without a toggle button, in print variant", () => {

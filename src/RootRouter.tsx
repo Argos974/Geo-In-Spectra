@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route, Navigate, useLocation } from "react-router-d
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { SiteFooter } from "@/components/layout/SiteFooter"
 import { CanvasGrain } from "@/components/layout/CanvasGrain"
+import { ActiveParcoursBar } from "@/components/layout/ActiveParcoursBar"
 import { Home } from "@/pages/Home"
 import { useSmoothScroll } from "@/hooks/useSmoothScroll"
 
@@ -18,6 +19,13 @@ const GamePage = lazy(() => import("@/pages/GamePage").then((m) => ({ default: m
 const QuizPage = lazy(() => import("@/pages/QuizPage").then((m) => ({ default: m.QuizPage })))
 const PrintCourse = lazy(() => import("@/pages/PrintCourse").then((m) => ({ default: m.PrintCourse })))
 const PrintFiche = lazy(() => import("@/pages/PrintFiche").then((m) => ({ default: m.PrintFiche })))
+const PiegesPage = lazy(() => import("@/pages/PiegesPage").then((m) => ({ default: m.PiegesPage })))
+const FormulairePage = lazy(() => import("@/pages/FormulairePage").then((m) => ({ default: m.FormulairePage })))
+const DatasetPage = lazy(() => import("@/pages/DatasetPage").then((m) => ({ default: m.DatasetPage })))
+const ParcoursPage = lazy(() => import("@/pages/ParcoursPage").then((m) => ({ default: m.ParcoursPage })))
+const ExercisesPage = lazy(() => import("@/pages/ExercisesPage").then((m) => ({ default: m.ExercisesPage })))
+const BilanPage = lazy(() => import("@/pages/BilanPage").then((m) => ({ default: m.BilanPage })))
+const AnnalesPage = lazy(() => import("@/pages/AnnalesPage").then((m) => ({ default: m.AnnalesPage })))
 
 function RouteFallback() {
   return (
@@ -35,6 +43,13 @@ function AppShell() {
     <>
       {!isPrint && <CanvasGrain />}
       {!isPrint && <SiteHeader />}
+      {!isPrint && <ActiveParcoursBar />}
+      {/* Le landmark <main> manquait sur tout le site (violation d'accessibilité
+          landmark-one-main/region sur chaque route, confirmée par un audit axe-core)
+          — chaque page enveloppait son contenu dans un simple <div>. Toutes les
+          routes passent déjà par ce même point d'entrée, donc un seul <main> ici
+          corrige l'ensemble d'un coup plutôt que route par route. */}
+      <main>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -42,6 +57,13 @@ function AppShell() {
           <Route path="/mentions-legales" element={<LegalPage />} />
           <Route path="/glossaire" element={<GlossaryPage />} />
           <Route path="/references" element={<ReferencesPage />} />
+          <Route path="/pieges-frequents" element={<PiegesPage />} />
+          <Route path="/formulaire" element={<FormulairePage />} />
+          <Route path="/jeux-de-donnees" element={<DatasetPage />} />
+          <Route path="/parcours" element={<ParcoursPage />} />
+          <Route path="/bilan" element={<BilanPage />} />
+          <Route path="/annales" element={<AnnalesPage />} />
+          <Route path="/module/:slug/exercices" element={<ExercisesPage />} />
           <Route path="/jeu/epsg" element={<Navigate to="/jeu/fondamentaux" replace />} />
           <Route path="/jeu/:slug" element={<GamePage />} />
           <Route path="/module/:slug/quiz" element={<QuizPage />} />
@@ -49,6 +71,7 @@ function AppShell() {
           <Route path="/print/fiche/:slug" element={<PrintFiche />} />
         </Routes>
       </Suspense>
+      </main>
       {!isPrint && <SiteFooter />}
     </>
   )

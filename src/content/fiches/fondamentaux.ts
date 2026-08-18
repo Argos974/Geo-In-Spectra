@@ -39,6 +39,6 @@ export const fondamentauxFiche: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "ITRF vs ETRS89/RGF93",
-    text: "ITRF suit en continu la dérive des plaques tectoniques (~2-3 cm/an). ETRS89/RGF93 est \"gelé\" à l'époque 1989 : un point français garde la même coordonnée dans le temps — la transformation entre les deux passe par un modèle à 7 paramètres (Helmert : 3 translations, 3 rotations, 1 échelle).",
+    text: "ITRF suit en continu la dérive des plaques tectoniques (~2-3 cm/an). ETRS89/RGF93 est \"gelé\" à l'époque 1989 : un point français garde la même coordonnée dans le temps : la transformation entre les deux passe par un modèle à 7 paramètres (Helmert : 3 translations, 3 rotations, 1 échelle). En pratique (PROJ, QGIS), on utilise la version linéarisée aux petits angles, pas la rotation complète.",
   },
 ]

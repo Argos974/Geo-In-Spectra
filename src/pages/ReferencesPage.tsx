@@ -12,16 +12,16 @@ const typeLabel: Record<string, string> = {
 
 const typeStyle: Record<string, string> = {
   manuel: "text-gilt border-gilt/40",
-  revue: "text-lapis border-lapis/40",
+  revue: "text-lapis-bright border-lapis/40",
   site: "text-gilt-bright border-gilt/40",
-  video: "text-oxblood border-oxblood/40",
+  video: "text-oxblood-bright border-oxblood/40",
   officiel: "text-parchment border-parchment-dim/40",
 }
 
 export function ReferencesPage() {
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-4xl">
         <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
           ← La galerie
         </Link>

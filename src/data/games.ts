@@ -1,27 +1,32 @@
 import type { MatchingPair } from "@/components/games/MatchingGame"
+import type { CategoryItem } from "@/components/games/CategoryGame"
+import type { FormulaChallenge } from "@/components/games/FormulaBuilderGame"
+import type { CityCoord } from "@/components/games/CoordinateMapGame"
 
-export interface GameDef {
-  title: string
-  instructions: string
-  pairs: MatchingPair[]
-}
+export type GameDef =
+  | { type: "matching"; title: string; instructions: string; pairs: MatchingPair[] }
+  | { type: "sequence"; title: string; instructions: string; items: string[] }
+  | { type: "category"; title: string; instructions: string; categories: string[]; items: CategoryItem[] }
+  | { type: "formula-builder"; title: string; instructions: string; challenges: FormulaChallenge[] }
+  | { type: "spatial-operation"; title: string; instructions: string }
+  | { type: "coordinate-map"; title: string; instructions: string; cities: CityCoord[] }
 
 export const games: Record<string, GameDef> = {
   fondamentaux: {
-    title: "La Chasse aux EPSG",
-    instructions: "Associer chaque code EPSG à son système de coordonnées. Cliquer un code, puis le système correspondant.",
-    pairs: [
-      { left: "EPSG:4326", right: "WGS84 (géographique, degrés)" },
-      { left: "EPSG:2154", right: "Lambert-93 (France métropolitaine)" },
-      { left: "EPSG:3857", right: "Web Mercator (cartes web)" },
-      { left: "EPSG:25831", right: "ETRS89 / UTM zone 31N (Europe de l'Ouest)" },
-      { left: "EPSG:32633", right: "WGS84 / UTM zone 33N" },
-      { left: "EPSG:27700", right: "OSGB36 / British National Grid" },
-      { left: "ITRF", right: "Référentiel global, suit en continu la dérive des plaques tectoniques" },
-      { left: "ETRS89 / RGF93", right: "Référentiel \"gelé\" sur la plaque eurasienne à l'époque 1989" },
+    type: "coordinate-map",
+    title: "Le Compas des Coordonnées",
+    instructions: "Une ville et ses vraies coordonnées Lambert-93 sont données : clique le point qui lui correspond sur le plan (X croît vers l'est, Y croît vers le nord).",
+    cities: [
+      { name: "Paris", x: 652000, y: 6862000 },
+      { name: "Marseille", x: 892000, y: 6247000 },
+      { name: "Lille", x: 703000, y: 7060000 },
+      { name: "Bordeaux", x: 417000, y: 6427000 },
+      { name: "Strasbourg", x: 1032000, y: 6841000 },
+      { name: "Nice", x: 1049000, y: 6293000 },
     ],
   },
   teledetection: {
+    type: "matching",
     title: "Les Quatre Résolutions",
     instructions: "Associer chaque type de résolution (ou de capteur) à sa définition. Cliquer un terme, puis sa définition.",
     pairs: [
@@ -36,33 +41,23 @@ export const games: Record<string, GameDef> = {
     ],
   },
   "indices-spectraux": {
-    title: "Indice ou Formule ?",
-    instructions: "Associer chaque indice spectral à sa formule ou à son usage principal.",
-    pairs: [
-      { left: "NDVI", right: "(NIR − Rouge) / (NIR + Rouge)" },
-      { left: "NDMI", right: "(NIR − SWIR) / (NIR + SWIR)" },
-      { left: "NDBI", right: "(SWIR − NIR) / (SWIR + NIR)" },
-      { left: "SAVI", right: "NDVI corrigé de l'effet du sol nu" },
-      { left: "NBR", right: "Sévérité de brûlis, bande SWIR2" },
-      { left: "EVI", right: "Corrige la saturation et les résidus atmosphériques" },
-      { left: "NDRE", right: "Bandes red-edge, sature plus tard que le NDVI" },
+    type: "formula-builder",
+    title: "L'Atelier des Formules",
+    instructions: "Construis chaque formule en cliquant les tuiles dans l'ordre : attention, des tuiles pièges (mauvaise bande, mauvais opérateur) se glissent dans le tas.",
+    challenges: [
+      { name: "NDVI", tokens: ["(", "NIR", "−", "Rouge", ")", "/", "(", "NIR", "+", "Rouge", ")"], distractors: ["SWIR", "×", "Vert"] },
+      { name: "NDMI", tokens: ["(", "NIR", "−", "SWIR", ")", "/", "(", "NIR", "+", "SWIR", ")"], distractors: ["Rouge", "Bleu"] },
+      { name: "NDBI", tokens: ["(", "SWIR", "−", "NIR", ")", "/", "(", "SWIR", "+", "NIR", ")"], distractors: ["Vert", "÷"] },
+      { name: "NDWI", tokens: ["(", "Vert", "−", "NIR", ")", "/", "(", "Vert", "+", "NIR", ")"], distractors: ["SWIR", "Rouge"] },
     ],
   },
   "outils-sig": {
-    title: "Le Cabinet des Opérations",
-    instructions: "Associer chaque opération spatiale à ce qu'elle fait réellement.",
-    pairs: [
-      { left: "Buffer", right: "Polygone à distance fixe autour d'une géométrie" },
-      { left: "Intersection", right: "Ne garde que la partie commune entre deux couches" },
-      { left: "Dissolve", right: "Fusionne les géométries adjacentes de même valeur" },
-      { left: "Jointure spatiale", right: "Associe des attributs selon la position" },
-      { left: "Clip", right: "Découpe une couche selon l'emprise d'une autre" },
-      { left: "Différence symétrique", right: "Garde tout sauf la partie commune aux deux couches" },
-      { left: "Krigeage", right: "Interpolation statistique, fournit aussi une carte d'incertitude" },
-      { left: "AHP", right: "Pondère plusieurs critères spatiaux à partir de comparaisons deux à deux" },
-    ],
+    type: "spatial-operation",
+    title: "Le Simulateur d'Opérations Spatiales",
+    instructions: "Deux formes fixes, A et B (en pointillés) : reconnais visuellement le résultat de chaque opération spatiale parmi 4 vignettes.",
   },
   "traitements-ia": {
+    type: "matching",
     title: "Machine et Vocabulaire",
     instructions: "Associer chaque terme d'apprentissage automatique à sa définition.",
     pairs: [
@@ -76,29 +71,30 @@ export const games: Record<string, GameDef> = {
     ],
   },
   methodologie: {
-    title: "La Grammaire de la Carte",
-    instructions: "Associer chaque variable visuelle de Bertin ou type de plan à ce qu'il/elle sert à représenter.",
-    pairs: [
-      { left: "Taille", right: "Une quantité (ex. ronds proportionnels)" },
-      { left: "Valeur (clair → foncé)", right: "Un ordre, une intensité progressive" },
-      { left: "Couleur (teinte)", right: "Une donnée qualitative, sans ordre" },
-      { left: "Forme", right: "Une donnée qualitative catégorielle" },
-      { left: "Plan dialectique", right: "Sujet formulé comme une question fermée ou un débat" },
-      { left: "Plan thématique", right: "Sujet qui invite à explorer plusieurs dimensions d'un phénomène" },
-      { left: "Structure IMRaD", right: "Introduction, Méthode, Résultats, Discussion" },
+    type: "category",
+    title: "La Sémiologie de Bertin",
+    instructions: "Cliquer une donnée, puis la variable visuelle de Bertin adaptée pour la représenter.",
+    categories: ["Taille ou valeur (quantité, ordre)", "Couleur / teinte (qualitatif, sans ordre)", "Forme (qualitatif catégoriel)"],
+    items: [
+      { label: "Population d'une commune", category: "Taille ou valeur (quantité, ordre)" },
+      { label: "Taux de chômage par département", category: "Taille ou valeur (quantité, ordre)" },
+      { label: "NDVI cartographié (continu, -1 à 1)", category: "Taille ou valeur (quantité, ordre)" },
+      { label: "Type d'occupation du sol (forêt/culture/bâti)", category: "Couleur / teinte (qualitatif, sans ordre)" },
+      { label: "Nature géologique du sol", category: "Couleur / teinte (qualitatif, sans ordre)" },
+      { label: "Type d'équipement (école/mairie/hôpital)", category: "Forme (qualitatif catégoriel)" },
     ],
   },
   "travaux-pratiques": {
-    title: "L'Établi de l'Apprenti",
-    instructions: "Associer chaque outil ou mesure de contrôle à son usage en séance pratique.",
-    pairs: [
-      { left: "ogrinfo", right: "Inspecte une couche vecteur en ligne de commande" },
-      { left: "gdalinfo", right: "Inspecte un raster en ligne de commande" },
-      { left: "Géoréférenceur QGIS", right: "Associe des pixels à des coordonnées réelles via des GCP" },
-      { left: "Statistiques de zone", right: "Moyenne d'un raster à l'intérieur de chaque polygone" },
-      { left: "RMSE", right: "Mesure la précision géométrique d'un géoréférencement" },
-      { left: "Matrice de confusion", right: "Évalue la précision d'une classification" },
-      { left: "MLPClassifier", right: "Réseau de neurones simple, à comparer au Random Forest sur le même jeu de test" },
+    type: "sequence",
+    title: "Le Fil de l'Atelier",
+    instructions: "Remettre dans l'ordre les étapes de la séance 3 : de l'image géoréférencée à l'indice composé.",
+    items: [
+      "Géoréférencer l'image par grille (points de contrôle, séance 2)",
+      "Calculer le NDVI sur l'image géoréférencée",
+      "Superposer une grille et calculer la moyenne de NDVI par cellule",
+      "Répéter géoréférencement + NDVI sur une image d'une autre date",
+      "Composer le ΔNDVI = NDVI(date 2) − NDVI(date 1)",
+      "Classer les cellules en trois catégories : perte, stable, gain",
     ],
   },
 }

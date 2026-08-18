@@ -11,6 +11,8 @@ import { NeuralNetwork } from "./NeuralNetwork"
 import { CartographyTimeline } from "./CartographyTimeline"
 import { SpectralSignatures } from "./SpectralSignatures"
 import { DissertationPlan } from "./DissertationPlan"
+import { IoUDiagram } from "./IoUDiagram"
+import { VariogramDiagram } from "./VariogramDiagram"
 
 export const diagramRegistry = {
   "coordinate-systems": { Component: CoordinateSystems, plate: "I" },
@@ -26,6 +28,8 @@ export const diagramRegistry = {
   "cartography-timeline": { Component: CartographyTimeline, plate: "XI" },
   "spectral-signatures": { Component: SpectralSignatures, plate: "XII" },
   "dissertation-plan": { Component: DissertationPlan, plate: "XIII" },
+  "iou": { Component: IoUDiagram, plate: "XIV" },
+  "variogram": { Component: VariogramDiagram, plate: "XV" },
 } as const
 
 export type DiagramName = keyof typeof diagramRegistry

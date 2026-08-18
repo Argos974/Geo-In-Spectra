@@ -80,4 +80,15 @@ export const fondamentauxQuiz: QuizQuestion[] = [
     correctIndex: 1,
     explanation: "ITRF est un référentiel global recalculé en continu, qui suit le mouvement réel de la croûte (~2-3 cm/an en Europe). ETRS89 fixe ce mouvement à une époque de référence (1989), ce qui permet à un cadastre de rester utilisable sans recalcul permanent.",
   },
+  {
+    question: "En pratique (QGIS, PROJ), la transformation de Helmert à 7 paramètres utilise :",
+    choices: [
+      "La matrice de rotation complète, exactement comme la formule théorique",
+      "Une version linéarisée aux petits angles, car les rotations entre référentiels proches sont minuscules",
+      "Aucune rotation, seulement les translations",
+      "Un facteur d'échelle uniquement, sans translation ni rotation",
+    ],
+    correctIndex: 1,
+    explanation: "Les rotations entre deux référentiels proches (ex. ITRF et ETRS89) sont de l'ordre de la fraction de seconde d'arc : la formule est linéarisée en une transformation affine résoluble directement par moindres carrés, plutôt que d'utiliser la matrice de rotation complète.",
+  },
 ]

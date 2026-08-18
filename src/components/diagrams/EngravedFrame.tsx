@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import type { CSSProperties, ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 interface EngravedFrameProps {
@@ -21,7 +21,17 @@ export function EngravedFrame({ children, caption, plate, variant = "dark" }: En
   return (
     <figure className="my-2">
       <div className={cn("border p-5 md:p-8", isPrint ? "border-[#8a6a2f]/40 bg-black/[0.02]" : "border-gilt/25 bg-black/20")}>
-        <div className={isPrint ? "text-[#3a3020]" : "text-gilt/80"}>{children}</div>
+        <div
+          className={isPrint ? "text-[#3a3020]" : "text-gilt/80"}
+          // Un diagramme (NeuralNetwork) a besoin de connaître la couleur de fond réelle
+          // pour un effet de "trou" — en impression, ce fond est toujours le papier clair
+          // du PDF, quel que soit le thème (sombre/clair) actif sur le site au moment de
+          // l'export. Cette variable scoped l'informe sans lui faire porter la logique
+          // print/thème lui-même (il continue de ne lire que --color-ink).
+          style={isPrint ? ({ "--color-ink": "243 236 221" } as CSSProperties) : undefined}
+        >
+          {children}
+        </div>
       </div>
       <figcaption className={cn("mt-3 font-mono text-[11px] uppercase tracking-[0.15em]", isPrint ? "text-[#5c5140]" : "text-parchment-dim")}>
         <span className={isPrint ? "text-[#8a6a2f]" : "text-gilt"}>Planche {plate}.</span>

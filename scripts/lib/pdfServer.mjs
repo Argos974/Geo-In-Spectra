@@ -24,6 +24,11 @@ export const ALL_SLUGS = [
   "travaux-pratiques",
 ]
 
+// Même numérotation romaine que ROOT_NUMERALS côté React (Home.tsx, ModulePage.tsx) —
+// dupliquée ici pour la même raison que ALL_SLUGS : ces scripts sont du Node autonome,
+// pas de loader TypeScript pour importer depuis src/.
+export const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+
 export function resolveRequestedSlugs() {
   const args = process.argv.slice(2)
   if (args.length === 0) return ALL_SLUGS
@@ -95,8 +100,25 @@ export async function withPdfServer(fn) {
   }
 }
 
-// Pas d'en-tête ni de pied de page généré par Playwright : un vrai document de
-// cours n'affiche pas de numérotation sur sa page de garde, et le reste du
-// contenu (page de garde, sommaire, cartels des planches) porte déjà sa propre
-// identité visuelle — un bandeau superposé par-dessus serait redondant.
+// Pas d'en-tête généré par Playwright (le défaut Chromium affiche titre/URL/date,
+// hors sujet pour un document de cours) : on le remplace par un gabarit vide plutôt
+// que de laisser le défaut, sans quoi il réapparaît dès que displayHeaderFooter est
+// activé pour le pied de page ci-dessous.
 export const PDF_MARGIN = { top: "16mm", bottom: "16mm", left: "14mm", right: "14mm" }
+export const PDF_HEADER_TEMPLATE = "<span></span>"
+
+/**
+ * Pied de page minimal, sur toutes les pages : le repère de salle (cohérent
+ * avec les "Salle I/II/III…" déjà utilisés partout ailleurs sur le site) et
+ * le numéro de page — utile pour se repérer une fois le document imprimé ou
+ * mélangé à d'autres, sans ajouter de bandeau visuel lourd.
+ */
+export function footerTemplateForSlug(slug) {
+  const numeral = ROOM_NUMERALS[ALL_SLUGS.indexOf(slug)] ?? ""
+  return `
+    <div style="width:100%; font-family:'IBM Plex Mono', monospace; font-size:8px; color:#8a6a2f; padding:0 14mm; display:flex; justify-content:space-between;">
+      <span>GEO-IN-SPECTRA &middot; SALLE ${numeral}</span>
+      <span class="pageNumber"></span>
+    </div>
+  `
+}

@@ -87,6 +87,28 @@ export const traitementsIaQuiz: QuizQuestion[] = [
       "Le kappa est toujours égal à 1 pour une segmentation",
     ],
     correctIndex: 0,
-    explanation: "L'IoU (Intersection over Union) mesure directement le recouvrement entre la forme prédite et la forme réelle d'un objet — la métrique standard des benchmarks de segmentation, contrairement au kappa qui ignore la géométrie.",
+    explanation: "L'IoU (Intersection over Union) mesure directement le recouvrement entre la forme prédite et la forme réelle d'un objet, la métrique standard des benchmarks de segmentation, contrairement au kappa qui ignore la géométrie.",
+  },
+  {
+    question: "Les architectures Transformer (Vision Transformer) utilisées aujourd'hui sur l'imagerie satellite proviennent à l'origine :",
+    choices: [
+      "D'un mécanisme d'attention conçu pour le traitement automatique du langage",
+      "D'une amélioration directe des filtres à noyau classiques",
+      "De la classification non supervisée",
+      "D'un capteur radar spécifique",
+    ],
+    correctIndex: 0,
+    explanation: "Le mécanisme d'attention (Vaswani et al., 2017) a d'abord été conçu pour le langage, puis adapté à l'image (Vision Transformer, Dosovitskiy et al., 2021) et spécifiquement à l'imagerie satellite multi-bandes.",
+  },
+  {
+    question: "Un modèle atteint 99 % de précision sur l'entraînement et 61 % sur le jeu de test. Quel est le diagnostic le plus probable ?",
+    choices: [
+      "Sous-apprentissage : le modèle est trop simple",
+      "Sur-apprentissage : le modèle mémorise l'entraînement au lieu de généraliser",
+      "Le jeu de test est mal étiqueté, le modèle est en réalité excellent",
+      "C'est un résultat normal, aucun problème à corriger",
+    ],
+    correctIndex: 1,
+    explanation: "Un écart aussi marqué entre précision d'entraînement et de test est la signature du sur-apprentissage (overfitting) : avant même de réduire la complexité du modèle, il faut d'abord vérifier l'absence de fuite de données entre les deux jeux.",
   },
 ]

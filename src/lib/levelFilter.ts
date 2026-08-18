@@ -1,6 +1,6 @@
 import type { ContentBlock, ContentLevel } from "@/content/types"
 
-export const ALL_LEVELS: ContentLevel[] = ["college-lycee", "superieur", "approfondissement"]
+export const ALL_LEVELS: ContentLevel[] = ["lycee", "superieur", "approfondissement"]
 
 /**
  * Un bloc "hérite" du niveau du dernier titre rencontré avant lui. Un bloc placé

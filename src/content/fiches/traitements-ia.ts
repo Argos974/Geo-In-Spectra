@@ -36,6 +36,6 @@ export const traitementsIaFiche: ContentBlock[] = [
     type: "formula",
     label: "Kappa et IoU : deux métriques, deux usages",
     formula: "κ = (Po − Pe) / (1 − Pe)   ·   IoU = Aire(prédiction ∩ vérité) / Aire(prédiction ∪ vérité)",
-    note: "Kappa pour une classification pixel par pixel ; IoU pour une segmentation (forme d'un objet, ex. sortie U-Net) — ne pas utiliser le kappa pour évaluer une segmentation.",
+    note: "Kappa pour une classification pixel par pixel ; IoU pour une segmentation (forme d'un objet, ex. sortie U-Net), ne pas utiliser le kappa pour évaluer une segmentation.",
   },
 ]
