@@ -3,6 +3,8 @@ import type { DiagramName } from "@/components/diagrams"
 /** Repère de niveau affiché à côté d'un titre — organise une même salle pour plusieurs publics. */
 export type ContentLevel = "lycee" | "superieur" | "approfondissement"
 
+export type ImagePairItem = { src: string; alt: string; label: string; caption: string }
+
 export type ContentBlock =
   | { type: "heading"; text: string; level?: ContentLevel }
   | { type: "paragraph"; text: string }
@@ -15,6 +17,8 @@ export type ContentBlock =
   | { type: "link"; to: string; label: string; description?: string }
   | { type: "solution"; title: string; text?: string; items?: string[] }
   | { type: "image"; src: string; alt: string; caption?: string }
+  | { type: "imagepair"; images: [ImagePairItem, ImagePairItem] }
   | { type: "marginnote"; title: string; text: string }
   | { type: "live"; name: "osm-buffer-vitrolles"; caption?: string }
+  | { type: "game" }
   | { type: "devoir"; format: string; title: string; prompt: string; criteria: string[] }

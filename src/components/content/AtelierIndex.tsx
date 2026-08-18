@@ -40,7 +40,7 @@ export function AtelierIndex() {
   const rowClass = "w-full flex items-center justify-between gap-4 px-5 py-3 text-left font-heading text-base text-parchment-dim hover:text-gilt hover:bg-gilt/[0.04] transition-colors"
 
   return (
-    <div className="mb-12 border border-gilt/20 print:hidden">
+    <div className="mb-12 border border-gilt/20 bg-canvas print:hidden">
       <div className="flex items-center justify-between flex-wrap gap-3 px-5 pt-4 pb-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt">Plan de l'atelier</p>
         <div className="flex gap-1.5">

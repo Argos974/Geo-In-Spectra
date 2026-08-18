@@ -179,6 +179,7 @@ export const traitementsIaContent: ContentBlock[] = [
     title: "Où s'entraîner sur des données réelles et un jeu de référence",
     text: "La recherche en télédétection compare ses modèles sur des jeux de données publics de référence, plutôt que sur des données propriétaires impossibles à reproduire : BigEarthNet (590 000 patches Sentinel-1/2 annotés par occupation du sol, Sumbul et al., 2019), EuroSAT (27 000 patches Sentinel-2, 10 classes, conçu comme benchmark d'entrée simple), SEN12MS (données appariées Sentinel-1/Sentinel-2/MODIS pour la fusion multi-capteurs). Ces jeux permettent de comparer une nouvelle méthode à l'état de l'art publié sur un pied d'égalité : la même logique qu'un jeu de test indépendant (module Travaux pratiques), mais partagé par toute une communauté de recherche plutôt que propre à un seul projet.",
   },
+  { type: "game" },
 
   { type: "heading", text: "10. Limites et vigilance", level: "approfondissement" },
   {

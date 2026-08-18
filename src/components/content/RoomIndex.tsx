@@ -22,7 +22,7 @@ export function RoomIndex({ blocks }: { blocks: ContentBlock[] }) {
   }
 
   return (
-    <div className="mb-12 border border-gilt/20">
+    <div className="mb-12 border border-gilt/20 bg-canvas">
       <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt px-5 pt-4 pb-3">
         Plan de la salle
       </p>

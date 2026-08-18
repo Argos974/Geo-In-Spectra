@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 import { slugify } from "@/lib/slug"
 import { Diagram } from "@/components/diagrams"
 import { OsmBufferVitrolles } from "@/components/live/OsmBufferVitrolles"
+import { GameBlock } from "@/components/content/GameBlock"
+import type { GameDef } from "@/data/games"
 
 type Variant = "dark" | "print"
 
@@ -98,7 +100,7 @@ function SolutionBlock({
   )
 }
 
-export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlock[]; variant?: Variant }) {
+export function ContentBlocks({ blocks, variant = "dark", game }: { blocks: ContentBlock[]; variant?: Variant; game?: GameDef }) {
   const isPrint = variant === "print"
 
   const text = isPrint ? "text-[#2b2116]" : "text-parchment"
@@ -134,6 +136,9 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
 
           case "diagram":
             return <Diagram key={i} name={block.name} caption={block.caption} variant={variant} />
+
+          case "game":
+            return game ? <GameBlock key={i} game={game} isPrint={isPrint} /> : null
 
           case "live":
             // Interrogation réseau réelle (API Overpass) : n'a de sens que sur le site
@@ -187,6 +192,27 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
                   <figcaption className={cn("px-4 py-3 text-sm border-t", borderSoft, textDim)}>{block.caption}</figcaption>
                 )}
               </figure>
+            )
+
+          case "imagepair":
+            // Deux prises de vue de la même emprise (ex. RVB réel vs NDVI calculé) à
+            // comparer d'un coup d'œil : côte à côte et plafonnées en hauteur plutôt
+            // qu'empilées pleine largeur, qui les faisait chacune occuper un écran
+            // entier pour un résultat à comparer, pas à contempler séparément.
+            return (
+              <div key={i} className="grid sm:grid-cols-2 gap-3">
+                {block.images.map((img, j) => (
+                  <figure key={j} className={cn("border", borderSoft)}>
+                    <div className={cn("flex items-center justify-center overflow-hidden", isPrint ? "bg-black/[0.03]" : "bg-canvas")}>
+                      <img src={img.src} alt={img.alt} className="w-full max-h-64 object-contain" loading="lazy" />
+                    </div>
+                    <figcaption className={cn("px-3 py-2.5 border-t", borderSoft)}>
+                      <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-1", accent)}>{img.label}</p>
+                      <p className={cn("text-xs leading-relaxed text-justify", textDim)}>{img.caption}</p>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
             )
 
           case "marginnote": {
@@ -328,7 +354,7 @@ export function ContentBlocks({ blocks, variant = "dark" }: { blocks: ContentBlo
 
           case "table":
             return (
-              <div key={i} className={cn("overflow-x-auto border", borderSoft)}>
+              <div key={i} className={cn("overflow-x-auto border bg-canvas", borderSoft)}>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className={panelBg}>

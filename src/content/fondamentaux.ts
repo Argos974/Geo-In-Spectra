@@ -245,12 +245,7 @@ export const fondamentauxContent: ContentBlock[] = [
     title: "Un code postal n'est pas une commune",
     text: "Joindre des données par code postal plutôt que par code INSEE est une erreur fréquente : plusieurs communes peuvent partager un même code postal, et une commune peut en couvrir plusieurs. Le code INSEE (ou son équivalent cadastral pour la parcelle) est la clé de jointure fiable en géomatique française.",
   },
-  {
-    type: "link",
-    to: "/jeu/fondamentaux",
-    label: "S'entraîner : le Compas des Coordonnées",
-    description: "Un jeu court pour déduire la position d'une ville à partir de ses vraies coordonnées Lambert-93, en pratique plutôt qu'en lecture.",
-  },
+  { type: "game" },
 
   { type: "heading", text: "10. Petite histoire de la cartographie", level: "lycee" },
   {

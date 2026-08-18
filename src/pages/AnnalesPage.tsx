@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom"
+import { artworks } from "@/data/artworks"
+import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 
 interface AnnaleLink {
   label: string
@@ -91,15 +93,24 @@ const GROUPS: AnnaleGroup[] = [
 ]
 
 export function AnnalesPage() {
-  return (
-    <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
-      <div className="mx-auto max-w-4xl">
-        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
-          ← La galerie
-        </Link>
+  const art = artworks["ressources-annales"]
 
-        <p className="font-mono text-[12px] text-gilt mt-8">Ressources</p>
-        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">Annales de concours</h1>
+  return (
+    <div className="min-h-screen bg-ink text-parchment">
+      {art && (
+        <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
+          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
+            <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
+              ← La galerie
+            </Link>
+            <p className="font-mono text-[12px] text-gilt mb-3">Ressources</p>
+            <h1 className="font-heading text-4xl md:text-5xl">Annales de concours</h1>
+          </div>
+        </ArtworkBackdrop>
+      )}
+
+      <div className="px-6 pt-16 pb-24">
+        <div className="mx-auto max-w-4xl">
         <p className="text-parchment-dim text-lg mb-4 text-justify">
           De vrais sujets, publiés par les organismes officiels qui les produisent, pas des épreuves reconstituées par
           ce site. Chaque lien pointe directement vers la source qui fait autorité sur ce concours.
@@ -128,6 +139,7 @@ export function AnnalesPage() {
               </ul>
             </section>
           ))}
+        </div>
         </div>
       </div>
     </div>

@@ -145,6 +145,7 @@ export const methodologieContent: ContentBlock[] = [
     label: "Voir l'indice concerné : le NDVI",
     description: "Le module Les Couleurs détaille la formule et l'échelle de valeurs du NDVI utilisé comme exemple ci-dessus.",
   },
+  { type: "game" },
 
   { type: "heading", text: "5. Le croquis et la carte de synthèse", level: "superieur" },
   {

@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom"
 import { referenceGroups } from "@/data/references"
+import { artworks } from "@/data/artworks"
+import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { ChapterAccordion } from "@/components/content/ChapterAccordion"
 import { cn } from "@/lib/utils"
 
 const typeLabel: Record<string, string> = {
@@ -19,24 +22,37 @@ const typeStyle: Record<string, string> = {
 }
 
 export function ReferencesPage() {
-  return (
-    <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
-      <div className="mx-auto max-w-4xl">
-        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
-          ← La galerie
-        </Link>
+  const art = artworks["ressources-references"]
 
-        <p className="font-mono text-[12px] text-gilt mt-8">Annexe</p>
-        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">Références</h1>
+  return (
+    <div className="min-h-screen bg-ink text-parchment">
+      {art && (
+        <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
+          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
+            <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
+              ← La galerie
+            </Link>
+            <p className="font-mono text-[12px] text-gilt mb-3">Annexe</p>
+            <h1 className="font-heading text-4xl md:text-5xl">Références</h1>
+          </div>
+        </ArtworkBackdrop>
+      )}
+
+      <div className="px-6 pt-16 pb-24">
+        <div className="mx-auto max-w-4xl">
         <p className="text-parchment-dim text-lg mb-12">
           Manuels, revues, sites spécialisés et ressources officielles consultables pour aller au-delà du site,
           groupés par thème du cours.
         </p>
 
-        <div className="space-y-12">
-          {referenceGroups.map((group) => (
-            <div key={group.theme}>
-              <h2 className="font-heading text-2xl mb-5">{group.theme}</h2>
+        <div>
+          {referenceGroups.map((group, i) => (
+            <ChapterAccordion
+              key={group.theme}
+              name="references-themes"
+              title={group.theme}
+              defaultOpen={i === 0}
+            >
               <ul className="space-y-4">
                 {group.refs.map((ref) => (
                   <li key={ref.label} className="border-l-2 border-gilt/20 pl-4">
@@ -61,8 +77,9 @@ export function ReferencesPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </ChapterAccordion>
           ))}
+        </div>
         </div>
       </div>
     </div>

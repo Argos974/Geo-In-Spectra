@@ -163,6 +163,7 @@ export const teledetectionContent: ContentBlock[] = [
     title: "Un compromis, jamais gratuit",
     text: "Aucun satellite ne maximise les quatre résolutions à la fois : c'est un compromis physique et budgétaire, imposé par la conservation de l'énergie du signal. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) capte moins de photons par pixel : il doit soit élargir ses bandes spectrales (moins de résolution spectrale), soit réduire sa fauchée (moins de résolution temporelle) pour conserver un rapport signal/bruit exploitable. Un capteur à revisite quotidienne (ex. MODIS) a en retour une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
   },
+  { type: "game" },
 
   { type: "heading", text: "7. Architecture d'un capteur : push-broom vs whisk-broom", level: "approfondissement" },
   {

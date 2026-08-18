@@ -49,6 +49,7 @@ export const outilsSigContent: ContentBlock[] = [
     title: "Ces opérations reposent sur l'algèbre des ensembles",
     text: "Buffer, intersection, union, différence et différence symétrique sont les cinq opérations classiques de l'algèbre booléenne appliquées à des polygones plutôt qu'à des ensembles abstraits. Comprendre l'une d'elles comme un diagramme de Venn géométrique rend les quatre autres immédiates : c'est la même logique, seule l'opération change.",
   },
+  { type: "game" },
 
   { type: "heading", text: "3. Requêtes attributaires et spatiales" },
   {

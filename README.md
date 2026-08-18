@@ -148,8 +148,10 @@ bibliographie) a été produit comme document de travail séparé plutôt que ve
 ici. Sept salles en ligne aujourd'hui, dans cet ordre : Fondements, Le Regard, Les
 Couleurs, Le Compas, L'Intelligence (indices composés/complexes, filtres,
 classification, deep learning, IA), La Méthode (commentaire de document,
-dissertation, rapport technique, concours) et L'Atelier, en clôture, six séances
-pratiques autonomes qui réutilisent les compétences des salles précédentes
+dissertation, rapport technique, concours) et L'Atelier, en clôture, douze séances
+pratiques autonomes (un semestre universitaire), réparties sur les trois profils
+lycée/licence-BUT/master-recherche via le même système de niveaux, qui réutilisent
+les compétences des salles précédentes
 (géoréférencement par grille, NDVI/statistiques zonales/ΔNDVI, buffer/intersection,
 programmation Python, étude de cas). Fondements intègre aussi l'histoire de
 la cartographie, la lecture de carte, le débat Mercator/Peters et les codes

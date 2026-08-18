@@ -19,6 +19,9 @@ export const travauxPratiquesFiche: ContentBlock[] = [
       "Séance 7 : réseau de neurones simple (MLP), comparé au Random Forest de la séance 6",
       "Séance 8 : radar (signature VV eau/bâti) et krigeage (variogramme, carte d'incertitude)",
       "Séance 9 : étude de cas + mini-projet, rapport structuré (voir La Méthode)",
+      "Séance 10 : commenter un document cartographique (lecture critique, pas de production)",
+      "Séance 11 : auditer la qualité d'un jeu de données SIG (complétude, CRS, métadonnées ISO 19115)",
+      "Séance 12 : valider statistiquement une classification (test de McNemar, RF vs MLP de la séance 6)",
     ],
   },
   {

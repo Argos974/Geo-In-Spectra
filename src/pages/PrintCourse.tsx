@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
+import { games } from "@/data/games"
 import { moduleContent } from "@/content"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { GalleryFrame } from "@/components/gallery/GalleryFrame"
@@ -78,7 +79,7 @@ export function PrintCourse() {
 
       {/* Contenu */}
       <section className="px-16 py-24 max-w-3xl mx-auto">
-        <ContentBlocks blocks={blocks} variant="print" />
+        <ContentBlocks blocks={blocks} variant="print" game={games[module.slug]} />
       </section>
     </div>
   )

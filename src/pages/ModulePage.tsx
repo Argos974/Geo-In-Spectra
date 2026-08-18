@@ -1,42 +1,27 @@
-import { useEffect, useMemo, useState } from "react"
-import { markVisited } from "@/lib/progress"
+import { useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
-import { moduleContent } from "@/content"
-import { quizzes } from "@/data/quizzes"
-import { games } from "@/data/games"
-import { exercises } from "@/data/exercises"
-import { ContentBlocks } from "@/components/content/ContentBlocks"
-import { RoomIndex } from "@/components/content/RoomIndex"
-import { AtelierIndex } from "@/components/content/AtelierIndex"
+import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
-import { ALL_LEVELS, filterBlocksByLevel } from "@/lib/levelFilter"
-import type { ContentLevel } from "@/content/types"
-import { cn } from "@/lib/utils"
+import { markVisited } from "@/lib/progress"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
 
-const LEVEL_TOGGLE_LABEL: Record<ContentLevel, string> = {
-  "lycee": "Lycée",
-  superieur: "Supérieur",
-  approfondissement: "Approfondissement",
-}
-
+/**
+ * Lien profond / vue autonome d'un module (imprimée, partagée, indexée) — le
+ * chemin de navigation normal passe désormais par Discipulus → Cours (chapitres
+ * repliables sur une seule page, voir DiscipulusCoursPage) ou Magister → Cours
+ * pour l'Atelier, qui réutilisent le même ModuleChapterBody. Cette route reste
+ * intacte pour ne casser aucun lien existant (parcours, renvois croisés, PDF).
+ */
 export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()
   const module = modules.find((m) => m.slug === slug)
-  const [activeLevels, setActiveLevels] = useState<Set<ContentLevel>>(new Set(ALL_LEVELS))
 
   useEffect(() => {
     if (module) markVisited(module.slug)
   }, [module])
-
-  const blocks = module ? moduleContent[module.slug] : undefined
-  const filteredBlocks = useMemo(
-    () => (blocks ? filterBlocksByLevel(blocks, activeLevels) : undefined),
-    [blocks, activeLevels],
-  )
 
   if (!module) {
     return (
@@ -47,30 +32,11 @@ export function ModulePage() {
     )
   }
 
-  function toggleLevel(level: ContentLevel) {
-    setActiveLevels((prev) => {
-      const next = new Set(prev)
-      if (next.has(level)) {
-        if (next.size === 1) return prev // toujours garder au moins un niveau actif
-        next.delete(level)
-      } else {
-        next.add(level)
-      }
-      return next
-    })
-  }
-
   const index = modules.findIndex((m) => m.slug === slug)
   const art = artworks[module.slug]
   const prev = modules[index - 1]
   const next = modules[index + 1]
   const numeral = ROOM_NUMERALS[index] ?? String(index + 1)
-  const order = String(index + 1).padStart(2, "0")
-  const coursName = `${order}-${module.slug}-cours.pdf`
-  const ficheName = `${order}-${module.slug}-fiche-memo.pdf`
-  const hasQuiz = Boolean(quizzes[module.slug])
-  const hasGame = Boolean(games[module.slug])
-  const hasExercises = Boolean(exercises[module.slug])
 
   return (
     <div className="print-page min-h-screen bg-ink text-parchment">
@@ -90,85 +56,7 @@ export function ModulePage() {
       )}
 
       <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
-        <p className="text-parchment-dim text-lg mb-6 text-justify">{module.summary}</p>
-
-        <div className="print:hidden flex flex-nowrap items-center gap-2 mb-6 overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-          <a
-            href={`/pdf/${module.slug}/${coursName}`}
-            download={coursName}
-            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
-          >
-            ↓ Cours (PDF)
-          </a>
-          <a
-            href={`/pdf/${module.slug}/${ficheName}`}
-            download={ficheName}
-            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
-          >
-            ↓ Fiche mémo (PDF)
-          </a>
-          {hasExercises && (
-            <Link
-              to={`/module/${module.slug}/exercices`}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
-            >
-              S'entraîner →
-            </Link>
-          )}
-          {hasQuiz && (
-            <Link
-              to={`/module/${module.slug}/quiz`}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
-            >
-              Faire le quiz →
-            </Link>
-          )}
-          {hasGame && (
-            <Link
-              to={`/jeu/${module.slug}`}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-oxblood-bright border border-oxblood/40 px-3 py-2 hover:bg-oxblood/10 transition-colors"
-            >
-              Jouer →
-            </Link>
-          )}
-        </div>
-
-        <div className="print:hidden flex flex-wrap items-center gap-2 mb-10">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mr-1">Afficher :</span>
-          {ALL_LEVELS.map((level) => {
-            const active = activeLevels.has(level)
-            return (
-              <button
-                key={level}
-                type="button"
-                onClick={() => toggleLevel(level)}
-                aria-pressed={active}
-                className={cn(
-                  "font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
-                  active ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/80 hover:text-parchment-dim hover:border-gilt/30",
-                )}
-              >
-                {LEVEL_TOGGLE_LABEL[level]}
-              </button>
-            )
-          })}
-        </div>
-
-        {module.slug === "travaux-pratiques" ? <AtelierIndex /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
-
-        {filteredBlocks ? (
-          filteredBlocks.length > 0 ? (
-            <ContentBlocks blocks={filteredBlocks} />
-          ) : (
-            <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
-              <p className="font-mono text-sm">Aucun contenu à ce niveau, élargis le filtre ci-dessus.</p>
-            </div>
-          )
-        ) : (
-          <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
-            <p className="font-mono text-sm">Contenu du module à venir.</p>
-          </div>
-        )}
+        <ModuleChapterBody module={module} />
 
         <div className="mt-16 pt-8 border-t border-gilt/15 flex items-center justify-between font-mono text-[12px] uppercase tracking-wider">
           {prev ? (

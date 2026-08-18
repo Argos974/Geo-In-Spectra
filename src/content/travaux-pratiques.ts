@@ -17,16 +17,21 @@ export const travauxPratiquesContent: ContentBlock[] = [
     text: "Plutôt que de renvoyer vers « télécharge une image quelque part », plusieurs séances ci-dessous (3, 5, 6, 7, 9) s'appuient sur un même jeu de données réel, extrait directement de l'archive Copernicus et fourni avec le site : une scène Sentinel-2 authentique, quasiment sans nuage, sur une emprise de 3,2 × 3,3 km à Vitrolles (Bouches-du-Rhône), qui mélange volontairement bâti dense, infrastructure aéroportuaire, végétation de garrigue et une portion de l'étang de Berre, de quoi illustrer chaque indice du module Les Couleurs sur un seul et même territoire.",
   },
   {
-    type: "image",
-    src: "/images/sample-vitrolles-2024-rgb.jpg",
-    alt: "Composition colorée réelle (rouge/vert/bleu) de la scène Sentinel-2 du 6 août 2024 sur Vitrolles",
-    caption: "Composition couleur naturelle réelle, scène S2B_31TFJ_20240806_0_L2A (6 août 2024, 0.008 % de nuages). Étang de Berre en haut à gauche, tissu urbain de Vitrolles à droite, piste de l'aéroport Marseille-Provence en bas à gauche.",
-  },
-  {
-    type: "image",
-    src: "/images/sample-vitrolles-2024-ndvi.jpg",
-    alt: "NDVI réel calculé sur la même emprise, palette marron-blanc-vert",
-    caption: "Le NDVI réellement calculé sur cette même image (formule du module Les Couleurs) : le contraste végétation (vert) / bâti-piste-eau (blanc à marron) saute aux yeux sans aucune interprétation nécessaire.",
+    type: "imagepair",
+    images: [
+      {
+        src: "/images/sample-vitrolles-2024-rgb.jpg",
+        alt: "Composition colorée réelle (rouge/vert/bleu) de la scène Sentinel-2 du 6 août 2024 sur Vitrolles",
+        label: "Composition couleur naturelle",
+        caption: "Scène S2B_31TFJ_20240806_0_L2A (6 août 2024, 0.008 % de nuages). Étang de Berre en haut à gauche, tissu urbain de Vitrolles à droite, piste de l'aéroport Marseille-Provence en bas à gauche.",
+      },
+      {
+        src: "/images/sample-vitrolles-2024-ndvi.jpg",
+        alt: "NDVI réel calculé sur la même emprise, palette marron-blanc-vert",
+        label: "NDVI calculé",
+        caption: "Même image, formule du module Les Couleurs : le contraste végétation (vert) / bâti-piste-eau (blanc à marron) saute aux yeux sans interprétation nécessaire.",
+      },
+    ],
   },
   {
     type: "table",
@@ -37,13 +42,20 @@ export const travauxPratiquesContent: ContentBlock[] = [
       ["emprise.geojson", "Polygone exact de l'emprise, pour un découpage (clip) propre"],
       ["grille_100m_indices.geojson", "1122 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule, résultat de référence pour la séance 3"],
       ["stats.json", "Statistiques réelles (min/max/moyenne/écart-type) de chaque indice sur toute l'emprise"],
+      ["classification_reference.json", "Classification SCL réelle à 3 classes, découpage train/test et matrices de confusion Random Forest/MLP, référence pour la séance 6"],
     ],
+  },
+  {
+    type: "link",
+    to: "/jeux-de-donnees",
+    label: "Télécharger les 6 fichiers",
+    description: "Page dédiée avec un lien de téléchargement direct par fichier, pas besoin de reconstituer l'URL à la main.",
   },
   {
     type: "formula",
     label: "Accès direct aux fichiers",
     formula: "/data/sample-vitrolles-2024/<nom-du-fichier>",
-    note: "Les 5 fichiers du tableau ci-dessus sont servis statiquement par le site à cette adresse relative (ex. /data/sample-vitrolles-2024/emprise.geojson), à charger directement dans QGIS (Couche > Ajouter une couche) via l'URL complète du site, ou à télécharger avec un clic droit > Enregistrer sous depuis le navigateur.",
+    note: "Les 6 fichiers du tableau ci-dessus sont aussi servis statiquement par le site à cette adresse relative (ex. /data/sample-vitrolles-2024/emprise.geojson), pratique pour les charger directement dans QGIS (Couche > Ajouter une couche) via l'URL complète du site, sans passer par un téléchargement local.",
   },
   {
     type: "callout",
@@ -262,6 +274,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
       "La longueur demandée (300-400 mots) est respectée : ni un résumé trop court, ni un remplissage hors sujet",
     ],
   },
+  { type: "game" },
 
   { type: "heading", text: "Séance 4 : Analyse spatiale, buffer et intersection", level: "lycee" },
   {
@@ -639,5 +652,199 @@ export const travauxPratiquesContent: ContentBlock[] = [
     to: "/module/methodologie",
     label: "Structurer le rapport rendu",
     description: "Le module La Méthode détaille la structure attendue d'un rapport technique (contexte, données et méthode, résultats, discussion, recommandations) et la sémiologie graphique d'une carte de synthèse.",
+  },
+
+  // Séances 10-12 : les neuf premières couvrent la production (cartographier,
+  // géoréférencer, classer) mais aucune ne pratique la lecture critique d'un
+  // document déjà produit (lycée), l'audit de qualité d'un jeu de données
+  // (licence/BUT, section "Qualité des données" du module Le Compas restée
+  // sans contrepartie pratique), ni la validation statistique d'un résultat
+  // (master/recherche — déjà promise par le parcours "Approfondissement /
+  // initiation à la recherche" sans séance correspondante jusqu'ici). Un
+  // semestre universitaire compte 12 séances : ces trois complètent le compte
+  // sans redire la séance 9 (déjà la synthèse cartographie + rapport).
+
+  { type: "heading", text: "Séance 10 : Commenter un document cartographique", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Les séances précédentes produisent toutes un document (carte, indice, classification). Celle-ci fait l'inverse : lire et commenter par écrit un document déjà produit, l'exercice le plus fréquent en épreuve de lycée (voir module La Méthode, section 1). Un commentaire de document n'est pas une description : c'est une lecture organisée qui répond à une problématique.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger la composition couleur naturelle et le NDVI du jeu de données Vitrolles (voir Ressources → Jeux de données)",
+      "Identifier, sans aucun calcul, les grands ensembles visibles sur la composition naturelle : bâti, végétation, eau, infrastructure (voir module Le Regard, section 9, les six clés de lecture de la photo-interprétation)",
+      "Comparer les mêmes zones sur le NDVI : formuler une problématique du type « le contraste bâti/végétation vu à l'œil sur la composition naturelle se confirme-t-il, et se précise-t-il, une fois l'indice calculé ? »",
+      "Rédiger un commentaire structuré (introduction avec problématique, deux ou trois parties, conclusion) qui répond à cette problématique, appuyé uniquement sur ce que montrent les deux documents",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "S'appuyer sur le document, pas sur une connaissance générale plaquée dessus",
+    text: "L'erreur la plus fréquente d'un commentaire de document consiste à réciter une connaissance générale sur le NDVI ou la télédétection sans jamais revenir au document précis fourni. Chaque affirmation doit pouvoir être localisée sur l'image (« la zone nord-ouest, plus sombre sur le NDVI, correspond à la piste de l'aéroport visible sur la composition naturelle »), pas rester générale.",
+  },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Découverte",
+        points: ["Décrire ce que montrent les deux documents, zone par zone", "Une problématique simple suffit (ex. \"le NDVI confirme-t-il la lecture à l'œil ?\")"],
+      },
+      {
+        label: "Approfondissement",
+        points: ["Discuter un désaccord entre lecture à l'œil et NDVI, s'il en existe un (ex. végétation clairsemée visible mais NDVI faible)", "Relier ce désaccord à une limite connue de l'indice (voir module Les Couleurs, limites communes aux indices spectraux)"],
+      },
+    ],
+  },
+  {
+    type: "solution",
+    title: "Séance 10",
+    text: "Sur ce jeu de données, la piste de l'aéroport Marseille-Provence et le tissu urbain de Vitrolles se distinguent nettement en blanc à marron sur le NDVI, cohérent avec la lecture à l'œil de la composition naturelle. L'étang de Berre, en haut à gauche, apparaît en valeurs NDVI proches de zéro ou négatives (l'eau n'a pas de chlorophylle), une nuance qu'une lecture purement visuelle de la composition naturelle ne permet pas de chiffrer aussi précisément. Un bon commentaire relève cette complémentarité : le NDVI ne remplace pas la lecture à l'œil, il la précise et la rend mesurable.",
+    items: [
+      "Critère 1 : la problématique figure explicitement en introduction, pas seulement en filigrane",
+      "Critère 2 : chaque affirmation renvoie à un endroit précis du document (pas de généralité non localisée)",
+      "Critère 3 : la conclusion répond réellement à la problématique posée, sans ouvrir un sujet nouveau non traité",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/teledetection",
+    label: "Revoir : la photo-interprétation",
+    description: "Le module Le Regard détaille les six clés de lecture classiques mobilisées ici.",
+  },
+  {
+    type: "devoir",
+    format: "Commentaire de document",
+    title: "Commentaire structuré sur un document au choix",
+    prompt: "En reprenant la méthode de cette séance, rédige un commentaire structuré (400 à 600 mots) sur la composition naturelle et le NDVI du jeu de données Vitrolles, ou sur un autre couple image/indice de ton choix issu d'un module précédent (par exemple le ΔNDVI de la séance 3). Le commentaire doit répondre à une problématique explicite, formulée en introduction.",
+    criteria: [
+      "Une problématique explicite figure en introduction et structure tout le commentaire",
+      "Chaque partie s'appuie sur un élément localisable du document, jamais sur une généralité seule",
+      "La conclusion répond à la problématique posée",
+      "La longueur demandée (400-600 mots) est respectée",
+    ],
+  },
+
+  { type: "heading", text: "Séance 11 : Auditer la qualité d'un jeu de données SIG", level: "superieur" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "Un jeu de données n'est exploitable que si sa qualité a été vérifiée au préalable, pas supposée : c'est une compétence professionnelle distincte de celle de produire une carte (voir module Le Compas, section 10, qualité des données et métadonnées), jamais encore pratiquée dans l'Atelier jusqu'ici bien qu'annoncée dès la séance 1.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger les 6 fichiers du jeu de données Vitrolles (voir Ressources → Jeux de données)",
+      "Vérifier la complétude : le nombre de cellules de grille_100m_indices.geojson correspond-il à ce qu'annonce la documentation du module Travaux pratiques (1122 cellules) ?",
+      "Vérifier la cohérence du CRS : emprise.geojson et grille_100m_indices.geojson déclarent-ils bien EPSG:2154, et se superposent-ils réellement une fois chargés côte à côte dans QGIS ?",
+      "Vérifier la plausibilité des valeurs attributaires : les NDVI/NDMI/NDBI de la grille restent-ils dans leur plage théorique (-1 à 1) ? Une valeur hors plage signale une erreur de calcul ou d'encodage",
+      "Rédiger une fiche de métadonnées courte (source, date, CRS, résolution, limites connues) au format du standard ISO 19115 simplifié, telle qu'un tiers pourrait la lire sans avoir jamais vu le jeu de données",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Une anomalie réelle à chercher : la classe eau dans classification_reference.json",
+    text: "classification_reference.json (utilisé en séance 6) recense trois classes (végétation, sol nu/bâti, eau), mais sa matrice de confusion sur le jeu de test présente une ligne \"eau\" entièrement à zéro pour les trois modèles fournis. Un audit de qualité doit repérer cette anomalie et formuler une hypothèse plausible (classe totalement absente du découpage spatial train/test choisi, plutôt qu'un modèle qui échouerait totalement sur l'eau) : sans vérifier cette hypothèse ici, la repérer et la documenter est déjà le geste professionnel attendu.",
+  },
+  {
+    type: "solution",
+    title: "Séance 11",
+    text: "Les 5 fichiers géographiques du jeu de données sont mutuellement cohérents (même CRS EPSG:2154, même emprise), une garantie apportée par leur origine commune (même pipeline d'extraction Sentinel-2). Le point d'audit le plus instructif reste la ligne \"eau\" vide de classification_reference.json : elle rappelle qu'un jeu de données peut être par ailleurs parfaitement cohérent (CRS, plages de valeurs) tout en portant une limite structurelle qu'aucune vérification de format ne révèle, seule une lecture attentive du contenu la fait apparaître.",
+    items: [
+      "Critère 1 : la fiche de métadonnées mentionne explicitement le CRS, la date d'acquisition et la résolution, pas seulement le nom du fichier",
+      "Critère 2 : au moins une vérification de plausibilité (plage de valeurs, nombre d'entités) est réellement effectuée, pas seulement annoncée",
+      "Critère 3 : l'anomalie de la classe eau (ou toute autre anomalie réelle trouvée) est documentée avec une hypothèse, pas ignorée",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/outils-sig",
+    label: "Revoir : qualité des données et métadonnées",
+    description: "Le module Le Compas détaille la norme ISO 19115 et les critères classiques de qualité d'un jeu de données géographique.",
+  },
+  {
+    type: "devoir",
+    format: "Fiche de métadonnées",
+    title: "Fiche de métadonnées et rapport d'audit",
+    prompt: "Produis une fiche de métadonnées complète du jeu de données Vitrolles (source, licence, CRS, résolution, emprise, date, limites connues) accompagnée d'un court rapport d'audit (une page) qui documente au moins deux vérifications de qualité réellement effectuées, avec leur résultat.",
+    criteria: [
+      "La fiche de métadonnées couvre au moins six champs (source, licence, CRS, résolution, emprise, date)",
+      "Au moins deux vérifications de qualité distinctes sont documentées avec leur résultat réel, pas supposé",
+      "Toute anomalie trouvée est décrite avec une hypothèse plausible, pas seulement signalée",
+    ],
+  },
+
+  { type: "heading", text: "Séance 12 : Valider statistiquement une classification", level: "approfondissement" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Objectif méthodologique",
+    text: "La séance 6 a comparé Random Forest et un perceptron multicouche (MLP) sur le même jeu de test : le MLP obtient un kappa supérieur. Mais un écart de kappa observé sur un seul jeu de test suffit-il à conclure qu'un modèle est réellement meilleur que l'autre, ou peut-il s'expliquer par le hasard de ce découpage particulier ? C'est la question que pose toute validation statistique (voir module La Méthode, section 7, rigueur statistique d'un mémoire de recherche), rarement posée avant d'annoncer un résultat.",
+  },
+  {
+    type: "table",
+    headers: ["Modèle", "Kappa (test, n = 37170)", "Exactitude (test)"],
+    rows: [
+      ["Random Forest", "0.6402", "0.9617"],
+      ["MLP (50 neurones)", "0.6732", "0.9632"],
+      ["MLP (200 neurones)", "0.6720", "0.9638"],
+    ],
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Télécharger classification_reference.json (voir Ressources → Jeux de données) : il contient les trois matrices de confusion complètes, pas seulement les scores agrégés du tableau ci-dessus",
+      "À partir des deux matrices de confusion Random Forest et MLP(50), identifier les pixels que les deux modèles classent différemment (désaccords) : c'est la donnée nécessaire à un test de McNemar, le test standard pour comparer deux classifieurs évalués sur le même jeu de test",
+      "Formuler l'hypothèse nulle explicitement : « les deux modèles se trompent avec la même fréquence, l'écart de kappa observé est compatible avec le hasard »",
+      "Discuter, sans nécessairement calculer la statistique exacte, ce qui rendrait cet écart de kappa (0.6402 contre 0.6732) plus ou moins convaincant : un grand nombre de désaccords cohérents dans un sens penche contre l'hypothèse nulle, un faible nombre de désaccords dispersés ne permet pas de trancher",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un seul jeu de test ne prouve jamais une supériorité générale",
+    text: "Même si l'écart de kappa se révèle statistiquement significatif sur ce jeu de test précis, cela ne prouve pas que le MLP est supérieur au Random Forest en général, seulement sur cette scène, ce découpage spatial train/test et ces trois classes. Une conclusion générale nécessiterait de répéter la comparaison sur plusieurs scènes et découpages indépendants, exactement la mise en garde déjà formulée dans le quiz de cette salle (résultat mesuré, pas une règle générale à présumer).",
+  },
+  {
+    type: "solution",
+    title: "Séance 12",
+    text: "Le test de McNemar ne compare pas les scores agrégés (0.9617 contre 0.9632) mais spécifiquement les pixels où les deux modèles sont en désaccord : il ignore, à raison, tous les pixels que les deux modèles classent correctement ou incorrectement de la même façon, car ces cas ne renseignent en rien sur une différence entre les deux modèles. C'est une erreur fréquente de vouloir comparer deux exactitudes globales avec un test de Student ou un simple écart en points de pourcentage : les deux échantillons ne sont pas indépendants (même jeu de test, mêmes pixels), condition que ces tests supposent et que McNemar, conçu justement pour des données appariées, respecte.",
+    items: [
+      "Critère 1 : l'hypothèse nulle est formulée explicitement avant toute discussion du résultat",
+      "Critère 2 : le raisonnement distingue clairement désaccords (pertinents pour la comparaison) et accords (non pertinents), pas une simple comparaison des deux exactitudes globales",
+      "Critère 3 : la conclusion reste prudente sur la portée du résultat (une scène, un découpage), sans généraliser abusivement",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/traitements-ia",
+    label: "Revoir : kappa et évaluation de précision",
+    description: "Le module L'Intelligence détaille le calcul du kappa et les pièges classiques de l'évaluation d'une classification.",
+  },
+  {
+    type: "link",
+    to: "/module/methodologie",
+    label: "Approfondir : rigueur statistique d'un mémoire",
+    description: "Le module La Méthode (section 7, structure IMRaD) détaille les exigences de rigueur statistique attendues dans un travail de recherche.",
+  },
+  {
+    type: "devoir",
+    format: "Note d'analyse",
+    title: "Note d'analyse statistique de la comparaison RF / MLP",
+    prompt: "Rédige une note d'analyse (300 à 500 mots) qui formule l'hypothèse nulle du test de McNemar appliqué à la comparaison Random Forest / MLP(50) de la séance 6, discute qualitativement ce qui rendrait l'écart de kappa observé plus ou moins convaincant à partir des matrices de confusion fournies, et conclut en rappelant explicitement la portée limitée du résultat (une seule scène, un seul découpage train/test).",
+    criteria: [
+      "L'hypothèse nulle est formulée correctement (les deux modèles se trompent avec la même fréquence)",
+      "L'argument s'appuie sur les désaccords entre modèles, pas sur la simple différence d'exactitude globale",
+      "La conclusion rappelle explicitement que le résultat ne vaut que pour cette scène et ce découpage",
+      "La longueur demandée (300-500 mots) est respectée",
+    ],
   },
 ]

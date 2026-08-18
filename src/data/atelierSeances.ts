@@ -39,4 +39,19 @@ export const atelierSeances: AtelierSeanceRef[] = [
     ],
   },
   { heading: "Séance 9 : Étude de cas et mini-projet final", salles: [{ slug: "methodologie", label: "La Méthode" }] },
+  {
+    heading: "Séance 10 : Commenter un document cartographique",
+    salles: [
+      { slug: "teledetection", label: "Le Regard" },
+      { slug: "methodologie", label: "La Méthode" },
+    ],
+  },
+  { heading: "Séance 11 : Auditer la qualité d'un jeu de données SIG", salles: [{ slug: "outils-sig", label: "Le Compas" }] },
+  {
+    heading: "Séance 12 : Valider statistiquement une classification",
+    salles: [
+      { slug: "traitements-ia", label: "L'Intelligence" },
+      { slug: "methodologie", label: "La Méthode" },
+    ],
+  },
 ]

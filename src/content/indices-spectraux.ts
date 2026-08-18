@@ -153,6 +153,7 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     title: "ΔNBR : cartographier la sévérité d'un incendie après coup",
     text: "Le NBR utilise la bande SWIR2 (~2.2 µm, B12 sur Sentinel-2), car la végétation brûlée et les cendres ont une réflectance NIR effondrée et une réflectance SWIR fortement augmentée par rapport à une végétation saine. Comparer le NBR juste avant et juste après un feu (ΔNBR = NBR_préfeu − NBR_postfeu) est la méthode standard des services forestiers (US Forest Service, séquelle d'usage international) pour classer la sévérité d'un incendie en plusieurs catégories, de la repousse rapide à la mortalité totale du peuplement.",
   },
+  { type: "game" },
 
   { type: "heading", text: "7. Des indices simples aux indices composés", level: "lycee" },
   {

@@ -1,15 +1,42 @@
 import { Link } from "react-router-dom"
+import { artworks } from "@/data/artworks"
+import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+
+/**
+ * Avant ce correctif, la seule mention du jeu de données réel ("/data/sample-
+ * vitrolles-2024/") était du texte brut, ni lien ni bouton : rien n'était
+ * réellement téléchargeable nulle part sur le site (bug signalé), il fallait
+ * reconstituer l'URL à la main. `download` force l'enregistrement plutôt que
+ * la navigation (utile pour les .tif, qu'un navigateur ne sait pas afficher).
+ */
+const DATASET_FILES = [
+  { name: "sentinel2_2024-08-06_vitrolles_bands.tif", size: "1,9 Mo", desc: "6 bandes réelles en réflectance de surface (0–1) : bleu, vert, rouge, red-edge (B5), NIR, SWIR (B11), EPSG:2154, 10 m" },
+  { name: "sentinel2_2024-08-06_vitrolles_indices.tif", size: "1,7 Mo", desc: "NDVI, NDMI, NDBI, NDRE, NDWI déjà calculés, en 5 bandes, pour vérifier un calcul plutôt que le refaire" },
+  { name: "emprise.geojson", size: "< 1 Ko", desc: "Polygone exact de l'emprise, pour un découpage (clip) propre" },
+  { name: "grille_100m_indices.geojson", size: "412 Ko", desc: "1122 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule, résultat de référence pour la séance 3" },
+  { name: "stats.json", size: "< 1 Ko", desc: "Statistiques réelles (min/max/moyenne/écart-type) de chaque indice sur toute l'emprise" },
+  { name: "classification_reference.json", size: "< 2 Ko", desc: "Classification SCL réelle à 3 classes (végétation, sol nu/bâti, eau), découpage train/test et matrices de confusion Random Forest/MLP, référence pour la séance 6" },
+]
 
 export function DatasetPage() {
-  return (
-    <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
-      <div className="mx-auto max-w-4xl">
-        <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
-          ← La galerie
-        </Link>
+  const art = artworks["ressources-dataset"]
 
-        <p className="font-mono text-[12px] text-gilt mt-8">Ressources</p>
-        <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">Jeux de données</h1>
+  return (
+    <div className="min-h-screen bg-ink text-parchment">
+      {art && (
+        <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
+          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
+            <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
+              ← La galerie
+            </Link>
+            <p className="font-mono text-[12px] text-gilt mb-3">Ressources</p>
+            <h1 className="font-heading text-4xl md:text-5xl">Jeux de données</h1>
+          </div>
+        </ArtworkBackdrop>
+      )}
+
+      <div className="px-6 pt-16 pb-24">
+        <div className="mx-auto max-w-4xl">
         <p className="text-parchment-dim text-lg mb-12 text-justify">
           Le jeu de données canonique fourni avec le site, et les portails externes déjà cités dans le cours pour
           aller plus loin, réunis ici plutôt qu'éparpillés séance par séance.
@@ -25,8 +52,28 @@ export function DatasetPage() {
               garrigue et étang de Berre, bandes en réflectance, indices précalculés, grille agrégée et statistiques
               réelles.
             </p>
-            <p className="font-mono text-[13px] text-parchment-dim">/data/sample-vitrolles-2024/</p>
           </div>
+
+          <div className="mt-4 border border-gilt/15 divide-y divide-gilt/10">
+            {DATASET_FILES.map((f) => (
+              <a
+                key={f.name}
+                href={`/data/sample-vitrolles-2024/${f.name}`}
+                download
+                className="flex items-center justify-between gap-4 p-4 hover:bg-gilt/[0.04] transition-colors group"
+              >
+                <div className="min-w-0">
+                  <p className="font-mono text-[12.5px] text-parchment group-hover:text-gilt transition-colors break-all">{f.name}</p>
+                  <p className="text-parchment-dim text-xs mt-1 leading-relaxed">{f.desc}</p>
+                </div>
+                <span className="shrink-0 flex items-center gap-3">
+                  <span className="font-mono text-[10px] text-parchment-dim/70 whitespace-nowrap">{f.size}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-gilt whitespace-nowrap">Télécharger ↓</span>
+                </span>
+              </a>
+            ))}
+          </div>
+
           <Link
             to="/module/travaux-pratiques"
             className="block mt-4 border border-gilt/15 p-4 hover:border-gilt/40 hover:text-gilt transition-colors font-mono text-[11px] uppercase tracking-wider"
@@ -58,6 +105,7 @@ export function DatasetPage() {
             ))}
           </div>
         </section>
+        </div>
       </div>
     </div>
   )
