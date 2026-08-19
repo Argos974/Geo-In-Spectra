@@ -23,6 +23,12 @@ export const lidarContent: ContentBlock[] = [
     formula: "d = (c × t) / 2",
     note: "c = vitesse de la lumière (≈3×10⁸ m/s), t = temps aller-retour mesuré. Division par 2 car le temps mesuré couvre le trajet aller ET retour de l'impulsion. Une précision de mesure de temps de l'ordre de la picoseconde est nécessaire pour une précision de distance centimétrique — la contrainte technique centrale d'un capteur LiDAR.",
   },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Convertir un temps mesuré en distance",
+    text: "Pour une cible au sol à 100 m sous l'avion, le trajet aller-retour du pulse mesure 200 m ; à la vitesse de la lumière, cela correspond à un temps de vol d'environ 667 nanosecondes (t = 2d/c = 2×100 / 3×10⁸ s). L'électronique du capteur doit résoudre ce temps avec une incertitude de quelques picosecondes seulement pour livrer une distance fiable au centimètre près — un ordre de grandeur qui explique pourquoi l'horloge interne d'un LiDAR est l'un des composants les plus coûteux du capteur.",
+  },
 
   { type: "heading", text: "2. Retours multiples : un pulse traverse la canopée", level: "lycee" },
   {
@@ -50,7 +56,36 @@ export const lidarContent: ContentBlock[] = [
     text: "Un couvert forestier très dense (feuillage continu, sous-bois épais) peut ne laisser passer aucun pulse jusqu'au sol sur certaines zones, même en LiDAR. La densité de points au sol effective dépend directement de la densité de la végétation traversée, pas seulement de la densité d'émission du capteur : une carte de densité de points au sol doit être vérifiée avant de faire confiance à un MNT LiDAR sous canopée très fermée.",
   },
 
-  { type: "heading", text: "3. Classification du nuage de points : sol, végétation, bâti", level: "superieur" },
+  { type: "heading", text: "3. Retours discrets ou forme d'onde complète : deux façons d'enregistrer le signal", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Détecter et enregistrer un « retour » n'est pas anodin techniquement : deux stratégies coexistent selon le capteur, avec des conséquences directes sur la richesse de l'information de structure verticale disponible après acquisition.",
+  },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "LiDAR discret (discrete return)",
+        points: [
+          "Le capteur détecte en temps réel les pics d'énergie du signal retour et n'enregistre que leur position (et souvent leur intensité)",
+          "Typiquement jusqu'à 4 à 6 retours détectés par pulse",
+          "Volume de données maîtrisé, traitement standard immédiat",
+          "Mode de la grande majorité des capteurs aéroportés commerciaux, y compris le programme Lidar HD",
+        ],
+      },
+      {
+        label: "LiDAR à forme d'onde complète (full waveform)",
+        points: [
+          "Enregistre l'intégralité de la courbe d'énergie retournée au cours du temps, sans se limiter à des pics détectés en vol",
+          "Le traitement post-acquisition (décomposition en gaussiennes) peut extraire davantage de retours qu'une détection embarquée en temps réel",
+          "Caractérise plus finement une structure verticale continue (sous-étage forestier stratifié)",
+          "Volume de données et temps de traitement nettement supérieurs, usage surtout scientifique/recherche",
+        ],
+      },
+    ],
+  },
+
+  { type: "heading", text: "4. Classification du nuage de points : sol, végétation, bâti", level: "superieur" },
   {
     type: "paragraph",
     text: "Le nuage de points brut d'un relevé LiDAR n'est pas classé par nature de surface à l'acquisition : un algorithme de classification (souvent fondé sur une analyse de voisinage local, proche dans son principe du filtre à noyau du module L'Intelligence, mais appliqué en 3D à un nuage plutôt qu'en 2D à une grille de pixels) étiquette ensuite chaque point comme sol, végétation basse/moyenne/haute, bâti, eau, ou bruit.",
@@ -62,7 +97,43 @@ export const lidarContent: ContentBlock[] = [
     text: "L'algorithme le plus répandu pour isoler les points-sol (TIN densification progressive, Axelsson 2000) construit d'abord une surface grossière à partir des points les plus bas d'un voisinage, puis ajoute progressivement les points qui restent cohérents avec cette surface tout en rejetant ceux trop élevés (probablement végétation ou bâti). Un paramétrage trop strict laisse passer trop peu de points sol (MNT lacunaire) ; trop permissif, il intègre à tort des points de végétation basse au MNT (biais systématique vers le haut).",
   },
 
-  { type: "heading", text: "4. MNT, MNS et modèle de hauteur de canopée (CHM)", level: "superieur" },
+  { type: "heading", text: "5. Le format LAS/LAZ et les attributs portés par chaque point", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Un nuage de points LiDAR se diffuse presque toujours au format standard LAS (défini par l'ASPRS, American Society for Photogrammetry and Remote Sensing), ou son équivalent compressé LAZ. Chaque point du nuage n'est pas qu'une coordonnée X, Y, Z : il porte plusieurs attributs qui permettent de le retraiter, le filtrer ou le reclasser sans revenir à l'acquisition brute.",
+  },
+  {
+    type: "list",
+    items: [
+      "Coordonnées X, Y, Z : la position 3D du point dans le système de référence choisi",
+      "Intensité : l'énergie du retour reçu, révélatrice de la nature de la surface (le bitume, la végétation et l'eau ont des réponses d'intensité différentes)",
+      "Numéro de retour / nombre total de retours : la position de ce point dans la séquence de retours d'un même pulse (ex. \"2ᵉ retour sur 3\")",
+      "Temps GPS : l'horodatage précis de l'acquisition, indispensable pour recaler le nuage sur la trajectoire réelle de la plateforme",
+      "Angle de balayage (scan angle) : l'écart angulaire par rapport au nadir au moment de l'émission, utile pour pondérer la précision selon la géométrie de visée",
+      "Classe : le code de classification attribué au point (voir tableau ci-dessous)",
+      "Couleur RVB (optionnelle) : ajoutée seulement si le nuage LiDAR est fusionné avec une caméra embarquée simultanée",
+    ],
+  },
+  {
+    type: "table",
+    headers: ["Code ASPRS", "Classe", "Contenu typique"],
+    rows: [
+      ["1", "Non classé", "Points non encore attribués à une classe"],
+      ["2", "Sol", "Points-sol retenus par l'algorithme de filtrage (base du MNT)"],
+      ["3 / 4 / 5", "Végétation basse / moyenne / haute", "Sous-étage, arbustes, cime de la canopée"],
+      ["6", "Bâti", "Toitures et structures identifiées comme bâtiment"],
+      ["7", "Bruit (basse altitude)", "Points aberrants à rejeter, souvent des artefacts de mesure"],
+      ["9", "Eau", "Surfaces d'eau détectées, généralement peu de retours (absorption du proche infrarouge)"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "LAZ n'est pas un format \"allégé\" en qualité",
+    text: "LAZ est une compression sans perte du LAS, au même principe qu'un fichier .zip : un LAZ correctement décompressé restitue exactement les mêmes coordonnées et attributs que le LAS d'origine, au bit près. La confusion inverse — croire qu'un fichier .laz sacrifie de la précision pour réduire son poids — reste une erreur fréquente ; le gain est uniquement un poids de fichier divisé par 4 à 10, jamais une perte d'information.",
+  },
+
+  { type: "heading", text: "6. MNT, MNS et modèle de hauteur de canopée (CHM)", level: "superieur" },
   {
     type: "paragraph",
     text: "Une fois le nuage de points classé, les mêmes produits dérivés que pour la photogrammétrie s'obtiennent, généralement avec une meilleure fidélité sous couvert végétal (le LiDAR ayant réellement mesuré des points au sol, pas seulement filtré une surface visible d'en haut) :",
@@ -73,11 +144,23 @@ export const lidarContent: ContentBlock[] = [
     formula: "CHM = MNS − MNT",
     note: "Identique en principe au calcul de la salle Photogrammétrie et drones, mais généralement plus fiable en forêt dense avec des données LiDAR : le MNT y bénéficie de vrais points sol mesurés, pas d'une surface uniquement filtrée à partir de ce qui est visible d'en haut.",
   },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Calculer une hauteur de canopée en un point",
+    text: "Sur une placette forestière, le MNS (points classés végétation haute) indique une altitude de 32,4 m au sommet de la cime la plus proche ; le MNT interpolé au même point, à partir des points-sol environnants, donne 18,1 m. La hauteur de canopée locale est donc CHM = 32,4 − 18,1 = 14,3 m, une valeur directement comparable à une mesure de terrain au dendromètre, sans avoir eu besoin d'accéder physiquement au sous-bois.",
+  },
 
-  { type: "heading", text: "5. Densité de points et résolution effective", level: "superieur" },
+  { type: "heading", text: "7. Densité de points et résolution effective", level: "superieur" },
   {
     type: "paragraph",
     text: "La densité de points (points par m²) d'un relevé LiDAR dépend de l'altitude de vol, de la fréquence d'émission du capteur, et de la vitesse de déplacement de la plateforme. Une densité plus élevée permet de détecter des objets plus petits (un MNT à 20 points/m² capture des détails qu'un MNT à 1 point/m² ne peut pas résoudre), au prix d'un volume de données et d'un temps de vol nettement supérieurs.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "De la fréquence d'émission à la densité au sol",
+    text: "Un capteur émettant 200 000 pulses par seconde (200 kHz), embarqué sur un avion volant à environ 70 m/s (≈ 250 km/h) et balayant une fauchée au sol de 400 m de large, dépose en moyenne 200 000 / (70 × 400) ≈ 7 points par m² avant classification — un ordre de grandeur réaliste pour un relevé LiDAR aéroporté grand public. Doubler la densité visée revient, à altitude et fauchée constantes, à réduire d'autant la vitesse de vol ou à doubler la fréquence d'émission : jamais un réglage gratuit, toujours un compromis avec le temps de vol total.",
   },
   {
     type: "callout",
@@ -86,7 +169,7 @@ export const lidarContent: ContentBlock[] = [
     text: "La densité de points annoncée pour un relevé (ex. « 8 points/m² ») est presque toujours la densité globale du nuage brut, avant classification. La densité de points classés « sol » spécifiquement, la seule pertinente pour la qualité du MNT sous couvert dense, est systématiquement plus faible — un chiffre à vérifier séparément, pas à déduire de la densité globale annoncée.",
   },
 
-  { type: "heading", text: "6. LiDAR aéroporté, terrestre mobile et satellite", level: "superieur" },
+  { type: "heading", text: "8. LiDAR aéroporté, terrestre mobile et satellite", level: "superieur" },
   {
     type: "table",
     headers: ["Plateforme", "Usage typique", "Précision/densité"],
@@ -98,13 +181,40 @@ export const lidarContent: ContentBlock[] = [
   },
   { type: "game" },
 
-  { type: "heading", text: "7. LiDAR bathymétrique : voir sous l'eau", level: "approfondissement" },
+  { type: "heading", text: "9. LiDAR terrestre et mobile : des cas d'usage à part entière", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Le LiDAR terrestre se scinde lui-même en deux familles d'usage assez différentes de l'aéroporté : le scanner terrestre statique (Terrestrial Laser Scanning, TLS), posé sur trépied et immobile pendant l'acquisition, produit la densité de points la plus élevée possible mais couvre une seule station à la fois ; le système mobile embarqué (Mobile Mapping System, MMS), monté sur un véhicule, un chariot ou un sac à dos, balaie en continu le long d'un trajet, au prix d'une précision légèrement inférieure au TLS statique mais d'une couverture linéaire bien plus rapide.",
+  },
+  {
+    type: "list",
+    items: [
+      "Relevé de voirie et de réseaux : géométrie exacte de chaussée, mobilier urbain, réseaux aériens, pour l'entretien ou la conception de projets d'aménagement",
+      "Numérisation du patrimoine bâti : relevé intérieur/extérieur d'un monument à quelques millimètres de précision, base d'une maquette BIM \"scan-to-BIM\"",
+      "Surveillance d'ouvrages d'art : comparaison de scans répétés d'un pont ou d'un barrage dans le temps pour détecter une déformation structurelle infime",
+      "Perception embarquée de véhicules autonomes : un usage LiDAR temps réel, différent du relevé topographique, où le nuage sert à la navigation immédiate plutôt qu'à produire un document cartographique",
+    ],
+  },
+
+  { type: "heading", text: "10. Le programme Lidar HD : la France numérisée en haute densité", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "L'IGN a engagé au début des années 2020 le programme Lidar HD, un relevé LiDAR aéroporté visant à couvrir l'intégralité du territoire métropolitain avec une densité de points nettement supérieure aux relevés antérieurs, en données ouvertes.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un ordre de grandeur pour un programme national",
+    text: "Lidar HD vise une densité d'environ 10 points par m² sur l'ensemble du territoire métropolitain, un nuage de points classé (sol, végétation, bâti) diffusé en dalles LAZ, ainsi que des MNT et MNS dérivés à 1 m de résolution, en accès libre sur la plateforme de l'IGN. À cette échelle, l'acquisition d'un seul département représente déjà plusieurs centaines de milliards de points bruts, ce qui explique un déploiement étalé sur plusieurs années plutôt qu'une campagne unique.",
+  },
+
+  { type: "heading", text: "11. LiDAR bathymétrique : voir sous l'eau", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Une variante du LiDAR utilise une longueur d'onde verte (plutôt que le proche infrarouge du LiDAR terrestre classique) qui pénètre l'eau claire sur plusieurs mètres à quelques dizaines de mètres de profondeur selon la turbidité, permettant de cartographier simultanément la topographie terrestre et la bathymétrie côtière depuis une même plateforme aéroportée — une application directement utile à la gestion du trait de côte et des zones littorales.",
   },
 
-  { type: "heading", text: "8. Comparer LiDAR, radar et photogrammétrie", level: "approfondissement" },
+  { type: "heading", text: "12. Comparer LiDAR, radar et photogrammétrie", level: "approfondissement" },
   {
     type: "comparison",
     items: [
@@ -114,7 +224,7 @@ export const lidarContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "9. Applications : forêt, risques naturels, patrimoine", level: "superieur" },
+  { type: "heading", text: "13. Applications : forêt, risques naturels, patrimoine", level: "superieur" },
   {
     type: "list",
     items: [
@@ -125,14 +235,15 @@ export const lidarContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "10. Limites et pièges du LiDAR", level: "approfondissement" },
+  { type: "heading", text: "14. Limites et pièges du LiDAR", level: "approfondissement" },
   {
     type: "list",
     items: [
       "Coût et complexité logistique nettement supérieurs à la photogrammétrie de drone pour une même emprise",
       "Aucune information de texture/couleur native (un nuage de points LiDAR pur porte une intensité de retour, pas une couleur RVB, sauf fusion avec une caméra embarquée séparée)",
-      "Sous canopée très dense, la densité de points sol réelle peut rester insuffisante malgré une densité globale annoncée élevée (section 5)",
+      "Sous canopée très dense, la densité de points sol réelle peut rester insuffisante malgré une densité globale annoncée élevée (section 7)",
       "Le LiDAR bathymétrique ne pénètre pas une eau turbide : sa portée en profondeur dépend fortement de la clarté de l'eau, très variable selon le site et la saison",
+      "Un capteur en mode full waveform ne produit pas automatiquement \"plus de points\" qu'un capteur en mode discret : il produit un signal plus riche à décomposer, ce qui exige un traitement spécifique en aval, pas seulement un export brut",
     ],
   },
   {

@@ -4,7 +4,7 @@
 // (…-fiche-memo.pdf vs …-cours.pdf) plutôt que par un sous-dossier séparé.
 //
 // Usage :
-//   npm run pdf:generate:fiches                    → régénère les 6 fiches
+//   npm run pdf:generate:fiches                    → régénère les 14 fiches
 //   npm run pdf:generate:fiches -- fondamentaux     → régénère uniquement celle-ci
 
 import { mkdir } from "node:fs/promises"

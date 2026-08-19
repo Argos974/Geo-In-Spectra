@@ -61,7 +61,7 @@ src/
     types.ts                         # ContentBlock (paragraph, formula, callout, table, diagram…)
                                        # heading accepte un `level` (voir "Niveaux")
   data/
-    modules.ts                     # 7 salles : slug, titre, résumé, thèmes, épigraphe
+    modules.ts                     # 14 salles : slug, titre, résumé, thèmes, épigraphe
     artworks.ts                     # œuvre associée à chaque salle (+ crédits)
     glossary.ts                      # termes techniques, source universitaire, renvoi vers la salle
     references.ts                     # bibliographie groupée par thème (page /references)
@@ -115,51 +115,87 @@ pas des fichiers image : elles sont dessinées au chargement, rien à stocker da
 
 ## Export PDF
 
-Deux scripts, même pipeline partagé (`scripts/lib/pdfServer.mjs`) : build le site,
+Trois scripts, même pipeline partagé (`scripts/lib/pdfServer.mjs`) : build le site,
 sert `dist/` en local, imprime via Chromium headless (Playwright) — jamais une
-capture de la page web : `PrintCourse.tsx`/`PrintFiche.tsx` sont des mises en page
-dédiées (`/print/module/:slug`, `/print/fiche/:slug`), sans aucun élément
-d'interface web (`RootRouter.tsx` masque header/footer/grain sur ces routes), **et
-sur un thème papier clair délibérément différent du site** (fond sombre) : un
-support de cours destiné à être imprimé ou lu comme un document, pas comme une page
-web. `ContentBlocks`/`GalleryFrame`/`EngravedFrame` acceptent un prop `variant`
-(`"dark"` pour le site, `"print"` pour ces deux pages) qui bascule leurs couleurs en
-conséquence — aucun `displayHeaderFooter` Playwright : pas de bandeau ni de
-numérotation de page superposés, la page de garde (illustrée) et le sommaire portent
-déjà leur propre identité.
+capture de la page web : `PrintCourse.tsx`/`PrintFiche.tsx`/`PrintQuiz.tsx` sont des
+mises en page dédiées (`/print/module/:slug`, `/print/fiche/:slug`,
+`/print/quiz/:slug`, `/print/quiz-corrige/:slug`), sans aucun élément d'interface web
+(`RootRouter.tsx` masque header/footer/grain sur ces routes), **et sur un thème
+papier clair délibérément différent du site** (fond sombre) : un support de cours
+destiné à être imprimé ou lu comme un document, pas comme une page web.
+`ContentBlocks`/`GalleryFrame`/`EngravedFrame` acceptent un prop `variant` (`"dark"`
+pour le site, `"print"` pour ces pages) qui bascule leurs couleurs en conséquence —
+aucun `displayHeaderFooter` Playwright : pas de bandeau ni de numérotation de page
+superposés, la page de garde (illustrée) et le sommaire portent déjà leur propre
+identité.
 
 ```bash
-npm run pdf:generate                          # les 7 cours
+npm run pdf:generate                          # les 14 cours
 npm run pdf:generate -- fondamentaux           # un seul cours
-npm run pdf:generate:fiches                     # les 7 fiches mémo
+npm run pdf:generate:fiches                     # les 14 fiches mémo
 npm run pdf:generate:fiches -- fondamentaux      # une seule fiche
+npm run pdf:generate:quiz                        # les 14 quiz (énoncé + corrigé)
+npm run pdf:generate:quiz -- fondamentaux         # un seul quiz
 ```
 
 **Nommage** : `<NN>-<slug>-<type>.pdf` (ex. `01-fondamentaux-cours.pdf`,
-`01-fondamentaux-fiche-memo.pdf`) — le numéro d'ordre et le type de document
+`01-fondamentaux-fiche-memo.pdf`, `01-fondamentaux-quiz.pdf`,
+`01-fondamentaux-quiz-corrige.pdf`) — le numéro d'ordre et le type de document
 permettent de s'y retrouver une fois plusieurs PDF téléchargés dans le même dossier
-de téléchargements. `<type>` vaut `cours` ou `fiche-memo` aujourd'hui ; `quiz` et
-`quiz-corrige` suivront la même convention le jour où ils existeront en PDF.
+de téléchargements. `<type>` vaut `cours`, `fiche-memo`, `quiz` (énoncé seul) ou
+`quiz-corrige` (bonne réponse + explication). Le bouton de téléchargement du corrigé
+n'apparaît que côté Magister (`showTeacherMeta`, voir `ModuleChapterBody.tsx`) — pas
+sur la page Cours de Discipulus, pour ne pas exposer les réponses à l'élève avant le
+quiz interactif.
 
 ## Feuille de route
 
-Un état des lieux pédagogique complet (critique du site, programme en sept axes,
-bibliographie) a été produit comme document de travail séparé plutôt que versionné
-ici. Sept salles en ligne aujourd'hui, dans cet ordre : Fondements, Le Regard, Les
-Couleurs, Le Compas, L'Intelligence (indices composés/complexes, filtres,
-classification, deep learning, IA), La Méthode (commentaire de document,
-dissertation, rapport technique, concours) et L'Atelier, en clôture, douze séances
-pratiques autonomes (un semestre universitaire), réparties sur les trois profils
-lycée/licence-BUT/master-recherche via le même système de niveaux, qui réutilisent
-les compétences des salles précédentes
-(géoréférencement par grille, NDVI/statistiques zonales/ΔNDVI, buffer/intersection,
-programmation Python, étude de cas). Fondements intègre aussi l'histoire de
-la cartographie, la lecture de carte, le débat Mercator/Peters et les codes
-géographiques (EPSG, INSEE/COG, NUTS, cadastre) — regroupés là plutôt qu'en salle
-séparée. Glossaire (avec sources et recherche), page Références (bibliographie par
-thème), quiz interactif et fiches mémo PDF couvrent les sept salles. Reste : étoffer
-encore chaque salle (le programme en sept axes en liste bien plus que ce qui est
-déjà écrit).
+14 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
+socle d'origine, plus étoffé ; les sept suivantes couvrent des thèmes spécialisés
+ajoutés ensuite, à un niveau de détail plus resserré (voir « reste à faire »
+ci-dessous) :
+
+1. **Fondements** (`fondamentaux`) — coordonnées/EPSG, projections, vecteur/raster,
+   histoire de la cartographie, lecture de carte, débat Mercator/Peters, codes
+   géographiques (INSEE/COG, NUTS, cadastre)
+2. **Le Regard** (`teledetection`) — rayonnement électromagnétique, capteurs
+   optique/radar, résolutions, missions Sentinel/Landsat
+3. **Les Couleurs** (`indices-spectraux`) — NDVI/NDMI/NDBI et indices dérivés,
+   indices composés (Tasseled Cap), validation statistique, séries temporelles
+4. **Le Compas** (`outils-sig`) — QGIS, analyses spatiales (Moran, MAUP),
+   géostatistique (krigeage), PostGIS/PyQGIS
+5. **L'Intelligence** (`traitements-ia`) — filtres à noyau, classification,
+   matrice de confusion/kappa, deep learning (CNN, U-Net, Transformers)
+6. **La Méthode** (`methodologie`) — commentaire de document, dissertation,
+   rapport technique SIG, sémiologie de Bertin, préparation aux concours,
+   mémoire IMRaD
+7. **Les Projections** (`projections-avancees`) — familles de déformation,
+   Lambert-93/UTM, datum et transformation, choix d'une projection
+8. **Le Web** (`cartographie-web`) — pyramide de tuiles, Leaflet/MapLibre,
+   standards OGC (WMS/WMTS/WFS), performance et accessibilité
+9. **Les Statistiques** (`statistiques-spatiales`) — LISA, Gi* de Getis-Ord,
+   estimation de densité par noyau, régression spatiale, cartographie du risque
+10. **Le Drone** (`photogrammetrie-drones`) — Structure from Motion, MNS/MNT,
+    points d'appui au sol, planification de vol, RTK/PPK
+11. **Le LiDAR** (`lidar`) — temps de vol laser, retours multiples, classification
+    du nuage de points, plateformes aéroportées/terrestres
+12. **La Base** (`bases-donnees-spatiales`) — index spatial GiST, requêtes et
+    jointures spatiales, topologie, performance (EXPLAIN ANALYZE)
+13. **Les Secteurs** (`etudes-de-cas-sectorielles`) — agriculture de précision,
+    artificialisation des sols, risque incendie, foresterie
+14. **L'Atelier** (`travaux-pratiques`), en clôture — douze séances pratiques
+    autonomes (un semestre universitaire), réparties sur les trois profils
+    lycée/licence-BUT/master-recherche via le système de niveaux, qui réutilisent
+    les compétences des salles précédentes (géoréférencement par grille,
+    NDVI/statistiques zonales/ΔNDVI, buffer/intersection, programmation Python,
+    étude de cas)
+
+Glossaire (avec sources et recherche), page Références (bibliographie par thème),
+quiz interactif et fiches mémo PDF couvrent les 14 salles.
+
+**Reste à faire** : les 7 salles spécialisées (7 à 13 ci-dessus) sont sensiblement
+plus courtes que les 6 salles du socle d'origine — à étoffer pour atteindre un
+niveau de détail comparable.
 
 ## Déploiement
 

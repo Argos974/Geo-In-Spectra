@@ -99,6 +99,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta }: Modu
   const order = String(index + 1).padStart(2, "0")
   const coursName = `${order}-${module.slug}-cours.pdf`
   const ficheName = `${order}-${module.slug}-fiche-memo.pdf`
+  const quizCorrigeName = `${order}-${module.slug}-quiz-corrige.pdf`
   const hasQuiz = Boolean(quizzes[module.slug])
   const hasExercises = Boolean(exercises[module.slug])
 
@@ -136,6 +137,15 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta }: Modu
           >
             Faire le quiz →
           </Link>
+        )}
+        {hasQuiz && showTeacherMeta && (
+          <a
+            href={`/pdf/${module.slug}/${quizCorrigeName}`}
+            download={quizCorrigeName}
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
+          >
+            ↓ Corrigé quiz (PDF)
+          </a>
         )}
       </div>
 

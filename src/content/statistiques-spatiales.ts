@@ -68,6 +68,33 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
     title: "Application directe à la cartographie du risque",
     text: "Sur une couche de points d'éclosion de feux de forêt sur plusieurs décennies, une carte Gi* identifie précisément les secteurs où les départs de feu se concentrent statistiquement au-delà du hasard, distincts des secteurs qui en comptent simplement beaucoup parce que la zone d'étude y est plus grande ou plus peuplée d'entités. C'est cette distinction — concentration réelle vs simple densité brute — qui rend le Gi* directement utile à la priorisation d'une politique de prévention, plutôt qu'une carte de densité brute qui confond les deux.",
   },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "LISA (Local Moran's I)",
+        points: [
+          "Compare chaque entité à ses voisins directs : mesure une similarité locale",
+          "Distingue quatre configurations, y compris les anomalies isolées (HL, LH)",
+          "Répond à : « cette entité ressemble-t-elle à son voisinage, ou détonne-t-elle ? »",
+        ],
+      },
+      {
+        label: "Gi* (Getis-Ord)",
+        points: [
+          "Compare la somme locale des valeurs à la moyenne de toute la zone d'étude",
+          "Ne distingue que deux issues significatives : point chaud ou point froid",
+          "Répond à : « où, précisément, les valeurs fortes (ou faibles) se concentrent-elles statistiquement ? »",
+        ],
+      },
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Deux outils complémentaires, pas concurrents",
+    text: "Sur un même jeu de données, un praticien calcule fréquemment les deux : le LISA pour repérer aussi les anomalies locales (un point isolé qui détonne, potentiellement une erreur de saisie ou un cas réellement singulier à examiner), le Gi* pour produire une carte de points chauds/froids directement lisible par un décideur, sans les quatre catégories du LISA à expliquer. Le choix de la matrice de poids spatiaux wᵢⱼ (section 11) affecte les deux de la même façon.",
+  },
 
   { type: "heading", text: "4. Densité de points : l'estimation par noyau (KDE)", level: "superieur" },
   {

@@ -27,6 +27,29 @@ export const basesDonneesSpatialesContent: ContentBlock[] = [
       ["Exposition à plusieurs applications à la fois", "Copies multiples, risque de divergence", "Source unique, interrogée par toutes les applications"],
     ],
   },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Fichier seul (Shapefile, GeoPackage)",
+        points: [
+          "Adapté à un projet isolé, jusqu'à quelques centaines de milliers d'entités",
+          "Un seul rédacteur à la fois, sans risque réel de conflit",
+          "Distribution simple : un ou quelques fichiers à copier",
+          "Aucune garantie de cohérence entre fichiers si plusieurs copies circulent",
+        ],
+      },
+      {
+        label: "Base de données spatiale (PostGIS)",
+        points: [
+          "Adaptée à plusieurs millions d'entités, interrogées en continu",
+          "Plusieurs utilisateurs et applications lisent/écrivent en même temps, sans copie divergente",
+          "Nécessite un serveur à installer et administrer (sauvegardes, droits d'accès)",
+          "Une seule source de vérité, interrogée à la demande plutôt que dupliquée",
+        ],
+      },
+    ],
+  },
 
   { type: "heading", text: "2. Rappel : PostGIS et les types géométriques", level: "superieur" },
   {

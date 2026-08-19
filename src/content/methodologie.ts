@@ -33,6 +33,18 @@ export const methodologieContent: ContentBlock[] = [
     title: "Grille de lecture pour un document de télédétection précisément",
     text: "Pour une image satellite ou un indice cartographié (NDVI, NDBI…), l'identification doit préciser en plus : le capteur et sa résolution spatiale (une image Sentinel-2 à 10 m ne permet pas les mêmes conclusions qu'une image Pléiades à 0.5 m), la composition affichée (naturelle ou fausse couleur, voir module Le Regard) et, pour un indice, sa formule et son échelle de valeurs. Omettre ces précisions techniques dans l'identification est sanctionné comme une identification incomplète, au même titre qu'oublier l'échelle d'une carte topographique.",
   },
+  {
+    type: "paragraph",
+    text: "Une photographie aérienne se lit différemment selon sa prise de vue : verticale (l'appareil pointe vers le sol, c'est la géométrie de la photogrammétrie et des orthophotos), elle se compare à une carte et permet de mesurer des distances une fois orthorectifiée ; oblique (prise de biais), elle donne un rendu plus lisible pour un public non spécialiste mais déforme les distances et les surfaces de façon croissante avec l'éloignement au point de prise de vue — un commentaire doit préciser laquelle est utilisée avant d'en tirer une mesure quelconque.",
+  },
+  {
+    type: "list",
+    items: [
+      "Vérifier avant de conclure : le nord est-il indiqué ? l'échelle est-elle graphique (fiable après un redimensionnement de l'image) ou seulement numérique (faussée si l'image a été redimensionnée) ?",
+      "Une seule date ne permet jamais de conclure sur une évolution : une comparaison exige au minimum deux documents comparables (même saison si le phénomène est saisonnier, résolutions compatibles)",
+      "Relire la légende avant la carte elle-même : une légende mal comprise fausse toute la lecture qui suit",
+    ],
+  },
 
   { type: "heading", text: "2. La dissertation de géographie", level: "superieur" },
   {
@@ -161,6 +173,45 @@ export const methodologieContent: ContentBlock[] = [
       "La légende, la nomenclature et le figuré ne doivent jamais être plus détaillés que ce que l'échelle du fond de carte permet réellement de représenter",
     ],
   },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Croquis d'examen (bac, concours)",
+        points: [
+          "Fond de carte imposé, à main levée ou tracé simple",
+          "Temps contraint : légende schématique, peu de rubriques",
+          "Juge la démonstration, pas la finition graphique",
+        ],
+      },
+      {
+        label: "Carte de synthèse professionnelle (rapport, mémoire)",
+        points: [
+          "Fond de carte choisi et sourcé, réalisé en SIG",
+          "Temps long : légende exhaustive, sources et échelle précisées",
+          "Juge aussi la lisibilité et la conformité aux normes cartographiques (échelle, orientation, source)",
+        ],
+      },
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Une légende organisée, sur un exemple concret",
+    text: "Sujet : « L'artificialisation des sols en périphérie d'une métropole ». Une légende en vrac listerait pêle-mêle zones bâties, routes, cours d'eau, zones agricoles. Une légende organisée regroupe par rubrique : « I. Les espaces artificialisés » (bâti dense, zones d'activité, réseau routier structurant), « II. Les espaces encore ouverts » (agriculture, espaces boisés, trame verte résiduelle), « III. Les dynamiques et tensions » (fronts d'urbanisation, flèches de pression foncière). Le lecteur comprend la structure du raisonnement avant même de lire le texte du devoir.",
+  },
+  {
+    type: "devoir",
+    format: "Croquis noté",
+    title: "Construire la légende d'un croquis de synthèse",
+    prompt: "À partir d'un sujet de ton choix portant sur un territoire connu (ta commune, ta région), rédige uniquement le titre problématisé et la légende organisée (2 à 4 rubriques, chaque figuré justifié) — sans tracer le fond de carte. L'objectif est d'évaluer la structuration de la légende indépendamment du dessin.",
+    criteria: [
+      "Le titre annonce une problématique, pas seulement le thème du sujet",
+      "La légende compte 2 à 4 rubriques thématiques cohérentes, pas une liste plate",
+      "Chaque figuré est justifié par la nature de la donnée qu'il représente (sémiologie de Bertin, section 4)",
+      "Aucun élément de légende ne dépasse ce qu'une échelle raisonnable permettrait réellement de représenter",
+    ],
+  },
 
   { type: "heading", text: "6. Préparer un concours (CAPES / Agrégation d'histoire-géographie)", level: "approfondissement" },
   {
@@ -186,6 +237,14 @@ export const methodologieContent: ContentBlock[] = [
     tone: "info",
     title: "L'oral de concours : reformuler, ne pas réciter",
     text: "Un jury évalue autant la capacité à répondre à une question précise posée en direct qu'à dérouler un exposé préparé. Le réflexe le plus utile : reformuler brièvement la question avant d'y répondre, pour vérifier qu'on l'a bien comprise et laisser au jury l'occasion de préciser s'il le souhaite, un geste simple, souvent négligé sous la pression du temps.",
+  },
+  {
+    type: "list",
+    items: [
+      "Gérer le temps de préparation en deux passes : une première lecture complète du sujet et des documents sans rien rédiger, puis seulement la construction du plan — rédiger dès la première lecture pousse presque toujours vers un plan bancal",
+      "Réserver systématiquement les dernières minutes de préparation à une relecture du plan, pas à en ajouter davantage : un plan clair et tenu vaut mieux qu'un plan surchargé mal exposé",
+      "À l'oral, annoncer le plan dès l'introduction et le rappeler brièvement à chaque transition : le jury doit pouvoir suivre la démonstration sans avoir le plan sous les yeux",
+    ],
   },
   {
     type: "link",
@@ -228,5 +287,11 @@ export const methodologieContent: ContentBlock[] = [
     tone: "example",
     title: "Revue de littérature : synthétiser, pas empiler",
     text: "Une revue de littérature organisée chronologiquement (\"en 1990, X a montré... puis en 2005, Y a montré...\") reste souvent une paraphrase juxtaposée. Une revue organisée par débat ou par méthode (\"deux approches s'opposent sur ce point : d'un côté X, Y ; de l'autre Z\") démontre une réelle appropriation de la littérature : c'est ce second type qui est attendu dans l'introduction d'un mémoire de recherche.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Citer une source, y compris une donnée géospatiale",
+    text: "Le plagiat ne concerne pas que le texte : reprendre un jeu de données, un fond de carte ou une méthode de traitement sans en citer l'origine (producteur, date, licence) est une faute de même nature. Une donnée Copernicus, IGN ou OpenStreetMap réutilisée dans un mémoire doit être créditée avec la même rigueur qu'une citation d'auteur — attendu explicitement dans la section Méthode d'un travail IMRaD.",
   },
 ]

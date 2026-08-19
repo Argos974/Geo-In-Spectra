@@ -115,3 +115,20 @@ export const PARCOURS: Parcours[] = [
     ],
   },
 ]
+
+/**
+ * Slugs de module traversés par un parcours, dérivés de ses `stops` (`/module/<slug>`
+ * uniquement — un stop vers `/discipulus/methodes` ou `/jeux-de-donnees` n'est pas un
+ * slug de reviewQueue). Sert au mode express de RevisionPage : filtrer la file de
+ * révision espacée sur le seul parcours actif plutôt que toutes les salles.
+ */
+export function getParcoursModuleSlugs(id: string): Set<string> {
+  const parcours = PARCOURS.find((p) => p.id === id)
+  const slugs = new Set<string>()
+  if (!parcours) return slugs
+  for (const stop of parcours.stops) {
+    const match = stop.to.match(/^\/module\/([^/]+)/)
+    if (match) slugs.add(match[1])
+  }
+  return slugs
+}

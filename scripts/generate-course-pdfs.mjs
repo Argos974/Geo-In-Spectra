@@ -3,7 +3,7 @@
 // depuis la page web. Sortie regroupée par salle dans public/pdf/<slug>/.
 //
 // Usage :
-//   npm run pdf:generate                    → régénère les 6 salles
+//   npm run pdf:generate                    → régénère les 14 salles
 //   npm run pdf:generate -- fondamentaux     → régénère uniquement celle-ci
 //   npm run pdf:generate -- fondamentaux teledetection
 

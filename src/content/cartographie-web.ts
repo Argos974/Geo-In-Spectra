@@ -40,6 +40,18 @@ export const cartographieWebContent: ContentBlock[] = [
     title: "Identifier une tuile",
     text: "L'URL https://tile.openstreetmap.org/14/8281/5928.png demande la tuile au zoom 14 (z), colonne 8281 (x, comptée depuis l'ouest) et ligne 5928 (y, comptée depuis le nord). Un client de cartographie web calcule automatiquement quelles tuiles z/x/y couvrent la zone visible avant de les demander une à une au serveur.",
   },
+  {
+    type: "formula",
+    label: "Convertir une position géographique en indices de tuile (z/x/y)",
+    formula: "x = ⌊(lon + 180) / 360 × 2^z⌋      y = ⌊(1 − ln(tan(lat) + sec(lat)) / π) / 2 × 2^z⌋",
+    note: "lon/lat en degrés (lat convertie en radians pour le calcul du logarithme), z le niveau de zoom demandé. Cette formule, dite « slippy map », dérive directement de la projection Web Mercator : c'est elle que toute bibliothèque de cartographie web recalcule en silence à chaque déplacement de la carte, pour savoir précisément quelles tuiles demander au serveur.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "XYZ et TMS ne comptent pas les lignes dans le même sens",
+    text: "Le schéma XYZ quasi universel (OpenStreetMap, Google, la plupart des bibliothèques web) compte y depuis le nord : y=0 tout en haut de la pyramide. Le schéma TMS (Tile Map Service), plus ancien, compte y depuis le sud. Connecter un fond de tuiles TMS à un client qui attend du XYZ sans inverser explicitement l'indice y affiche une carte retournée par bandes horizontales — une source d'erreur classique lors de la connexion à un ancien serveur de tuiles.",
+  },
 
   { type: "heading", text: "3. Tuiles raster vs tuiles vectorielles", level: "superieur" },
   {
@@ -54,7 +66,28 @@ export const cartographieWebContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "4. Les bibliothèques de cartographie web", level: "superieur" },
+  { type: "heading", text: "4. Le format vectoriel tuilé : Mapbox Vector Tiles (MVT)", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Les tuiles vectorielles échangées entre serveur et navigateur suivent presque toutes le même format de fait, les Mapbox Vector Tiles (MVT), devenu un standard de facto de l'industrie bien au-delà de son éditeur d'origine. Une tuile MVT n'est pas un fichier texte lisible comme un GeoJSON : c'est un binaire compact encodé en Protocol Buffers (protobuf), pensé pour minimiser le volume transféré à chaque déplacement de la carte.",
+  },
+  {
+    type: "list",
+    items: [
+      "Un fichier .mvt/.pbf par tuile z/x/y, encodé en protobuf : bien plus léger qu'un GeoJSON équivalent, au prix d'un format non lisible tel quel",
+      "Plusieurs « layers » thématiques nommés à l'intérieur d'une même tuile (ex. water, building, road, poi), que le style choisit d'afficher, de masquer ou de restyliser indépendamment les uns des autres",
+      "Coordonnées quantifiées sur une grille locale à la tuile (typiquement 4096 unités par côté), pas en degrés ni en mètres : une géométrie MVT n'a de sens qu'une fois replacée dans sa tuile d'origine",
+      "Géométries pré-généralisées dès la génération de la tuile : une tuile de faible zoom contient déjà une version simplifiée des contours, pas la précision complète recalculée à la volée par le navigateur",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "La donnée et le style, deux fichiers séparés",
+    text: "Un même jeu de tuiles vectorielles MVT peut être affiché avec des styles radicalement différents (fond clair, fond sombre, thématique administrative) sans regénérer une seule tuile : seul change le document de style (JSON, suivant la Mapbox/MapLibre Style Spec) que le navigateur applique au moment du rendu. C'est structurellement impossible avec des tuiles raster, où le style est cuit dans l'image dès sa génération côté serveur.",
+  },
+
+  { type: "heading", text: "5. Les bibliothèques de cartographie web", level: "superieur" },
   {
     type: "paragraph",
     text: "Trois bibliothèques dominent la cartographie web actuelle, avec des technologies de rendu différentes :",
@@ -74,8 +107,31 @@ export const cartographieWebContent: ContentBlock[] = [
     title: "Pourquoi Leaflet reste un premier choix pédagogique",
     text: "Sa simplicité d'API (quelques lignes suffisent pour une première carte fonctionnelle) et sa légèreté en font le point d'entrée le plus courant pour apprendre la cartographie web, avant, si le projet l'exige (très gros volumes de données vectorielles, rendu 3D), de migrer vers une bibliothèque accélérée par WebGL comme MapLibre GL.",
   },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Leaflet",
+        points: [
+          "API minimaliste : quelques lignes suffisent pour une carte fonctionnelle",
+          "Rendu DOM/Canvas, sans accélération matérielle",
+          "Écosystème de plugins considérable (clustering, dessin, heatmaps…)",
+          "Pertinent pour des volumes de données modérés et une carte 2D classique",
+        ],
+      },
+      {
+        label: "MapLibre GL JS",
+        points: [
+          "API plus bas niveau, pilotée par un document de style JSON (Style Spec)",
+          "Rendu WebGL : anime fluidement des dizaines de milliers d'entités vectorielles",
+          "Rotation, inclinaison (pitch) et extrusion 3D des bâtiments nativement",
+          "Pertinent dès que le style doit changer dynamiquement ou que le volume dépasse ce que Leaflet peut animer sans ralentir",
+        ],
+      },
+    ],
+  },
 
-  { type: "heading", text: "5. Les standards OGC du service cartographique", level: "superieur" },
+  { type: "heading", text: "6. Les standards OGC du service cartographique", level: "superieur" },
   {
     type: "paragraph",
     text: "Avant même l'ère des tuiles, l'Open Geospatial Consortium (OGC) a normalisé la façon dont un serveur cartographique expose ses données sur le web — des standards encore massivement utilisés aujourd'hui, notamment dans l'administration publique et la recherche.",
@@ -89,8 +145,24 @@ export const cartographieWebContent: ContentBlock[] = [
       ["WFS (Web Feature Service)", "La géométrie et les attributs bruts (features vecteur), pas une image", "Récupérer les données elles-mêmes pour analyse, pas seulement les afficher"],
     ],
   },
+  {
+    type: "paragraph",
+    text: "Chacun de ces standards s'interroge par une URL construite selon une syntaxe imposée (des paramètres clé=valeur), consultable pour n'importe quel serveur via une requête GetCapabilities qui liste les couches disponibles, leurs styles et leur emprise. La différence entre les trois ne tient pas à la donnée source, souvent identique, mais à la sémantique de la requête envoyée :",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Trois requêtes, trois sémantiques différentes",
+    text: "WMS GetMap — .../wms?SERVICE=WMS&REQUEST=GetMap&LAYERS=occupation_sol&BBOX=...&WIDTH=800&HEIGHT=600&CRS=EPSG:3857&FORMAT=image/png : redessine une image pour une emprise arbitraire, propre à cet appel. WMTS GetTile — .../wmts?SERVICE=WMTS&REQUEST=GetTile&LAYER=occupation_sol&TILEMATRIX=14&TILEROW=5928&TILECOL=8281&FORMAT=image/png : renvoie une tuile pré-calculée à un z/x/y fixe, jamais redessinée à la demande. WFS GetFeature — .../wfs?SERVICE=WFS&REQUEST=GetFeature&TYPENAME=parcelles&BBOX=...&OUTPUTFORMAT=application/json : renvoie la géométrie et les attributs bruts, pas une image du tout.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une confusion fréquente : croire que WMS fonctionne « par tuiles »",
+    text: "Certains clients (le mode WMS-C de QGIS, le plugin Leaflet.WMS) simulent un comportement tuilé en alignant leurs requêtes GetMap sur une grille fixe, pour profiter d'un cache HTTP standard. C'est une convention ajoutée par le client, pas une propriété du protocole WMS lui-même : WMS, par construction, accepte n'importe quelle bbox arbitraire et la redessine à chaque appel côté serveur. Seul WMTS intègre la tuile fixe dans la sémantique même du protocole.",
+  },
 
-  { type: "heading", text: "6. GeoJSON et la donnée vecteur sur le web", level: "superieur" },
+  { type: "heading", text: "7. GeoJSON et la donnée vecteur sur le web", level: "superieur" },
   {
     type: "paragraph",
     text: "Le GeoJSON (voir le module Fondements) est le format d'échange vecteur de référence du web géospatial : texte lisible, directement exploitable en JavaScript sans bibliothèque de parsing dédiée, nativement en WGS84 (EPSG:4326) par convention. Une bibliothèque comme Leaflet ou MapLibre GL le reprojette automatiquement vers Web Mercator au moment de l'affichage — le fichier source, lui, reste en coordonnées géographiques.",
@@ -102,7 +174,42 @@ export const cartographieWebContent: ContentBlock[] = [
     text: "Charger un unique fichier GeoJSON de plusieurs dizaines de milliers de sommets d'un coup peut faire fonctionner un onglet de navigateur au ralenti, même une fois le fichier reçu : chaque sommet doit être reprojeté et dessiné. Au-delà d'un certain volume, découper la donnée en tuiles (vectorielles ou en GeoJSON pré-découpé par zone) redevient nécessaire, exactement pour la même raison qui a motivé les tuiles raster à l'origine : ne transmettre et ne dessiner que ce qui est réellement visible.",
   },
 
-  { type: "heading", text: "7. Performance à grande échelle : simplification, clustering, découpage", level: "approfondissement" },
+  { type: "heading", text: "8. GeoJSON ou tuiles vectorielles : quel format pour quel usage ?", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Les deux sections précédentes esquissent déjà le compromis : un fichier GeoJSON unique est plus simple à produire et à déboguer, des tuiles vectorielles passent mieux à l'échelle. Le tableau ci-dessous rend ce choix explicite.",
+  },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "GeoJSON (fichier unique)",
+        points: [
+          "Un seul fichier texte, toute la donnée transmise d'un coup",
+          "Facile à générer, lire, déboguer, versionner (diff lisible dans un outil de gestion de version)",
+          "Reprojection et rendu entièrement à la charge du navigateur",
+          "Adapté à quelques centaines ou milliers d'entités, pas nettement au-delà",
+        ],
+      },
+      {
+        label: "Tuiles vectorielles (MVT)",
+        points: [
+          "Découpées par zone et par niveau de zoom, chargées à la demande",
+          "Génération plus complexe : nécessite un pipeline de tuilage dédié (ex. Tippecanoe, l'outil libre de Mapbox)",
+          "Passe à l'échelle jusqu'à des millions d'entités sans jamais tout charger d'un coup",
+          "Format binaire peu lisible en l'état, plus difficile à déboguer ou versionner",
+        ],
+      },
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Un seuil pratique, pas une règle stricte",
+    text: "Il n'existe pas de nombre magique de sommets au-delà duquel un GeoJSON devient interdit : cela dépend du matériel de l'utilisateur final, de la complexité du style appliqué et de la fréquence d'interaction attendue. En pratique, un projet qui commence en GeoJSON simple et dont le volume de données croît migre naturellement vers des tuiles vectorielles générées une fois pour toutes, plutôt que de continuer à alourdir un fichier unique.",
+  },
+
+  { type: "heading", text: "9. Performance à grande échelle : simplification, clustering, découpage", level: "approfondissement" },
   {
     type: "list",
     items: [
@@ -114,7 +221,28 @@ export const cartographieWebContent: ContentBlock[] = [
   },
   { type: "game" },
 
-  { type: "heading", text: "8. Sources de tuiles ouvertes et leurs licences", level: "superieur" },
+  { type: "heading", text: "10. Mise en cache et diffusion : CDN et en-têtes HTTP", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Une tuile change rarement une fois publiée : c'est cette stabilité que toute l'architecture de diffusion à grande échelle exploite, en évitant de redessiner ou même de retransmettre une tuile déjà servie une première fois.",
+  },
+  {
+    type: "list",
+    items: [
+      "En-tête HTTP Cache-Control avec une durée de validité longue (par exemple max-age fixé à plusieurs jours) : une tuile d'un fond de carte topographique change rarement, autant éviter de la redemander à chaque session utilisateur",
+      "Un CDN (réseau de diffusion de contenu) répartit géographiquement des copies des tuiles les plus demandées au plus près de l'utilisateur final, réduisant la latence perçue indépendamment de la localisation du serveur d'origine",
+      "Pré-génération (seeding) : calculer et stocker à l'avance toutes les tuiles d'une zone et d'une plage de zoom, plutôt que de les dessiner à la demande — un compromis espace disque contre temps de réponse",
+      "Génération à la volée avec mise en cache (GeoWebCache, TileCache, Tegola) : ne dessiner une tuile qu'à sa première demande, puis la conserver pour les suivantes, un compromis entre les deux approches précédentes, adapté aux couches trop volumineuses pour un seeding complet",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Invalider un cache de tuiles n'est jamais gratuit",
+    text: "Mettre à jour la donnée source (une nouvelle route, un bâtiment démoli) ne suffit pas à mettre à jour ce que voit l'utilisateur si les anciennes tuiles restent servies depuis un cache HTTP ou un CDN qui n'a aucune raison de les considérer périmées. Les stratégies courantes consistent soit à purger explicitement le cache après chaque mise à jour, soit à versionner l'URL des tuiles (un paramètre ou un chemin qui change avec chaque nouvelle génération), pour que l'ancienne et la nouvelle version cohabitent sans jamais se confondre.",
+  },
+
+  { type: "heading", text: "11. Sources de tuiles ouvertes et leurs licences", level: "superieur" },
   {
     type: "paragraph",
     text: "OpenStreetMap (licence ODbL, données librement réutilisables avec attribution) fournit la donnée source de la plupart des fonds de carte libres, mais la politique d'usage des tuiles pré-rendues officielles (tile.openstreetmap.org) est stricte : elle est prévue pour du développement/test à faible trafic, pas pour un site en production à fort trafic, qui doit s'appuyer sur un fournisseur dédié (auto-hébergement, ou un service comme MapTiler, Stadia Maps, Thunderforest) plutôt que solliciter l'infrastructure gratuite communautaire au-delà de ce qu'elle prévoit.",
@@ -126,13 +254,32 @@ export const cartographieWebContent: ContentBlock[] = [
     text: "OpenStreetMap est mise à jour en continu par des contributeurs, contrairement à une image satellite figée à sa date d'acquisition (voir le module Le Regard) : c'est cette réactivité, interrogeable directement via l'API Overpass, qu'exploite ailleurs sur ce site le bloc de données vivantes sur Vitrolles — une illustration concrète de donnée OSM récupérée en direct, même si son affichage n'y prend pas la forme d'une carte tuilée classique.",
   },
 
-  { type: "heading", text: "9. Cartographie web et accessibilité", level: "approfondissement" },
+  { type: "heading", text: "12. Cartographie web et accessibilité", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Une carte interactive pose des défis d'accessibilité spécifiques : elle est par nature visuelle et dépend de la souris/du tactile pour se déplacer. Les bonnes pratiques incluent une navigation clavier alternative (zoomer/déplacer sans souris), un contraste suffisant pour les fonds de carte et les symboles, et systématiquement un résumé textuel ou tabulaire de la donnée essentielle affichée sur la carte, pour qu'un lecteur d'écran ne dépende pas uniquement du rendu graphique.",
   },
+  {
+    type: "list",
+    items: [
+      "Navigation clavier : tabulation pour atteindre les contrôles (zoom, boutons), flèches ou touches dédiées pour déplacer le centre de la carte sans souris ni tactile",
+      "Attributs ARIA (rôle explicite, libellé descriptif) sur le conteneur de la carte, pour qu'un lecteur d'écran annonce la nature du composant plutôt que de le passer sous silence comme une simple image",
+      "Contraste suffisant entre symboles/étiquettes et fond de carte, y compris sur un fond sombre ou une image satellite chargée visuellement",
+      "Palettes adaptées au daltonisme pour toute carte choroplèthe ou tout dégradé de couleur, plutôt que le seul contraste rouge/vert — une forme de daltonisme concerne environ 8 % des hommes",
+      "Un résumé textuel ou tabulaire de la donnée essentielle, indépendant du rendu graphique, pour qu'un lecteur d'écran ne dépende pas d'un canvas ou d'un contexte WebGL qu'il ne peut pas interroger",
+    ],
+  },
+  {
+    type: "table",
+    headers: ["Type de palette", "Usage typique", "Recommandation daltonisme"],
+    rows: [
+      ["Séquentielle (une teinte, dégradé de clarté)", "Variable ordonnée du faible au fort (densité, indice continu)", "Sûre par nature : la clarté seule porte l'information, lisible même en vision monochrome"],
+      ["Divergente (deux teintes autour d'un point médian)", "Variable avec un zéro ou un seuil significatif (écart à la moyenne, perte/gain)", "Préférer un couple comme bleu/orange, distinguable par les formes courantes de daltonisme, plutôt que rouge/vert"],
+      ["Qualitative (catégories sans ordre)", "Occupation du sol, classes discrètes sans hiérarchie", "Limiter à une poignée de couleurs et vérifier avec un simulateur de daltonisme"],
+    ],
+  },
 
-  { type: "heading", text: "10. Erreurs fréquentes en cartographie web", level: "superieur" },
+  { type: "heading", text: "13. Erreurs fréquentes en cartographie web", level: "superieur" },
   {
     type: "list",
     items: [
@@ -140,6 +287,8 @@ export const cartographieWebContent: ContentBlock[] = [
       "Charger un fond de tuiles sans citer sa source (attribution obligatoire pour OpenStreetMap et la plupart des fournisseurs, une condition de licence, pas une simple courtoisie)",
       "Solliciter un serveur de tuiles gratuit communautaire à un volume de requêtes dépassant sa politique d'usage prévue, au risque d'un blocage de l'adresse IP du site",
       "Charger un GeoJSON complet et volumineux sans simplification ni découpage, provoquant un ralentissement visible du navigateur plutôt qu'un simple délai réseau",
+      "Confondre les schémas XYZ et TMS (indexation y inversée) lors de la connexion à un ancien serveur de tuiles, ce qui produit une carte retournée par bandes horizontales",
+      "Styliser une information uniquement par la couleur, sans variation de forme ni de motif, la rendant ambiguë ou invisible pour une partie des utilisateurs daltoniens",
     ],
   },
   {

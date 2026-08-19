@@ -19,6 +19,7 @@ const ReferencesPage = lazy(() => import("@/pages/ReferencesPage").then((m) => (
 const QuizPage = lazy(() => import("@/pages/QuizPage").then((m) => ({ default: m.QuizPage })))
 const PrintCourse = lazy(() => import("@/pages/PrintCourse").then((m) => ({ default: m.PrintCourse })))
 const PrintFiche = lazy(() => import("@/pages/PrintFiche").then((m) => ({ default: m.PrintFiche })))
+const PrintQuiz = lazy(() => import("@/pages/PrintQuiz").then((m) => ({ default: m.PrintQuiz })))
 const PiegesPage = lazy(() => import("@/pages/PiegesPage").then((m) => ({ default: m.PiegesPage })))
 const FormulairePage = lazy(() => import("@/pages/FormulairePage").then((m) => ({ default: m.FormulairePage })))
 const DatasetPage = lazy(() => import("@/pages/DatasetPage").then((m) => ({ default: m.DatasetPage })))
@@ -99,6 +100,8 @@ function AppShell() {
           <Route path="/module/:slug/quiz" element={<QuizPage />} />
           <Route path="/print/module/:slug" element={<PrintCourse />} />
           <Route path="/print/fiche/:slug" element={<PrintFiche />} />
+          <Route path="/print/quiz/:slug" element={<PrintQuiz corrige={false} />} />
+          <Route path="/print/quiz-corrige/:slug" element={<PrintQuiz corrige={true} />} />
         </Routes>
       </Suspense>
       </main>
