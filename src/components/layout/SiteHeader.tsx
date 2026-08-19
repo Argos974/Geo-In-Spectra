@@ -13,6 +13,7 @@ const DISCIPULUS_SUBNAV = [
   { to: "/discipulus/cours", label: "Cours" },
   { to: "/discipulus/methodes", label: "Méthodes" },
   { to: "/discipulus/progression", label: "Progression" },
+  { to: "/discipulus/revision", label: "Révision" },
 ]
 
 const MAGISTER_SUBNAV = [

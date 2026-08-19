@@ -5,6 +5,7 @@ import { artworks } from "@/data/artworks"
 import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { markVisited } from "@/lib/progress"
+import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
@@ -27,7 +28,7 @@ export function ModulePage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-ink text-parchment gap-4">
         <p className="font-mono text-parchment-dim">Salle introuvable.</p>
-        <Link to="/" className="text-gilt underline">Retour à la galerie</Link>
+        <Link to="/discipulus" className="text-gilt underline">Retour à Discipulus</Link>
       </div>
     )
   }
@@ -37,14 +38,16 @@ export function ModulePage() {
   const prev = modules[index - 1]
   const next = modules[index + 1]
   const numeral = ROOM_NUMERALS[index] ?? String(index + 1)
+  const backTo = moduleTreeRoute(module.slug)
+  const backState = moduleTreeState(module.slug, module.title)
 
   return (
     <div className="print-page min-h-screen bg-ink text-parchment">
       {art && (
         <ArtworkBackdrop art={art} figure={numeral} className="h-[70vh] min-h-[480px] w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-16 max-w-3xl">
-            <Link to="/" className="print:hidden font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
-              ← La galerie
+            <Link to={backTo} state={backState} className="print:hidden font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
+              ← Discipulus
             </Link>
             <p className="font-mono text-[12px] text-gilt mb-3">Salle {numeral}</p>
             <h1 className="font-heading text-4xl md:text-5xl mb-4">{module.title}</h1>

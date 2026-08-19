@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
-import { getProgress, resetProgress, getActivityDates, type ModuleProgress } from "@/lib/progress"
+import { getProgress, resetProgress, getActivityDates, exportProgress, importProgress, type ModuleProgress } from "@/lib/progress"
 import { computeBadges } from "@/lib/badges"
 import { cn } from "@/lib/utils"
 import { CompetencyRadar } from "@/components/progression/CompetencyRadar"
@@ -19,14 +19,50 @@ import { BadgeList } from "@/components/progression/BadgeList"
  * par salle : visitée, score au quiz (meilleur essai gardé), exercices
  * consultés. Un signal grossier délibérément — pas un LMS avec suivi fin
  * par séance, juste de quoi voir d'un coup d'œil ce qui reste à faire.
+ * Export/Import JSON (exportProgress/importProgress, lib/progress.ts) seul
+ * moyen de faire suivre ce bilan d'un appareil/navigateur à l'autre, faute
+ * de compte — écrase le bilan local à l'import, ne fusionne pas.
  */
 export function BilanPage() {
   const art = artworks["discipulus-progression"]
   const [progress, setProgress] = useState<Record<string, ModuleProgress>>(() => getProgress())
+  const [importFeedback, setImportFeedback] = useState<"ok" | "error" | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   function handleReset() {
     resetProgress()
     setProgress({})
+  }
+
+  function handleExport() {
+    const blob = new Blob([exportProgress()], { type: "application/json" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = `geo-in-spectra-bilan-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  function handleImportClick() {
+    fileInputRef.current?.click()
+  }
+
+  // Écrase le bilan actuel par le fichier importé — pas de fusion (une fusion
+  // silencieuse entre deux historiques quizHistory/reviewQueue distincts serait
+  // plus trompeuse qu'utile) : le cas d'usage visé est "je change d'appareil",
+  // pas "je combine deux profils".
+  function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ""
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const ok = importProgress(String(reader.result ?? ""))
+      setImportFeedback(ok ? "ok" : "error")
+      if (ok) setProgress(getProgress())
+    }
+    reader.readAsText(file)
   }
 
   const total = modules.length
@@ -49,8 +85,8 @@ export function BilanPage() {
             <h1 className="font-heading text-4xl md:text-5xl mb-4">Progression</h1>
             <p className="font-body italic text-parchment-dim leading-relaxed text-justify border-l-2 border-gilt/30 pl-4">
               Suivi entièrement local : ce bilan est stocké uniquement dans ton navigateur (localStorage), rien
-              n'est envoyé ni conservé ailleurs. Il se réinitialise si tu vides les données du site ou changes de
-              navigateur/appareil.
+              n'est envoyé ni conservé ailleurs. Il se réinitialise si tu vides les données du site — exporte-le
+              (bouton ci-dessous) avant de changer de navigateur/appareil, et réimporte-le une fois là-bas.
             </p>
           </div>
         </ArtworkBackdrop>
@@ -63,7 +99,7 @@ export function BilanPage() {
             <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-1">Avancement global</p>
             <p className="font-heading text-3xl">{overallPct}%</p>
           </div>
-          <div className="print:hidden flex items-center gap-2">
+          <div className="print:hidden flex flex-wrap items-center gap-2">
             <Link
               to="/discipulus/revision"
               className="font-mono text-[10px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
@@ -79,6 +115,21 @@ export function BilanPage() {
             </button>
             <button
               type="button"
+              onClick={handleExport}
+              className="font-mono text-[10px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+            >
+              Exporter (JSON)
+            </button>
+            <button
+              type="button"
+              onClick={handleImportClick}
+              className="font-mono text-[10px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+            >
+              Importer
+            </button>
+            <input ref={fileInputRef} type="file" accept="application/json" onChange={handleImportFile} className="hidden" />
+            <button
+              type="button"
               onClick={handleReset}
               className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:text-oxblood-bright hover:border-oxblood/40 transition-colors"
             >
@@ -86,6 +137,12 @@ export function BilanPage() {
             </button>
           </div>
         </div>
+
+        {importFeedback && (
+          <p className={cn("print:hidden font-mono text-[11px] mb-6 -mt-6", importFeedback === "ok" ? "text-gilt" : "text-oxblood-bright")}>
+            {importFeedback === "ok" ? "Bilan importé avec succès." : "Fichier invalide — import ignoré, ton bilan actuel n'a pas été modifié."}
+          </p>
+        )}
 
         <div className="grid md:grid-cols-2 gap-6 mb-10">
           <CompetencyRadar progress={progress} />

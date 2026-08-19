@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { Link } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
-import { getAllWrongQuestions, clearWrongQuestion } from "@/lib/progress"
+import { getDueReviewQuestions, getReviewQueueSize, advanceReviewBox, resetReviewBox } from "@/lib/progress"
 import { cn } from "@/lib/utils"
 
 interface ReviewItem {
@@ -12,14 +12,16 @@ interface ReviewItem {
 }
 
 /**
- * Révision espacée — rejoue uniquement les questions ratées au moins une fois,
- * tous modules confondus, plutôt qu'un quiz complet par salle (QuizPage).
- * Alimenté par recordWrongQuestion/clearWrongQuestion (lib/progress.ts),
- * appelés depuis QuizPage à chaque réponse.
+ * Révision espacée (Leitner à 5 boîtes) — ne montre que les cartes dues
+ * maintenant (getDueReviewQuestions), tous modules confondus, plutôt qu'un
+ * quiz complet par salle (QuizPage). Une bonne réponse ici monte la carte
+ * d'une boîte et repousse son échéance (advanceReviewBox) au lieu de la
+ * retirer directement — une carte n'est considérée maîtrisée qu'après avoir
+ * dépassé la boîte 5, pas après un seul succès.
  */
 export function RevisionPage() {
   const initialItems = useMemo<ReviewItem[]>(() => {
-    const wrong = getAllWrongQuestions()
+    const wrong = getDueReviewQuestions()
     const items: ReviewItem[] = []
     for (const [slug, indices] of Object.entries(wrong)) {
       const module = modules.find((m) => m.slug === slug)
@@ -55,7 +57,8 @@ export function RevisionPage() {
   function choose(i: number) {
     if (selected !== null || !current || !question || !shuffled) return
     setSelected(i)
-    if (i === shuffled.correctIndex) clearWrongQuestion(current.slug, current.questionIndex)
+    if (i === shuffled.correctIndex) advanceReviewBox(current.slug, current.questionIndex)
+    else resetReviewBox(current.slug, current.questionIndex)
   }
 
   function next() {
@@ -69,15 +72,18 @@ export function RevisionPage() {
   }
 
   if (!current || !question) {
+    const queueSize = getReviewQueueSize()
     return (
       <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
         <div className="mx-auto max-w-2xl text-center">
           <p className="font-mono text-[12px] text-gilt mb-3">Discipulus</p>
           <h1 className="font-heading text-3xl md:text-4xl mb-6">Réviser mes erreurs</h1>
           <p className="text-parchment-dim mb-8">
-            {initialItems.length === 0
-              ? "Aucune question ratée en attente — soit tu n'as encore fait aucun quiz, soit tout est déjà maîtrisé."
-              : "Série terminée : les questions retrouvées correctement viennent de sortir de la file de révision."}
+            {initialItems.length > 0
+              ? "Série terminée : les questions retrouvées correctement viennent de monter d'une boîte et sortent de la file jusqu'à leur prochaine échéance."
+              : queueSize === 0
+                ? "Aucune carte en file — soit tu n'as encore fait aucun quiz, soit tout est déjà maîtrisé (boîte 5 dépassée)."
+                : `Rien à revoir aujourd'hui : ${queueSize} carte${queueSize > 1 ? "s" : ""} en file, mais aucune n'est encore due (répétition espacée, l'échéance dépend de la boîte atteinte).`}
           </p>
           <Link to="/discipulus/progression" className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors">
             ← Retour à Progression

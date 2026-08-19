@@ -24,7 +24,7 @@ export function QuizPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-ink text-parchment gap-4">
         <p className="font-mono text-parchment-dim">Quiz introuvable.</p>
-        <Link to="/" className="text-gilt underline">Retour à la galerie</Link>
+        <Link to="/discipulus" className="text-gilt underline">Retour à Discipulus</Link>
       </div>
     )
   }
