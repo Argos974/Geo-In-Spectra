@@ -33,6 +33,7 @@ const DiscipulusMethodesPage = lazy(() => import("@/pages/DiscipulusMethodesPage
 const MagisterPage = lazy(() => import("@/pages/MagisterPage").then((m) => ({ default: m.MagisterPage })))
 const MagisterCoursPage = lazy(() => import("@/pages/MagisterCoursPage").then((m) => ({ default: m.MagisterCoursPage })))
 const MagisterEvaluationPage = lazy(() => import("@/pages/MagisterEvaluationPage").then((m) => ({ default: m.MagisterEvaluationPage })))
+const MagisterPedagogiePage = lazy(() => import("@/pages/MagisterPedagogiePage").then((m) => ({ default: m.MagisterPedagogiePage })))
 const RessourcesPage = lazy(() => import("@/pages/RessourcesPage").then((m) => ({ default: m.RessourcesPage })))
 const ProgrammePage = lazy(() => import("@/pages/ProgrammePage").then((m) => ({ default: m.ProgrammePage })))
 const RecherchePage = lazy(() => import("@/pages/RecherchePage").then((m) => ({ default: m.RecherchePage })))
@@ -79,6 +80,7 @@ function AppShell() {
           <Route path="/magister/cours" element={<MagisterCoursPage />} />
           <Route path="/magister/programme" element={<ProgrammePage />} />
           <Route path="/magister/evaluation" element={<MagisterEvaluationPage />} />
+          <Route path="/magister/pedagogie" element={<MagisterPedagogiePage />} />
           <Route path="/ressources" element={<RessourcesPage />} />
           <Route path="/recherche" element={<RecherchePage />} />
           <Route path="/module/:slug" element={<ModulePage />} />

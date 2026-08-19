@@ -1,15 +1,17 @@
 import { useState } from "react"
 import type { QuizQuestion } from "@/data/quizzes/types"
+import { recordWrongQuestion, clearWrongQuestion } from "@/lib/progress"
 import { cn } from "@/lib/utils"
 
 /**
  * QCM d'entraînement au format, embarqué directement dans une section
- * d'Annales — pas de route dédiée, pas de suivi dans progress.ts (ce n'est
- * pas un module) : une simple boîte repliable, cohérente avec le reste de la
- * page (liens externes), pour vérifier sa posture méthodologique sans quitter
- * la page ni prétendre reproduire une vraie épreuve.
+ * d'Annales — pas de route dédiée, mais suit bien dans progress.ts via
+ * `reviewKey` (clé annalesQuiz, ex. "capes-agregation" — jamais un slug de
+ * module) : une question ratée ici doit revenir en mode Révision comme une
+ * question ratée en quiz de salle, sinon elle s'oublie sans repasser (trou
+ * corrigé — voir resolveReviewSource pour le pendant lecture côté RevisionPage).
  */
-export function AnnalesPracticeQuiz({ questions }: { questions: QuizQuestion[] }) {
+export function AnnalesPracticeQuiz({ questions, reviewKey }: { questions: QuizQuestion[]; reviewKey: string }) {
   const [open, setOpen] = useState(false)
   const [index, setIndex] = useState(0)
   const [selected, setSelected] = useState<number | null>(null)
@@ -33,7 +35,12 @@ export function AnnalesPracticeQuiz({ questions }: { questions: QuizQuestion[] }
   function choose(i: number) {
     if (selected !== null) return
     setSelected(i)
-    if (i === q.correctIndex) setScore((s) => s + 1)
+    if (i === q.correctIndex) {
+      setScore((s) => s + 1)
+      clearWrongQuestion(reviewKey, index)
+    } else {
+      recordWrongQuestion(reviewKey, index)
+    }
   }
 
   function next() {

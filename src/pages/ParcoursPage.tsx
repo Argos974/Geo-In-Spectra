@@ -1,43 +1,11 @@
-import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { PARCOURS, type Parcours } from "@/data/parcours"
+import { PARCOURS } from "@/data/parcours"
 import { startParcours } from "@/lib/activeParcours"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
-import { getProgress, type ModuleProgress } from "@/lib/progress"
-
-/** Extrait les slugs de module réellement traversés par un parcours, à partir de ses stops. */
-function parcoursModuleSlugs(p: Parcours): string[] {
-  const slugs = new Set<string>()
-  for (const stop of p.stops) {
-    const m = stop.to.match(/^\/module\/([^/]+)/)
-    if (m) slugs.add(m[1])
-    else if (stop.to === "/discipulus/methodes") slugs.add("methodologie")
-  }
-  return Array.from(slugs)
-}
-
-/** Fraction des salles du parcours déjà visitées — sert à repérer le parcours le plus avancé/pertinent pour cet utilisateur. */
-function overlapScore(p: Parcours, progress: Record<string, ModuleProgress>): number {
-  const slugs = parcoursModuleSlugs(p)
-  if (slugs.length === 0) return 0
-  return slugs.filter((s) => progress[s]?.visited).length / slugs.length
-}
 
 export function ParcoursPage() {
   const navigate = useNavigate()
   const active = useActiveParcours()
-  const [progress] = useState<Record<string, ModuleProgress>>(() => getProgress())
-
-  // Recommandation dérivée de la progression réelle (lib/progress.ts), pas d'un
-  // ordre fixe : le parcours dont le plus de salles ont déjà été visitées est mis
-  // en avant. Si rien n'a encore été visité, "Découverte (lycée)" reste le point
-  // d'entrée par défaut le plus sûr, sans avoir besoin de calculer quoi que ce soit.
-  const anyVisited = Object.values(progress).some((p) => p.visited)
-  const recommendedId = anyVisited
-    ? PARCOURS.map((p) => ({ id: p.id, score: overlapScore(p, progress) }))
-        .filter((s) => s.score > 0)
-        .sort((a, b) => b.score - a.score)[0]?.id
-    : "decouverte-lycee"
 
   function begin(id: string, firstStop: string) {
     startParcours(id)
@@ -62,17 +30,11 @@ export function ParcoursPage() {
         <div className="space-y-10">
           {PARCOURS.map((p) => {
             const isActive = active?.id === p.id
-            const isRecommended = !isActive && p.id === recommendedId
             return (
-              <section key={p.id} className={isActive ? "border border-gilt/50 bg-gilt/[0.04] p-6" : isRecommended ? "border border-lapis/40 bg-lapis/[0.04] p-6" : "border border-gilt/20 p-6"}>
+              <section key={p.id} className={isActive ? "border border-gilt/50 bg-gilt/[0.04] p-6" : "border border-gilt/20 p-6"}>
                 <div className="flex items-start justify-between gap-4 flex-wrap mb-1">
                   <h2 className="font-heading text-2xl text-gilt flex items-center gap-3">
                     {p.title}
-                    {isRecommended && (
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-2 py-0.5">
-                        Recommandé pour toi
-                      </span>
-                    )}
                   </h2>
                   <button
                     type="button"

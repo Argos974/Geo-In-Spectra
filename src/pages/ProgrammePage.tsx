@@ -108,7 +108,7 @@ export function ProgrammePage() {
           <ChapterAccordion
             name="programme-sections"
             title={SECTIONS[1]}
-            subtitle={`Les ${atelierSeances.length} séances de l'Atelier, avec leur niveau et le rendu attendu, dérivé du contenu réel et jamais ressaisi à la main.`}
+            subtitle={`Les ${atelierSeances.length} séances de l'Atelier, avec leur niveau, leur durée indicative et le rendu attendu, dérivé du contenu réel et jamais ressaisi à la main.`}
           >
             <div className="overflow-x-auto border border-gilt/20 bg-canvas">
               <table className="w-full text-sm">
@@ -116,6 +116,7 @@ export function ProgrammePage() {
                   <tr className="bg-ink/40">
                     <th className="text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 text-gilt">Séance</th>
                     <th className="text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 text-gilt whitespace-nowrap">Niveau</th>
+                    <th className="text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 text-gilt whitespace-nowrap">Durée</th>
                     <th className="text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 text-gilt">Salle(s) de référence</th>
                     <th className="text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 text-gilt">Rendu attendu</th>
                   </tr>
@@ -136,6 +137,9 @@ export function ProgrammePage() {
                         </td>
                         <td className="px-4 py-3 align-top text-parchment-dim whitespace-nowrap">
                           {meta?.level ? LEVEL_LABEL[meta.level] : "–"}
+                        </td>
+                        <td className="px-4 py-3 align-top text-parchment-dim whitespace-nowrap">
+                          {s.dureeMin ? `${s.dureeMin} min` : "–"}
                         </td>
                         <td className="px-4 py-3 align-top text-parchment-dim">
                           {s.salles.map((salle) => salle.label).join(" · ")}

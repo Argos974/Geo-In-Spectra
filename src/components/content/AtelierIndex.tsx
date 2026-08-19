@@ -21,8 +21,14 @@ type ViewMode = "pipeline" | "salle"
  * séances (Lycée/Licence-BUT/Master-Recherche), pas un seul programme mixte —
  * sans ce filtre, le plan listerait les 36 séances des trois pistes à la fois,
  * y compris celles que le filtre de niveau masque déjà plus bas dans la page.
+ *
+ * `showTeacherMeta` (off par défaut) affiche la durée, le matériel et la note
+ * d'animation de chaque séance (atelierSeances.ts) sous son intitulé — réservé
+ * à MagisterCoursPage, la route publique /module/travaux-pratiques et
+ * Discipulus n'en ont pas besoin (la note d'animation n'a aucun intérêt côté
+ * élève, contrairement au reste du contenu de la séance qui lui est commun).
  */
-export function AtelierIndex({ activeLevels }: { activeLevels: Set<ContentLevel> }) {
+export function AtelierIndex({ activeLevels, showTeacherMeta }: { activeLevels: Set<ContentLevel>; showTeacherMeta?: boolean }) {
   const [mode, setMode] = useState<ViewMode>("pipeline")
   const visibleSeances = useMemo(() => atelierSeances.filter((s) => activeLevels.has(s.level)), [activeLevels])
 
@@ -47,6 +53,34 @@ export function AtelierIndex({ activeLevels }: { activeLevels: Set<ContentLevel>
   }, [visibleSeances])
 
   const rowClass = "w-full flex items-center justify-between gap-4 px-5 py-3 text-left font-heading text-base text-parchment-dim hover:text-gilt hover:bg-gilt/[0.04] transition-colors"
+
+  const seanceByHeading = useMemo(() => new Map(visibleSeances.map((s) => [s.heading, s])), [visibleSeances])
+
+  // Fonction, pas un composant imbriqué : évite un remount de la ligne à chaque
+  // rendu de AtelierIndex (piège classique d'une déclaration de composant dans
+  // le corps d'un autre composant).
+  function renderTeacherMeta(heading: string) {
+    if (!showTeacherMeta) return null
+    const s = seanceByHeading.get(heading)
+    if (!s || (!s.dureeMin && !s.materiel?.length && !s.animation)) return null
+    return (
+      <div className="px-5 pb-3 -mt-2">
+        {(s.dureeMin || s.materiel?.length) && (
+          <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim">
+            {s.dureeMin && <span>⏱ {s.dureeMin} min</span>}
+            {s.dureeMin && s.materiel?.length ? <span className="mx-1.5 text-parchment-dim/50">·</span> : null}
+            {s.materiel?.length ? <span>{s.materiel.join(", ")}</span> : null}
+          </p>
+        )}
+        {s.animation && (
+          <p className="text-[11px] leading-relaxed text-lapis-bright/90 border-l border-lapis/30 pl-2.5 mt-1.5">
+            <span className="font-mono text-[9px] uppercase tracking-wider text-lapis-bright/70 mr-1">Animation ·</span>
+            {s.animation}
+          </p>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="mb-12 border border-gilt/20 bg-canvas print:hidden">
@@ -88,6 +122,7 @@ export function AtelierIndex({ activeLevels }: { activeLevels: Set<ContentLevel>
                     <span>{s.heading}</span>
                     <span className="font-mono text-xs text-gilt/50 shrink-0">→</span>
                   </button>
+                  {renderTeacherMeta(s.heading)}
                 </td>
               </tr>
             ))}
@@ -107,6 +142,7 @@ export function AtelierIndex({ activeLevels }: { activeLevels: Set<ContentLevel>
                           <span>{heading}</span>
                           <span className="font-mono text-xs text-gilt/50 shrink-0">→</span>
                         </button>
+                        {renderTeacherMeta(heading)}
                       </td>
                     </tr>
                   ))}

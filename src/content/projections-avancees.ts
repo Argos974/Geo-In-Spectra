@@ -39,6 +39,11 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "tissot-distortion",
+    caption: "Le même cercle avant projection : une conforme le garde circulaire mais l'exagère en surface vers les hautes latitudes, une équivalente conserve son aire au prix de sa forme.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Une carte du monde en Mercator exagère les hautes latitudes",

@@ -90,6 +90,11 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Le module Les Statistiques pose la structure conceptuelle Risque = Aléa × Enjeux × Vulnérabilité. Appliquée à un risque incendie communal, chaque composante mobilise des méthodes déjà vues séparément dans les salles précédentes, combinées ici pour la première fois dans un même exercice complet.",
   },
+  {
+    type: "diagram",
+    name: "risk-layers",
+    caption: "Trois couches distinctes, jamais confondues : un aléa fort sans aucun enjeu exposé ne produit aucun risque au sens opérationnel.",
+  },
   { type: "game" },
 
   { type: "heading", text: "7. Étude de cas : hiérarchiser un risque incendie à l'échelle communale", level: "approfondissement" },

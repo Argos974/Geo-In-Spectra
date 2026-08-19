@@ -1,13 +1,12 @@
 import { useMemo, useState } from "react"
 import { Link } from "react-router-dom"
-import { modules } from "@/data/modules"
-import { quizzes } from "@/data/quizzes"
 import { getDueReviewQuestions, getReviewQueueSize, advanceReviewBox, resetReviewBox } from "@/lib/progress"
+import { resolveReviewSource } from "@/lib/reviewSource"
 import { cn } from "@/lib/utils"
 
 interface ReviewItem {
   slug: string
-  moduleTitle: string
+  sourceTitle: string
   questionIndex: number
 }
 
@@ -24,11 +23,10 @@ export function RevisionPage() {
     const wrong = getDueReviewQuestions()
     const items: ReviewItem[] = []
     for (const [slug, indices] of Object.entries(wrong)) {
-      const module = modules.find((m) => m.slug === slug)
-      const questions = quizzes[slug]
-      if (!module || !questions) continue
+      const source = resolveReviewSource(slug)
+      if (!source) continue
       for (const i of indices) {
-        if (questions[i]) items.push({ slug, moduleTitle: module.title, questionIndex: i })
+        if (source.questions[i]) items.push({ slug, sourceTitle: source.title, questionIndex: i })
       }
     }
     return items
@@ -39,7 +37,7 @@ export function RevisionPage() {
   const [selected, setSelected] = useState<number | null>(null)
 
   const current = items[pos]
-  const question = current ? quizzes[current.slug]?.[current.questionIndex] : undefined
+  const question = current ? resolveReviewSource(current.slug)?.questions[current.questionIndex] : undefined
 
   // Même raison qu'en QuizPage : ordre mélangé à chaque question pour ne pas
   // laisser la position devenir un repère mémorisable indépendant du contenu.
@@ -100,7 +98,7 @@ export function RevisionPage() {
           ← Progression
         </Link>
 
-        <p className="font-mono text-[12px] text-gilt mt-8">Révision · {current.moduleTitle}</p>
+        <p className="font-mono text-[12px] text-gilt mt-8">Révision · {current.sourceTitle}</p>
         <h1 className="font-heading text-3xl md:text-4xl mt-3 mb-2">Réviser mes erreurs</h1>
         <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-8">
           Question {pos + 1} / {items.length}

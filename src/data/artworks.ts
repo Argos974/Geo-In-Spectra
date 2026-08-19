@@ -147,6 +147,13 @@ export const artworks: Record<string, Artwork> = {
     title: "Le Maître d'école",
     year: "1662",
   },
+  "magister-pedagogie": {
+    src: "/images/gallery/magister-pedagogie-steen-drawing-lesson.jpg",
+    alt: "La Leçon de dessin de Jan Steen, un maître penché sur le dessin d'un jeune élève dans un atelier encombré de moulages en plâtre et d'instruments",
+    artist: "Jan Steen",
+    title: "La Leçon de dessin",
+    year: "vers 1665",
+  },
   ressources: {
     src: "/images/gallery/ressources-francken-cabinet.jpg",
     alt: "Cabinet d'un collectionneur de Frans Francken le Jeune, une pièce couverte de tableaux, coquillages, pièces, fossiles et fleurs classés",

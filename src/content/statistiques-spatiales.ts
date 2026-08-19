@@ -40,6 +40,11 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "lisa-quadrant",
+    caption: "Le nuage de Moran : chaque entité classée selon sa propre valeur et celle de son voisinage — Haut-Haut et Bas-Bas signalent un vrai regroupement, Haut-Bas et Bas-Haut une anomalie locale.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Comparaisons multiples : ne pas lire chaque Iᵢ isolément sans correction",

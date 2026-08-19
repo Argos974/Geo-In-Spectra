@@ -52,6 +52,12 @@ export const basesDonneesSpatialesContent: ContentBlock[] = [
     note: "Sans cet index, toute requête spatiale (ST_Intersects, ST_Contains…) doit comparer la géométrie de chaque ligne une par une avec la géométrie recherchée — un balayage complet de la table, catastrophique en temps au-delà de quelques dizaines de milliers d'entités (voir module Le Compas, section 7).",
   },
 
+  {
+    type: "diagram",
+    name: "spatial-index-tree",
+    caption: "Un index GiST organise les géométries en rectangles englobants imbriqués, structurés en arbre — éliminer vite les candidats impossibles avant de tester la géométrie exacte.",
+  },
+
   { type: "heading", text: "4. Écrire une requête spatiale : jointures et opérateurs", level: "superieur" },
   {
     type: "paragraph",

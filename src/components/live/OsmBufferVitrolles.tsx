@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { VITROLLES_BBOX as BBOX, makeLocalProjector } from "@/lib/vitrollesBbox"
 
-// Emprise exacte du jeu de données canonique (emprise.geojson, séance 1-9 de
-// l'Atelier) — mêmes bornes, pour que l'élève compare directement la même
-// zone en donnée figée (Sentinel-2 du 06/08/2024) et en donnée vivante (OSM,
-// mise à jour en continu par des contributeurs).
-const BBOX = { s: 43.42921, w: 5.21384, n: 43.46083, e: 5.25627 }
+// Mêmes bornes que le jeu de données canonique (voir lib/vitrollesBbox), pour
+// que l'élève compare directement la même zone en donnée figée (Sentinel-2 du
+// 06/08/2024) et en donnée vivante (OSM, mise à jour en continu par des contributeurs).
 // L'instance historique (overpass-api.de) sature régulièrement sous sa propre
 // charge globale (HTTP 504, indépendant de notre requête — vérifié par un
 // appel curl direct pendant le développement de ce composant). maps.mail.ru
@@ -65,6 +64,62 @@ async function fetchCounts(): Promise<{ buildings: number; water: number; roads:
   throw new Error(lastError)
 }
 
+interface OsmWay {
+  points: [number, number][] // [lon, lat]
+}
+
+interface Geometries {
+  buildings: OsmWay[]
+  water: OsmWay[]
+  roads: OsmWay[]
+}
+
+// "out geom;" sur des relations (multipolygones d'eau) ne renvoie pas une
+// géométrie directement exploitable de la même façon qu'un simple way — pour
+// garder le dessin robuste et simple, seules les entités "way" sont
+// géométrisées ici (les relations restent comptées dans fetchCounts ci-dessus,
+// juste pas dessinées) : une simplification documentée, pas un oubli.
+function combinedGeometryQuery(): string {
+  const { s, w, n, e } = BBOX
+  const b = `${s},${w},${n},${e}`
+  return [
+    "[out:json][timeout:25];",
+    `(way["building"](${b});way["natural"="water"](${b});way["highway"](${b}););`,
+    "out geom;",
+  ].join("")
+}
+
+async function fetchGeometries(): Promise<Geometries> {
+  const body = `data=${encodeURIComponent(combinedGeometryQuery())}`
+  let lastError = "erreur inconnue"
+  for (const url of OVERPASS_URLS) {
+    try {
+      const res = await fetch(url, { method: "POST", body, signal: AbortSignal.timeout(20000) })
+      if (!res.ok) {
+        lastError = `HTTP ${res.status}`
+        continue
+      }
+      const json = await res.json()
+      const buildings: OsmWay[] = []
+      const water: OsmWay[] = []
+      const roads: OsmWay[] = []
+      for (const el of json.elements ?? []) {
+        if (el.type !== "way" || !Array.isArray(el.geometry)) continue
+        const points: [number, number][] = el.geometry.filter((p: unknown) => p != null).map((p: { lon: number; lat: number }) => [p.lon, p.lat])
+        if (points.length < 2) continue
+        const tags = el.tags ?? {}
+        if (tags.building) buildings.push({ points })
+        else if (tags.natural === "water") water.push({ points })
+        else if (tags.highway) roads.push({ points })
+      }
+      return { buildings, water, roads }
+    } catch (err) {
+      lastError = err instanceof Error ? err.message : "erreur réseau"
+    }
+  }
+  throw new Error(lastError)
+}
+
 /**
  * Interroge en direct l'API Overpass (OpenStreetMap) sur l'emprise exacte du
  * jeu de données canonique — publique, sans clé, CORS activé. Les nombres
@@ -73,8 +128,22 @@ async function fetchCounts(): Promise<{ buildings: number; water: number; roads:
  * contributeurs. C'est le point pédagogique de l'exercice, pas une gêne —
  * voir la consigne sous le composant.
  */
+const MAP_SIZE = 640
+
 export function OsmBufferVitrolles() {
   const [state, setState] = useState<{ status: "loading" | "error" | "done"; counts?: Counts; error?: string }>({ status: "loading" })
+  const [mapState, setMapState] = useState<{ status: "idle" | "loading" | "error" | "done"; geometries?: Geometries; error?: string }>({ status: "idle" })
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  async function loadMap() {
+    setMapState({ status: "loading" })
+    try {
+      const geometries = await fetchGeometries()
+      setMapState({ status: "done", geometries })
+    } catch (err) {
+      setMapState({ status: "error", error: err instanceof Error ? err.message : "erreur réseau" })
+    }
+  }
 
   async function load(force = false) {
     if (!force) {
@@ -107,9 +176,46 @@ export function OsmBufferVitrolles() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- charge des données au montage, pas une valeur dérivée du rendu
     load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  useEffect(() => {
+    if (mapState.status !== "done" || !mapState.geometries || !canvasRef.current) return
+    const canvas = canvasRef.current
+    canvas.width = MAP_SIZE
+    canvas.height = MAP_SIZE
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+    const project = makeLocalProjector(BBOX, MAP_SIZE, MAP_SIZE)
+
+    ctx.fillStyle = "rgb(13 14 18)"
+    ctx.fillRect(0, 0, MAP_SIZE, MAP_SIZE)
+
+    function drawWays(ways: OsmWay[], fillStyle: string | null, strokeStyle: string, lineWidth: number) {
+      for (const way of ways) {
+        ctx!.beginPath()
+        way.points.forEach(([lon, lat], i) => {
+          const [x, y] = project(lon, lat)
+          if (i === 0) ctx!.moveTo(x, y)
+          else ctx!.lineTo(x, y)
+        })
+        if (fillStyle) {
+          ctx!.fillStyle = fillStyle
+          ctx!.fill()
+        }
+        ctx!.strokeStyle = strokeStyle
+        ctx!.lineWidth = lineWidth
+        ctx!.stroke()
+      }
+    }
+
+    // Ordre de dessin : eau (fond), puis routes, puis bâtiments par-dessus —
+    // même hiérarchie visuelle qu'une carte topographique classique.
+    drawWays(mapState.geometries.water, "rgba(63,80,102,0.55)", "rgba(150,175,205,0.7)", 1)
+    drawWays(mapState.geometries.roads, null, "rgba(168,159,140,0.55)", 1)
+    drawWays(mapState.geometries.buildings, "rgba(184,147,79,0.35)", "rgba(217,180,106,0.6)", 0.75)
+  }, [mapState])
 
   return (
     <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
@@ -147,12 +253,50 @@ export function OsmBufferVitrolles() {
               </tr>
             </tbody>
           </table>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-6">
             <p className="font-mono text-[10px] text-parchment-dim/80">Interrogé le {state.counts.fetchedAt}</p>
             <button type="button" onClick={() => load(true)} className="font-mono text-[10px] uppercase tracking-wider text-gilt/70 hover:text-gilt transition-colors">
               ↻ Rafraîchir
             </button>
           </div>
+
+          {mapState.status === "idle" && (
+            <button
+              type="button"
+              onClick={loadMap}
+              className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-1.5 hover:bg-gilt/10 transition-colors"
+            >
+              Afficher la carte (géométries OSM réelles) →
+            </button>
+          )}
+
+          {mapState.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Récupération des géométries (bâtiments, routes, eau)…</p>}
+
+          {mapState.status === "error" && (
+            <div>
+              <p className="font-mono text-sm text-oxblood-bright mb-3">Échec de la requête géométrie ({mapState.error}).</p>
+              <button type="button" onClick={loadMap} className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-1.5 hover:bg-gilt/10 transition-colors">
+                Réessayer
+              </button>
+            </div>
+          )}
+
+          {mapState.status === "done" && mapState.geometries && (
+            <div>
+              <canvas ref={canvasRef} className="w-full h-auto border border-gilt/15 bg-ink" />
+              <div className="flex flex-wrap gap-4 mt-3 font-mono text-[10px] text-parchment-dim">
+                <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 bg-lapis/60 border border-lapis-bright/60" /> Eau ({mapState.geometries.water.length})</span>
+                <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-0.5 bg-parchment-dim" /> Routes ({mapState.geometries.roads.length})</span>
+                <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 bg-gilt/40 border border-gilt-bright/60" /> Bâtiments ({mapState.geometries.buildings.length})</span>
+              </div>
+              <p className="font-mono text-[10px] text-parchment-dim/70 mt-3 text-justify">
+                Chaque forme est un contour réel dessiné par un contributeur OSM (VGI), pas une donnée nettoyée
+                pour l'affichage : des bâtiments manquants, désalignés ou mal fermés sont normaux et font partie
+                de ce que « donnée vivante » veut dire — comparer avec la précision du bâti visible sur la
+                planche Sentinel-2 ci-dessus (module Indices spectraux) est un bon exercice.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

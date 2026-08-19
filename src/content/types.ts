@@ -19,6 +19,7 @@ export type ContentBlock =
   | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "imagepair"; images: [ImagePairItem, ImagePairItem] }
   | { type: "marginnote"; title: string; text: string }
-  | { type: "live"; name: "osm-buffer-vitrolles"; caption?: string }
+  | { type: "live"; name: "osm-buffer-vitrolles" | "raster-explorer" | "grid-choropleth" | "sentinel-swipe"; caption?: string }
+  | { type: "live-game"; name: "draw-operation" }
   | { type: "game" }
   | { type: "devoir"; format: string; title: string; prompt: string; criteria: string[] }

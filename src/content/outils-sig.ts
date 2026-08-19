@@ -51,6 +51,12 @@ export const outilsSigContent: ContentBlock[] = [
   },
   { type: "game" },
 
+  {
+    type: "paragraph",
+    text: "Reconnaître le bon résultat parmi des vignettes (jeu ci-dessus) est une chose ; le construire soi-même en est une autre. L'exercice suivant demande de dessiner directement le résultat de l'opération, sommet par sommet, comparé automatiquement au vrai résultat via l'IoU (Intersection over Union — voir aussi module L'Intelligence).",
+  },
+  { type: "live-game", name: "draw-operation" },
+
   { type: "heading", text: "3. Requêtes attributaires et spatiales" },
   {
     type: "paragraph",
@@ -114,6 +120,11 @@ export const outilsSigContent: ContentBlock[] = [
       "Algèbre raster (map algebra, calculatrice raster) : combine plusieurs rasters pixel à pixel avec des opérations arithmétiques ou logiques : c'est ainsi que se calcule tout indice spectral (NDVI = (NIR−Rouge)/(NIR+Rouge)) directement dans QGIS ou avec GDAL",
       "Analyse de voisinage (focal statistics, filtre à noyau) : recalcule chaque pixel à partir de son voisinage, détaillée dans le module L'Intelligence, qui la relie aux réseaux de neurones convolutifs",
     ],
+  },
+  {
+    type: "live",
+    name: "grid-choropleth",
+    caption: "Planche vivante. Statistiques de zone réelles (résultat de référence de la séance 3 de l'Atelier) : 1122 cellules de 100 m, moyenne NDVI/NDMI/NDBI par cellule.",
   },
   {
     type: "link",

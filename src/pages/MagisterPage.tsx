@@ -24,14 +24,18 @@ export function MagisterPage() {
             autonomes et corrigées, ressources prêtes à l'emploi), pas pour réviser soi-même.
           </p>
 
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <Link to="/magister/cours" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Cours</p>
-              <p className="text-parchment-dim text-sm leading-relaxed">L'Atelier en détail : objectifs, matériel, déroulé et corrigé de chaque séance.</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">L'Atelier en détail : objectifs, matériel, déroulé, corrigé et note d'animation de chaque séance.</p>
             </Link>
             <Link to="/magister/programme" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Programme</p>
               <p className="text-parchment-dim text-sm leading-relaxed">Une progression suggérée reliant Cours, Méthodes et Atelier en séquence enseignable.</p>
+            </Link>
+            <Link to="/magister/pedagogie" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
+              <p className="font-heading text-2xl mb-2">Pédagogie</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">Comment guider l'écriture pendant la séance : séquences d'animation et blocages fréquents, par finalité.</p>
             </Link>
             <Link to="/magister/evaluation" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Évaluation</p>

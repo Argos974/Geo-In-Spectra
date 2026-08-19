@@ -39,6 +39,11 @@ export const lidarContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "lidar-returns",
+    caption: "Un même pulse laser touche la cime, une branche, puis le sol : trois retours distincts d'une seule impulsion.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "\"Voir à travers\" la canopée ne veut pas dire voir le sol partout",

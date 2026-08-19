@@ -30,6 +30,11 @@ export const cartographieWebContent: ContentBlock[] = [
     note: "z=0 → 1 tuile (le monde). z=10 → environ 1 million de tuiles. z=18 → environ 68,7 milliards de tuiles, dont seules quelques dizaines sont chargées pour une vue d'écran donnée.",
   },
   {
+    type: "diagram",
+    name: "tile-pyramid",
+    caption: "Au zoom 0, une seule tuile couvre le monde entier ; chaque niveau supplémentaire multiplie leur nombre par quatre.",
+  },
+  {
     type: "callout",
     tone: "example",
     title: "Identifier une tuile",

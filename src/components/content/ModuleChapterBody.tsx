@@ -26,6 +26,13 @@ interface ModuleChapterBodyProps {
   module: CourseModule
   /** Masque le résumé en tête de corps — utile quand l'appelant (ex. ChapterAccordion) l'affiche déjà comme sous-titre. */
   hideSummary?: boolean
+  /**
+   * Affiche la couche de métadonnées enseignant (durée, matériel) de l'Atelier,
+   * transmise telle quelle à AtelierIndex — sans effet sur les autres modules
+   * (RoomIndex n'en a pas besoin). Off par défaut : MagisterCoursPage seul la
+   * passe à true, ModulePage (route publique) et DiscipulusCoursPage n'y touchent pas.
+   */
+  showTeacherMeta?: boolean
 }
 
 /**
@@ -41,7 +48,7 @@ interface ModuleChapterBodyProps {
  * quand c'est réellement vu — ModulePage/MagisterCoursPage au montage (page dédiée,
  * pas de repli possible), ChapterAccordion à l'ouverture réelle (voir son onOpen).
  */
-export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProps) {
+export function ModuleChapterBody({ module, hideSummary, showTeacherMeta }: ModuleChapterBodyProps) {
   // L'Atelier a trois pistes indépendantes de 12 séances (Lycée/Licence-BUT/
   // Master-Recherche), pas un même contenu simplement stratifié par niveau
   // comme les autres salles : afficher les trois par défaut (ALL_LEVELS)
@@ -160,7 +167,11 @@ export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProp
 
       {module.slug === "travaux-pratiques" && visibleSeanceHeadings.length > 0 && <ChapterNav titles={visibleSeanceHeadings} />}
 
-      {module.slug === "travaux-pratiques" ? <AtelierIndex activeLevels={activeLevels} /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
+      {module.slug === "travaux-pratiques" ? (
+        <AtelierIndex activeLevels={activeLevels} showTeacherMeta={showTeacherMeta} />
+      ) : (
+        filteredBlocks && <RoomIndex blocks={filteredBlocks} />
+      )}
 
       {filteredBlocks ? (
         filteredBlocks.length > 0 ? (

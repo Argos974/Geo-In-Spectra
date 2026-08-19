@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { lazy, Suspense, useState } from "react"
 import { Link } from "react-router-dom"
 import type { ContentBlock } from "@/content/types"
 import { cn } from "@/lib/utils"
@@ -8,6 +8,21 @@ import { OsmBufferVitrolles } from "@/components/live/OsmBufferVitrolles"
 import { GameBlock } from "@/components/content/GameBlock"
 import type { GameDef } from "@/data/games"
 import { linkifyGlossaryTerms } from "@/lib/linkifyGlossaryTerms"
+
+// Chargés à la demande : ces quatre planches embarquent chacune des
+// dépendances lourdes (geotiff.js + ses codecs LERC/ZSTD, turf, proj4 — ~150
+// à 250 ko à elles seules) qui n'ont aucune raison de peser sur CHAQUE page
+// de module (ContentBlocks est le point de rendu commun à toutes les salles)
+// alors qu'une seule salle sur toutes n'en a besoin par planche. OsmBufferVitrolles
+// reste en import direct : pas de dépendance lourde, juste fetch().
+const RasterExplorer = lazy(() => import("@/components/live/RasterExplorer").then((m) => ({ default: m.RasterExplorer })))
+const GridChoropleth = lazy(() => import("@/components/live/GridChoropleth").then((m) => ({ default: m.GridChoropleth })))
+const SentinelSwipe = lazy(() => import("@/components/live/SentinelSwipe").then((m) => ({ default: m.SentinelSwipe })))
+const DrawOperationGame = lazy(() => import("@/components/games/DrawOperationGame").then((m) => ({ default: m.DrawOperationGame })))
+
+function LivePlaceholder({ textDim }: { textDim: string }) {
+  return <p className={cn("font-mono text-sm", textDim)}>Chargement de la planche…</p>
+}
 
 type Variant = "dark" | "print"
 
@@ -141,21 +156,52 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
           case "game":
             return game ? <GameBlock key={i} game={game} isPrint={isPrint} /> : null
 
-          case "live":
-            // Interrogation réseau réelle (API Overpass) : n'a de sens que sur le site
-            // vivant. En export PDF, Playwright génère une page statique hors-ligne —
-            // afficher un état de chargement figé serait trompeur, donc on affiche à la
-            // place un renvoi explicite vers la version web plutôt que de tenter le fetch.
+          case "live": {
+            // Interrogation réseau réelle (API Overpass, GeoTIFF décodé côté client,
+            // catalogue STAC…) : n'a de sens que sur le site vivant. En export PDF,
+            // Playwright génère une page statique hors-ligne — afficher un état de
+            // chargement figé serait trompeur, donc on affiche à la place un renvoi
+            // explicite vers la version web plutôt que de tenter le fetch/décodage.
+            const LIVE_PRINT_LABEL: Record<typeof block.name, string> = {
+              "osm-buffer-vitrolles": "Cette section interroge l'API OpenStreetMap en temps réel, consulter la version web du module pour l'exécuter et voir les nombres actuels.",
+              "raster-explorer": "Cette planche décode le GeoTIFF réel du jeu de données dans le navigateur, consulter la version web du module pour l'explorer pixel par pixel.",
+              "grid-choropleth": "Cette planche affiche la grille 100 m interactive, consulter la version web du module pour cliquer une cellule.",
+              "sentinel-swipe": "Cette planche interroge en direct le catalogue Sentinel-2 (Element84/AWS) pour deux dates réelles, consulter la version web du module pour la voir.",
+            }
+            if (isPrint) {
+              return (
+                <div key={i} className={cn("border p-5 md:p-8 text-sm", border, panelBg)}>
+                  <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-2", accent)}>Donnée interrogée en direct</p>
+                  <p className={textDim}>{LIVE_PRINT_LABEL[block.name]}</p>
+                  {block.caption && <p className={cn("mt-2", textDim)}>{block.caption}</p>}
+                </div>
+              )
+            }
+            return (
+              <div key={i}>
+                {block.name === "osm-buffer-vitrolles" && <OsmBufferVitrolles />}
+                <Suspense fallback={<LivePlaceholder textDim={textDim} />}>
+                  {block.name === "raster-explorer" && <RasterExplorer />}
+                  {block.name === "grid-choropleth" && <GridChoropleth />}
+                  {block.name === "sentinel-swipe" && <SentinelSwipe />}
+                </Suspense>
+                {block.caption && <p className={cn("mt-3 text-sm", textDim)}>{block.caption}</p>}
+              </div>
+            )
+          }
+
+          case "live-game":
             return isPrint ? (
-              <div key={i} className={cn("border p-5 md:p-8 text-sm", border, panelBg)}>
-                <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-2", accent)}>Donnée interrogée en direct</p>
-                <p className={textDim}>Cette section interroge l'API OpenStreetMap en temps réel, consulter la version web du module pour l'exécuter et voir les nombres actuels.</p>
-                {block.caption && <p className={cn("mt-2", textDim)}>{block.caption}</p>}
+              <div key={i} className={cn("border-2 p-5 md:p-6", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
+                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>À toi de jouer</p>
+                <p className={textDim}>Exercice interactif de dessin, à faire sur la version web du site.</p>
               </div>
             ) : (
-              <div key={i}>
-                <OsmBufferVitrolles />
-                {block.caption && <p className={cn("mt-3 text-sm", textDim)}>{block.caption}</p>}
+              <div key={i} className="border-2 border-oxblood/40 bg-oxblood/[0.06] p-5 md:p-6">
+                <p className="font-mono text-[11px] uppercase tracking-wider mb-3 text-oxblood-bright">À toi de jouer</p>
+                <Suspense fallback={<LivePlaceholder textDim={textDim} />}>
+                  {block.name === "draw-operation" && <DrawOperationGame />}
+                </Suspense>
               </div>
             )
 

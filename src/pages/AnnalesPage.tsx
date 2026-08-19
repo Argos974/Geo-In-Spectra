@@ -144,7 +144,7 @@ export function AnnalesPage() {
                   </li>
                 ))}
               </ul>
-              {annalesQuiz[g.quizKey] && <AnnalesPracticeQuiz questions={annalesQuiz[g.quizKey]} />}
+              {annalesQuiz[g.quizKey] && <AnnalesPracticeQuiz questions={annalesQuiz[g.quizKey]} reviewKey={g.quizKey} />}
             </section>
           ))}
         </div>

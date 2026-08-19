@@ -32,6 +32,11 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "flight-overlap",
+    caption: "Un plan de vol en bandes parallèles : recouvrement longitudinal entre photos consécutives, recouvrement latéral entre bandes adjacentes.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Un recouvrement insuffisant ne se voit qu'après coup",

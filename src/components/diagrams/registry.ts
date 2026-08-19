@@ -13,6 +13,13 @@ import { SpectralSignatures } from "./SpectralSignatures"
 import { DissertationPlan } from "./DissertationPlan"
 import { IoUDiagram } from "./IoUDiagram"
 import { VariogramDiagram } from "./VariogramDiagram"
+import { LidarReturns } from "./LidarReturns"
+import { SpatialIndexTree } from "./SpatialIndexTree"
+import { LisaQuadrant } from "./LisaQuadrant"
+import { TissotDistortion } from "./TissotDistortion"
+import { TilePyramid } from "./TilePyramid"
+import { FlightOverlap } from "./FlightOverlap"
+import { RiskLayers } from "./RiskLayers"
 
 export const diagramRegistry = {
   "coordinate-systems": { Component: CoordinateSystems, plate: "I" },
@@ -30,6 +37,13 @@ export const diagramRegistry = {
   "dissertation-plan": { Component: DissertationPlan, plate: "XIII" },
   "iou": { Component: IoUDiagram, plate: "XIV" },
   "variogram": { Component: VariogramDiagram, plate: "XV" },
+  "lidar-returns": { Component: LidarReturns, plate: "XVI" },
+  "spatial-index-tree": { Component: SpatialIndexTree, plate: "XVII" },
+  "lisa-quadrant": { Component: LisaQuadrant, plate: "XVIII" },
+  "tissot-distortion": { Component: TissotDistortion, plate: "XIX" },
+  "tile-pyramid": { Component: TilePyramid, plate: "XX" },
+  "flight-overlap": { Component: FlightOverlap, plate: "XXI" },
+  "risk-layers": { Component: RiskLayers, plate: "XXII" },
 } as const
 
 export type DiagramName = keyof typeof diagramRegistry

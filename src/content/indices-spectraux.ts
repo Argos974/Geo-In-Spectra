@@ -155,6 +155,16 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   },
   { type: "game" },
 
+  {
+    type: "paragraph",
+    text: "Les cinq formules ci-dessus restent abstraites tant qu'on ne les a pas vues s'appliquer à de vrais pixels. La planche suivante décode dans le navigateur les 6 bandes réelles du jeu de données canonique (voir Ressources → Jeux de données) : cliquer un pixel calcule NDVI, NDMI, NDBI, NDRE ou NDWI en direct à partir de sa réflectance réelle, formule affichée avec les vraies valeurs plutôt qu'un exemple générique.",
+  },
+  {
+    type: "live",
+    name: "raster-explorer",
+    caption: "Planche vivante. Mêmes bandes, mêmes formules que ci-dessus, appliquées pixel par pixel à la scène Sentinel-2 réelle de Vitrolles.",
+  },
+
   { type: "heading", text: "7. Des indices simples aux indices composés", level: "lycee" },
   {
     type: "paragraph",

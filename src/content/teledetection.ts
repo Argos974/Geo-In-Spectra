@@ -165,6 +165,16 @@ export const teledetectionContent: ContentBlock[] = [
   },
   { type: "game" },
 
+  {
+    type: "paragraph",
+    text: "La résolution temporelle n'a d'intérêt que si elle sert à voir un changement réel. La planche suivante interroge en direct le catalogue public Sentinel-2 (même source qu'utilisée pour construire le jeu de données canonique du site) et compare deux vraies acquisitions de la même emprise, été et hiver.",
+  },
+  {
+    type: "live",
+    name: "sentinel-swipe",
+    caption: "Planche vivante. NDVI recalculé en direct sur deux acquisitions Sentinel-2 réelles, même emprise que le jeu de données canonique.",
+  },
+
   { type: "heading", text: "7. Architecture d'un capteur : push-broom vs whisk-broom", level: "approfondissement" },
   {
     type: "comparison",

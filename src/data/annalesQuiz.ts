@@ -8,6 +8,13 @@ import type { QuizQuestion } from "@/data/quizzes/types"
  * contenu factuel daté (durées, coefficients…) qui changerait d'une session
  * à l'autre et que ce site n'a aucun moyen de garantir à jour.
  */
+/** Titre affiché en mode Révision (RevisionPage) pour chaque quizKey — AnnalesPage.tsx a déjà ces titres dans GROUPS, dupliqués ici en version courte plutôt que ré-exportés depuis la page, pour ne pas faire dépendre progress/révision d'un composant de page. */
+export const annalesQuizTitles: Record<string, string> = {
+  "capes-agregation": "Annales · CAPES / Agrégation",
+  "bts-mgtmn": "Annales · BTS MGTMN",
+  "concours-territoriaux": "Annales · Concours territoriaux",
+}
+
 export const annalesQuiz: Record<string, QuizQuestion[]> = {
   "capes-agregation": [
     {

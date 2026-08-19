@@ -42,7 +42,7 @@ export function MagisterCoursPage() {
       )}
 
       <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
-        <ModuleChapterBody module={atelier} />
+        <ModuleChapterBody module={atelier} showTeacherMeta />
       </div>
     </div>
   )

@@ -77,7 +77,14 @@ export function Home() {
             </Link>
           </div>
 
-          <p className="text-center mt-10 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70">
+          <p className="text-center mt-10 font-mono text-[11px] uppercase tracking-wider text-gilt">
+            Pas sûr par où commencer ?{" "}
+            <Link to="/parcours" className="text-gilt hover:text-gilt-bright transition-colors underline underline-offset-2">
+              Voir les parcours conseillés (du premier contact à l'approfondissement) →
+            </Link>
+          </p>
+
+          <p className="text-center mt-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70">
             Ni l'un ni l'autre ?{" "}
             <Link to="/ressources" className="text-gilt hover:text-gilt-bright transition-colors underline underline-offset-2">
               Glossaire, références, jeux de données →

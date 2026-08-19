@@ -25,11 +25,20 @@ export function ExercisesPage() {
     )
   }
 
-  const blocks: ContentBlock[] = set.exercises.flatMap((ex, i): ContentBlock[] => [
-    { type: "heading", text: `Exercice ${i + 1}` },
-    { type: "paragraph", text: ex.prompt },
-    { type: "solution", title: `Exercice ${i + 1}`, text: ex.solutionText, items: ex.solutionItems },
-  ])
+  const blocks: ContentBlock[] = set.exercises.flatMap((ex, i): ContentBlock[] => {
+    const parts: ContentBlock[] = [
+      { type: "heading", text: `Exercice ${i + 1}` },
+      { type: "paragraph", text: ex.prompt },
+    ]
+    if (ex.formula) {
+      parts.push({ type: "formula", label: ex.formula.label, formula: ex.formula.formula, note: ex.formula.note })
+    }
+    if (ex.dataset) {
+      parts.push({ type: "table", headers: ex.dataset.headers, rows: ex.dataset.rows })
+    }
+    parts.push({ type: "solution", title: `Exercice ${i + 1}`, text: ex.solutionText, items: ex.solutionItems })
+    return parts
+  })
 
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
