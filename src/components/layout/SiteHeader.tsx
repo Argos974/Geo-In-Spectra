@@ -19,6 +19,7 @@ const DISCIPULUS_SUBNAV = [
 const MAGISTER_SUBNAV = [
   { to: "/magister/cours", label: "Cours" },
   { to: "/magister/programme", label: "Programme" },
+  { to: "/magister/pedagogie", label: "Pédagogie" },
   { to: "/magister/evaluation", label: "Évaluation" },
 ]
 
