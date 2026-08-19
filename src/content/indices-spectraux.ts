@@ -193,9 +193,9 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   },
   {
     type: "link",
-    to: "/module/traitements-ia",
-    label: "Continuer : du pixel isolé au voisinage, jusqu'à la classification",
-    description: "Le module L'Intelligence prend le relais à partir d'ici : filtres à noyau, classification supervisée/non supervisée, deep learning.",
+    to: "/module/travaux-pratiques",
+    label: "Pratiquer : du calcul de NDVI à l'indice composé",
+    description: "La séance 3 de l'Atelier calcule un NDVI réel, puis compose un ΔNDVI multi-dates à partir de ce que ce module vient de présenter.",
   },
 
   { type: "heading", text: "9. Signatures spectrales comparées", level: "superieur" },
@@ -286,8 +286,8 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   },
   {
     type: "link",
-    to: "/module/travaux-pratiques",
-    label: "Pratiquer : du calcul de NDVI à l'indice composé",
-    description: "La séance 3 de l'Atelier calcule un NDVI réel, puis compose un ΔNDVI multi-dates à partir de ce que ce module vient de présenter.",
+    to: "/module/traitements-ia",
+    label: "Continuer : du pixel isolé au voisinage, jusqu'à la classification",
+    description: "Le module L'Intelligence prend le relais à partir d'ici : filtres à noyau, classification supervisée/non supervisée, deep learning.",
   },
 ]

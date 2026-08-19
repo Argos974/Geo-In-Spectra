@@ -7,7 +7,7 @@ const curves: { label: string; d: string; dash?: string }[] = [
 
 export function SpectralSignatures() {
   return (
-    <svg viewBox="0 0 560 260" className="w-full h-auto" role="img" aria-label="Signatures spectrales comparées de la végétation, de l'eau, du sol nu et du bâti">
+    <svg viewBox="0 0 560 285" className="w-full h-auto" role="img" aria-label="Signatures spectrales comparées de la végétation, de l'eau, du sol nu et du bâti">
       <g stroke="currentColor" fill="none" strokeWidth="1">
         <line x1="40" y1="30" x2="40" y2="220" strokeWidth="1.2" />
         <line x1="40" y1="220" x2="520" y2="220" strokeWidth="1.2" />
@@ -19,9 +19,20 @@ export function SpectralSignatures() {
         <text x="280" y="245" fontSize="10" textAnchor="middle" letterSpacing="1">LONGUEUR D'ONDE →</text>
         <text x="20" y="30" fontSize="10" textAnchor="end">100%</text>
         <text x="20" y="224" fontSize="10" textAnchor="end">0%</text>
-        {curves.map((c, i) => (
-          <text key={c.label} x={555} y={18 + i * 13} fontSize="10" textAnchor="end">{c.label}</text>
-        ))}
+      </g>
+      {/* Légende : chaque étiquette porte l'échantillon de trait (plein/pointillé)
+          de sa courbe, seul repère visuel qui les distingue (rendu monochrome
+          currentColor) — sans ça rien ne relie "Végétation" à sa courbe. */}
+      <g fontFamily="'IBM Plex Mono', monospace" fontSize="10">
+        {curves.map((c, i) => {
+          const x0 = 40 + i * 130
+          return (
+            <g key={c.label}>
+              <line x1={x0} y1="270" x2={x0 + 26} y2="270" stroke="currentColor" strokeWidth="1.6" strokeDasharray={c.dash} />
+              <text x={x0 + 32} y="273" fill="currentColor" stroke="none" textAnchor="start">{c.label}</text>
+            </g>
+          )
+        })}
       </g>
     </svg>
   )
