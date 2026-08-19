@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 import { cn } from "@/lib/utils"
-import { recordQuizScore } from "@/lib/progress"
+import { recordQuizScore, recordWrongQuestion, clearWrongQuestion } from "@/lib/progress"
+import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 
 export function QuizPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -14,6 +15,10 @@ export function QuizPage() {
   const [selected, setSelected] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [done, setDone] = useState(false)
+  // Incrémenté à chaque "Recommencer" pour forcer un nouveau tirage même sur
+  // la question 0 (sinon useMemo, indexé sur `index` seul, garderait le même
+  // ordre déjà vu à la tentative précédente).
+  const [shuffleSeed, setShuffleSeed] = useState(0)
 
   if (!module || !questions) {
     return (
@@ -27,11 +32,31 @@ export function QuizPage() {
   const quizQuestions = questions
   const q = quizQuestions[index]
   const moduleSlug = module.slug
+  const backTo = moduleTreeRoute(moduleSlug)
+  const backState = moduleTreeState(moduleSlug, module.title)
+
+  // Ordre des choix mélangé à chaque question (et à chaque "Recommencer") —
+  // sinon la bonne réponse reste sur le même index d'une lecture à l'autre et
+  // devient un repère de position mémorisable indépendamment du contenu.
+  const shuffled = useMemo(() => {
+    const order = q.choices.map((_, i) => i)
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[order[i], order[j]] = [order[j], order[i]]
+    }
+    return { choices: order.map((i) => q.choices[i]), correctIndex: order.indexOf(q.correctIndex) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [index, shuffleSeed, q])
 
   function choose(i: number) {
     if (selected !== null) return
     setSelected(i)
-    if (i === q.correctIndex) setScore((s) => s + 1)
+    if (i === shuffled.correctIndex) {
+      setScore((s) => s + 1)
+      clearWrongQuestion(moduleSlug, index)
+    } else {
+      recordWrongQuestion(moduleSlug, index)
+    }
   }
 
   function next() {
@@ -49,12 +74,13 @@ export function QuizPage() {
     setSelected(null)
     setScore(0)
     setDone(false)
+    setShuffleSeed((s) => s + 1)
   }
 
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-2xl">
-        <Link to={`/module/${module.slug}`} className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
+        <Link to={backTo} state={backState} className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
           ← {module.title}
         </Link>
 
@@ -82,7 +108,8 @@ export function QuizPage() {
                 Recommencer
               </button>
               <Link
-                to={`/module/${module.slug}`}
+                to={backTo}
+                state={backState}
                 className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim hover:text-gilt transition-colors"
               >
                 Retour à la salle
@@ -97,8 +124,8 @@ export function QuizPage() {
             <p className="font-heading text-xl mb-6">{q.question}</p>
 
             <div className="space-y-3 mb-6">
-              {q.choices.map((choice, i) => {
-                const isCorrect = i === q.correctIndex
+              {shuffled.choices.map((choice, i) => {
+                const isCorrect = i === shuffled.correctIndex
                 const isSelected = i === selected
                 const revealed = selected !== null
                 return (

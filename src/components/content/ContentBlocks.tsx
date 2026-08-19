@@ -7,6 +7,7 @@ import { Diagram } from "@/components/diagrams"
 import { OsmBufferVitrolles } from "@/components/live/OsmBufferVitrolles"
 import { GameBlock } from "@/components/content/GameBlock"
 import type { GameDef } from "@/data/games"
+import { linkifyGlossaryTerms } from "@/lib/linkifyGlossaryTerms"
 
 type Variant = "dark" | "print"
 
@@ -100,7 +101,7 @@ function SolutionBlock({
   )
 }
 
-export function ContentBlocks({ blocks, variant = "dark", game }: { blocks: ContentBlock[]; variant?: Variant; game?: GameDef }) {
+export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { blocks: ContentBlock[]; variant?: Variant; game?: GameDef; moduleSlug?: string }) {
   const isPrint = variant === "print"
 
   const text = isPrint ? "text-[#2b2116]" : "text-parchment"
@@ -275,7 +276,7 @@ export function ContentBlocks({ blocks, variant = "dark", game }: { blocks: Cont
           case "paragraph":
             return (
               <p key={i} className={cn("leading-relaxed text-justify", textDim)}>
-                {block.text}
+                {isPrint ? block.text : linkifyGlossaryTerms(block.text, moduleSlug)}
               </p>
             )
 

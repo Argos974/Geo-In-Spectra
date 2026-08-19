@@ -25,6 +25,7 @@ const DatasetPage = lazy(() => import("@/pages/DatasetPage").then((m) => ({ defa
 const ParcoursPage = lazy(() => import("@/pages/ParcoursPage").then((m) => ({ default: m.ParcoursPage })))
 const ExercisesPage = lazy(() => import("@/pages/ExercisesPage").then((m) => ({ default: m.ExercisesPage })))
 const BilanPage = lazy(() => import("@/pages/BilanPage").then((m) => ({ default: m.BilanPage })))
+const RevisionPage = lazy(() => import("@/pages/RevisionPage").then((m) => ({ default: m.RevisionPage })))
 const AnnalesPage = lazy(() => import("@/pages/AnnalesPage").then((m) => ({ default: m.AnnalesPage })))
 const DiscipulusPage = lazy(() => import("@/pages/DiscipulusPage").then((m) => ({ default: m.DiscipulusPage })))
 const DiscipulusCoursPage = lazy(() => import("@/pages/DiscipulusCoursPage").then((m) => ({ default: m.DiscipulusCoursPage })))
@@ -89,6 +90,7 @@ function AppShell() {
           <Route path="/jeux-de-donnees" element={<DatasetPage />} />
           <Route path="/parcours" element={<ParcoursPage />} />
           <Route path="/discipulus/progression" element={<BilanPage />} />
+          <Route path="/discipulus/revision" element={<RevisionPage />} />
           <Route path="/bilan" element={<Navigate to="/discipulus/progression" replace />} />
           <Route path="/annales" element={<AnnalesPage />} />
           <Route path="/module/:slug/exercices" element={<ExercisesPage />} />

@@ -8,7 +8,7 @@ import { GalleryFrame } from "@/components/gallery/GalleryFrame"
 import { slugify } from "@/lib/slug"
 import type { ContentBlock } from "@/content/types"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
 /**
  * Mise en page dédiée à l'export PDF — pas la page web avec le chrome masqué :

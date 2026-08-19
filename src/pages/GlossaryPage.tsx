@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { glossary } from "@/data/glossary"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
@@ -17,7 +17,12 @@ function groupByLetter(terms: typeof glossary) {
 
 export function GlossaryPage() {
   const art = artworks["ressources-glossaire"]
-  const [query, setQuery] = useState("")
+  const location = useLocation()
+  // Arrivée depuis un renvoi inline (linkifyGlossaryTerms, dans une salle de
+  // cours) : préremplit la recherche avec le terme exact plutôt que d'exiger
+  // un système d'ancre par terme séparé — le filtre déjà présent ci-dessous
+  // suffit à isoler la bonne définition.
+  const [query, setQuery] = useState(() => (location.state as { prefillQuery?: string } | null)?.prefillQuery ?? "")
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -34,8 +39,8 @@ export function GlossaryPage() {
       {art && (
         <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
-            <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
-              ← La galerie
+            <Link to="/ressources" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
+              ← Ressources
             </Link>
             <p className="font-mono text-[12px] text-gilt mb-3">Annexe</p>
             <h1 className="font-heading text-4xl md:text-5xl">Glossaire</h1>

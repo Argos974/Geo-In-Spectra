@@ -5,6 +5,7 @@ import { exercises } from "@/data/exercises"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import type { ContentBlock } from "@/content/types"
 import { markExercisesVisited } from "@/lib/progress"
+import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 
 export function ExercisesPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -33,7 +34,11 @@ export function ExercisesPage() {
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-4xl">
-        <Link to={`/module/${module.slug}`} className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline">
+        <Link
+          to={moduleTreeRoute(module.slug)}
+          state={moduleTreeState(module.slug, module.title)}
+          className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline"
+        >
           ← {module.title}
         </Link>
 
@@ -41,7 +46,7 @@ export function ExercisesPage() {
         <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">{set.title}</h1>
         <p className="text-parchment-dim text-lg mb-10 text-justify">{set.intro}</p>
 
-        <ContentBlocks blocks={blocks} />
+        <ContentBlocks blocks={blocks} moduleSlug={module.slug} />
       </div>
     </div>
   )

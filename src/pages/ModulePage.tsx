@@ -6,7 +6,7 @@ import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { markVisited } from "@/lib/progress"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
 /**
  * Lien profond / vue autonome d'un module (imprimée, partagée, indexée) — le

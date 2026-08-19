@@ -44,8 +44,8 @@ export function SiteHeader() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink/80 border-b border-gilt/15">
-      <nav className="mx-auto flex max-w-[1800px] items-center justify-between gap-10 px-8 py-4">
-        <Link to="/" className="font-heading text-sm uppercase tracking-[0.28em] text-parchment shrink-0">
+      <nav className="mx-auto flex max-w-[1800px] items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 lg:gap-10 lg:px-8">
+        <Link to="/" className="font-heading text-xs uppercase tracking-[0.14em] text-parchment shrink-0 sm:text-sm sm:tracking-[0.28em]">
           Geo-In<span className="text-gilt">.</span>Spectra
         </Link>
 
@@ -67,7 +67,7 @@ export function SiteHeader() {
           to="/recherche"
           aria-label="Recherche"
           title="Recherche"
-          className={cn("shrink-0 p-1.5 text-parchment-dim hover:text-gilt transition-colors", location.pathname === "/recherche" && "text-gilt")}
+          className={cn("shrink-0 p-1 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors", location.pathname === "/recherche" && "text-gilt")}
         >
           <Search size={18} />
         </Link>
@@ -77,7 +77,7 @@ export function SiteHeader() {
           onClick={toggleTheme}
           aria-label={theme === "dark" ? "Passer au thème clair" : "Passer au thème sombre"}
           title={theme === "dark" ? "Thème clair (lecture en extérieur)" : "Thème sombre"}
-          className="shrink-0 p-1.5 text-parchment-dim hover:text-gilt transition-colors"
+          className="shrink-0 p-1 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors"
         >
           {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
         </button>
@@ -88,7 +88,7 @@ export function SiteHeader() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden p-2 -mr-2 text-parchment hover:text-gilt transition-colors"
+          className="lg:hidden p-1.5 -mr-1 sm:p-2 sm:-mr-2 text-parchment hover:text-gilt transition-colors"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>

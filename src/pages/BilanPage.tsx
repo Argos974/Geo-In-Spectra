@@ -1,11 +1,17 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
-import { getProgress, resetProgress, type ModuleProgress } from "@/lib/progress"
+import { getProgress, resetProgress, getActivityDates, type ModuleProgress } from "@/lib/progress"
+import { computeBadges } from "@/lib/badges"
 import { cn } from "@/lib/utils"
+import { CompetencyRadar } from "@/components/progression/CompetencyRadar"
+import { ActivityHeatmap } from "@/components/progression/ActivityHeatmap"
+import { PersonalGoals } from "@/components/progression/PersonalGoals"
+import { Recommendations } from "@/components/progression/Recommendations"
+import { BadgeList } from "@/components/progression/BadgeList"
 
 /**
  * Bilan cumulé, entièrement local (localStorage, rien n'est envoyé à un
@@ -16,11 +22,7 @@ import { cn } from "@/lib/utils"
  */
 export function BilanPage() {
   const art = artworks["discipulus-progression"]
-  const [progress, setProgress] = useState<Record<string, ModuleProgress>>({})
-
-  useEffect(() => {
-    setProgress(getProgress())
-  }, [])
+  const [progress, setProgress] = useState<Record<string, ModuleProgress>>(() => getProgress())
 
   function handleReset() {
     resetProgress()
@@ -32,9 +34,11 @@ export function BilanPage() {
   const quizDoneCount = modules.filter((m) => progress[m.slug]?.quizScore).length
   const exercisesDoneCount = modules.filter((m) => progress[m.slug]?.exercisesVisited).length
   const overallPct = Math.round(((visitedCount + quizDoneCount + exercisesDoneCount) / (total * 3)) * 100)
+  const activityDates = getActivityDates()
+  const badges = computeBadges(progress)
 
   return (
-    <div className="min-h-screen bg-ink text-parchment">
+    <div className="print-page min-h-screen bg-ink text-parchment">
       {art && (
         <ArtworkBackdrop art={art} figure="XI" className="h-[70vh] min-h-[480px] w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-16 max-w-3xl">
@@ -54,18 +58,46 @@ export function BilanPage() {
 
       <div className="px-6 pt-16 pb-24">
         <div className="mx-auto max-w-4xl">
-        <div className="flex items-center justify-between border border-gilt/20 bg-gilt/[0.04] px-6 py-5 mb-10">
+        <div className="flex flex-wrap items-center justify-between gap-4 border border-gilt/20 bg-gilt/[0.04] px-6 py-5 mb-10">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-1">Avancement global</p>
             <p className="font-heading text-3xl">{overallPct}%</p>
           </div>
-          <button
-            type="button"
-            onClick={handleReset}
-            className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:text-oxblood-bright hover:border-oxblood/40 transition-colors"
-          >
-            Réinitialiser
-          </button>
+          <div className="print:hidden flex items-center gap-2">
+            <Link
+              to="/discipulus/revision"
+              className="font-mono text-[10px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
+            >
+              Réviser mes erreurs
+            </Link>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="font-mono text-[10px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+            >
+              Imprimer / PDF
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:text-oxblood-bright hover:border-oxblood/40 transition-colors"
+            >
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <CompetencyRadar progress={progress} />
+          <div className="flex flex-col gap-6">
+            <ActivityHeatmap activeDates={activityDates} />
+            <Recommendations progress={progress} />
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-10">
+          <BadgeList badges={badges} />
+          <PersonalGoals />
         </div>
 
         <table className="w-full text-sm border border-gilt/20 bg-canvas">
@@ -87,6 +119,26 @@ export function BilanPage() {
                     <Link to={`/module/${m.slug}`} className="text-parchment hover:text-gilt transition-colors">
                       {m.title}
                     </Link>
+                    {m.slug === "travaux-pratiques" && (
+                      <span className="block mt-1">
+                        <Link
+                          to="/magister/cours"
+                          className="inline-block font-mono text-[9px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-1.5 py-0.5 hover:bg-lapis/10 transition-colors"
+                        >
+                          Espace Magister →
+                        </Link>
+                      </span>
+                    )}
+                    {m.slug === "methodologie" && (
+                      <span className="block mt-1">
+                        <Link
+                          to="/discipulus/methodes"
+                          className="inline-block font-mono text-[9px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-1.5 py-0.5 hover:bg-lapis/10 transition-colors"
+                        >
+                          Espace Méthodes →
+                        </Link>
+                      </span>
+                    )}
                   </td>
                   <td className="text-center px-4 py-3">
                     <span className={cn("font-mono", p?.visited ? "text-gilt" : "text-parchment-dim/80")}>{p?.visited ? "✓" : "–"}</span>

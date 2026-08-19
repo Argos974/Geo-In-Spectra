@@ -9,6 +9,8 @@ const GROUP_LABEL: Record<SearchEntry["group"], string> = {
   Glossaire: "Glossaire",
   Jeu: "Jeu",
   Page: "Page",
+  Quiz: "Quiz",
+  Exercice: "Exercice",
 }
 
 /** Mutualisé — recherche texte simple sur tout le contenu indexé (voir lib/searchIndex.ts). */

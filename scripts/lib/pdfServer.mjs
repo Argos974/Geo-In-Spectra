@@ -22,12 +22,19 @@ export const ALL_SLUGS = [
   "traitements-ia",
   "methodologie",
   "travaux-pratiques",
+  "projections-avancees",
+  "cartographie-web",
+  "statistiques-spatiales",
+  "photogrammetrie-drones",
+  "lidar",
+  "bases-donnees-spatiales",
+  "etudes-de-cas-sectorielles",
 ]
 
 // Même numérotation romaine que ROOT_NUMERALS côté React (Home.tsx, ModulePage.tsx) —
 // dupliquée ici pour la même raison que ALL_SLUGS : ces scripts sont du Node autonome,
 // pas de loader TypeScript pour importer depuis src/.
-export const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+export const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
 export function resolveRequestedSlugs() {
   const args = process.argv.slice(2)

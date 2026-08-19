@@ -3,16 +3,10 @@ import { moduleContent } from "@/content"
 import { glossary } from "@/data/glossary"
 import { RESOURCE_LINKS } from "@/data/resourceLinks"
 import { games } from "@/data/games"
+import { quizzes } from "@/data/quizzes"
+import { exercises } from "@/data/exercises"
 import { slugify } from "@/lib/slug"
-
-const COURS_SLUGS = new Set(["fondamentaux", "teledetection", "indices-spectraux", "outils-sig", "traitements-ia"])
-
-function moduleRoute(slug: string): string {
-  if (COURS_SLUGS.has(slug)) return "/discipulus/cours"
-  if (slug === "methodologie") return "/discipulus/methodes"
-  if (slug === "travaux-pratiques") return "/magister/cours"
-  return `/module/${slug}`
-}
+import { COURS_SLUGS, moduleTreeRoute as moduleRoute } from "@/lib/moduleRoute"
 
 export interface SearchEntry {
   label: string
@@ -20,7 +14,7 @@ export interface SearchEntry {
   to: string
   /** id à ouvrir/faire défiler à l'arrivée (voir lib/lenisStore.ts::openAndScrollTo) — omis quand la cible est la page entière, pas une section précise. */
   scrollTo?: string
-  group: "Chapitre" | "Section" | "Glossaire" | "Jeu" | "Page"
+  group: "Chapitre" | "Section" | "Glossaire" | "Jeu" | "Page" | "Quiz" | "Exercice"
 }
 
 /**
@@ -54,10 +48,24 @@ export function buildSearchIndex(): SearchEntry[] {
     // du module, comme n'importe quelle autre section.
     const game = games[m.slug]
     if (game) entries.push({ label: game.title, context: `Jeu : ${m.title}`, to: route, scrollTo: slugify(game.title), group: "Jeu" })
+
+    // Questions de quiz et prompts d'exercices indexés individuellement — auparavant
+    // seuls les titres de chapitre/section étaient cherchables, alors qu'une bonne
+    // partie du contenu réellement testable (les questions elles-mêmes) restait
+    // invisible à la recherche.
+    for (const q of quizzes[m.slug] ?? []) {
+      entries.push({ label: q.question, context: `Quiz : ${m.title}`, to: `/module/${m.slug}/quiz`, group: "Quiz" })
+    }
+    const exerciseSet = exercises[m.slug]
+    if (exerciseSet) {
+      for (const ex of exerciseSet.exercises) {
+        entries.push({ label: ex.prompt, context: `Exercice : ${m.title}`, to: `/module/${m.slug}/exercices`, group: "Exercice" })
+      }
+    }
   }
 
   for (const g of glossary) {
-    entries.push({ label: g.term, context: "Glossaire", to: "/glossaire", group: "Glossaire" })
+    entries.push({ label: g.term, context: g.definition, to: "/glossaire", group: "Glossaire" })
   }
 
   for (const r of RESOURCE_LINKS) {

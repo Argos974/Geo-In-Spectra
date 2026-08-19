@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { annalesQuiz } from "@/data/annalesQuiz"
+import { AnnalesPracticeQuiz } from "@/components/annales/AnnalesPracticeQuiz"
 
 interface AnnaleLink {
   label: string
@@ -13,6 +15,8 @@ interface AnnaleGroup {
   audience: string
   note: string
   links: AnnaleLink[]
+  /** Clé dans annalesQuiz.ts — QCM d'entraînement au format, jamais un sujet réel reproduit. */
+  quizKey: string
 }
 
 /**
@@ -50,6 +54,7 @@ const GROUPS: AnnaleGroup[] = [
         detail: "Exemples de sujets publiés par le ministère pour découvrir le format avant la session réelle.",
       },
     ],
+    quizKey: "capes-agregation",
   },
   {
     title: "BTS Métiers du Géomètre-Topographe et de la Modélisation Numérique",
@@ -72,6 +77,7 @@ const GROUPS: AnnaleGroup[] = [
         detail: "Annales maintenues par l'école d'ingénieurs géomètres-topographes qui recrute sur ce BTS, perspective admission plutôt que seulement diplôme.",
       },
     ],
+    quizKey: "bts-mgtmn",
   },
   {
     title: "Concours administratifs à dimension géomatique (technicien territorial, ingénieur territorial)",
@@ -89,6 +95,7 @@ const GROUPS: AnnaleGroup[] = [
         detail: "Exemple d'archive tenue par un centre de gestion départemental (Haute-Garonne), la spécialité SIG figure parmi les options du concours technicien.",
       },
     ],
+    quizKey: "concours-territoriaux",
   },
 ]
 
@@ -100,8 +107,8 @@ export function AnnalesPage() {
       {art && (
         <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
-            <Link to="/" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
-              ← La galerie
+            <Link to="/ressources" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-4">
+              ← Ressources
             </Link>
             <p className="font-mono text-[12px] text-gilt mb-3">Ressources</p>
             <h1 className="font-heading text-4xl md:text-5xl">Annales de concours</h1>
@@ -137,6 +144,7 @@ export function AnnalesPage() {
                   </li>
                 ))}
               </ul>
+              {annalesQuiz[g.quizKey] && <AnnalesPracticeQuiz questions={annalesQuiz[g.quizKey]} />}
             </section>
           ))}
         </div>

@@ -9,10 +9,23 @@ import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { getProgress, markVisited } from "@/lib/progress"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 
-/** Les 5 salles de savoir (hors La Méthode et l'Atelier, déménagées ailleurs) en chapitres repliables d'une seule page. */
-const COURS_SLUGS = ["fondamentaux", "teledetection", "indices-spectraux", "outils-sig", "traitements-ia"]
+/** Les salles de savoir (hors La Méthode et l'Atelier, déménagées ailleurs) en chapitres repliables d'une seule page. */
+const COURS_SLUGS = [
+  "fondamentaux",
+  "teledetection",
+  "indices-spectraux",
+  "outils-sig",
+  "traitements-ia",
+  "projections-avancees",
+  "cartographie-web",
+  "statistiques-spatiales",
+  "photogrammetrie-drones",
+  "lidar",
+  "bases-donnees-spatiales",
+  "etudes-de-cas-sectorielles",
+]
 
 export function DiscipulusCoursPage() {
   const courseModules = COURS_SLUGS.map((slug) => modules.find((m) => m.slug === slug)).filter((m) => m !== undefined)

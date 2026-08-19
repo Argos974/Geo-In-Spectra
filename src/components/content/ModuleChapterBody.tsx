@@ -8,6 +8,8 @@ import { exercises } from "@/data/exercises"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 import { RoomIndex } from "@/components/content/RoomIndex"
 import { AtelierIndex } from "@/components/content/AtelierIndex"
+import { ChapterNav } from "@/components/content/ChapterNav"
+import { atelierSeances } from "@/data/atelierSeances"
 import { ALL_LEVELS, filterBlocksByLevel } from "@/lib/levelFilter"
 import type { ContentLevel } from "@/content/types"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
@@ -61,6 +63,16 @@ export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProp
   const filteredBlocks = useMemo(
     () => (blocks ? filterBlocksByLevel(blocks, activeLevels) : undefined),
     [blocks, activeLevels],
+  )
+
+  // Mini-nav sticky (ChapterNav) pour l'Atelier, même mécanisme que Cours/Méthodes
+  // (jusque-là seul module de type "Cours" à en être dépourvu) — le "Plan de
+  // l'atelier" (AtelierIndex, juste en dessous) couvre déjà la navigation par
+  // séance en détail, ce ChapterNav ajoute le saut rapide depuis n'importe où
+  // dans la page longue, cohérent avec les autres onglets Cours.
+  const visibleSeanceHeadings = useMemo(
+    () => (module.slug === "travaux-pratiques" ? atelierSeances.filter((s) => activeLevels.has(s.level)).map((s) => s.heading) : []),
+    [module.slug, activeLevels],
   )
 
   function toggleLevel(level: ContentLevel) {
@@ -146,11 +158,13 @@ export function ModuleChapterBody({ module, hideSummary }: ModuleChapterBodyProp
         )}
       </div>
 
+      {module.slug === "travaux-pratiques" && visibleSeanceHeadings.length > 0 && <ChapterNav titles={visibleSeanceHeadings} />}
+
       {module.slug === "travaux-pratiques" ? <AtelierIndex activeLevels={activeLevels} /> : filteredBlocks && <RoomIndex blocks={filteredBlocks} />}
 
       {filteredBlocks ? (
         filteredBlocks.length > 0 ? (
-          <ContentBlocks blocks={filteredBlocks} game={games[module.slug]} />
+          <ContentBlocks blocks={filteredBlocks} game={games[module.slug]} moduleSlug={module.slug} />
         ) : (
           <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
             <p className="font-mono text-sm">Aucun contenu à ce niveau, élargis le filtre ci-dessus.</p>

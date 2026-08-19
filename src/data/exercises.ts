@@ -126,4 +126,130 @@ export const exercises: Record<string, ExerciseSet> = {
       },
     ],
   },
+  "projections-avancees": {
+    title: "Exercices : Les Projections",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Une carte du monde en Mercator est utilisée pour comparer visuellement la taille du Groenland et de l'Afrique. Pourquoi ce n'est pas une comparaison valide ?",
+        solutionText: "Mercator est une projection conforme, pas équivalente : elle préserve les angles/formes locales mais déforme fortement les surfaces, de plus en plus en s'éloignant de l'équateur. Le Groenland y paraît comparable à l'Afrique alors qu'il est environ 14 fois plus petit en réalité. Une projection équivalente est nécessaire pour comparer des surfaces valablement.",
+      },
+      {
+        prompt: "Deux couches SIG semblent décalées d'environ 200 m dans la même direction partout sur la carte, alors qu'elles sont annoncées dans le même système de coordonnées projeté. Quelle est la cause la plus probable, et comment la distinguer d'un problème de projection ?",
+        solutionText: "Probablement une confusion de datum (ex. une couche encore en NTF non transformée vers RGF93/WGS84), pas un problème de projection : un décalage de datum est systématique (même direction, même ampleur partout), alors qu'une déformation de projection varie selon la position sur la carte.",
+      },
+      {
+        prompt: "Pourquoi Lambert-93 n'est-il pas un bon choix pour une carte web mondiale, alors qu'il est excellent pour une carte de France ?",
+        solutionText: "Lambert-93 est calé (parallèles standards 44°N/49°N, méridien central 3°E) spécifiquement pour minimiser la déformation sur l'étendue et la latitude du territoire français. Hors de cette zone, la déformation croît rapidement. Une carte mondiale a besoin d'un système pensé pour le globe entier (Web Mercator pour l'affichage, une projection équivalente pour comparer des surfaces).",
+      },
+    ],
+  },
+  "cartographie-web": {
+    title: "Exercices : Le Web",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Une carte web affiche 4 tuiles au zoom 1. Combien de tuiles couvrent le monde entier au zoom 5 ?",
+        solutionText: "N = 4^z, donc 4^5 = 1024 tuiles au zoom 5. Seule une petite fraction de ces tuiles est chargée à un instant donné, celles correspondant à la zone réellement visible à l'écran.",
+      },
+      {
+        prompt: "Un site affiche un fond de carte via des tuiles vectorielles rendues en WebGL plutôt que des tuiles raster classiques. Quel avantage concret cela apporte-t-il à l'utilisateur ?",
+        solutionText: "Le style de la carte (couleurs, labels affichés, thème clair/sombre) peut changer en temps réel côté client sans redemander de nouvelles images au serveur, et la carte peut s'incliner/pivoter en 3D — impossible avec des tuiles raster déjà dessinées et figées côté serveur.",
+      },
+      {
+        prompt: "Un développeur charge un fichier GeoJSON de 80 000 sommets d'un seul coup sur une carte Leaflet, et la carte devient saccadée même après le chargement complet du fichier. Quelle est la cause, et quelles solutions envisager ?",
+        solutionText: "Le ralentissement vient du rendu (reprojection et dessin de chaque sommet), pas seulement du transfert réseau. Solutions : simplifier la géométrie (Douglas-Peucker), découper la donnée par zone/tuile pour ne charger que la partie visible, ou utiliser du clustering si ce sont des points plutôt que des lignes/polygones complexes.",
+      },
+    ],
+  },
+  "statistiques-spatiales": {
+    title: "Exercices : Les Statistiques",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Un indice de Moran global sur le taux de départs de feu par commune d'un département vaut +0.65, significatif. Le maire d'une commune isolée en zone plutôt calme te demande si sa commune est concernée par un cluster à risque. L'indice global suffit-il à répondre ?",
+        solutionText: "Non : l'indice global de Moran ne dit rien sur la localisation précise des regroupements, seulement qu'il en existe globalement sur le département. Un indicateur local (LISA) ou une statistique Gi* est nécessaire pour savoir si cette commune précise appartient à un cluster (HH), en est à l'écart, ou constitue une anomalie isolée (HL/LH).",
+      },
+      {
+        prompt: "Une carte de densité par noyau (KDE) de départs de feu sur 15 ans affiche une zone rouge vif bien visible. Cette zone représente-t-elle nécessairement une concentration statistiquement anormale de départs de feu ?",
+        solutionText: "Pas nécessairement. Une KDE produit toujours une image visuellement convaincante, même sur des données sans structure réelle : elle décrit une densité observée, sans test de significativité par défaut. Un Gi* sur la même donnée est nécessaire pour vérifier si cette concentration dépasse statistiquement ce qu'on attendrait d'une répartition aléatoire.",
+      },
+      {
+        prompt: "Une régression tentant de prédire la vulnérabilité au feu à partir de variables socio-économiques présente un R² élevé, mais un indice de Moran calculé sur ses résidus est fortement positif et significatif. Que faut-il en conclure sur ce modèle ?",
+        solutionText: "Les résidus ne sont pas indépendants (autocorrélation spatiale résiduelle) : l'hypothèse d'indépendance de la régression classique (OLS) est violée. La significativité statistique des coefficients du modèle est probablement surestimée (intervalles de confiance trop étroits). Un modèle de régression spatiale (retard spatial ou erreur spatiale) serait plus approprié.",
+      },
+    ],
+  },
+  "photogrammetrie-drones": {
+    title: "Exercices : Le Drone",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Un vol de drone est planifié avec seulement 40 % de recouvrement longitudinal pour gagner du temps de batterie. Quel risque cela fait-il courir au traitement final ?",
+        solutionText: "Un recouvrement insuffisant (la norme est 70-80 % longitudinal) risque de laisser des zones du terrain visibles sur une seule photo, jamais sous deux angles différents : ces zones ne peuvent pas être reconstruites en 3D, ce qui se traduit par des trous dans le nuage de points ou l'orthophoto finale, généralement découverts seulement au traitement, trop tard pour corriger sans revoler.",
+      },
+      {
+        prompt: "Un modèle 3D de drone est cohérent en géométrie relative mais mal positionné dans le référentiel Lambert-93 réel. Quelle est la cause la plus probable, et comment la corriger ?",
+        solutionText: "L'absence ou l'insuffisance de points d'appui au sol (GCP) mesurés précisément au GPS. La SfM seule produit une géométrie cohérente entre elle mais pas nécessairement bien calée en position/échelle absolue : des GCP bien répartis sur toute l'emprise du chantier, identifiables sur plusieurs photos, permettent de recaler le modèle sur le référentiel géographique réel.",
+      },
+      {
+        prompt: "Pourquoi un MNT calculé par photogrammétrie de drone au-dessus d'une forêt dense est-il structurellement moins fiable qu'un MNT LiDAR sur la même zone ?",
+        solutionText: "La photogrammétrie est un capteur passif qui ne voit que la première surface opaque rencontrée par la caméra : sous une canopée dense, aucune photo ne voit jamais directement le sol, donc le MNT photogrammétrique n'est qu'une estimation filtrée à partir du MNS. Le LiDAR, capteur actif, laisse une partie de son signal pénétrer entre les feuilles et mesure directement des points au sol (retours multiples), rendant son MNT structurellement plus fiable sous couvert dense.",
+      },
+    ],
+  },
+  lidar: {
+    title: "Exercices : Le LiDAR",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Un pulse LiDAR aller-retour met 6,68 microsecondes à revenir au capteur. Calcule la distance mesurée (c ≈ 3×10⁸ m/s).",
+        solutionText: "d = (c × t) / 2 = (3×10⁸ × 6,68×10⁻⁶) / 2 = 2004 / 2 = 1002 m, soit environ 1000 m — une distance de vol aéroporté classique.",
+      },
+      {
+        prompt: "Un relevé LiDAR annonce une densité de 10 points/m², mais le MNT produit reste lacunaire sous une zone de forêt très dense. Explique cette apparente contradiction.",
+        solutionText: "La densité annoncée (10 points/m²) est presque toujours la densité globale du nuage brut, avant classification. Sous un couvert très dense, très peu de pulses atteignent réellement le sol : la densité de points classés \"sol\" spécifiquement peut être bien plus faible que la densité globale, expliquant un MNT lacunaire malgré une densité annoncée élevée.",
+      },
+      {
+        prompt: "Pourquoi un nuage de points LiDAR brut ne peut-il pas, à lui seul, produire une orthophoto colorée classique ?",
+        solutionText: "Un LiDAR pur mesure une distance et une intensité de retour, pas une couleur RVB : il n'a pas de capteur optique de couleur natif. Produire une orthophoto colorée à partir d'un relevé LiDAR nécessite de fusionner le nuage de points avec des photos prises par une caméra embarquée séparée, plaquées ensuite sur la géométrie mesurée par le laser.",
+      },
+    ],
+  },
+  "bases-donnees-spatiales": {
+    title: "Exercices : La Base",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Une requête ST_Intersects sur une table de 3 millions de parcelles met plusieurs minutes à s'exécuter. Quelle est la première chose à vérifier, et comment ?",
+        solutionText: "Vérifier si un index spatial GiST existe sur la colonne géométrique, et s'il est réellement utilisé, via EXPLAIN ANALYZE : un plan affichant un \"Seq Scan\" (balayage complet de table) plutôt qu'un \"Index Scan\" indique que l'index n'est pas exploité, la cause la plus fréquente d'une requête spatiale anormalement lente sur une grande table.",
+      },
+      {
+        prompt: "Une requête filtre `WHERE ST_Transform(a.geom, 2154) && b.geom`. Pourquoi cette écriture risque-t-elle d'être lente même si un index spatial existe sur a.geom ?",
+        solutionText: "La reprojection ST_Transform est appliquée à la volée, ligne par ligne, dans la clause WHERE : PostgreSQL compare alors une expression calculée à une valeur, ce qui empêche souvent l'utilisation de l'index existant sur la colonne brute. La reprojection devrait être faite une fois, en amont (stockée dans une colonne dédiée ou une vue matérialisée), pas répétée à chaque ligne comparée dans la requête.",
+      },
+      {
+        prompt: "Pourquoi un simple fichier Shapefile ne peut-il pas garantir qu'aucune parcelle cadastrale ne chevauche une autre, contrairement à une base PostGIS avec un schéma topologique ?",
+        solutionText: "Un Shapefile ne vérifie structurellement rien à l'écriture d'une entité : deux parcelles peuvent se chevaucher sans qu'aucune alerte ne soit levée. PostGIS Topology permet de définir des règles de cohérence géométrique (ex. absence de chevauchement) activement vérifiées et maintenues, capables de rejeter une géométrie incohérente dès son enregistrement plutôt que de découvrir le problème des mois plus tard en analyse.",
+      },
+    ],
+  },
+  "etudes-de-cas-sectorielles": {
+    title: "Exercices : Les Secteurs",
+    intro: "Trois questions courtes pour vérifier les bases avant de continuer.",
+    exercises: [
+      {
+        prompt: "Une carte de vigueur agricole en 4 classes est produite à partir d'un unique NDVI Sentinel-2, sans autre donnée. Quelle limite méthodologique cela pose-t-il pour une vraie carte de préconisation ?",
+        solutionText: "Un NDVI isolé ne distingue pas la cause d'une vigueur faible (stress hydrique, carence en azote, maladie, ou simplement un sol naturellement moins profond) : une préconisation agronomique fiable croise le NDVI avec un historique de rendement, une analyse de sol, ou une série temporelle plutôt qu'une image unique.",
+      },
+      {
+        prompt: "Une commune calcule un ΔNDBI entre deux images d'été, dix ans d'écart, et détecte une forte hausse sur une zone qui n'a en réalité connu aucune construction nouvelle. Quelle vérification manquait probablement en amont ?",
+        solutionText: "Vérifier que les deux images sont réellement comparables : même saison (déjà le cas ici), mais surtout correction atmosphérique appliquée aux deux dates et absence de différences d'humidité du sol ou de stress de végétation ponctuel pouvant faire varier le NDBI sans changement réel du bâti. Sans ce contrôle, un artefact radiométrique peut être confondu avec une vraie artificialisation.",
+      },
+      {
+        prompt: "Deux communes voisines, en croisant les mêmes trois couches (aléa, enjeux, vulnérabilité) pour un risque incendie, obtiennent des cartes de priorisation très différentes. Est-ce nécessairement une erreur méthodologique ?",
+        solutionText: "Pas nécessairement : chaque commune peut légitimement pondérer différemment les trois composantes selon son contexte réel (une commune avec beaucoup d'habitat isolé en forêt pondérera davantage la vulnérabilité). Ce qui doit être vérifié, ce n'est pas que les deux cartes soient identiques, mais que chaque pondération soit explicitement documentée et justifiée, condition nécessaire pour auditer ou comparer les deux résultats honnêtement.",
+      },
+    ],
+  },
 }

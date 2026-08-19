@@ -12,6 +12,11 @@ import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { splitIntoChapters, leadingIntro, groupChapters } from "@/lib/chapters"
 import { markVisited } from "@/lib/progress"
 import { openAndScrollTo } from "@/lib/lenisStore"
+import { exercises } from "@/data/exercises"
+import { MethodesActionBar } from "@/components/methodes/MethodesActionBar"
+import { DecisionTree } from "@/components/methodes/DecisionTree"
+import { GuidedCase } from "@/components/methodes/GuidedCase"
+import { SelfCheckList } from "@/components/methodes/SelfCheckList"
 
 /**
  * "La Méthode" (7 sections numérotées) regroupées ici par finalité réelle plutôt
@@ -65,7 +70,11 @@ export function DiscipulusMethodesPage() {
       )}
 
       <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
-        {intro.length > 0 && <ContentBlocks blocks={intro} game={games.methodologie} />}
+        <MethodesActionBar />
+
+        {intro.length > 0 && <ContentBlocks blocks={intro} game={games.methodologie} moduleSlug="methodologie" />}
+
+        <DecisionTree />
 
         <ChapterNav titles={GROUPS.map((g) => g.title)} />
 
@@ -84,10 +93,14 @@ export function DiscipulusMethodesPage() {
                   d'origine (Concours, Professionnel) ; inutile pour un chapitre à une seule
                   section (Scolaire, Recherche), RoomIndex se masque de lui-même sinon. */}
               {(source?.indices.length ?? 0) > 1 && <RoomIndex blocks={g.blocks} />}
-              <ContentBlocks blocks={g.blocks} game={games.methodologie} />
+              <ContentBlocks blocks={g.blocks} game={games.methodologie} moduleSlug="methodologie" />
             </ChapterAccordion>
           )
         })}
+
+        {exercises.methodologie && <GuidedCase set={exercises.methodologie} />}
+
+        <SelfCheckList />
       </div>
     </div>
   )

@@ -3,7 +3,7 @@ import { modules } from "@/data/modules"
 import { ficheContent } from "@/content/fiches"
 import { ContentBlocks } from "@/components/content/ContentBlocks"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
 /**
  * Mise en page dédiée à la fiche mémo, l'essentiel d'une salle condensé sur
