@@ -64,7 +64,7 @@ export function DiscipulusCoursPage() {
             <p className="font-mono text-[12px] text-gilt mb-3">Discipulus</p>
             <h1 className="font-heading text-4xl md:text-5xl mb-4">Cours</h1>
             <p className="font-body italic text-parchment-dim leading-relaxed text-justify border-l-2 border-gilt/30 pl-4">
-              Cinq chapitres, du socle lycée à l'approfondissement. Déplie celui qu'il te faut : les autres se
+              Douze chapitres, du socle lycée à l'approfondissement. Déplie celui qu'il te faut : les autres se
               referment tout seuls, rien à faire défiler en trop.
             </p>
           </div>

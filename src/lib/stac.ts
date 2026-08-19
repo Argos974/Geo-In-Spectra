@@ -1,5 +1,3 @@
-import { VITROLLES_BBOX } from "@/lib/vitrollesBbox"
-
 const STAC_SEARCH_URL = "https://earth-search.aws.element84.com/v1/search"
 
 export interface StacScene {
@@ -16,13 +14,13 @@ interface StacItem {
   assets: Record<string, { href: string }>
 }
 
-async function searchScenes(datetimeRange: string, limit: number): Promise<StacItem[]> {
+async function searchScenes(bbox: { w: number; s: number; e: number; n: number }, datetimeRange: string, limit: number): Promise<StacItem[]> {
   const res = await fetch(STAC_SEARCH_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       collections: ["sentinel-2-l2a"],
-      bbox: [VITROLLES_BBOX.w, VITROLLES_BBOX.s, VITROLLES_BBOX.e, VITROLLES_BBOX.n],
+      bbox: [bbox.w, bbox.s, bbox.e, bbox.n],
       datetime: datetimeRange,
       limit,
       query: { "eo:cloud_cover": { lt: 10 } },
@@ -32,7 +30,13 @@ async function searchScenes(datetimeRange: string, limit: number): Promise<StacI
   })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const json = await res.json()
-  return (json.features ?? []) as StacItem[]
+  const items = (json.features ?? []) as StacItem[]
+  // Certains items plus anciens du catalogue renvoient encore des hrefs
+  // s3:// (JP2 d'origine, pas de COG converti) plutôt que https:// —
+  // illisibles depuis un navigateur (fetch ne sait pas parler s3://). Écartés
+  // ici plutôt que de laisser échouer le fetch plus tard, sans distinction
+  // avec une vraie panne réseau.
+  return items.filter((i) => i.assets.red?.href?.startsWith("https://") && i.assets.nir?.href?.startsWith("https://"))
 }
 
 function toScene(item: StacItem): StacScene {
@@ -57,8 +61,8 @@ function monthOf(iso: string): number {
  * est vide (peu probable sur 3 ans de catalogue Sentinel-2, mais réel —
  * l'API est interrogée en direct, pas un jeu de données figé).
  */
-export async function findTwoContrastingScenes(): Promise<{ summer: StacScene; winter: StacScene }> {
-  const items = await searchScenes(`${new Date(Date.now() - 3 * 365 * 86400000).toISOString()}/${new Date().toISOString()}`, 100)
+export async function findTwoContrastingScenes(bbox: { w: number; s: number; e: number; n: number }): Promise<{ summer: StacScene; winter: StacScene }> {
+  const items = await searchScenes(bbox, `${new Date(Date.now() - 3 * 365 * 86400000).toISOString()}/${new Date().toISOString()}`, 100)
   if (items.length < 2) throw new Error("pas assez de scènes disponibles sur cette emprise")
 
   const bySummer = items.filter((i) => [6, 7, 8].includes(monthOf(i.properties.datetime))).sort((a, b) => a.properties["eo:cloud_cover"] - b.properties["eo:cloud_cover"])

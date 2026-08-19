@@ -15,9 +15,13 @@ export function LegalPage() {
           <section>
             <h2 className="font-heading text-2xl mb-3">Éditeur du site</h2>
             <p className="text-parchment-dim leading-relaxed text-justify">
-              Ce site est un projet pédagogique personnel, sans finalité commerciale, destiné à
-              l'enseignement de la géomatique et de la télédétection. Pour toute question, un
-              formulaire de contact ou une adresse dédiée sera ajouté ici.
+              Ce site est un projet pédagogique personnel, édité à titre non professionnel par
+              Thomas D'Amore, sans finalité commerciale, destiné à l'enseignement de la géomatique
+              et de la télédétection. Pour toute question relative au site, contact :{" "}
+              <a href="mailto:thomas.damore974@gmail.com" className="text-gilt hover:underline">
+                thomas.damore974@gmail.com
+              </a>
+              .
             </p>
           </section>
 

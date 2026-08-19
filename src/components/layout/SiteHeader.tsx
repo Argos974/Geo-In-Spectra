@@ -45,7 +45,7 @@ export function SiteHeader() {
   const subnav = inDiscipulus ? DISCIPULUS_SUBNAV : inMagister ? MAGISTER_SUBNAV : null
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink/80 border-b border-gilt/15">
+    <header className="print:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink/80 border-b border-gilt/15">
       <nav className="mx-auto flex max-w-[1800px] items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 lg:gap-10 lg:px-8">
         <Link to="/" className="font-heading text-xs uppercase tracking-[0.14em] text-parchment shrink-0 sm:text-sm sm:tracking-[0.28em]">
           Geo-In<span className="text-gilt">.</span>Spectra
@@ -98,7 +98,7 @@ export function SiteHeader() {
 
       {/* Sous-navigation du profil actif — Cours/Méthodes (Discipulus) ou Cours (Magister), visible dès qu'on est dans l'un des deux, pour sauter d'une section à l'autre sans repasser par la page de profil. */}
       {subnav && (
-        <div className="hidden lg:flex justify-center gap-8 border-t border-gilt/10 py-2 font-mono text-[10px] uppercase tracking-wider text-parchment-dim/70">
+        <div className="hidden lg:flex justify-center gap-8 border-t border-gilt/10 py-2 font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80">
           {subnav.map((s) => (
             <Link key={s.to} to={s.to} className={navLinkClass(location.pathname === s.to)}>
               {s.label}

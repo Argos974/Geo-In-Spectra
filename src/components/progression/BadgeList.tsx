@@ -12,7 +12,7 @@ export function BadgeList({ badges }: { badges: Badge[] }) {
     <div className="border border-gilt/20 bg-canvas p-6">
       <div className="flex items-center justify-between mb-4">
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt">Badges</p>
-        <p className="font-mono text-[10px] text-parchment-dim/60">{earnedCount} / {badges.length}</p>
+        <p className="font-mono text-[10px] text-parchment-dim/80">{earnedCount} / {badges.length}</p>
       </div>
       <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {badges.map((b) => (

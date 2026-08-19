@@ -44,8 +44,8 @@ export function SelfCheckList() {
                   ✓
                 </span>
                 <span>
-                  <span className={`block text-sm ${active ? "text-parchment-dim/60 line-through" : "text-parchment"}`}>{item.label}</span>
-                  <span className="block text-xs text-parchment-dim/60 mt-0.5">{item.detail}</span>
+                  <span className={`block text-sm ${active ? "text-parchment-dim/80 line-through" : "text-parchment"}`}>{item.label}</span>
+                  <span className="block text-xs text-parchment-dim/80 mt-0.5">{item.detail}</span>
                 </span>
               </button>
             </li>

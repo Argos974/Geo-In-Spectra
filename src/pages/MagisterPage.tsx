@@ -39,7 +39,7 @@ export function MagisterPage() {
             </Link>
             <Link to="/magister/evaluation" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Évaluation</p>
-              <p className="text-parchment-dim text-sm leading-relaxed">Grilles de correction par finalité : scolaire, concours, professionnel, recherche.</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">Grilles de correction par finalité, et un générateur de sujet QCM imprimable à partir des banques de quiz.</p>
             </Link>
           </div>
 

@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
-import { cn } from "@/lib/utils"
+import { QuestionAnswerBlock } from "@/components/quiz/QuestionAnswerBlock"
 import { recordQuizScore, recordWrongQuestion, clearWrongQuestion } from "@/lib/progress"
 import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 
@@ -12,12 +12,10 @@ export function QuizPage() {
   const questions = slug ? quizzes[slug] : undefined
 
   const [index, setIndex] = useState(0)
-  const [selected, setSelected] = useState<number | null>(null)
   const [score, setScore] = useState(0)
   const [done, setDone] = useState(false)
   // Incrémenté à chaque "Recommencer" pour forcer un nouveau tirage même sur
-  // la question 0 (sinon useMemo, indexé sur `index` seul, garderait le même
-  // ordre déjà vu à la tentative précédente).
+  // la question 0 (voir QuestionAnswerBlock, remonté via sa clé).
   const [shuffleSeed, setShuffleSeed] = useState(0)
 
   if (!module || !questions) {
@@ -29,29 +27,18 @@ export function QuizPage() {
     )
   }
 
+  // Alias plutôt que `questions` réutilisé tel quel : TypeScript ne propage pas le
+  // rétrécissement de type (non-`undefined`) fait plus haut à l'intérieur des fonctions
+  // imbriquées ci-dessous, seul un nouveau `const` capturé après coup le préserve.
   const quizQuestions = questions
-  const q = quizQuestions[index]
   const moduleSlug = module.slug
   const backTo = moduleTreeRoute(moduleSlug)
   const backState = moduleTreeState(moduleSlug, module.title)
+  const q = quizQuestions[index]
+  const isLast = index + 1 >= quizQuestions.length
 
-  // Ordre des choix mélangé à chaque question (et à chaque "Recommencer") —
-  // sinon la bonne réponse reste sur le même index d'une lecture à l'autre et
-  // devient un repère de position mémorisable indépendamment du contenu.
-  const shuffled = useMemo(() => {
-    const order = q.choices.map((_, i) => i)
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[order[i], order[j]] = [order[j], order[i]]
-    }
-    return { choices: order.map((i) => q.choices[i]), correctIndex: order.indexOf(q.correctIndex) }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, shuffleSeed, q])
-
-  function choose(i: number) {
-    if (selected !== null) return
-    setSelected(i)
-    if (i === shuffled.correctIndex) {
+  function handleAnswered(correct: boolean) {
+    if (correct) {
       setScore((s) => s + 1)
       clearWrongQuestion(moduleSlug, index)
     } else {
@@ -60,18 +47,16 @@ export function QuizPage() {
   }
 
   function next() {
-    if (index + 1 >= quizQuestions.length) {
+    if (isLast) {
       setDone(true)
       recordQuizScore(moduleSlug, score, quizQuestions.length)
       return
     }
     setIndex((n) => n + 1)
-    setSelected(null)
   }
 
   function restart() {
     setIndex(0)
-    setSelected(null)
     setScore(0)
     setDone(false)
     setShuffleSeed((s) => s + 1)
@@ -123,47 +108,16 @@ export function QuizPage() {
             </p>
             <p className="font-heading text-xl mb-6">{q.question}</p>
 
-            <div className="space-y-3 mb-6">
-              {shuffled.choices.map((choice, i) => {
-                const isCorrect = i === shuffled.correctIndex
-                const isSelected = i === selected
-                const revealed = selected !== null
-                return (
-                  <button
-                    key={choice}
-                    type="button"
-                    onClick={() => choose(i)}
-                    disabled={revealed}
-                    className={cn(
-                      "w-full text-left px-4 py-3 border transition-colors",
-                      !revealed && "border-gilt/20 text-parchment-dim hover:border-gilt/50 hover:text-parchment",
-                      revealed && isCorrect && "border-gilt bg-gilt/10 text-gilt",
-                      revealed && isSelected && !isCorrect && "border-oxblood bg-oxblood/10 text-oxblood-bright",
-                      revealed && !isSelected && !isCorrect && "border-gilt/10 text-parchment-dim/40",
-                    )}
-                  >
-                    {choice}
-                  </button>
-                )
-              })}
-            </div>
-
-            {selected !== null && (
-              <div className="border border-gilt/20 bg-white/[0.02] p-5 mb-6">
-                <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">Explication</p>
-                <p className="text-parchment-dim leading-relaxed text-justify">{q.explanation}</p>
-              </div>
-            )}
-
-            {selected !== null && (
-              <button
-                type="button"
-                onClick={next}
-                className="font-mono text-[12px] uppercase tracking-wider text-gilt border-b border-gilt/40 hover:border-gilt-bright hover:text-gilt-bright transition-colors pb-1"
-              >
-                {index + 1 >= questions.length ? "Voir le score →" : "Question suivante →"}
-              </button>
-            )}
+            {/* Clé = (index, shuffleSeed) : remonte le bloc à chaque nouvelle question ou
+                "Recommencer", pour que le tirage aléatoire des choix se fasse une seule fois
+                à l'initialisation de l'instance (voir QuestionAnswerBlock). */}
+            <QuestionAnswerBlock
+              key={`${index}-${shuffleSeed}`}
+              question={q}
+              nextLabel={isLast ? "Voir le score →" : "Question suivante →"}
+              onAnswered={handleAnswered}
+              onNext={next}
+            />
           </div>
         )}
       </div>

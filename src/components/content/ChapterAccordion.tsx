@@ -55,10 +55,10 @@ export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwor
     >
       <summary className="cursor-pointer list-none flex items-center justify-between gap-4 py-6 select-none">
         <span className="flex items-baseline gap-4 min-w-0">
-          {numeral && <span className="font-mono text-[11px] text-gilt/70 shrink-0">{numeral}</span>}
-          <span className="font-heading text-lg sm:text-2xl md:text-3xl truncate">{title}</span>
+          {numeral && <span className="font-mono text-[11px] text-gilt/85 shrink-0">{numeral}</span>}
+          <span className="font-heading text-lg sm:text-2xl md:text-3xl">{title}</span>
           {visited && (
-            <span className="font-mono text-[10px] normal-case tracking-normal text-parchment-dim/60 shrink-0" title="Déjà visité">
+            <span className="font-mono text-[10px] normal-case tracking-normal text-parchment-dim/80 shrink-0" title="Déjà visité">
               ✓ visité
             </span>
           )}

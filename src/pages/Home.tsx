@@ -35,7 +35,7 @@ export function Home() {
             patient posé sur le monde. La géomatique moderne poursuit ce même geste,
             avec d'autres outils.
           </p>
-          <p className="font-mono text-[12px] text-parchment-dim/70 max-w-xl">
+          <p className="font-mono text-[12px] text-parchment-dim/80 max-w-xl">
             Cours de géomatique et télédétection, pour réviser ou pour enseigner.
           </p>
         </div>
@@ -70,7 +70,7 @@ export function Home() {
               <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt mb-3">Magister</p>
               <p className="font-heading text-2xl mb-4">Enseignant</p>
               <p className="text-parchment-dim leading-relaxed text-justify">
-                L'Atelier en détail (douze séances autonomes et corrigées, un semestre) et les ressources
+                L'Atelier en détail (trente-six séances autonomes et corrigées, un semestre) et les ressources
                 pédagogiques pour préparer un cours.
               </p>
               <p className="font-mono text-[12px] uppercase tracking-wider text-gilt mt-6">Entrer →</p>
@@ -84,7 +84,7 @@ export function Home() {
             </Link>
           </p>
 
-          <p className="text-center mt-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70">
+          <p className="text-center mt-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80">
             Ni l'un ni l'autre ?{" "}
             <Link to="/ressources" className="text-gilt hover:text-gilt-bright transition-colors underline underline-offset-2">
               Glossaire, références, jeux de données →

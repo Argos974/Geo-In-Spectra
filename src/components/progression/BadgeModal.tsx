@@ -48,7 +48,7 @@ export function BadgeModal({ badge, onClose }: BadgeModalProps) {
         <p id="badge-modal-title" className={cn("font-heading text-2xl mt-5 mb-1", badge.earned ? "text-gilt" : "text-parchment")}>
           {badge.label}
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/60 mb-5">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mb-5">
           {badge.earned ? "Acquis" : "Non acquis"}
         </p>
 

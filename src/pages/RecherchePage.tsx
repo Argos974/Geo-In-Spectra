@@ -40,7 +40,7 @@ export function RecherchePage() {
         />
 
         {query.trim() && (
-          <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/60 mb-4">
+          <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-4">
             {results.length} résultat{results.length !== 1 ? "s" : ""}
           </p>
         )}

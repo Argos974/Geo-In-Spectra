@@ -33,7 +33,7 @@ export function GuidedCase({ set }: { set: ExerciseSet }) {
   return (
     <div className="mb-12 border border-gilt/20 bg-canvas p-6">
       <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt mb-1">Cas pratique guidé</p>
-      <p className="font-mono text-[10px] text-parchment-dim/60 mb-4">
+      <p className="font-mono text-[10px] text-parchment-dim/80 mb-4">
         Étape {index + 1} / {set.exercises.length}
       </p>
 
@@ -66,7 +66,7 @@ export function GuidedCase({ set }: { set: ExerciseSet }) {
             <button
               type="button"
               onClick={restart}
-              className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 border border-gilt/15 px-3 py-2 hover:text-gilt hover:border-gilt/40 transition-colors"
+              className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 border border-gilt/15 px-3 py-2 hover:text-gilt hover:border-gilt/40 transition-colors"
             >
               Recommencer la série
             </button>

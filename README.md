@@ -151,9 +151,8 @@ quiz interactif.
 ## Feuille de route
 
 14 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
-socle d'origine, plus étoffé ; les sept suivantes couvrent des thèmes spécialisés
-ajoutés ensuite, à un niveau de détail plus resserré (voir « reste à faire »
-ci-dessous) :
+socle d'origine ; les sept suivantes couvrent des thèmes spécialisés ajoutés ensuite,
+étoffées depuis à un niveau de détail comparable :
 
 1. **Fondements** (`fondamentaux`) — coordonnées/EPSG, projections, vecteur/raster,
    histoire de la cartographie, lecture de carte, débat Mercator/Peters, codes
@@ -192,10 +191,6 @@ ci-dessous) :
 
 Glossaire (avec sources et recherche), page Références (bibliographie par thème),
 quiz interactif et fiches mémo PDF couvrent les 14 salles.
-
-**Reste à faire** : les 7 salles spécialisées (7 à 13 ci-dessus) sont sensiblement
-plus courtes que les 6 salles du socle d'origine — à étoffer pour atteindre un
-niveau de détail comparable.
 
 ## Déploiement
 

@@ -63,7 +63,7 @@ export const modules: CourseModule[] = [
     slug: "travaux-pratiques",
     title: "Le Cabinet de l'Apprenti",
     navLabel: "L'Atelier",
-    summary: "Douze séances pratiques complètes, chacune autonome et corrigée : cartographie, géoréférencement, indices, classification, réseau de neurones, radar, mini-projet, audit qualité, validation statistique.",
+    summary: "Trente-six séances pratiques complètes (lycée, licence/BUT, master), chacune autonome et corrigée : cartographie, géoréférencement, indices, classification, réseau de neurones, radar, mini-projet, audit qualité, validation statistique.",
     topics: ["Géoréférencement par grille", "NDVI, indices par cellule, classification et réseau de neurones", "Radar et interpolation (krigeage)", "Programmation géospatiale et mini-projet corrigé"],
     epigraph: "Ortelius a rassemblé cartes et méthode en un atlas : le premier assemblage cohérent d'un savoir jusque-là dispersé. Ces travaux pratiques ont le même objectif.",
   },

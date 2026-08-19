@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { booleanPointInPolygon, point as turfPoint } from "@turf/turf"
 import type { Feature, Polygon } from "geojson"
 import { makeLocalProjector } from "@/lib/vitrollesBbox"
+import { DEMO_SITES, DEFAULT_SITE_ID, getSite } from "@/lib/sites"
 import { cn } from "@/lib/utils"
 
-const GRID_URL = "/data/sample-vitrolles-2024/grille_100m_indices.geojson"
 const SIZE = 640
 
 type IndexField = "ndvi_mean" | "ndmi_mean" | "ndbi_mean"
@@ -53,14 +53,25 @@ interface GridCell {
  * et l'emprise fixe, un canvas suffit et évite une dépendance supplémentaire.
  */
 export function GridChoropleth() {
+  const [siteId, setSiteId] = useState(DEFAULT_SITE_ID)
+  const site = getSite(siteId)
   const [state, setState] = useState<{ status: "loading" | "error" | "done"; cells?: GridCell[]; error?: string }>({ status: "loading" })
   const [field, setField] = useState<IndexField>("ndvi_mean")
   const [picked, setPicked] = useState<GridCell | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const gridCache = useRef<Map<string, GridCell[]>>(new Map())
 
   useEffect(() => {
+    const cached = gridCache.current.get(site.gridUrl)
+    if (cached) {
+      setState({ status: "done", cells: cached })
+      setPicked(null)
+      return
+    }
     let cancelled = false
-    fetch(GRID_URL)
+    setState({ status: "loading" })
+    setPicked(null)
+    fetch(site.gridUrl)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json()
@@ -68,6 +79,7 @@ export function GridChoropleth() {
       .then((geojson: { features: Feature<Polygon, Record<IndexField, number>>[] }) => {
         if (cancelled) return
         const cells: GridCell[] = geojson.features.map((f) => ({ feature: f, ring: f.geometry.coordinates[0] as [number, number][] }))
+        gridCache.current.set(site.gridUrl, cells)
         setState({ status: "done", cells })
       })
       .catch((err) => {
@@ -76,7 +88,7 @@ export function GridChoropleth() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [site.gridUrl])
 
   const bbox = useMemo(() => {
     if (state.status !== "done" || !state.cells) return null
@@ -152,10 +164,25 @@ export function GridChoropleth() {
 
   return (
     <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
-      <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Planche vivante · Grille 100 m, résultat réel de la séance 3</p>
-      <p className="font-mono text-[11px] text-parchment-dim mb-5">
-        1122 cellules, moyenne réelle par cellule (Vitrolles, 06/08/2024). Clique une cellule pour voir ses trois valeurs.
+      <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Planche vivante · Grille 100 m, résultat réel</p>
+      <p className="font-mono text-[11px] text-parchment-dim mb-3">
+        {state.status === "done" && state.cells ? `${state.cells.length} cellules, ` : ""}moyenne réelle par cellule ({site.label}, {site.date}). Clique une cellule pour voir ses trois valeurs.
       </p>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {DEMO_SITES.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setSiteId(s.id)}
+            className={cn(
+              "font-mono text-[10px] uppercase tracking-wider px-2.5 py-1.5 border transition-colors",
+              siteId === s.id ? "border-gilt bg-gilt/15 text-gilt" : "border-gilt/25 text-parchment-dim hover:border-gilt/50",
+            )}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
 
       {state.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Chargement de la grille…</p>}
       {state.status === "error" && <p className="font-mono text-sm text-oxblood-bright">Échec du chargement ({state.error}).</p>}
@@ -195,7 +222,7 @@ export function GridChoropleth() {
                 </tbody>
               </table>
             ) : (
-              <p className="font-mono text-[11px] text-parchment-dim/70">Clique une cellule de la grille pour voir ses valeurs réelles.</p>
+              <p className="font-mono text-[11px] text-parchment-dim/80">Clique une cellule de la grille pour voir ses valeurs réelles.</p>
             )}
           </div>
         </div>

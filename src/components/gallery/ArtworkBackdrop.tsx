@@ -1,6 +1,9 @@
-import type { ReactNode } from "react"
+import { useRef, type ReactNode } from "react"
 import type { Artwork } from "@/data/artworks"
 import { cn } from "@/lib/utils"
+import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { useArtworkKenBurns } from "@/hooks/useArtworkKenBurns"
+import { useArtworkParallax } from "@/hooks/useArtworkParallax"
 
 interface ArtworkBackdropProps {
   art: Artwork
@@ -20,9 +23,30 @@ interface ArtworkBackdropProps {
  * avant, n'avaient qu'un aplat ink derrière le texte.
  */
 export function ArtworkBackdrop({ art, figure, children, className, eager = true }: ArtworkBackdropProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const parallaxRef = useRef<HTMLDivElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const reducedMotion = useReducedMotion()
+
+  useArtworkKenBurns(imgRef, !reducedMotion)
+  useArtworkParallax(parallaxRef, containerRef, !reducedMotion)
+
   return (
-    <div className={cn("relative overflow-hidden", className)}>
-      <img src={art.src} alt={art.alt} loading={eager ? "eager" : "lazy"} className="absolute inset-0 h-full w-full object-cover" />
+    <div ref={containerRef} className={cn("relative overflow-hidden", className)}>
+      {/* Calque photographique surdimensionné (10% de marge verticale) : le
+          parallax de useArtworkParallax le déplace un peu plus lentement que
+          le reste de la page pendant le défilement, sans jamais découvrir de
+          bord — l'image elle-même (Ken Burns) continue de zoomer/panner à
+          l'intérieur, les deux mouvements se composent sans se gêner. */}
+      <div ref={parallaxRef} className="absolute -inset-y-[10%] inset-x-0">
+        <img
+          ref={imgRef}
+          src={art.src}
+          alt={art.alt}
+          loading={eager ? "eager" : "lazy"}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/25" />
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_180px_rgba(0,0,0,0.7)]" />
 

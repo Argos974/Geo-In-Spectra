@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { FRANCE_OUTLINE_BBOX, FRANCE_OUTLINE_CORSICA, FRANCE_OUTLINE_MAINLAND } from "@/data/franceOutline"
 
 export interface CityCoord {
   name: string
@@ -20,24 +21,46 @@ const VIEW = 400
 const PAD = 20
 
 /**
- * Positionne chaque ville sur un plan selon ses vraies coordonnées Lambert-93
- * relatives (X croissant vers l'est, Y croissant vers le nord — donc inversé
- * en SVG, dont l'axe Y croît vers le bas). Le joueur doit déduire la position
- * d'un point à partir de son couple de coordonnées, pas reconnaître un nom de
- * ville sur une carte — un vrai exercice de lecture de système de coordonnées.
+ * Positionne chaque ville sur le vrai contour de la France (Lambert-93,
+ * `src/data/franceOutline.ts`) selon ses vraies coordonnées — X croissant
+ * vers l'est, Y croissant vers le nord, donc inversé en SVG dont l'axe Y
+ * croît vers le bas. L'échelle est uniforme (pas d'étirement séparé en X/Y)
+ * et calée sur l'emprise réelle du pays, pas sur le nuage de villes du jeu,
+ * pour que le contour et les points restent cohérents entre eux. Le joueur
+ * doit déduire la position d'un point à partir de son couple de coordonnées,
+ * pas reconnaître un nom de ville sur une carte — un vrai exercice de
+ * lecture de système de coordonnées, simplement posé sur un vrai fond.
  */
+const OUTLINE_MARGIN = 40_000 // m, marge autour du contour réel pour laisser respirer les points côtiers
+
+const { xMin, xMax, yMin, yMax } = FRANCE_OUTLINE_BBOX
+const boxX = xMax - xMin + 2 * OUTLINE_MARGIN
+const boxY = yMax - yMin + 2 * OUTLINE_MARGIN
+const scale = Math.min((VIEW - 2 * PAD) / boxX, (VIEW - 2 * PAD) / boxY)
+const drawnW = boxX * scale
+const drawnH = boxY * scale
+const offsetX = (VIEW - drawnW) / 2
+const offsetY = (VIEW - drawnH) / 2
+
+function project(x: number, y: number) {
+  const sx = (x - xMin + OUTLINE_MARGIN) * scale + offsetX
+  const sy = drawnH - (y - yMin + OUTLINE_MARGIN) * scale + offsetY
+  return { sx, sy }
+}
+
+function ringToPath(ring: readonly [number, number][]) {
+  return ring.map(([x, y], i) => {
+    const { sx, sy } = project(x, y)
+    return `${i === 0 ? "M" : "L"}${sx.toFixed(1)},${sy.toFixed(1)}`
+  }).join(" ") + " Z"
+}
+
 export function CoordinateMapGame({ cities }: { cities: CityCoord[] }) {
-  const xs = cities.map((c) => c.x)
-  const ys = cities.map((c) => c.y)
-  const xMin = Math.min(...xs)
-  const xMax = Math.max(...xs)
-  const yMin = Math.min(...ys)
-  const yMax = Math.max(...ys)
+  const mainlandPath = useMemo(() => ringToPath(FRANCE_OUTLINE_MAINLAND), [])
+  const corsicaPath = useMemo(() => ringToPath(FRANCE_OUTLINE_CORSICA), [])
 
   function toSvg(c: CityCoord) {
-    const sx = ((c.x - xMin) / (xMax - xMin)) * (VIEW - 2 * PAD) + PAD
-    const sy = ((yMax - c.y) / (yMax - yMin)) * (VIEW - 2 * PAD) + PAD
-    return { sx, sy }
+    return project(c.x, c.y)
   }
 
   const order = useMemo(() => shuffled(cities.map((_, i) => i)), [cities])
@@ -99,9 +122,9 @@ export function CoordinateMapGame({ cities }: { cities: CityCoord[] }) {
           </p>
 
           <svg viewBox={`0 0 ${VIEW} ${VIEW}`} className="w-full max-w-md border border-gilt/15 bg-white/[0.02]">
-            <line x1={PAD} y1={VIEW - PAD} x2={VIEW - PAD} y2={VIEW - PAD} stroke="rgb(var(--color-parchment-dim))" strokeWidth={1} />
-            <line x1={PAD} y1={PAD} x2={PAD} y2={VIEW - PAD} stroke="rgb(var(--color-parchment-dim))" strokeWidth={1} />
-            <text x={VIEW - PAD} y={VIEW - PAD + 14} textAnchor="end" fontSize={10} fill="rgb(var(--color-gilt))" fontFamily="monospace">X (est) →</text>
+            <path d={mainlandPath} fill="rgb(var(--color-parchment-dim))" fillOpacity={0.1} stroke="rgb(var(--color-gilt))" strokeOpacity={0.5} strokeWidth={1} />
+            <path d={corsicaPath} fill="rgb(var(--color-parchment-dim))" fillOpacity={0.1} stroke="rgb(var(--color-gilt))" strokeOpacity={0.5} strokeWidth={1} />
+            <text x={VIEW - PAD} y={VIEW - 6} textAnchor="end" fontSize={10} fill="rgb(var(--color-gilt))" fontFamily="monospace">X (est) →</text>
             <text x={PAD - 6} y={PAD + 4} textAnchor="end" fontSize={10} fill="rgb(var(--color-gilt))" fontFamily="monospace" transform={`rotate(-90 ${PAD - 6} ${PAD + 4})`}>Y (nord) ↑</text>
 
             {cities.map((c, i) => {

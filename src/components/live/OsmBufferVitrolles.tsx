@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react"
-import { VITROLLES_BBOX as BBOX, makeLocalProjector } from "@/lib/vitrollesBbox"
+import { makeLocalProjector } from "@/lib/vitrollesBbox"
+import { DEMO_SITES, DEFAULT_SITE_ID, getSite } from "@/lib/sites"
+import { cn } from "@/lib/utils"
 
 // Mêmes bornes que le jeu de données canonique (voir lib/vitrollesBbox), pour
 // que l'élève compare directement la même zone en donnée figée (Sentinel-2 du
@@ -12,8 +14,9 @@ import { VITROLLES_BBOX as BBOX, makeLocalProjector } from "@/lib/vitrollesBbox"
 // miroirs testés dont la base s'est avérée tronquée/obsolète) — utilisé en
 // secours si le premier échoue ou sature.
 const OVERPASS_URLS = ["https://overpass-api.de/api/interpreter", "https://maps.mail.ru/osm/tools/overpass/api/interpreter"]
-const CACHE_KEY = "geo-in-spectra-osm-vitrolles-v1"
+const CACHE_KEY_PREFIX = "geo-in-spectra-osm-"
 const CACHE_TTL_MS = 30 * 60 * 1000
+type Bbox = { s: number; w: number; n: number; e: number }
 
 interface Counts {
   buildings: number
@@ -26,8 +29,8 @@ interface Counts {
 // que 3 requêtes séparées — Overpass est une infrastructure publique partagée
 // et gratuite ; limiter le nombre d'appels HTTP est un minimum de politesse
 // envers elle, et réduit d'autant le risque de 429 (trop de requêtes).
-function combinedCountQuery(): string {
-  const { s, w, n, e } = BBOX
+function combinedCountQuery(bbox: Bbox): string {
+  const { s, w, n, e } = bbox
   const b = `${s},${w},${n},${e}`
   return [
     "[out:json][timeout:25];",
@@ -40,8 +43,8 @@ function combinedCountQuery(): string {
   ].join("")
 }
 
-async function fetchCounts(): Promise<{ buildings: number; water: number; roads: number }> {
-  const body = `data=${encodeURIComponent(combinedCountQuery())}`
+async function fetchCounts(bbox: Bbox): Promise<{ buildings: number; water: number; roads: number }> {
+  const body = `data=${encodeURIComponent(combinedCountQuery(bbox))}`
   let lastError = "erreur inconnue"
   for (const url of OVERPASS_URLS) {
     try {
@@ -79,8 +82,8 @@ interface Geometries {
 // garder le dessin robuste et simple, seules les entités "way" sont
 // géométrisées ici (les relations restent comptées dans fetchCounts ci-dessus,
 // juste pas dessinées) : une simplification documentée, pas un oubli.
-function combinedGeometryQuery(): string {
-  const { s, w, n, e } = BBOX
+function combinedGeometryQuery(bbox: Bbox): string {
+  const { s, w, n, e } = bbox
   const b = `${s},${w},${n},${e}`
   return [
     "[out:json][timeout:25];",
@@ -89,8 +92,8 @@ function combinedGeometryQuery(): string {
   ].join("")
 }
 
-async function fetchGeometries(): Promise<Geometries> {
-  const body = `data=${encodeURIComponent(combinedGeometryQuery())}`
+async function fetchGeometries(bbox: Bbox): Promise<Geometries> {
+  const body = `data=${encodeURIComponent(combinedGeometryQuery(bbox))}`
   let lastError = "erreur inconnue"
   for (const url of OVERPASS_URLS) {
     try {
@@ -131,14 +134,23 @@ async function fetchGeometries(): Promise<Geometries> {
 const MAP_SIZE = 640
 
 export function OsmBufferVitrolles() {
+  const [siteId, setSiteId] = useState(DEFAULT_SITE_ID)
+  const site = getSite(siteId)
   const [state, setState] = useState<{ status: "loading" | "error" | "done"; counts?: Counts; error?: string }>({ status: "loading" })
   const [mapState, setMapState] = useState<{ status: "idle" | "loading" | "error" | "done"; geometries?: Geometries; error?: string }>({ status: "idle" })
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const geometriesCache = useRef<Map<string, Geometries>>(new Map())
 
   async function loadMap() {
+    const cached = geometriesCache.current.get(siteId)
+    if (cached) {
+      setMapState({ status: "done", geometries: cached })
+      return
+    }
     setMapState({ status: "loading" })
     try {
-      const geometries = await fetchGeometries()
+      const geometries = await fetchGeometries(site.bbox)
+      geometriesCache.current.set(siteId, geometries)
       setMapState({ status: "done", geometries })
     } catch (err) {
       setMapState({ status: "error", error: err instanceof Error ? err.message : "erreur réseau" })
@@ -146,9 +158,10 @@ export function OsmBufferVitrolles() {
   }
 
   async function load(force = false) {
+    const cacheKey = CACHE_KEY_PREFIX + siteId
     if (!force) {
       try {
-        const cached = sessionStorage.getItem(CACHE_KEY)
+        const cached = sessionStorage.getItem(cacheKey)
         if (cached) {
           const parsed = JSON.parse(cached) as Counts & { cachedAt: number }
           if (Date.now() - parsed.cachedAt < CACHE_TTL_MS) {
@@ -162,11 +175,11 @@ export function OsmBufferVitrolles() {
     }
     setState({ status: "loading" })
     try {
-      const { buildings, water, roads } = await fetchCounts()
+      const { buildings, water, roads } = await fetchCounts(site.bbox)
       const counts: Counts = { buildings, water, roads, fetchedAt: new Date().toLocaleString("fr-FR") }
       setState({ status: "done", counts })
       try {
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify({ ...counts, cachedAt: Date.now() }))
+        sessionStorage.setItem(cacheKey, JSON.stringify({ ...counts, cachedAt: Date.now() }))
       } catch {
         // idem
       }
@@ -176,9 +189,11 @@ export function OsmBufferVitrolles() {
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- charge des données au montage, pas une valeur dérivée du rendu
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- charge des données au montage/changement de site, pas une valeur dérivée du rendu
+    setMapState({ status: "idle" })
     load()
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteId])
 
   useEffect(() => {
     if (mapState.status !== "done" || !mapState.geometries || !canvasRef.current) return
@@ -187,7 +202,7 @@ export function OsmBufferVitrolles() {
     canvas.height = MAP_SIZE
     const ctx = canvas.getContext("2d")
     if (!ctx) return
-    const project = makeLocalProjector(BBOX, MAP_SIZE, MAP_SIZE)
+    const project = makeLocalProjector(site.bbox, MAP_SIZE, MAP_SIZE)
 
     ctx.fillStyle = "rgb(13 14 18)"
     ctx.fillRect(0, 0, MAP_SIZE, MAP_SIZE)
@@ -215,14 +230,29 @@ export function OsmBufferVitrolles() {
     drawWays(mapState.geometries.water, "rgba(63,80,102,0.55)", "rgba(150,175,205,0.7)", 1)
     drawWays(mapState.geometries.roads, null, "rgba(168,159,140,0.55)", 1)
     drawWays(mapState.geometries.buildings, "rgba(184,147,79,0.35)", "rgba(217,180,106,0.6)", 0.75)
-  }, [mapState])
+  }, [mapState, site.bbox])
 
   return (
     <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
       <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Requête en direct · API Overpass (OpenStreetMap)</p>
-      <p className="font-mono text-[11px] text-parchment-dim mb-5">
-        Emprise : {BBOX.s.toFixed(4)}, {BBOX.w.toFixed(4)} → {BBOX.n.toFixed(4)}, {BBOX.e.toFixed(4)} (identique au jeu de données canonique)
+      <p className="font-mono text-[11px] text-parchment-dim mb-3">
+        {site.label} — emprise : {site.bbox.s.toFixed(4)}, {site.bbox.w.toFixed(4)} → {site.bbox.n.toFixed(4)}, {site.bbox.e.toFixed(4)} (identique au jeu de données canonique)
       </p>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {DEMO_SITES.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setSiteId(s.id)}
+            className={cn(
+              "font-mono text-[10px] uppercase tracking-wider px-2.5 py-1.5 border transition-colors",
+              siteId === s.id ? "border-gilt bg-gilt/15 text-gilt" : "border-gilt/25 text-parchment-dim hover:border-gilt/50",
+            )}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
 
       {state.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Interrogation d'Overpass (OpenStreetMap)…</p>}
 
@@ -255,7 +285,7 @@ export function OsmBufferVitrolles() {
           </table>
           <div className="flex items-center justify-between mb-6">
             <p className="font-mono text-[10px] text-parchment-dim/80">Interrogé le {state.counts.fetchedAt}</p>
-            <button type="button" onClick={() => load(true)} className="font-mono text-[10px] uppercase tracking-wider text-gilt/70 hover:text-gilt transition-colors">
+            <button type="button" onClick={() => load(true)} className="font-mono text-[10px] uppercase tracking-wider text-gilt/85 hover:text-gilt transition-colors">
               ↻ Rafraîchir
             </button>
           </div>
@@ -289,7 +319,7 @@ export function OsmBufferVitrolles() {
                 <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-0.5 bg-parchment-dim" /> Routes ({mapState.geometries.roads.length})</span>
                 <span className="flex items-center gap-1.5"><span className="inline-block w-3 h-3 bg-gilt/40 border border-gilt-bright/60" /> Bâtiments ({mapState.geometries.buildings.length})</span>
               </div>
-              <p className="font-mono text-[10px] text-parchment-dim/70 mt-3 text-justify">
+              <p className="font-mono text-[10px] text-parchment-dim/80 mt-3 text-justify">
                 Chaque forme est un contour réel dessiné par un contributeur OSM (VGI), pas une donnée nettoyée
                 pour l'affichage : des bâtiments manquants, désalignés ou mal fermés sont normaux et font partie
                 de ce que « donnée vivante » veut dire — comparer avec la précision du bâti visible sur la

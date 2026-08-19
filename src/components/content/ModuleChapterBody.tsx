@@ -169,7 +169,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta }: Modu
           )
         })}
         {parcours?.levels && (
-          <span className="font-mono text-[10px] text-parchment-dim/60">
+          <span className="font-mono text-[10px] text-parchment-dim/80">
             réglé par le parcours « {parcours.title} »
           </span>
         )}

@@ -1,4 +1,8 @@
+import { useRef } from "react"
 import { cn } from "@/lib/utils"
+import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { useScrollReveal } from "@/hooks/useScrollReveal"
+import { useTiltHover } from "@/hooks/useTiltHover"
 
 interface GalleryFrameProps {
   src: string
@@ -20,11 +24,17 @@ interface GalleryFrameProps {
  */
 export function GalleryFrame({ src, alt, artist, title, year, figure, className, priority, variant = "dark" }: GalleryFrameProps) {
   const isPrint = variant === "print"
+  const figureRef = useRef<HTMLElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
+
+  useScrollReveal(figureRef, !isPrint && !reducedMotion)
+  useTiltHover(frameRef, !isPrint && !reducedMotion)
 
   return (
-    <figure className={cn("group", className)}>
-      <div className={cn("border p-[5px] md:p-[7px]", isPrint ? "border-[#8a6a2f]/50" : "border-gilt/30")}>
-        <div className={cn("relative border overflow-hidden", isPrint ? "border-[#8a6a2f]" : "border-gilt/60")}>
+    <figure ref={figureRef} className={cn("group", className)}>
+      <div ref={frameRef} className={cn("border p-[5px] md:p-[7px]", isPrint ? "border-[#8a6a2f]/50" : "border-gilt/30")}>
+        <div className={cn("relative border overflow-hidden", isPrint ? "border-[#8a6a2f]" : "border-gilt/60 gilt-sheen")}>
           <img
             src={src}
             alt={alt}

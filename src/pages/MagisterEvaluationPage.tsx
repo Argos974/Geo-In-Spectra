@@ -4,6 +4,7 @@ import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { ChapterAccordion } from "@/components/content/ChapterAccordion"
 import { ChapterNav } from "@/components/content/ChapterNav"
+import { EvaluationGenerator } from "@/components/evaluation/EvaluationGenerator"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { slugify } from "@/lib/slug"
 
@@ -198,7 +199,7 @@ export function MagisterEvaluationPage() {
   return (
     <div className="min-h-screen bg-ink text-parchment">
       {art && (
-        <ArtworkBackdrop art={art} figure="XII" className="h-[70vh] min-h-[480px] w-full pt-24">
+        <ArtworkBackdrop art={art} figure="XII" className="print:hidden h-[70vh] min-h-[480px] w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-16 max-w-3xl">
             <Link to="/magister" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
               ← Magister
@@ -214,8 +215,11 @@ export function MagisterEvaluationPage() {
         </ArtworkBackdrop>
       )}
 
-      <div className="px-6 pt-16 pb-24">
+      <div className="px-6 pt-16 pb-24 print:px-0 print:py-0">
         <div className="mx-auto max-w-4xl">
+          <EvaluationGenerator />
+
+          <div className="print:hidden">
           <p className="text-parchment-dim text-lg mb-10 text-justify">
             Pour chaque finalité : les compétences réellement évaluées, ce qui distingue une copie insuffisante d'une
             copie maîtrisée, un exercice type pour s'entraîner sur un point précis, et un sujet blanc complet à
@@ -327,6 +331,7 @@ export function MagisterEvaluationPage() {
                 Ce qui est effectivement demandé à l'élève pour chaque format, la même page que Discipulus consulte.
               </p>
             </Link>
+          </div>
           </div>
         </div>
       </div>

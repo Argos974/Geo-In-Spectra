@@ -18,6 +18,14 @@ const DATASET_FILES = [
   { name: "classification_reference.json", size: "< 2 Ko", desc: "Classification SCL réelle à 3 classes (végétation, sol nu/bâti, eau), découpage train/test et matrices de confusion Random Forest/MLP, référence pour la séance 6" },
 ]
 
+const PARIS_DATASET_FILES = [
+  { name: "sentinel2_2026-08-12_paris_bands.tif", size: "2,6 Mo", desc: "6 bandes réelles en réflectance de surface (0–1), même format que le jeu Vitrolles, EPSG:2154, 10 m" },
+  { name: "sentinel2_2026-08-12_paris_indices.tif", size: "2,0 Mo", desc: "NDVI, NDMI, NDBI, NDRE, NDWI déjà calculés, en 5 bandes" },
+  { name: "emprise.geojson", size: "< 1 Ko", desc: "Polygone exact de l'emprise, pour un découpage (clip) propre" },
+  { name: "grille_100m_indices.geojson", size: "500 Ko", desc: "1330 cellules de 100 m avec la moyenne réelle de NDVI/NDMI/NDBI par cellule" },
+  { name: "stats.json", size: "< 1 Ko", desc: "Statistiques réelles (min/max/moyenne/écart-type) de chaque indice sur toute l'emprise" },
+]
+
 export function DatasetPage() {
   const art = artworks["ressources-dataset"]
 
@@ -67,7 +75,7 @@ export function DatasetPage() {
                   <p className="text-parchment-dim text-xs mt-1 leading-relaxed">{f.desc}</p>
                 </div>
                 <span className="shrink-0 flex items-center gap-3">
-                  <span className="font-mono text-[10px] text-parchment-dim/70 whitespace-nowrap">{f.size}</span>
+                  <span className="font-mono text-[10px] text-parchment-dim/80 whitespace-nowrap">{f.size}</span>
                   <span className="font-mono text-[10px] uppercase tracking-wider text-gilt whitespace-nowrap">Télécharger ↓</span>
                 </span>
               </a>
@@ -80,6 +88,40 @@ export function DatasetPage() {
           >
             Voir le détail des fichiers et leur usage → module L'Atelier
           </Link>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="font-heading text-2xl text-gilt mb-6 pb-3 border-b border-gilt/15">Un second terrain : Paris centre</h2>
+          <div className="border border-gilt/25 bg-gilt/[0.04] p-6">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">Sentinel-2 réel : Paris centre, 12 août 2026</p>
+            <p className="text-parchment-dim leading-relaxed text-justify mb-4">
+              Scène S2B_31UDQ_20260812_0_L2A, 0,002 % de nuages, même catalogue public Element84/AWS (Copernicus
+              Sentinel data, ESA/UE), même format que le jeu Vitrolles ci-dessus. Emprise de 3,7 × 3,4 km : tissu
+              haussmannien dense, Seine, grands parcs — un contraste délibéré avec le périurbain de Vitrolles.
+              Sélectionnable directement dans les planches vivantes du site (RasterExplorer, choroplèthe de grille,
+              carte OSM, comparaison de dates) via le bouton « Paris centre ».
+            </p>
+          </div>
+
+          <div className="mt-4 border border-gilt/15 divide-y divide-gilt/10">
+            {PARIS_DATASET_FILES.map((f) => (
+              <a
+                key={f.name}
+                href={`/data/sample-paris-2026/${f.name}`}
+                download
+                className="flex items-center justify-between gap-4 p-4 hover:bg-gilt/[0.04] transition-colors group"
+              >
+                <div className="min-w-0">
+                  <p className="font-mono text-[12.5px] text-parchment group-hover:text-gilt transition-colors break-all">{f.name}</p>
+                  <p className="text-parchment-dim text-xs mt-1 leading-relaxed">{f.desc}</p>
+                </div>
+                <span className="shrink-0 flex items-center gap-3">
+                  <span className="font-mono text-[10px] text-parchment-dim/80 whitespace-nowrap">{f.size}</span>
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-gilt whitespace-nowrap">Télécharger ↓</span>
+                </span>
+              </a>
+            ))}
+          </div>
         </section>
 
         <section>

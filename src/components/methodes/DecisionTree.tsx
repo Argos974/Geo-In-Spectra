@@ -51,7 +51,7 @@ export function DecisionTree() {
             >
               Aller au chapitre →
             </button>
-            <button type="button" onClick={reset} className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 hover:text-parchment-dim">
+            <button type="button" onClick={reset} className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 hover:text-parchment-dim">
               Recommencer
             </button>
           </div>
@@ -82,7 +82,7 @@ export function DecisionTree() {
             ))}
           </div>
           {path.length > 1 && (
-            <button type="button" onClick={reset} className="mt-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/70 hover:text-parchment-dim">
+            <button type="button" onClick={reset} className="mt-4 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 hover:text-parchment-dim">
               ← Recommencer
             </button>
           )}

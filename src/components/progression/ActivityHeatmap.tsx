@@ -32,7 +32,7 @@ export function ActivityHeatmap({ activeDates, weeks = 18 }: ActivityHeatmapProp
     <div className="border border-gilt/20 bg-canvas p-6">
       <div className="flex items-center justify-between mb-4">
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-gilt">Activité récente</p>
-        <p className="font-mono text-[10px] text-parchment-dim/60">{activeCount} jour{activeCount > 1 ? "s" : ""} au total</p>
+        <p className="font-mono text-[10px] text-parchment-dim/80">{activeCount} jour{activeCount > 1 ? "s" : ""} au total</p>
       </div>
       <div className="flex gap-1 overflow-x-auto">
         {columns.map((col, ci) => (

@@ -70,7 +70,7 @@ export function AnnalesPracticeQuiz({ questions, reviewKey }: { questions: QuizQ
         </div>
       ) : (
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/70 mb-2">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mb-2">
             Question {index + 1} / {questions.length}
           </p>
           <p className="text-parchment mb-4">{q.question}</p>

@@ -53,7 +53,7 @@ export function PersonalGoals() {
                   </span>
                   <span className="min-w-0">
                     <span className={cn("block text-sm truncate", g.done ? "text-parchment-dim/50 line-through" : "text-parchment")}>{g.label}</span>
-                    <span className="block text-xs text-parchment-dim/60">
+                    <span className="block text-xs text-parchment-dim/80">
                       {module && <>{module.navLabel} · </>}
                       {g.done ? "atteint" : d < 0 ? "échéance dépassée" : d === 0 ? "aujourd'hui" : `dans ${d} j`}
                     </span>

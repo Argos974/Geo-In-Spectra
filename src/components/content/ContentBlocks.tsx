@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react"
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import type { ContentBlock } from "@/content/types"
 import { cn } from "@/lib/utils"
@@ -116,6 +116,140 @@ function SolutionBlock({
   )
 }
 
+type ActiveMarginNote = { id: number; title: string; text: string }
+
+/**
+ * Contenu d'une anecdote en cours d'affichage dans une colonne de marge (voir
+ * MarginSlot) — juste le texte, l'identité du bloc qui l'a activée sert à savoir
+ * qui a le droit de la faire disparaître (voir activateMarginNote plus bas).
+ */
+
+/**
+ * Point d'ancrage invisible (pas de <aside> : rôle ARIA "complementary" implicite,
+ * et un lecteur d'écran signale une violation dès que plusieurs landmarks du même
+ * type coexistent sans nom distinct — audit axe-core, landmark-unique — sur une
+ * page à 5 anecdotes ça en ferait 5 non nommées ; une anecdote n'est de toute façon
+ * pas une vraie région "complémentaire" au sens de la page) posé à la place exacte
+ * de l'anecdote dans le texte. Il ne montre rien lui-même à partir de `xl` : il
+ * prévient juste ContentBlocks (via `onActivate`) quand cette portion du texte
+ * traverse le viewport, pour que le contenu apparaisse dans la colonne de marge
+ * fixe correspondante (MarginSlot) au lieu de rester collé ici. En dessous de
+ * `xl` (pas assez de gouttière pour une colonne, comme le mini-nav ChapterNav)
+ * et à l'impression (rendu statique hors défilement), il affiche directement son
+ * contenu en ligne, sans observateur — traitement délibérément discret (pas de
+ * fond, pas de gras, italique fin) : une digression, pas une information au même
+ * rang qu'un callout ou une formule.
+ */
+function MarginNoteAnchor({
+  id,
+  block,
+  isPrint,
+  textDim,
+  onActivate,
+}: {
+  id: number
+  block: Extract<ContentBlock, { type: "marginnote" }>
+  isPrint: boolean
+  textDim: string
+  onActivate: (id: number, note: { title: string; text: string } | null) => void
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (isPrint) return
+    const el = ref.current
+    if (!el) return
+    // Bande de déclenchement volontairement large (le point d'ancrage entier, pas
+    // une fraction resserrée) : un retrait en pourcentage de la hauteur du viewport
+    // avait déjà, une fois, réduit cette bande à une fenêtre minuscule voire négative
+    // sur une fenêtre de hauteur modeste — rendant l'anecdote invisible en permanence.
+    // Ici, l'anecdote reste affichée tant que son point d'ancrage touche l'écran, du
+    // moment où il entre par le bas jusqu'à sa sortie par le haut.
+    const observer = new IntersectionObserver(
+      ([entry]) => onActivate(id, entry.isIntersecting ? { title: block.title, text: block.text } : null),
+      { threshold: 0 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [id, isPrint, block.title, block.text, onActivate])
+
+  // Le point de mesure (`ref`) reste toujours un élément réel du flux — jamais
+  // `display:none` — même quand son contenu visuel est masqué à `xl`+ : un élément cd
+  // `display:none` sort du rendu et n'a plus de position, `IntersectionObserver` ne
+  // peut alors plus jamais le voir traverser le viewport. Seul l'enfant (le contenu
+  // visible de secours en dessous de `xl`) porte `xl:hidden`, jamais le conteneur mesuré.
+  return (
+    <div ref={ref}>
+      <div className={cn(!isPrint && "xl:hidden", "mb-2 py-0.5 border-l-2 pl-3", isPrint ? "border-[#8a6a2f]/25" : "border-gilt/20")}>
+        <p className={cn("font-mono text-[9px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{block.title}</p>
+        <p className={cn("text-[12.5px] leading-relaxed italic opacity-80", textDim)}>{block.text}</p>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Colonne de marge, positionnée dans la marge exactement comme ChapterNav (même
+ * distance depuis le bord de la colonne de lecture centrée) — mais affichant
+ * l'anecdote actuellement "active" (voir MarginNoteAnchor) au lieu d'une liste de
+ * chapitres. Rendue une seule fois par page/chapitre ouvert, pas une par anecdote :
+ * le contenu qu'elle affiche change (fondu) au fil du défilement, sa position ne
+ * bouge pas.
+ *
+ * `fixed`, pas `sticky` comme ChapterNav : cette colonne apparaît/disparaît (donc
+ * change de hauteur) à chaque anecdote, alors que ChapterNav a une hauteur stable
+ * du début à la fin. Un élément `sticky` reste dans le flux normal — le moindre
+ * changement de sa propre hauteur repousse tout ce qui suit, y compris les points
+ * d'ancrage plus bas dans le texte (voir MarginNoteAnchor) ; si l'un de ces points
+ * est juste à la limite du viewport au même instant, ce déplacement suffit à
+ * inverser son intersection, ce qui déclenche un nouveau changement de hauteur, qui
+ * le repousse à nouveau dans l'autre sens : c'était le tremblement observé au
+ * moment précis où une anecdote apparaît/disparaît. `fixed` sort complètement du
+ * flux du document : son affichage ne peut plus ni pousser ni être poussé par le
+ * reste de la page, la boucle est cassée à la racine.
+ *
+ * Position calculée depuis `50vw` (le centre du viewport) plutôt que depuis le
+ * conteneur `max-w-4xl` centré : un élément `fixed` ne connaît que le viewport, pas
+ * la mise en page de son ancêtre. La constante à gauche (656px) reproduit
+ * exactement l'offset de ChapterNav (moitié de 896px + distance de décalage hors
+ * colonne), vérifiée pixel pour pixel par mesure directe du DOM — d'où une boîte
+ * de même largeur (`w-48`) que lui, cohérent avec "la même colonne".
+ *
+ * À droite, une boîte à la largeur de ChapterNav (`w-48`) déborderait sur le texte
+ * à la largeur `xl` minimale (1280px) : ChapterNav absorbe ce même manque de place
+ * en tronquant ses titres sur une ligne (`truncate`), ce qu'un paragraphe
+ * d'anecdote ne peut pas faire proprement. La colonne droite est donc plus étroite
+ * (`w-40`) avec un espacement fixe (24px, indépendant de la largeur du viewport)
+ * entre son bord gauche et le bord droit du texte — jamais de chevauchement, à
+ * aucune largeur `xl` et au-delà.
+ *
+ * Colonne gauche : positionnée sous la hauteur habituelle de ChapterNav (`top`
+ * généreux) pour ne jamais se superposer à lui — ChapterNav reste épinglé en haut
+ * de cette même colonne pour la quasi-totalité du défilement d'une page Cours.
+ * Colonne droite : rien à éviter (colonne vide), au même niveau que ChapterNav
+ * pour l'équilibre visuel.
+ */
+function MarginSlot({ side, note, isPrint, textDim }: { side: "left" | "right"; note: ActiveMarginNote | null; isPrint: boolean; textDim: string }) {
+  if (isPrint) return null
+  return (
+    <div
+      aria-hidden={!note}
+      className={cn(
+        "hidden xl:block xl:fixed xl:transition-opacity xl:duration-700 xl:ease-out",
+        side === "left" ? "xl:w-48 xl:top-[31.25rem] xl:left-[calc(50vw-656px)]" : "xl:w-40 xl:top-32 xl:right-[calc(50vw-632px)]",
+        note ? "xl:opacity-100" : "xl:opacity-0",
+      )}
+    >
+      {note && (
+        <div className="border-l-2 border-gilt/20 pl-3 py-0.5">
+          <p className={cn("font-mono text-[9px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{note.title}</p>
+          <p className={cn("text-[12.5px] leading-relaxed italic opacity-80", textDim)}>{note.text}</p>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { blocks: ContentBlock[]; variant?: Variant; game?: GameDef; moduleSlug?: string }) {
   const isPrint = variant === "print"
 
@@ -134,8 +268,24 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
   // incrémenté ici, dans l'ordre de rendu (le .map ci-dessous est synchrone).
   let marginnoteSeq = 0
 
+  // Anecdote actuellement affichée dans chaque colonne de marge (voir MarginSlot) —
+  // `id` (index du bloc) sert à arbitrer les activations concurrentes : un ancrage
+  // ne peut effacer la colonne que s'il en est bien l'auteur actuel, sinon un
+  // ancrage qui sort du viewport après qu'un autre y soit déjà entré écraserait le
+  // nouveau contenu avec `null`.
+  const [activeLeft, setActiveLeft] = useState<ActiveMarginNote | null>(null)
+  const [activeRight, setActiveRight] = useState<ActiveMarginNote | null>(null)
+  const activateLeft = useCallback((id: number, note: { title: string; text: string } | null) => {
+    setActiveLeft((prev) => (note ? { id, ...note } : prev?.id === id ? null : prev))
+  }, [])
+  const activateRight = useCallback((id: number, note: { title: string; text: string } | null) => {
+    setActiveRight((prev) => (note ? { id, ...note } : prev?.id === id ? null : prev))
+  }, [])
+
   return (
     <div className="space-y-6">
+      <MarginSlot side="left" note={activeLeft} isPrint={isPrint} textDim={textDim} />
+      <MarginSlot side="right" note={activeRight} isPrint={isPrint} textDim={textDim} />
       {blocks.map((block, i) => {
         switch (block.type) {
           case "heading":
@@ -263,39 +413,13 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             )
 
           case "marginnote": {
-            // Note historique/anecdotique : rejetée dans la marge sur les très grands
-            // écrans (technique classique "sidenote", float + marge négative — la
-            // colonne de lecture ne bouge pas, la note vient occuper le vide qui existe
-            // déjà à côté d'elle). En dessous de ce seuil, pas assez de gouttière pour
-            // l'accueillir sans chevaucher : elle redevient un simple encart en ligne.
-            // Traitement délibérément discret (pas de fond, pas de gras, italique fin) :
-            // une digression, pas une information au même rang qu'un callout ou une formule.
             // Alterne gauche/droite (voir marginnoteSeq plus haut) : le but n'est pas
             // seulement de désencombrer le texte, mais de faire bouger le regard du
             // lecteur d'un côté puis de l'autre entre deux paragraphes techniques denses.
             const onLeft = marginnoteSeq % 2 === 1
             marginnoteSeq++
-            // <div>, pas <aside> : <aside> porte un rôle ARIA "complementary" implicite,
-            // et un lecteur d'écran signale une violation dès que plusieurs landmarks du
-            // même type coexistent sans nom distinct (audit axe-core, landmark-unique) —
-            // sur une page à 5 anecdotes, ça en ferait 5 non nommées. Une anecdote lue au
-            // fil du texte n'est de toute façon pas une vraie région "complémentaire" au
-            // sens de la page (pas un widget de barre latérale autonome), donc pas de perte
-            // sémantique à ne pas en faire un landmark.
             return (
-              <div
-                key={i}
-                className={cn(
-                  "2xl:w-[220px] 2xl:mt-1 mb-2 py-0.5",
-                  onLeft
-                    ? "2xl:float-left 2xl:clear-left 2xl:ml-[-256px] border-r pr-3"
-                    : "2xl:float-right 2xl:clear-right 2xl:mr-[-256px] border-l pl-3",
-                  isPrint ? "border-[#8a6a2f]/25" : "border-gilt/20",
-                )}
-              >
-                <p className={cn("font-mono text-[9px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{block.title}</p>
-                <p className={cn("text-[12.5px] leading-relaxed italic opacity-80", textDim)}>{block.text}</p>
-              </div>
+              <MarginNoteAnchor key={i} id={i} block={block} isPrint={isPrint} textDim={textDim} onActivate={onLeft ? activateLeft : activateRight} />
             )
           }
 

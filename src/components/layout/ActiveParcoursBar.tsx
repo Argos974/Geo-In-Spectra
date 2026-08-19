@@ -27,9 +27,9 @@ export function ActiveParcoursBar() {
   }
 
   return (
-    <div className="fixed top-16 inset-x-0 z-40 border-b border-gilt/25 bg-ink/95 backdrop-blur-md">
+    <div className="print:hidden fixed top-16 inset-x-0 z-40 border-b border-gilt/25 bg-ink/95 backdrop-blur-md">
       <div className="mx-auto max-w-[1800px] px-6 md:px-8 py-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[11px] uppercase tracking-wider">
-        <span className="text-gilt/70 shrink-0">Parcours : {parcours.title}</span>
+        <span className="text-gilt/85 shrink-0">Parcours : {parcours.title}</span>
         <span className="text-parchment-dim shrink-0">
           Étape {active.stepIndex + 1}/{parcours.stops.length} · {stop.label}
         </span>

@@ -11,8 +11,7 @@ import {
   type BandSample,
 } from "@/lib/raster"
 import { cn } from "@/lib/utils"
-
-const BANDS_URL = "/data/sample-vitrolles-2024/sentinel2_2024-08-06_vitrolles_bands.tif"
+import { DEMO_SITES, DEFAULT_SITE_ID, getSite } from "@/lib/sites"
 
 type Mode = "rgb" | IndexKey
 
@@ -44,15 +43,31 @@ const BAND_LABEL: Record<keyof BandSample, string> = {
  * plutôt qu'un exemple générique.
  */
 export function RasterExplorer() {
+  const [siteId, setSiteId] = useState(DEFAULT_SITE_ID)
+  const site = getSite(siteId)
   const [state, setState] = useState<{ status: "loading" | "error" | "done"; raster?: LoadedRaster; error?: string }>({ status: "loading" })
   const [mode, setMode] = useState<Mode>("ndvi")
   const [picked, setPicked] = useState<{ px: number; py: number; sample: BandSample } | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  // Un seul fetch/décodage par site pour la durée de vie du composant — reprendre
+  // le même GeoTIFF une seconde fois (aller-retour entre sites) redéclenchait des
+  // requêtes Range qui entraient en conflit avec le cache HTTP du navigateur et
+  // échouaient silencieusement ; la donnée déjà décodée est réutilisée telle quelle.
+  const rasterCache = useRef<Map<string, LoadedRaster>>(new Map())
 
   useEffect(() => {
+    const cached = rasterCache.current.get(site.bandsUrl)
+    if (cached) {
+      setState({ status: "done", raster: cached })
+      setPicked(null)
+      return
+    }
     let cancelled = false
-    loadFullRaster(BANDS_URL)
+    setState({ status: "loading" })
+    setPicked(null)
+    loadFullRaster(site.bandsUrl)
       .then((raster) => {
+        rasterCache.current.set(site.bandsUrl, raster)
         if (!cancelled) setState({ status: "done", raster })
       })
       .catch((err) => {
@@ -61,7 +76,7 @@ export function RasterExplorer() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [site.bandsUrl])
 
   const stretch = useMemo(() => {
     if (state.status !== "done" || !state.raster) return null
@@ -122,11 +137,26 @@ export function RasterExplorer() {
   return (
     <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
       <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Planche vivante · Sentinel-2 réel, décodé dans le navigateur</p>
-      <p className="font-mono text-[11px] text-parchment-dim mb-5">
-        Vitrolles, 06/08/2024 — 6 bandes réelles en réflectance de surface (0–1), EPSG:2154, 10 m. Clique un pixel pour voir ses bandes et l'indice calculé en direct.
+      <p className="font-mono text-[11px] text-parchment-dim mb-3">
+        {site.label}, {site.date} — 6 bandes réelles en réflectance de surface (0–1), EPSG:2154, 10 m. Clique un pixel pour voir ses bandes et l'indice calculé en direct.
       </p>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {DEMO_SITES.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setSiteId(s.id)}
+            className={cn(
+              "font-mono text-[10px] uppercase tracking-wider px-2.5 py-1.5 border transition-colors",
+              siteId === s.id ? "border-gilt bg-gilt/15 text-gilt" : "border-gilt/25 text-parchment-dim hover:border-gilt/50",
+            )}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
 
-      {state.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Décodage du GeoTIFF (334 × 342 px)…</p>}
+      {state.status === "loading" && <p className="font-mono text-sm text-parchment-dim">Décodage du GeoTIFF…</p>}
 
       {state.status === "error" && (
         <p className="font-mono text-sm text-oxblood-bright">Échec du chargement ({state.error}). Vérifie que le jeu de données est bien servi sur ce domaine.</p>
@@ -156,7 +186,7 @@ export function RasterExplorer() {
               className="w-full h-auto border border-gilt/15 cursor-crosshair"
               style={{ imageRendering: "pixelated" }}
             />
-            <p className="font-mono text-[10px] text-parchment-dim/70 mt-2">
+            <p className="font-mono text-[10px] text-parchment-dim/80 mt-2">
               {picked ? `Pixel (${picked.px}, ${picked.py})` : "Aucun pixel sélectionné"}
             </p>
           </div>
@@ -175,7 +205,7 @@ export function RasterExplorer() {
                 </tbody>
               </table>
             ) : (
-              <p className="font-mono text-[11px] text-parchment-dim/70 mb-4">Clique un pixel de la planche pour voir sa réflectance réelle par bande.</p>
+              <p className="font-mono text-[11px] text-parchment-dim/80 mb-4">Clique un pixel de la planche pour voir sa réflectance réelle par bande.</p>
             )}
 
             {activeDef && (
@@ -189,7 +219,7 @@ export function RasterExplorer() {
                     <p className="font-mono text-xl text-gilt-bright tabular-nums">= {pickedValue.toFixed(3)}</p>
                   </>
                 ) : (
-                  <p className="font-mono text-[11px] text-parchment-dim/70">Clique un pixel pour calculer sa valeur réelle.</p>
+                  <p className="font-mono text-[11px] text-parchment-dim/80">Clique un pixel pour calculer sa valeur réelle.</p>
                 )}
               </>
             )}

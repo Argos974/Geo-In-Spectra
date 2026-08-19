@@ -1,5 +1,8 @@
-import type { CSSProperties, ReactNode } from "react"
+import { useRef, type CSSProperties, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { useScrollReveal } from "@/hooks/useScrollReveal"
+import { useTiltHover } from "@/hooks/useTiltHover"
 
 interface EngravedFrameProps {
   children: ReactNode
@@ -17,10 +20,16 @@ interface EngravedFrameProps {
  */
 export function EngravedFrame({ children, caption, plate, variant = "dark" }: EngravedFrameProps) {
   const isPrint = variant === "print"
+  const figureRef = useRef<HTMLElement>(null)
+  const frameRef = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
+
+  useScrollReveal(figureRef, !isPrint && !reducedMotion)
+  useTiltHover(frameRef, !isPrint && !reducedMotion, 4)
 
   return (
-    <figure className="my-2">
-      <div className={cn("border p-5 md:p-8", isPrint ? "border-[#8a6a2f]/40 bg-black/[0.02]" : "border-gilt/25 bg-black/20")}>
+    <figure ref={figureRef} className="my-2">
+      <div ref={frameRef} className={cn("border p-5 md:p-8", isPrint ? "border-[#8a6a2f]/40 bg-black/[0.02]" : "border-gilt/25 bg-black/20 gilt-sheen")}>
         <div
           className={isPrint ? "text-[#3a3020]" : "text-gilt/80"}
           // Un diagramme (NeuralNetwork) a besoin de connaître la couleur de fond réelle

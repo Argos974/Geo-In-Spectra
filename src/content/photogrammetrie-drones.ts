@@ -18,6 +18,13 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     text: "La photogrammétrie reconstruit la géométrie 3D d'une scène à partir de plusieurs photographies 2D qui se recouvrent, prises sous des angles légèrement différents — le même principe que la vision stéréoscopique humaine (deux yeux, deux points de vue légèrement décalés, le cerveau reconstitue la profondeur), mais appliqué à des dizaines ou des centaines d'images plutôt qu'à deux.",
   },
 
+  {
+    type: "callout",
+    tone: "example",
+    title: "Ordre de grandeur : à quelle échelle passe-t-on d'un satellite à un drone",
+    text: "Un pixel Sentinel-2 (module Le Regard) couvre 10 m au sol. Un drone volant à 100 m d'altitude avec un capteur grand public produit typiquement un pixel de 2 à 3 cm au sol — un facteur d'échelle d'environ 300 à 500 entre les deux, qui explique pourquoi la photogrammétrie de drone détecte des objets et des défauts (une fissure de chaussée, un pied de vigne isolé) totalement invisibles à l'échelle satellite.",
+  },
+
   { type: "heading", text: "2. Le recouvrement : condition indispensable à la reconstruction", level: "lycee" },
   {
     type: "paragraph",
@@ -53,6 +60,17 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     tone: "info",
     title: "Pourquoi la SfM a démocratisé la photogrammétrie",
     text: "Avant la SfM automatique, la photogrammétrie aérienne exigeait des caméras métriques calibrées et un opérateur spécialisé. La SfM tolère des caméras grand public non calibrées (y compris celle d'un drone commercial) : elle calibre la caméra elle-même comme sous-produit du calcul, à partir des correspondances entre images — c'est ce qui a rendu la photogrammétrie de drone accessible hors du cercle des professionnels spécialisés.",
+  },
+
+  {
+    type: "paragraph",
+    text: "Le calcul lui-même se déroule en deux temps, distincts dans presque tous les logiciels de photogrammétrie (Pix4D, Agisoft Metashape, WebODM) : un ajustement de faisceaux (bundle adjustment) résout d'abord, en une seule optimisation globale, la position/orientation de chaque photo et la position 3D du nuage de points épars, en minimisant l'écart entre où chaque point caractéristique devrait apparaître selon le modèle et où il apparaît réellement sur chaque photo ; une correspondance dense (Multi-View Stereo, section 8) densifie ensuite ce nuage épars en un nuage de plusieurs millions de points.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un ajustement de faisceaux qui \"converge\" n'est pas automatiquement juste",
+    text: "Un bundle adjustment peut converger vers une solution mathématiquement cohérente mais globalement déformée — un phénomène connu sous le nom de \"dome effect\" (effet dôme), une légère courbure systématique du modèle, en particulier sur des vols à axe unique sans GCP ni RTK. La correction : croiser des photos à angle oblique en plus du nadir (vue verticale), ou caler le modèle sur des GCP répartis (section 5), qui contraignent la géométrie globale plutôt que de laisser le bundle adjustment livré à lui-même.",
   },
 
   { type: "heading", text: "4. MNS et MNT : deux surfaces, pas la même chose", level: "superieur" },
@@ -108,6 +126,35 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     title: "RTK/PPK réduit le besoin en GCP, sans l'éliminer totalement",
     text: "Un vol RTK/PPK bien calibré peut réduire fortement le nombre de GCP nécessaires (parfois à quelques points de vérification plutôt qu'un maillage dense), mais ne dispense pas totalement d'un contrôle terrain indépendant : la précision RTK/PPK dépend elle-même de la qualité de sa propre station de référence et de la durée de calibration, deux points à vérifier avant de faire totalement confiance au résultat sans aucune vérification externe.",
   },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "GCP seuls",
+        points: [
+          "Aucun matériel embarqué supplémentaire, coût le plus bas",
+          "Précision homogène sur toute l'emprise si la répartition est bonne",
+          "Levé GPS terrain nécessaire avant chaque vol, temps non négligeable",
+        ],
+      },
+      {
+        label: "RTK (temps réel)",
+        points: [
+          "Position de chaque photo connue au centimètre dès le vol",
+          "Nécessite une station de référence proche ou un réseau RTK en ligne",
+          "Réduit fortement, sans l'éliminer, le nombre de GCP nécessaires",
+        ],
+      },
+      {
+        label: "PPK (post-traitement)",
+        points: [
+          "Moins dépendant d'une liaison radio continue pendant le vol qu'en RTK",
+          "Correction appliquée après le vol, à partir des mêmes journaux GPS",
+          "Précision comparable au RTK, workflow légèrement plus long avant résultat",
+        ],
+      },
+    ],
+  },
   { type: "game" },
 
   { type: "heading", text: "8. Nuage de points et maillage (mesh)", level: "approfondissement" },
@@ -116,7 +163,33 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     text: "La sortie brute de la SfM est un nuage de points épars (les points caractéristiques mis en correspondance), densifié ensuite par un algorithme de correspondance dense (Multi-View Stereo, MVS) en un nuage de plusieurs millions à milliards de points. Ce nuage peut ensuite être transformé en un maillage 3D continu (triangulation entre points voisins) pour produire un modèle solide texturé, utile pour la visualisation ou l'impression 3D, au-delà du seul usage cartographique du nuage de points ou du MNS qui en dérive.",
   },
 
-  { type: "heading", text: "9. Photogrammétrie vs LiDAR : forces et limites respectives", level: "approfondissement" },
+  { type: "heading", text: "9. L'orthomosaïque : assembler les photos en une seule image cartographiable", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Une simple mosaïque de photos brutes assemblées bord à bord reste géométriquement fausse : chaque photo porte sa propre déformation de perspective (plus un objet est haut, plus il est décalé vers les bords de la photo). L'orthomosaïque corrige cette déformation photo par photo, à partir du MNS (section 4), avant l'assemblage — le résultat est une image unique, à l'échelle constante en tout point, directement superposable à un fond cartographique, exactement comme une orthophoto IGN classique (module Fondements).",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une correction radiométrique est nécessaire, pas seulement géométrique",
+    text: "Chaque photo est prise sous un éclairage légèrement différent (nuage passager, angle du soleil qui change en cours de vol) : sans correction radiométrique (égalisation des couleurs entre photos adjacentes), l'orthomosaïque finale affiche des bandes visibles de teinte différente d'une photo à l'autre — un défaut purement esthétique en apparence, mais qui fausse aussi tout indice spectral calculé ensuite sur cette mosaïque (NDVI en agriculture de précision, module Études de cas sectorielles) si la correction n'a pas été appliquée avant le calcul.",
+  },
+
+  { type: "heading", text: "10. Cadre réglementaire du vol de drone en France", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un vol de drone à usage professionnel (photogrammétrie, inspection) en France est encadré par la réglementation européenne applicable depuis 2021, elle-même déclinée localement : catégorie \"ouverte\" pour les vols à faible risque en vue directe, catégorie \"spécifique\" (autorisation préalable) dès que le vol sort de ce cadre (hors vue directe, au-dessus d'un rassemblement de personnes, en zone urbaine dense selon le poids de l'appareil).",
+  },
+  {
+    type: "list",
+    items: [
+      "Vérifier systématiquement les zones d'interdiction ou de restriction de vol (proximité d'aérodrome, site militaire, zone Natura 2000 sensible) avant toute planification, via la carte officielle dédiée",
+      "Le télépilote doit détenir une attestation adaptée à la catégorie de vol, distincte d'un simple permis de loisir",
+      "Le survol de propriétés privées ou de personnes non impliquées dans l'opération reste encadré même en catégorie ouverte",
+    ],
+  },
+
+  { type: "heading", text: "11. Photogrammétrie vs LiDAR : forces et limites respectives", level: "approfondissement" },
   {
     type: "comparison",
     items: [
@@ -131,7 +204,7 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     description: "La salle suivante détaille le principe actif du LiDAR et son signal en retours multiples, évoqué ici en comparaison.",
   },
 
-  { type: "heading", text: "10. Erreurs fréquentes en photogrammétrie de drone", level: "superieur" },
+  { type: "heading", text: "12. Erreurs fréquentes en photogrammétrie de drone", level: "superieur" },
   {
     type: "list",
     items: [
@@ -140,6 +213,13 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
       "Confondre MNS et MNT et calculer une hauteur de bâtiment ou un volume directement sur le MNS sans en soustraire le MNT",
       "Voler par vent fort ou lumière changeante (nuages qui passent), qui dégrade la cohérence photométrique entre photos et complique la mise en correspondance SfM",
       "Ignorer les zones homogènes sans texture (eau calme, surface bétonnée uniforme) : la SfM n'y trouve aucun point caractéristique fiable à mettre en correspondance, laissant des trous dans le modèle indépendamment du recouvrement",
+      "Publier une orthomosaïque sans correction radiométrique, faussant tout indice spectral calculé ensuite dessus (section 9)",
     ],
+  },
+  {
+    type: "link",
+    to: "/module/lidar",
+    label: "Continuer : le LiDAR, une alternative active à la photogrammétrie",
+    description: "La salle suivante détaille le principe du temps de vol laser, comparé ici à la photogrammétrie (section 11).",
   },
 ]

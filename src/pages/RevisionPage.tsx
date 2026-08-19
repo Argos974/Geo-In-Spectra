@@ -4,6 +4,7 @@ import { getDueReviewQuestions, getReviewQueueSize, advanceReviewBox, resetRevie
 import { resolveReviewSource } from "@/lib/reviewSource"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
 import { PARCOURS, getParcoursModuleSlugs } from "@/data/parcours"
+import { QuestionAnswerBlock } from "@/components/quiz/QuestionAnswerBlock"
 import { cn } from "@/lib/utils"
 
 interface ReviewItem {
@@ -47,41 +48,25 @@ export function RevisionPage() {
   )
   const [finished, setFinished] = useState(false)
   const [pos, setPos] = useState(0)
-  const [selected, setSelected] = useState<number | null>(null)
 
   function toggleExpressMode() {
     setExpressMode((v) => !v)
     setFinished(false)
     setPos(0)
-    setSelected(null)
   }
 
   const current = items[pos]
   const question = current ? resolveReviewSource(current.slug)?.questions[current.questionIndex] : undefined
+  const isLast = pos + 1 >= items.length
 
-  // Même raison qu'en QuizPage : ordre mélangé à chaque question pour ne pas
-  // laisser la position devenir un repère mémorisable indépendant du contenu.
-  const shuffled = useMemo(() => {
-    if (!question) return null
-    const order = question.choices.map((_, i) => i)
-    for (let i = order.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[order[i], order[j]] = [order[j], order[i]]
-    }
-    return { choices: order.map((i) => question.choices[i]), correctIndex: order.indexOf(question.correctIndex) }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pos, question])
-
-  function choose(i: number) {
-    if (selected !== null || !current || !question || !shuffled) return
-    setSelected(i)
-    if (i === shuffled.correctIndex) advanceReviewBox(current.slug, current.questionIndex)
+  function handleAnswered(correct: boolean) {
+    if (!current) return
+    if (correct) advanceReviewBox(current.slug, current.questionIndex)
     else resetReviewBox(current.slug, current.questionIndex)
   }
 
   function next() {
-    setSelected(null)
-    if (pos + 1 >= items.length) {
+    if (isLast) {
       setFinished(true)
       setPos(0)
       return
@@ -141,7 +126,7 @@ export function RevisionPage() {
               onClick={toggleExpressMode}
               className={cn(
                 "font-mono text-[10px] uppercase tracking-wider border px-3 py-1 transition-colors",
-                expressMode ? "border-gilt bg-gilt/10 text-gilt" : "border-gilt/30 text-parchment-dim/70 hover:text-gilt hover:border-gilt/50",
+                expressMode ? "border-gilt bg-gilt/10 text-gilt" : "border-gilt/30 text-parchment-dim/80 hover:text-gilt hover:border-gilt/50",
               )}
             >
               Express · {parcoursMeta.title}
@@ -155,47 +140,15 @@ export function RevisionPage() {
 
         <p className="font-heading text-xl mb-6">{question.question}</p>
 
-        <div className="space-y-3 mb-6">
-          {(shuffled?.choices ?? question.choices).map((choice, i) => {
-            const isCorrect = i === (shuffled?.correctIndex ?? question.correctIndex)
-            const isSelected = i === selected
-            const revealed = selected !== null
-            return (
-              <button
-                key={choice}
-                type="button"
-                onClick={() => choose(i)}
-                disabled={revealed}
-                className={cn(
-                  "w-full text-left px-4 py-3 border transition-colors",
-                  !revealed && "border-gilt/20 text-parchment-dim hover:border-gilt/50 hover:text-parchment",
-                  revealed && isCorrect && "border-gilt bg-gilt/10 text-gilt",
-                  revealed && isSelected && !isCorrect && "border-oxblood bg-oxblood/10 text-oxblood-bright",
-                  revealed && !isSelected && !isCorrect && "border-gilt/10 text-parchment-dim/40",
-                )}
-              >
-                {choice}
-              </button>
-            )
-          })}
-        </div>
-
-        {selected !== null && (
-          <div className="border border-gilt/20 bg-white/[0.02] p-5 mb-6">
-            <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">Explication</p>
-            <p className="text-parchment-dim leading-relaxed text-justify">{question.explanation}</p>
-          </div>
-        )}
-
-        {selected !== null && (
-          <button
-            type="button"
-            onClick={next}
-            className="font-mono text-[12px] uppercase tracking-wider text-gilt border-b border-gilt/40 hover:border-gilt-bright hover:text-gilt-bright transition-colors pb-1"
-          >
-            {pos + 1 >= items.length ? "Terminer →" : "Question suivante →"}
-          </button>
-        )}
+        {/* Clé = (pos, expressMode) : remonte le bloc à chaque nouvelle carte, et aussi au
+            basculement du mode express (qui peut ramener pos à 0 sur une carte différente). */}
+        <QuestionAnswerBlock
+          key={`${pos}-${expressMode}`}
+          question={question}
+          nextLabel={isLast ? "Terminer →" : "Question suivante →"}
+          onAnswered={handleAnswered}
+          onNext={next}
+        />
       </div>
     </div>
   )

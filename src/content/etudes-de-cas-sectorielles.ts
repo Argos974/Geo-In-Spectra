@@ -32,6 +32,13 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     ],
   },
 
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un ordre de grandeur d'économie d'intrant",
+    text: "Sur une parcelle de 20 ha zonée en trois classes de vigueur (faible/moyenne/forte), une modulation qui réduit la dose d'azote de 20 % sur les 6 ha de classe forte (déjà bien pourvus) et l'augmente de 15 % sur les 4 ha de classe faible, dose uniforme inchangée sur le reste, se traduit typiquement par une économie nette d'intrant de l'ordre de quelques pourcents à l'échelle de la parcelle entière, sans perte de rendement sur les zones sous-dosées à tort par l'ancienne dose uniforme — l'ordre de grandeur exact dépend entièrement du contexte agronomique local, jamais transposable tel quel d'une parcelle à l'autre.",
+  },
+
   { type: "heading", text: "3. Étude de cas : d'un NDVI à une carte de préconisation à taux variable", level: "superieur" },
   {
     type: "table",
@@ -48,6 +55,13 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     tone: "warning",
     title: "Un NDVI unique ne suffit jamais à une vraie préconisation",
     text: "Une zone de NDVI faible peut signaler un stress hydrique, une carence en azote, une maladie, ou simplement un sol naturellement moins profond — le NDVI seul ne distingue pas la cause. Une préconisation agronomique fiable croise systématiquement le NDVI avec un historique de rendement, une analyse de sol, ou plusieurs dates de NDVI (série temporelle) plutôt qu'une image isolée.",
+  },
+
+  {
+    type: "link",
+    to: "/module/traitements-ia",
+    label: "Voir aussi : classification non supervisée",
+    description: "Le module L'Intelligence détaille les k-moyennes et les autres méthodes de classification mobilisées ici pour zoner la vigueur.",
   },
 
   { type: "heading", text: "4. Urbanisme : artificialisation des sols et îlots de chaleur", level: "superieur" },
@@ -83,6 +97,11 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     tone: "warning",
     title: "Un seuil de détection de changement n'est jamais universel",
     text: "Le seuil de ΔNDBI retenu comme \"changement significatif\" doit être calibré sur des zones de vérité terrain connues (une zone effectivement urbanisée récemment vs une zone restée stable), pas fixé arbitrairement : un seuil trop bas confond bruit radiométrique normal et vrai changement, un seuil trop haut manque des changements réels de faible intensité.",
+  },
+
+  {
+    type: "paragraph",
+    text: "L'objectif « zéro artificialisation nette » (loi Climat et Résilience, 2021) fixe une trajectoire de réduction du rythme d'artificialisation, mesurée précisément par ce type de suivi ΔNDBI à l'échelle communale ou intercommunale — un exemple direct où une méthode de télédétection alimente un indicateur de politique publique opposable, pas seulement une carte descriptive.",
   },
 
   { type: "heading", text: "6. Gestion des risques naturels : croiser aléa, enjeux, vulnérabilité en pratique", level: "superieur" },
@@ -121,7 +140,25 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     text: "La gestion forestière mobilise une combinaison différente : un modèle de hauteur de canopée LiDAR (module LiDAR) pour estimer un volume de bois sur pied, croisé avec une classification d'essence par imagerie multispectrale ou hyperspectrale (module Le Regard) et un suivi temporel de coupes rases par détection de changement (même logique ΔNDVI que la section 5), pour planifier une exploitation durable plutôt que réagir après coup à une coupe déjà réalisée.",
   },
 
-  { type: "heading", text: "9. Ce que ces secteurs partagent méthodologiquement", level: "superieur" },
+  { type: "heading", text: "9. Étude de cas : estimer un volume de bois sur pied", level: "approfondissement" },
+  {
+    type: "table",
+    headers: ["Étape", "Méthode mobilisée (déjà vue)", "Salle de référence"],
+    rows: [
+      ["Modèle de hauteur de canopée (CHM)", "CHM = MNS − MNT, différence de deux surfaces LiDAR", "LiDAR"],
+      ["Classification d'essence (résineux/feuillus)", "Classification supervisée sur signature spectrale", "Le Regard, L'Intelligence"],
+      ["Volume sur pied par placette", "Équation allométrique hauteur → volume, calibrée par essence", "—"],
+      ["Suivi des coupes rases dans le temps", "Détection de changement, seuillage ΔNDVI", "Les Couleurs, section 5 (ci-dessus)"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une équation allométrique n'est valable que dans son domaine de calibration",
+    text: "La relation entre hauteur de canopée et volume de bois (équation allométrique) est calibrée sur un échantillon de placettes mesurées au sol, pour une essence et une région données. L'appliquer telle quelle à une essence différente, ou à un peuplement d'âge très différent de celui de l'échantillon de calibration, produit une estimation de volume potentiellement fausse sans qu'aucune erreur ne soit visible dans le calcul lui-même — seule une nouvelle calibration locale, ou une équation publiée explicitement pour ce contexte, garantit un résultat fiable.",
+  },
+
+  { type: "heading", text: "10. Ce que ces secteurs partagent méthodologiquement", level: "superieur" },
   {
     type: "list",
     items: [
@@ -132,11 +169,39 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "10. Limites d'un transfert méthodologique d'un secteur à l'autre", level: "approfondissement" },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Agriculture de précision",
+        points: ["Donnée : NDVI répété dans la saison", "Décision : dose d'intrant modulée", "Échelle : intra-parcellaire"],
+      },
+      {
+        label: "Urbanisme (artificialisation)",
+        points: ["Donnée : ΔNDBI pluriannuel", "Décision : indicateur ZAN, PLU", "Échelle : communale/intercommunale"],
+      },
+      {
+        label: "Risque incendie",
+        points: ["Donnée : aléa/enjeux/vulnérabilité croisés", "Décision : priorisation de la prévention", "Échelle : communale, ciblée par secteur"],
+      },
+      {
+        label: "Foresterie",
+        points: ["Donnée : CHM LiDAR + classification d'essence", "Décision : plan d'exploitation durable", "Échelle : peuplement/parcelle forestière"],
+      },
+    ],
+  },
+
+  { type: "heading", text: "11. Limites d'un transfert méthodologique d'un secteur à l'autre", level: "approfondissement" },
   {
     type: "callout",
     tone: "warning",
     title: "Une méthode qui marche dans un secteur ne se transpose pas automatiquement",
     text: "Un seuil de ΔNDBI calibré pour détecter une artificialisation urbaine n'a aucune raison de bien fonctionner tel quel pour détecter un changement agricole (rotation de cultures normale, pas un vrai changement d'occupation du sol) : chaque secteur a sa propre dynamique temporelle et ses propres faux positifs typiques. Réutiliser une méthode d'un secteur à l'autre exige de re-calibrer sur une vérité terrain propre au nouveau secteur, jamais de transposer directement un seuil ou un poids validé ailleurs.",
+  },
+  {
+    type: "link",
+    to: "/discipulus/progression",
+    label: "Faire le point sur l'ensemble du parcours",
+    description: "Cette salle referme la boucle : chaque méthode mobilisée ici renvoie à la salle où elle a été apprise en détail — un bon moment pour vérifier sa progression d'ensemble.",
   },
 ]

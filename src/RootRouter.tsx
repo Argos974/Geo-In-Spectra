@@ -1,12 +1,12 @@
-import { Suspense, lazy, useEffect } from "react"
+import { Suspense, lazy } from "react"
 import { HashRouter, Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { SiteHeader } from "@/components/layout/SiteHeader"
 import { SiteFooter } from "@/components/layout/SiteFooter"
 import { CanvasGrain } from "@/components/layout/CanvasGrain"
 import { ActiveParcoursBar } from "@/components/layout/ActiveParcoursBar"
+import { RoomTransition } from "@/components/layout/RoomTransition"
 import { Home } from "@/pages/Home"
 import { useSmoothScroll } from "@/hooks/useSmoothScroll"
-import { resetScroll } from "@/lib/lenisStore"
 
 // Chargées à la demande : Home (page d'accueil, quasi toujours le premier
 // écran vu) reste importée directement pour un premier affichage sans flash
@@ -51,17 +51,9 @@ function AppShell() {
   const location = useLocation()
   const isPrint = location.pathname.startsWith("/print")
 
-  // Un lien qui porte state.scrollTo (voir ChapterNav/openAndScrollTo) gère
-  // déjà son propre positionnement précis sur la page d'arrivée — remettre
-  // le scroll en haut ici en plus produirait un double saut visible (haut
-  // de page puis ancre) au lieu d'un seul mouvement direct vers l'ancre.
-  useEffect(() => {
-    const hasScrollToState = Boolean((location.state as { scrollTo?: string } | null)?.scrollTo)
-    if (!hasScrollToState) resetScroll()
-  }, [location.pathname, location.state])
-
   return (
     <>
+      <RoomTransition />
       {!isPrint && <CanvasGrain />}
       {!isPrint && <SiteHeader />}
       {!isPrint && <ActiveParcoursBar />}

@@ -116,6 +116,58 @@ body {
   animation: anchor-flash 1.3s ease-out;
 }
 
+/* Reflet de lumière qui traverse un cadre doré au survol (GalleryFrame,
+   EngravedFrame) — pseudo-élément balayé en diagonale, pas de boucle. */
+.gilt-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.gilt-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 40%,
+    rgb(var(--color-gilt) / 0.28) 50%,
+    transparent 60%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.9s ease;
+  pointer-events: none;
+}
+
+.gilt-sheen:hover::after,
+.gilt-sheen:focus-within::after {
+  transform: translateX(120%);
+}
+
+/* Grain de toile qui vit légèrement — lumière de bougie plutôt qu'un pulse
+   mécanique régulier (paliers irréguliers). */
+@keyframes canvas-grain-flicker {
+  0%, 100% { opacity: 0.05; }
+  22% { opacity: 0.065; }
+  48% { opacity: 0.045; }
+  71% { opacity: 0.06; }
+  85% { opacity: 0.04; }
+}
+
+.canvas-grain {
+  animation: canvas-grain-flicker 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canvas-grain {
+    animation: none;
+  }
+
+  .gilt-sheen::after {
+    transition: none;
+    display: none;
+  }
+}
+
 /* Export PDF (scripts/generate-course-pdfs.mjs) — masque le chrome de navigation,
    force l'impression des couleurs/fond sombre, évite les coupures de page malvenues. */
 @media print {
