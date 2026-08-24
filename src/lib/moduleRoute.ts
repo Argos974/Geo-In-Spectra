@@ -1,6 +1,11 @@
 import { slugify } from "@/lib/slug"
 
-/** Modules affichés comme chapitres repliables sur /discipulus/cours (voir DiscipulusCoursPage). */
+/**
+ * Modules affichés comme chapitres repliables sur /discipulus/cours — source
+ * unique (DiscipulusCoursPage en dérive son ordre d'affichage via `[...COURS_SLUGS]`,
+ * l'ordre d'itération d'un Set étant son ordre d'insertion) pour éviter que cette
+ * liste ne diverge entre les deux usages, comme c'était le cas auparavant.
+ */
 export const COURS_SLUGS = new Set([
   "fondamentaux",
   "teledetection",

@@ -50,9 +50,10 @@ module in `src/content/<slug>.ts`, aggregated in `src/content/index.ts` as `modu
 same blocks feed three different renderers depending on context: `ContentBlocks.tsx` (raw
 render), `ModuleChapterBody` (wraps it with per-module chrome, shared by every page below).
 
-- **`DiscipulusCoursPage.tsx`** renders the "Cours" modules (`COURS_SLUGS`) as collapsible
-  `ChapterAccordion` sections on one page (not one route per module) — this is the current
-  primary navigation path.
+- **`DiscipulusCoursPage.tsx`** renders the "Cours" modules as collapsible `ChapterAccordion`
+  sections on one page (not one route per module) — this is the current primary navigation path.
+  Its display order comes from `[...COURS_SLUGS]` (`lib/moduleRoute.ts`, the single source —
+  Set iteration order is insertion order), not a locally duplicated list.
 - **`MagisterCoursPage.tsx`** renders the single `travaux-pratiques` module (l'Atelier) the same
   way, with `showTeacherMeta`.
 - **`ModulePage.tsx`** (`/module/:slug`) is a legacy standalone per-module route, kept alive only
@@ -60,10 +61,6 @@ render), `ModuleChapterBody` (wraps it with per-module chrome, shared by every p
   — not the normal way a user navigates anymore. Its "back" link and any deep-link into a Cours
   chapter resolve through `lib/moduleRoute.ts::moduleTreeRoute`/`moduleTreeState`, which knows
   which accordion page (if any) actually owns a given slug today.
-  - **Gotcha**: the set of "Cours" slugs is defined independently in `lib/moduleRoute.ts`
-    (`COURS_SLUGS`, exported, used by `moduleRoute.ts`/`searchIndex.ts`) and again inline in
-    `DiscipulusCoursPage.tsx` (`COURS_SLUGS`, not exported). Adding a module to the Cours chapter
-    list means updating both.
 
 `ContentBlock.heading` can carry a `level` (`lycee` | `superieur` | `approfondissement`,
 `src/content/types.ts`); `lib/levelFilter.ts::filterBlocksByLevel` hides/shows blocks by the

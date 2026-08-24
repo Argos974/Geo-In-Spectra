@@ -4,6 +4,7 @@ import { glossary } from "@/data/glossary"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { scrollToAnchor } from "@/lib/lenisStore"
 
 function groupByLetter(terms: typeof glossary) {
   const groups = new Map<string, typeof glossary>()
@@ -33,6 +34,10 @@ export function GlossaryPage() {
   }, [query])
 
   const groups = groupByLetter(filtered)
+  // Alphabet complet (pas seulement les lettres filtrées) pour que la barre de
+  // saut garde toujours la même forme — seules les lettres présentes dans la
+  // vue courante restent cliquables, les autres s'affichent en simple repère.
+  const allLetters = useMemo(() => [...groupByLetter(glossary).keys()], [])
 
   return (
     <div className="min-h-screen bg-ink text-parchment">
@@ -65,9 +70,33 @@ export function GlossaryPage() {
         {filtered.length === 0 ? (
           <p className="text-parchment-dim font-mono text-sm">Aucun terme ne correspond à « {query} ».</p>
         ) : (
-          <div className="space-y-10">
+          <>
+            <nav
+              aria-label="Aller à la lettre"
+              className="sticky top-16 z-10 mb-8 flex flex-row flex-wrap gap-x-1 gap-y-1.5 bg-ink/90 backdrop-blur-sm border border-gilt/15 px-3 py-2 font-mono text-[11px] uppercase tracking-wider"
+            >
+              {allLetters.map((letter) => {
+                const present = groups.has(letter)
+                return present ? (
+                  <button
+                    key={letter}
+                    type="button"
+                    onClick={() => scrollToAnchor(`glossaire-${letter}`)}
+                    className="w-6 text-center text-parchment-dim/80 hover:text-gilt hover:bg-gilt/[0.06] transition-colors"
+                  >
+                    {letter}
+                  </button>
+                ) : (
+                  <span key={letter} className="w-6 text-center text-parchment-dim/25">
+                    {letter}
+                  </span>
+                )
+              })}
+            </nav>
+
+            <div className="space-y-10">
             {[...groups.entries()].map(([letter, terms]) => (
-              <div key={letter}>
+              <div key={letter} id={`glossaire-${letter}`}>
                 <p className="font-heading text-2xl text-gilt mb-4">{letter}</p>
                 <dl className="space-y-5">
                   {terms.map((t) => {
@@ -93,7 +122,8 @@ export function GlossaryPage() {
                 </dl>
               </div>
             ))}
-          </div>
+            </div>
+          </>
         )}
         </div>
       </div>

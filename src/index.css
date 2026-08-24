@@ -185,6 +185,11 @@ body {
   figure, table, .avoid-break {
     break-inside: avoid;
   }
+  /* Un titre de section ne doit jamais rester seul en bas de page avec son
+     contenu reporté à la page suivante. */
+  h2 {
+    break-after: avoid;
+  }
   /* Seule la page de garde force sa propre page (convention normale d'une page
      de titre, volontairement spacieuse). Le sommaire, lui, ne force plus de
      saut de page après lui : un saut forcé (break-after) réserve toujours une

@@ -5,6 +5,7 @@ import { quizzes } from "@/data/quizzes"
 import { QuestionAnswerBlock } from "@/components/quiz/QuestionAnswerBlock"
 import { recordQuizScore, recordWrongQuestion, clearWrongQuestion } from "@/lib/progress"
 import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
+import { cn } from "@/lib/utils"
 
 export function QuizPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -103,9 +104,29 @@ export function QuizPage() {
           </div>
         ) : (
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-4">
-              Question {index + 1} / {questions.length}
-            </p>
+            <div
+              className="mb-6"
+              role="progressbar"
+              aria-valuenow={index + 1}
+              aria-valuemin={1}
+              aria-valuemax={questions.length}
+              aria-label={`Question ${index + 1} sur ${questions.length}`}
+            >
+              <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-2">
+                Question {index + 1} / {questions.length}
+              </p>
+              <div className="flex gap-1" aria-hidden="true">
+                {quizQuestions.map((_, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      "h-[3px] flex-1 transition-colors",
+                      i < index ? "bg-gilt" : i === index ? "bg-gilt/50" : "bg-gilt/15",
+                    )}
+                  />
+                ))}
+              </div>
+            </div>
             <p className="font-heading text-xl mb-6">{q.question}</p>
 
             {/* Clé = (index, shuffleSeed) : remonte le bloc à chaque nouvelle question ou

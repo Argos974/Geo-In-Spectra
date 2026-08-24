@@ -22,6 +22,19 @@ const LEVEL_TOGGLE_LABEL: Record<ContentLevel, string> = {
   approfondissement: "Approfondissement",
 }
 
+/**
+ * L'Atelier a trois pistes indépendantes (voir plus haut), pas un même contenu
+ * stratifié : son "Cours (PDF)" est donc généré en 3 fichiers distincts par
+ * generate-course-pdfs.mjs (un par piste, jamais les trois empilées), affichés ici
+ * comme 3 liens au lieu du bouton unique des autres salles. Suffixes de fichier
+ * alignés sur TRAVAUX_PRATIQUES_TRACKS dans ce script.
+ */
+const ATELIER_TRACKS: { level: ContentLevel; suffix: string; label: string }[] = [
+  { level: "lycee", suffix: "lycee", label: "Cours Lycée (PDF)" },
+  { level: "superieur", suffix: "licence-but", label: "Cours Licence/BUT (PDF)" },
+  { level: "approfondissement", suffix: "master-recherche", label: "Cours Master/Recherche (PDF)" },
+]
+
 interface ModuleChapterBodyProps {
   module: CourseModule
   /** Masque le résumé en tête de corps — utile quand l'appelant (ex. ChapterAccordion) l'affiche déjà comme sous-titre. */
@@ -108,13 +121,29 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta }: Modu
       {!hideSummary && <p className="text-parchment-dim text-lg mb-6 text-justify">{module.summary}</p>}
 
       <div className="print:hidden flex flex-nowrap items-center gap-2 mb-6 overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-        <a
-          href={`/pdf/${module.slug}/${coursName}`}
-          download={coursName}
-          className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
-        >
-          ↓ Cours (PDF)
-        </a>
+        {module.slug === "travaux-pratiques" ? (
+          ATELIER_TRACKS.map(({ suffix, label }) => {
+            const trackFileName = `${order}-${module.slug}-cours-${suffix}.pdf`
+            return (
+              <a
+                key={suffix}
+                href={`/pdf/${module.slug}/${trackFileName}`}
+                download={trackFileName}
+                className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+              >
+                ↓ {label}
+              </a>
+            )
+          })
+        ) : (
+          <a
+            href={`/pdf/${module.slug}/${coursName}`}
+            download={coursName}
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+          >
+            ↓ Cours (PDF)
+          </a>
+        )}
         <a
           href={`/pdf/${module.slug}/${ficheName}`}
           download={ficheName}

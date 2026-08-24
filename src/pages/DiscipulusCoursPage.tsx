@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
@@ -8,27 +8,17 @@ import { ChapterNav } from "@/components/content/ChapterNav"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { getProgress, markVisited } from "@/lib/progress"
+import { COURS_SLUGS } from "@/lib/moduleRoute"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 
-/** Les salles de savoir (hors La Méthode et l'Atelier, déménagées ailleurs) en chapitres repliables d'une seule page. */
-const COURS_SLUGS = [
-  "fondamentaux",
-  "teledetection",
-  "indices-spectraux",
-  "outils-sig",
-  "traitements-ia",
-  "projections-avancees",
-  "cartographie-web",
-  "statistiques-spatiales",
-  "photogrammetrie-drones",
-  "lidar",
-  "bases-donnees-spatiales",
-  "etudes-de-cas-sectorielles",
-]
-
 export function DiscipulusCoursPage() {
-  const courseModules = COURS_SLUGS.map((slug) => modules.find((m) => m.slug === slug)).filter((m) => m !== undefined)
+  // COURS_SLUGS est un Set (source unique, voir lib/moduleRoute.ts) mais son ordre
+  // d'itération — l'ordre d'insertion — est celui d'affichage voulu ici. Mémorisé
+  // (référence stable) pour ne pas redéclencher l'effet "premier chapitre visité"
+  // à chaque rendu.
+  const coursSlugs = useMemo(() => [...COURS_SLUGS], [])
+  const courseModules = coursSlugs.map((slug) => modules.find((m) => m.slug === slug)).filter((m) => m !== undefined)
   const art = artworks["discipulus-cours"]
   const location = useLocation()
   const [visitedSlugs, setVisitedSlugs] = useState<Set<string>>(() => {
@@ -48,10 +38,10 @@ export function DiscipulusCoursPage() {
   // se déclenche que sur un changement d'état ultérieur, pas pour l'attribut open
   // initial, donc onOpen ne le marquerait jamais visité tout seul.
   useEffect(() => {
-    const firstSlug = COURS_SLUGS[0]
+    const firstSlug = coursSlugs[0]
     markVisited(firstSlug)
     setVisitedSlugs((prev) => new Set(prev).add(firstSlug))
-  }, [])
+  }, [coursSlugs])
 
   return (
     <div className="min-h-screen bg-ink text-parchment">
