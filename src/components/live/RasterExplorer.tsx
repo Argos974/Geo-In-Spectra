@@ -127,8 +127,35 @@ export function RasterExplorer() {
     const rect = canvasRef.current.getBoundingClientRect()
     const px = Math.floor(((e.clientX - rect.left) / rect.width) * state.raster.width)
     const py = Math.floor(((e.clientY - rect.top) / rect.height) * state.raster.height)
+    pickPixel(px, py)
+  }
+
+  function pickPixel(px: number, py: number) {
+    if (state.status !== "done" || !state.raster) return
     const sample = sampleBands(state.raster, px, py)
     if (sample) setPicked({ px, py, sample })
+  }
+
+  // Un <canvas> n'a aucune sémantique de sélection au clavier par nature : sans
+  // ce gestionnaire, la planche n'était utilisable qu'à la souris. Les flèches
+  // déplacent le pixel sélectionné d'un pas dans la grille réelle (bornée aux
+  // dimensions du raster), Entrée/Espace confirment un point de départ — même
+  // résultat que le clic, juste atteignable sans pointeur.
+  function handleKeyDown(e: React.KeyboardEvent<HTMLCanvasElement>) {
+    if (state.status !== "done" || !state.raster) return
+    const { width, height } = state.raster
+    const from = picked ?? { px: Math.floor(width / 2), py: Math.floor(height / 2) }
+    let { px, py } = from
+    switch (e.key) {
+      case "ArrowLeft": px = Math.max(0, px - 1); break
+      case "ArrowRight": px = Math.min(width - 1, px + 1); break
+      case "ArrowUp": py = Math.max(0, py - 1); break
+      case "ArrowDown": py = Math.min(height - 1, py + 1); break
+      case "Enter": case " ": break
+      default: return
+    }
+    e.preventDefault()
+    pickPixel(px, py)
   }
 
   const activeDef = mode !== "rgb" ? INDEX_DEFS[mode] : null
@@ -183,15 +210,19 @@ export function RasterExplorer() {
             <canvas
               ref={canvasRef}
               onClick={handleClick}
-              className="w-full h-auto border border-gilt/15 cursor-crosshair"
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
+              role="application"
+              aria-label="Image Sentinel-2, flèches pour déplacer le pixel sélectionné, Entrée pour le confirmer"
+              className="w-full h-auto border border-gilt/15 cursor-crosshair focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-bright"
               style={{ imageRendering: "pixelated" }}
             />
-            <p className="font-mono text-[10px] text-parchment-dim/80 mt-2">
-              {picked ? `Pixel (${picked.px}, ${picked.py})` : "Aucun pixel sélectionné"}
+            <p className="font-mono text-[10px] text-parchment-dim/80 mt-2" aria-live="polite">
+              {picked ? `Pixel (${picked.px}, ${picked.py})` : "Aucun pixel sélectionné — clique la planche ou navigue au clavier (flèches, Entrée)"}
             </p>
           </div>
 
-          <div className="border border-gilt/15 bg-gilt/[0.03] p-4">
+          <div className="border border-gilt/15 bg-gilt/[0.03] p-4" aria-live="polite">
             <p className="font-mono text-[10px] uppercase tracking-wider text-gilt mb-3">Bandes au pixel</p>
             {picked ? (
               <table className="w-full font-mono text-[11px] mb-4">

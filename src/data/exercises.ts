@@ -1,9 +1,21 @@
+import type { ContentLevel } from "@/content/types"
+import type { DiagramName } from "@/components/diagrams"
+
 export interface Exercise {
   prompt: string
   formula?: { label: string; formula: string; note?: string }
   dataset?: { headers: string[]; rows: string[][] }
+  /** Planche du registre (src/components/diagrams/registry.ts) qui appuie visuellement l'énoncé — pas systématique, seulement quand une figure existante ou dédiée éclaire vraiment le problème. */
+  diagram?: { name: DiagramName; caption?: string }
   solutionText: string
   solutionItems?: string[]
+  /**
+   * Piste visée (Lycée/Licence-BUT/Master-Recherche) — absent sur les
+   * exercices d'avant le passage des salles à 3 pistes : ceux-là restent
+   * affichés quelle que soit la piste active (voir ExercisesPage), plutôt que
+   * de disparaître tant qu'ils n'ont pas été explicitement déclinés.
+   */
+  level?: ContentLevel
 }
 
 export interface ExerciseSet {
@@ -27,9 +39,22 @@ export interface ExerciseSet {
 export const exercises: Record<string, ExerciseSet> = {
   fondamentaux: {
     title: "Exercices : Fondements",
-    intro: "Trois exercices avec un vrai calcul à faire, à partir d'un jeu de données à chaque fois.",
+    intro: "Des exercices avec un vrai calcul à faire, à partir d'un jeu de données à chaque fois — affichés selon la piste choisie dans la salle (les exercices non déclinés par piste restent visibles quel que soit le niveau).",
     exercises: [
       {
+        level: "lycee",
+        prompt:
+          "Un randonneur connaît sa distance à trois refuges de montagne dont il a les coordonnées exactes : 8 km du refuge A, 5 km du refuge B, 6 km du refuge C. Explique, sans calculer, comment il peut retrouver sa position sur une carte à l'aide d'un compas — et pourquoi la distance à un seul refuge ne suffirait pas.",
+        diagram: { name: "trilateration-circles", caption: "Trois cercles de distance (un par refuge) : leur unique intersection commune est la position cherchée." },
+        solutionText: "Il trace au compas un cercle de 8 km autour de A, un cercle de 5 km autour de B, un cercle de 6 km autour de C : les trois cercles se croisent (approximativement) en un seul point, sa position — exactement le principe de la trilatération utilisé par un GPS, avec des satellites à la place des refuges.",
+        solutionItems: [
+          "Une seule distance connue (à A seul) laisse une infinité de positions possibles : tout le cercle de 8 km autour de A.",
+          "Deux distances (A et B) réduisent la position à deux points possibles seulement : les deux intersections des deux cercles.",
+          "La troisième distance (C) lève l'ambiguïté entre ces deux points : un seul reste cohérent avec les trois cercles à la fois.",
+        ],
+      },
+      {
+        level: "superieur",
         prompt:
           "Calcule la distance réelle représentée par 1° de longitude à Marseille (43.30°N) et à Brest (48.39°N), à partir de la formule ci-dessous. Que remarques-tu, et pourquoi ce n'est pas un détail anodin pour un calcul de distance en degrés ?",
         formula: {
@@ -45,6 +70,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
+        diagram: { name: "coordinate-systems", caption: "Repère Lambert-93 : X vers l'est, Y vers le nord — la lecture directe des coordonnées de l'énoncé." },
         prompt:
           "Calcule la distance de chacun des points suivants à Paris (X = 652 000, Y = 6 862 000 en Lambert-93), classe-les du plus proche au plus éloigné, et indique la direction du plus proche par rapport à Paris.",
         formula: {
@@ -69,11 +96,13 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
         prompt:
           "Un géoréférencement a été calé sur 4 points de contrôle : les points 1, 2 et 3 sont regroupés dans le même coin de l'image ; le point 4, ajouté ensuite pour vérifier, se trouve à l'autre bout de l'image. Calcule le RMSE global (les 4 points), puis le RMSE en ne gardant que les points 1 à 3. Que révèle la comparaison des deux résultats ?",
         formula: {
           label: "RMSE d'un géoréférencement (résidus dx, dy par point de contrôle)",
           formula: "RMSE = √( (1/n) × Σ(dx² + dy²) )",
+          note: "Rappel : la RMSE (Root Mean Square Error, erreur quadratique moyenne) mesure l'écart type des résidus dx/dy (l'écart entre la position calée et la position réelle de chaque point de contrôle) — plus elle est petite, plus le calage est fidèle en moyenne. Voir le module Fondements pour le détail.",
         },
         dataset: {
           headers: ["Point", "dx (m)", "dy (m)"],
@@ -91,6 +120,21 @@ export const exercises: Record<string, ExerciseSet> = {
           "Le point 4, seul à sortir de la zone d'appui, révèle une erreur réelle plus de 10 fois supérieure à ce que suggérait le résidu local — un résidu faible ne garantit la précision qu'au voisinage des points utilisés pour le calage.",
         ],
       },
+      {
+        level: "approfondissement",
+        prompt:
+          "Un point mesuré en ITRF il y a exactement 8 ans est comparé, sans transformation, à sa coordonnée RGF93 actuelle. La dérive de la plaque eurasienne est d'environ 2,5 cm/an. Calcule l'écart accumulé, et compare-le à la précision typique d'un relevé RTK.",
+        formula: {
+          label: "Dérive cumulée entre deux référentiels",
+          formula: "écart ≈ vitesse de dérive × durée",
+        },
+        solutionText: "L'écart accumulé (~20 cm) dépasse largement la précision centimétrique d'un relevé RTK : comparer directement les deux coordonnées sans transformation ITRF → RGF93 produirait une erreur bien plus grande que celle du relevé lui-même.",
+        solutionItems: [
+          "écart ≈ 2,5 cm/an × 8 ans = 20 cm.",
+          "Un relevé RTK vise 1 à 2 cm de précision : un écart de 20 cm dû au seul référentiel, non corrigé, est dix fois plus grand que l'incertitude de la mesure elle-même.",
+          "C'est pourquoi RGF93 reste « gelé » sur la plaque eurasienne (module Fondements, piste Master/Recherche) : sans ce choix, tout cadastre ou plan topographique français devrait être recalculé en continu.",
+        ],
+      },
     ],
   },
   teledetection: {
@@ -98,6 +142,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul à faire, à partir d'un jeu de données à chaque fois.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "reflectance-curve", caption: "Courbe de réflectance : l'eau absorbe fortement le NIR, contrairement au bleu — la signature qui explique le NDWI calculé ici." },
         prompt:
           "Un pixel de plan d'eau a les réflectances suivantes. Calcule son NDWI et son ratio de réflectance Bleu/NIR. Que confirment ces deux nombres sur la nature du pixel ?",
         formula: {
@@ -119,6 +165,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
         prompt:
           "Deux acquisitions du même lieu, aux conditions solaires suivantes. Calcule le ratio d'irradiance directe théorique reçue par l'acquisition B par rapport à A, et explique ce que ça implique pour comparer les deux images pixel à pixel sans précaution.",
         formula: {
@@ -139,6 +186,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "lycee",
         prompt:
           "Nébulosité relevée sur 10 jours consécutifs au-dessus d'un site à surveiller. En considérant qu'une image optique n'est exploitable qu'en dessous de 20 % de nébulosité (le radar restant exploitable tous les jours), calcule le pourcentage de jours exploitables en optique sur cette période, et le nombre de jours d'observation perdus.",
         dataset: {
@@ -158,6 +206,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices, avec un vrai calcul à faire sur un jeu de données à chaque fois.",
     exercises: [
       {
+        level: "lycee",
+        diagram: { name: "ndvi-scale", caption: "Échelle du NDVI et ses classes d'interprétation, pour situer les 4 pixels calculés ici." },
         prompt:
           "Calcule le NDVI de chacun des 4 pixels suivants, classe chacun, puis indique combien appartiennent à la classe \"végétation dense et vigoureuse\" (0.4 à 0.8).",
         formula: {
@@ -182,6 +232,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
+        diagram: { name: "spectral-signatures", caption: "Signatures spectrales comparées : le contraste SWIR/NIR entre surfaces bâties et végétation, à la base du NDBI." },
         prompt: "Un pixel a pour réflectance SWIR = 0.30 et NIR = 0.20. Calcule son NDBI et interprète le résultat.",
         formula: {
           label: "NDBI",
@@ -190,6 +242,7 @@ export const exercises: Record<string, ExerciseSet> = {
         solutionText: "NDBI = (0.30 − 0.20) / (0.30 + 0.20) = 0.10 / 0.50 = 0.20, un NDBI positif signale une surface bâtie ou minérale (le SWIR y est plus réfléchi que le NIR), à l'opposé d'un pixel de végétation.",
       },
       {
+        level: "approfondissement",
         prompt: "Deux parcelles ont exactement le même NDVI (0.15) en plein été : l'une est un champ labouré, l'autre un parking. Quel indice permettrait de les distinguer, et pourquoi le NDVI seul ne suffit pas ?",
         solutionText: "Le NDBI. Sol nu agricole et surface bâtie ont tous deux un NDVI faible (peu ou pas de végétation) : le NDVI seul ne peut pas les séparer. Le NDBI exploite le contraste SWIR/NIR, très différent entre un matériau minéral construit (béton, bitume, tuile) et un sol nu naturel.",
       },
@@ -200,6 +253,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul ou une vraie lecture de données à faire.",
     exercises: [
       {
+        level: "lycee",
+        diagram: { name: "spatial-operations", caption: "Intersection de deux couches : la surface commune calculée ici, entre chaque commune et la zone inondable." },
         prompt:
           "Pour ces 4 communes, calcule le pourcentage de surface couverte par la zone inondable, identifie la commune entièrement en zone inondable et celle qui n'est pas concernée.",
         formula: {
@@ -224,6 +279,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
+        diagram: { name: "lisa-quadrant", caption: "Quadrants LISA (HH/LL/HL/LH) : la commune X et son voisinage se situeraient ici dans le quadrant \"haut entouré de haut\"." },
         prompt:
           "Une commune X affiche un taux de chômage de 12 %. Ses 4 communes voisines directes affichent les valeurs ci-dessous. Calcule le retard spatial (spatial lag) de la commune X, et indique s'il est cohérent avec un indice de Moran global du département de +0.72.",
         formula: {
@@ -241,6 +298,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
+        diagram: { name: "variogram", caption: "Anatomie d'un variogramme (nugget, sill, range) — le vocabulaire à retrouver dans les valeurs de l'énoncé." },
         prompt:
           "À partir de ce variogramme expérimental (distance vs semi-variance), identifie approximativement le nugget, le palier (sill) et la portée (range). Explique en une phrase ce que la portée signifie pour la carte d'incertitude produite par krigeage.",
         dataset: {
@@ -261,6 +320,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul à faire, à partir d'un jeu de données à chaque fois.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "classification-methods", caption: "Les méthodes de classification qui produisent ce genre de matrice de confusion." },
         prompt:
           "À partir de cette matrice de confusion (100 pixels, classification forêt / non-forêt), calcule Po, Pe puis le kappa. Commente le résultat.",
         formula: {
@@ -284,6 +345,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "lycee",
         prompt:
           "À partir de ce suivi précision train/test par époque, identifie l'époque à partir de laquelle le sur-apprentissage démarre clairement, en justifiant par les chiffres (écart train − test).",
         dataset: {
@@ -300,6 +362,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
+        diagram: { name: "iou", caption: "IoU = aire d'intersection / aire d'union — le rapport que ce kappa gonflé masque ici." },
         prompt:
           "Sur cette matrice de confusion pour une segmentation de bâtiments (10 000 pixels), calcule l'IoU du bâtiment, puis le kappa classique (Po, Pe). Pourquoi les deux résultats divergent-ils autant, et lequel des deux est le plus honnête ici ?",
         formula: {
@@ -377,6 +441,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul ou une vraie lecture de données à faire.",
     exercises: [
       {
+        level: "lycee",
+        diagram: { name: "tissot-distortion", caption: "Indicatrices de Tissot : la même déformation d'aire, visible ici sous Mercator, que révèle le calcul Afrique/Groenland." },
         prompt:
           "Calcule le ratio de surface réelle Afrique/Groenland, puis le ratio de leur surface apparente sur une carte Mercator. Compare les deux ratios et quantifie l'ampleur de la déformation.",
         dataset: {
@@ -394,6 +460,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
         prompt:
           "Calcule la moyenne et l'écart-type du décalage mesuré entre deux couches SIG, à ces 4 points de la carte. Ce profil (valeurs proches, même direction partout) confirme-t-il plutôt un problème de datum ou de projection ?",
         dataset: {
@@ -411,6 +478,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
+        diagram: { name: "tissot-distortion", caption: "La déformation croît avec l'éloignement au parallèle standard — exactement le phénomène chiffré ici pour la Scandinavie." },
         prompt:
           "À partir de ce tableau de déformation d'échelle de Lambert-93 selon la latitude, à partir de quelle latitude environ la déformation dépasse 2 %, et qu'est-ce que ça implique pour une carte couvrant la Scandinavie (60-70°N) en Lambert-93 ?",
         dataset: {
@@ -426,6 +495,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul ou une vraie lecture de données à faire.",
     exercises: [
       {
+        level: "lycee",
+        diagram: { name: "tile-pyramid", caption: "Pyramide de tuiles : chaque niveau de zoom quadruple le nombre de tuiles du niveau précédent." },
         prompt:
           "Une carte web affiche 4 tuiles au zoom 1. Combien de tuiles couvrent le monde entier au zoom 5 ? Si l'écran n'affiche à l'instant qu'une zone de 3×2 tuiles, quel est le ratio tuiles chargées / tuiles disponibles à ce zoom ?",
         formula: {
@@ -440,6 +511,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
         prompt:
           "Pour passer du style clair au style sombre d'une même carte, combien de Ko doivent être re-téléchargés en tuiles raster (nouvelle image) contre en tuiles vectorielles (même géométrie, juste le style qui change) ? Chiffre le gain.",
         dataset: {
@@ -456,6 +528,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
         prompt:
           "Un développeur charge un fichier GeoJSON de 80 000 sommets sur une carte Leaflet, qui devient saccadée. Le budget technique visé est de moins de 10 000 sommets pour rester fluide sur mobile. D'après ce tableau, quelle tolérance de simplification Douglas-Peucker choisir au minimum, et quel compromis faut-il surveiller si elle est trop grande ?",
         dataset: {
@@ -475,6 +548,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai jeu de données à lire et interpréter.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "lisa-quadrant", caption: "Le quadrant HH (haut entouré de haut) regroupe les communes formant un vrai cluster chaud, comme les voisines de cet énoncé." },
         prompt:
           "Un indice de Moran global sur le taux de départs de feu par commune vaut +0.65, significatif. Le maire d'une commune isolée demande si sa commune est concernée. À partir de ces z-scores Gi* (significatif si |z| > 1.96), la commune du maire fait-elle partie d'un cluster à risque ? Et ses 4 communes voisines ?",
         dataset: {
@@ -496,6 +571,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
         prompt:
           "La zone A a la densité KDE visuelle la plus intense sur la carte, presque autant que B. D'après ce tableau, A est-elle statistiquement significative comme B ? Que ça montre sur la lecture d'une carte KDE seule ?",
         dataset: {
@@ -510,6 +586,7 @@ export const exercises: Record<string, ExerciseSet> = {
         solutionText: "A n'est pas significative (z = 1.1) malgré une densité KDE quasi identique à B, qui l'est (z = 2.7) : l'intensité visuelle d'une KDE ne distingue pas une vraie concentration statistique d'un simple effet de lissage.",
       },
       {
+        level: "approfondissement",
         prompt:
           "Un modèle OLS classique et un modèle spatial (spatial lag) obtiennent ces résultats sur les mêmes données. Lequel choisir, et pourquoi le R² plus élevé de l'OLS est-il trompeur ici ?",
         dataset: {
@@ -533,6 +610,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul à faire, à partir d'un jeu de données à chaque fois.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "flight-overlap", caption: "Recouvrement longitudinal entre deux photos successives — la géométrie derrière le calcul d'avancement demandé ici." },
         prompt:
           "Chaque photo d'un drone couvre 120 m dans le sens du vol × 80 m en travers. Pour couvrir une bande de 800 m de long, calcule le nombre de photos nécessaires à 80 % de recouvrement longitudinal, puis à 40 %. Quel pourcentage de photos est économisé au recouvrement réduit, et quel risque déjà identifié ce gain fait-il courir ?",
         formula: {
@@ -548,6 +627,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "lycee",
         prompt:
           "Sur un même chantier, calcule le facteur d'amélioration de précision (combien de fois plus précis) apporté par l'ajout de 5 points d'appui au sol (GCP), en planimétrie et en altimétrie.",
         dataset: {
@@ -565,6 +645,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
+        diagram: { name: "lidar-returns", caption: "Retours multiples d'un pulse LiDAR sous couvert dense : la part qui atteint encore le sol, contrairement à un pixel photo." },
         prompt:
           "À partir de ce tableau, en forêt dense, la photogrammétrie voit-elle encore le sol ? Que ça implique pour la fiabilité comparée du MNT photogrammétrique et du MNT LiDAR sous couvert dense ?",
         dataset: {
@@ -584,6 +666,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai calcul ou une vraie manipulation à faire, à partir d'un jeu de données.",
     exercises: [
       {
+        level: "lycee",
+        diagram: { name: "lidar-returns", caption: "Un pulse laser part, touche une surface, revient : le temps de vol aller-retour mesuré ici." },
         prompt: "Un pulse LiDAR aller-retour met 6,68 microsecondes à revenir au capteur. Calcule la distance mesurée (c ≈ 3×10⁸ m/s).",
         formula: {
           label: "Distance mesurée par temps de vol",
@@ -592,6 +676,7 @@ export const exercises: Record<string, ExerciseSet> = {
         solutionText: "d = (c × t) / 2 = (3×10⁸ × 6,68×10⁻⁶) / 2 = 2004 / 2 = 1002 m, soit environ 1000 m — une distance de vol aéroporté classique.",
       },
       {
+        level: "superieur",
         prompt:
           "Un relevé LiDAR annonce une densité brute de 10 points/m² partout. Complète la densité de points classés \"sol\" pour chaque zone, à partir du pourcentage de pulses réellement classés sol. Le MNT reste-t-il exploitable en forêt dense avec cette densité ?",
         dataset: {
@@ -610,6 +695,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
         prompt:
           "Remets dans le bon ordre les 4 étapes du processus de génération d'une orthophoto colorée à partir d'un relevé LiDAR + caméra embarquée : \"texturation du nuage de points avec les photos\" / \"acquisition simultanée du nuage de points et des photos RVB géoréférencées\" / \"calibration relative caméra/LiDAR (bras de levier)\" / \"projection finale en orthophoto 2D\".",
         solutionText: "Ordre correct : calibration relative caméra/LiDAR → acquisition simultanée → texturation du nuage de points → projection finale en orthophoto 2D.",
@@ -627,6 +713,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices avec un vrai plan d'exécution ou un vrai jeu de données à lire.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "spatial-index-tree", caption: "Un index spatial GiST organise les géométries en arbre pour éviter le balayage complet — celui que l'EXPLAIN ANALYZE ci-dessous révèle absent." },
         prompt:
           "Voici un extrait résumé d'un EXPLAIN ANALYZE sur une requête ST_Intersects portant sur 3 millions de parcelles. L'index spatial GiST est-il utilisé ? Que faut-il vérifier ensuite ?",
         dataset: {
@@ -640,6 +728,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "superieur",
         prompt:
           "Une requête filtre `WHERE ST_Transform(a.geom, 2154) && b.geom`. Une deuxième version pré-calcule la reprojection dans une colonne dédiée (`a.geom_2154 && b.geom`). Calcule le facteur d'accélération obtenu.",
         dataset: {
@@ -652,6 +741,7 @@ export const exercises: Record<string, ExerciseSet> = {
         solutionText: "48.2 / 0.09 ≈ 536 fois plus rapide : sortir la reprojection de la clause WHERE (la stocker en amont) laisse l'index spatial réellement utilisable.",
       },
       {
+        level: "approfondissement",
         prompt:
           "Calcule le taux de chevauchement (%) pour chacun de ces deux exports Shapefile. Pourquoi le jeu PostGIS Topology affiche-t-il 0, et ce 0 est-il comparable aux deux autres taux ?",
         dataset: {
@@ -676,6 +766,8 @@ export const exercises: Record<string, ExerciseSet> = {
     intro: "Trois exercices : croiser un vrai jeu de données pour trancher un cas concret.",
     exercises: [
       {
+        level: "superieur",
+        diagram: { name: "ndvi-scale", caption: "Un NDVI quasi identique en surface peut cacher des causes très différentes — le tableau ci-dessous en fait la démonstration." },
         prompt:
           "Ces 4 parcelles ont un NDVI quasi identique (0.40-0.43) en plein été. D'après le rendement historique et l'analyse de sol, laquelle a probablement une vigueur faible pour une cause structurelle (le sol) plutôt que ponctuelle (stress hydrique ou maladie de la saison en cours) ?",
         dataset: {
@@ -694,6 +786,7 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
         prompt:
           "Calcule le ΔNDBI brut entre 2010 et 2020 pour cette zone. Cette hausse est-elle fiable pour conclure à une artificialisation, vu les deux autres colonnes du tableau ?",
         dataset: {
@@ -711,6 +804,8 @@ export const exercises: Record<string, ExerciseSet> = {
         ],
       },
       {
+        level: "approfondissement",
+        diagram: { name: "risk-layers", caption: "Aléa × enjeux × vulnérabilité superposés : la même structure de pondération que ce tableau compare entre deux communes." },
         prompt:
           "Deux communes voisines pondèrent différemment aléa, enjeux et vulnérabilité pour leur priorisation du risque incendie, et obtiennent des cartes très différentes. À partir de ce tableau, la différence de pondération est-elle justifiable ? Que faudrait-il documenter pour l'auditer ?",
         dataset: {

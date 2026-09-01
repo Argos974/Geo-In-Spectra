@@ -1,5 +1,7 @@
 import type { ParcoursStop } from "@/lib/activeParcours"
 import type { ContentLevel } from "@/content/types"
+import { modules } from "@/data/modules"
+import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 
 export interface Parcours {
   id: string
@@ -20,6 +22,23 @@ export interface Parcours {
   levels?: ContentLevel[]
 }
 
+/**
+ * Construit un stop vers la maison canonique actuelle d'un chapitre (accordéon
+ * Discipulus → Cours, ou Magister → Atelier) plutôt que vers l'ancien
+ * lien profond /module/:slug — voir lib/moduleRoute.ts. Plusieurs stops de slugs
+ * différents peuvent ainsi partager la même route (/discipulus/cours) : le `state`
+ * (scrollTo) est ce qui distingue lequel s'ouvre réellement à l'arrivée.
+ */
+function moduleStop(label: string, slug: string): ParcoursStop {
+  const title = modules.find((m) => m.slug === slug)?.title ?? ""
+  return { label, to: moduleTreeRoute(slug), state: moduleTreeState(slug, title), moduleSlug: slug }
+}
+
+/** Stop vers la page d'exercices dédiée d'un module (route indépendante de la migration ci-dessus). */
+function exercisesStop(label: string, slug: string): ParcoursStop {
+  return { label, to: `/module/${slug}/exercices`, moduleSlug: slug }
+}
+
 export const PARCOURS: Parcours[] = [
   {
     id: "decouverte-lycee",
@@ -28,46 +47,61 @@ export const PARCOURS: Parcours[] = [
     description: "Filtrer chaque salle sur \"Lycée\" uniquement (bouton en haut de chaque salle, activé automatiquement tant que ce parcours est en cours) pour ne voir que le socle, sans les formules ni les approfondissements.",
     levels: ["lycee"],
     steps: [
-      "Fondements, sections 1, 7, 10, 11 (coordonnées, formats, histoire, lire une carte)",
-      "Le Regard, section 9 (photo-interprétation)",
-      "Les Couleurs, sections 1 à 3 (NDVI, NDMI, NDBI)",
+      "Fondements (piste Lycée) : coordonnées, formats, histoire de la cartographie, lire une carte",
+      "Le Regard (piste Lycée) : la photo-interprétation",
+      "Les Couleurs (piste Lycée) : NDVI, NDMI, NDBI",
       "L'Atelier (piste Lycée, activée par défaut par ce parcours), séance 1 (cartographie de base) puis séance 4 (buffer/intersection)",
       "Un exercice noté ponctue chaque salle traversée (coordonnées, indices, sémiologie de Bertin) : à faire sur place avant de continuer.",
       "L'Atelier, séance 9 (commenter un document cartographique) : la seule séance qui fait lire et critiquer un document plutôt que d'en produire un",
     ],
     stops: [
-      { label: "Fondements", to: "/module/fondamentaux" },
-      { label: "Le Regard", to: "/module/teledetection" },
-      { label: "Les Couleurs", to: "/module/indices-spectraux" },
-      { label: "L'Atelier (piste Lycée)", to: "/module/travaux-pratiques" },
-      { label: "L'Atelier, séance 9", to: "/module/travaux-pratiques" },
+      moduleStop("Fondements", "fondamentaux"),
+      moduleStop("Le Regard", "teledetection"),
+      moduleStop("Les Couleurs", "indices-spectraux"),
+      moduleStop("L'Atelier (piste Lycée)", "travaux-pratiques"),
+      moduleStop("L'Atelier, séance 9", "travaux-pratiques"),
     ],
   },
   {
     id: "licence-but-sig",
     title: "Licence / BUT SIG",
     audience: "Formation technique, objectif : maîtriser les outils",
-    description: "Lire les 7 salles dans l'ordre, niveaux \"Lycée\" et \"Supérieur\" activés (automatique tant que ce parcours est en cours), en s'arrêtant sur chaque séance de l'Atelier au fur et à mesure : c'est la voie la plus proche d'un vrai programme de cours.",
-    levels: ["lycee", "superieur"],
+    description: "Lire les 12 salles de Cours dans l'ordre, piste \"Licence/BUT\" activée automatiquement tant que ce parcours est en cours (chaque piste se lit seule, du socle à l'approfondissement), en s'arrêtant sur chaque séance de l'Atelier au fur et à mesure : c'est la voie la plus proche d'un vrai programme de cours.",
+    levels: ["superieur"],
     steps: [
-      "Fondements, Le Regard, Les Couleurs, Le Compas, dans l'ordre, sans sauter de section",
+      "Fondements, Les Projections (piste Licence/BUT), dans l'ordre : coordonnées et référentiels, puis choix concret d'une projection (Lambert-93, UTM)",
+      "Le Compas (piste Licence/BUT) : prise en main QGIS et analyses spatiales de base",
+      "Après Le Compas : L'Atelier, séance 4 (analyse spatiale professionnelle), puis séance 10 (auditer la qualité d'un jeu de données), une compétence professionnelle directe pour un BUT",
+      "Les Statistiques, puis La Base (piste Licence/BUT) : approfondir l'analyse spatiale (LISA, Gi*) puis la rendre interrogeable à grande échelle (index spatial, PostGIS)",
+      "Après La Base : L'Atelier, séance 6 (PostGIS)",
+      "Le Web (piste Licence/BUT) : publier les résultats sous forme de carte interactive",
+      "Le Regard, Les Couleurs (piste Licence/BUT), dans l'ordre",
       "Après Les Couleurs : L'Atelier, piste Licence/BUT, séances 2, 3, 5 (géoréférencement, indices, Python)",
-      "Après Le Compas : L'Atelier, séance 4 (analyse spatiale professionnelle) puis séance 6 (PostGIS)",
+      "Le Drone, Le LiDAR (piste Licence/BUT) : les deux méthodes d'acquisition de données 3D les plus courantes sur le terrain",
       "L'Intelligence, puis L'Atelier, séance 7 (classification supervisée)",
-      "Après Le Compas également : L'Atelier, séance 10 (auditer la qualité d'un jeu de données), une compétence professionnelle directe pour un BUT",
+      "Les Secteurs (piste Licence/BUT) : trois études de cas qui enchaînent l'ensemble des méthodes précédentes",
       "Terminer par le mini-projet (L'Atelier, séance 12, un livrable professionnel complet) sur un territoire choisi",
     ],
     stops: [
-      { label: "Fondements", to: "/module/fondamentaux" },
-      { label: "Le Regard", to: "/module/teledetection" },
-      { label: "Les Couleurs", to: "/module/indices-spectraux" },
-      { label: "Exercices, Les Couleurs", to: "/module/indices-spectraux/exercices" },
-      { label: "L'Atelier, séances 2, 3, 5", to: "/module/travaux-pratiques" },
-      { label: "Le Compas", to: "/module/outils-sig" },
-      { label: "Exercices, Le Compas", to: "/module/outils-sig/exercices" },
-      { label: "L'Atelier, séances 4, 6, 10", to: "/module/travaux-pratiques" },
-      { label: "L'Intelligence", to: "/module/traitements-ia" },
-      { label: "L'Atelier, séances 7, 12 (mini-projet)", to: "/module/travaux-pratiques" },
+      moduleStop("Fondements", "fondamentaux"),
+      moduleStop("Les Projections", "projections-avancees"),
+      moduleStop("Le Compas", "outils-sig"),
+      exercisesStop("Exercices, Le Compas", "outils-sig"),
+      moduleStop("L'Atelier, séances 4, 10", "travaux-pratiques"),
+      moduleStop("Les Statistiques", "statistiques-spatiales"),
+      moduleStop("La Base", "bases-donnees-spatiales"),
+      moduleStop("L'Atelier, séance 6", "travaux-pratiques"),
+      moduleStop("Le Web", "cartographie-web"),
+      moduleStop("Le Regard", "teledetection"),
+      moduleStop("Les Couleurs", "indices-spectraux"),
+      exercisesStop("Exercices, Les Couleurs", "indices-spectraux"),
+      moduleStop("L'Atelier, séances 2, 3, 5", "travaux-pratiques"),
+      moduleStop("Le Drone", "photogrammetrie-drones"),
+      moduleStop("Le LiDAR", "lidar"),
+      moduleStop("L'Intelligence", "traitements-ia"),
+      moduleStop("L'Atelier, séance 7", "travaux-pratiques"),
+      moduleStop("Les Secteurs", "etudes-de-cas-sectorielles"),
+      moduleStop("L'Atelier, séance 12 (mini-projet)", "travaux-pratiques"),
     ],
   },
   {
@@ -77,25 +111,25 @@ export const PARCOURS: Parcours[] = [
     description: "Commencer par La Méthode pour caler le cadre attendu avant même de réviser le fond : c'est la méthode, pas la quantité de contenu lu, qui fait la différence à l'écrit.",
     steps: [
       "La Méthode en entier (y compris la section 7, IMRaD et rigueur statistique)",
-      "Fondements, section 12 (débat Mercator/Peters), sujet de dissertation classique",
-      "Le Regard et Les Couleurs, niveau \"Approfondissement\" activé",
-      "Le Compas, section 4 (sémiologie et fondements théoriques de l'analyse spatiale)",
+      "Fondements (piste Master/Recherche) : débat Mercator/Peters, sujet de dissertation classique",
+      "Le Regard et Les Couleurs, piste Master/Recherche activée",
+      "Le Compas (piste Licence/BUT) : les fondements théoriques de l'analyse spatiale (Tobler, Moran, MAUP)",
       "S'entraîner : L'Atelier, piste Master/Recherche, séance 12 (rédiger un mémoire structuré IMRaD), comme simulation de rapport structuré",
     ],
     stops: [
       { label: "La Méthode", to: "/discipulus/methodes" },
-      { label: "Fondements, section 12 (Mercator/Peters)", to: "/module/fondamentaux" },
-      { label: "Le Regard (Approfondissement)", to: "/module/teledetection" },
-      { label: "Les Couleurs (Approfondissement)", to: "/module/indices-spectraux" },
-      { label: "Le Compas, section 4", to: "/module/outils-sig" },
-      { label: "L'Atelier, séance 12 (piste Master/Recherche)", to: "/module/travaux-pratiques" },
+      moduleStop("Fondements (Mercator/Peters, piste Master/Recherche)", "fondamentaux"),
+      moduleStop("Le Regard (Approfondissement)", "teledetection"),
+      moduleStop("Les Couleurs (Approfondissement)", "indices-spectraux"),
+      moduleStop("Le Compas (fondements théoriques)", "outils-sig"),
+      moduleStop("L'Atelier, séance 12 (piste Master/Recherche)", "travaux-pratiques"),
     ],
   },
   {
     id: "approfondissement-recherche",
     title: "Approfondissement / initiation à la recherche",
     audience: "Master, stage, premier travail de recherche appliquée",
-    description: "Ne lire que les sections tagées \"Approfondissement\" dans les 7 salles (filtre activé automatiquement tant que ce parcours est en cours), puis vérifier chaque notion sur le jeu de données réel plutôt que de rester dans l'abstrait.",
+    description: "Ne lire que les sections tagées \"Approfondissement\" des salles traversées ci-dessous (filtre activé automatiquement tant que ce parcours est en cours), puis vérifier chaque notion sur le jeu de données réel plutôt que de rester dans l'abstrait.",
     levels: ["approfondissement"],
     steps: [
       "Fondements : géoïde, trilatération GNSS, ITRF/ETRS89, transformation de Helmert",
@@ -106,20 +140,21 @@ export const PARCOURS: Parcours[] = [
       "L'Atelier, piste Master/Recherche, séance 6 : valider statistiquement une classification (test de McNemar), sur les résultats réels de la séance 5",
     ],
     stops: [
-      { label: "Fondements (Approfondissement)", to: "/module/fondamentaux" },
-      { label: "Le Regard (Approfondissement)", to: "/module/teledetection" },
-      { label: "Les Couleurs (Approfondissement)", to: "/module/indices-spectraux" },
-      { label: "Le Compas (Approfondissement)", to: "/module/outils-sig" },
+      moduleStop("Fondements (Approfondissement)", "fondamentaux"),
+      moduleStop("Le Regard (Approfondissement)", "teledetection"),
+      moduleStop("Les Couleurs (Approfondissement)", "indices-spectraux"),
+      moduleStop("Le Compas (Approfondissement)", "outils-sig"),
       { label: "Jeux de données (Vitrolles)", to: "/jeux-de-donnees" },
-      { label: "L'Atelier, séance 6 (piste Master/Recherche)", to: "/module/travaux-pratiques" },
+      moduleStop("L'Atelier, séance 6 (piste Master/Recherche)", "travaux-pratiques"),
     ],
   },
 ]
 
 /**
- * Slugs de module traversés par un parcours, dérivés de ses `stops` (`/module/<slug>`
- * uniquement — un stop vers `/discipulus/methodes` ou `/jeux-de-donnees` n'est pas un
- * slug de reviewQueue). Sert au mode express de RevisionPage : filtrer la file de
+ * Slugs de module traversés par un parcours, lus directement sur `stop.moduleSlug`
+ * plutôt que déduits de l'URL `to` (plusieurs stops de slugs différents peuvent
+ * désormais partager la même route canonique, ex. /discipulus/cours — voir
+ * moduleStop ci-dessus). Sert au mode express de RevisionPage : filtrer la file de
  * révision espacée sur le seul parcours actif plutôt que toutes les salles.
  */
 export function getParcoursModuleSlugs(id: string): Set<string> {
@@ -127,8 +162,7 @@ export function getParcoursModuleSlugs(id: string): Set<string> {
   const slugs = new Set<string>()
   if (!parcours) return slugs
   for (const stop of parcours.stops) {
-    const match = stop.to.match(/^\/module\/([^/]+)/)
-    if (match) slugs.add(match[1])
+    if (stop.moduleSlug) slugs.add(stop.moduleSlug)
   }
   return slugs
 }

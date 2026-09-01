@@ -22,8 +22,9 @@ export function ActiveParcoursBar() {
   const isLast = active.stepIndex === parcours.stops.length - 1
 
   function goTo(index: number) {
+    const target = parcours!.stops[index]
     setParcoursStep(index)
-    navigate(parcours!.stops[index].to)
+    navigate(target.to, target.state ? { state: target.state } : undefined)
   }
 
   return (

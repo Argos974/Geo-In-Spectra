@@ -43,10 +43,22 @@ export function scrollToAnchor(id: string, offset = -96) {
  * (lui-même si `id` cible un chapitre, ou son parent si `id` cible un titre à
  * l'intérieur) — nécessaire quand la cible peut être repliée : un simple scroll
  * vers un élément caché dans un <details> fermé ne l'affiche pas tout seul.
+ *
+ * Réessaie sur quelques frames (`attemptsLeft`) avant d'abandonner : une cible
+ * dans une piste (Lycée/Licence-BUT/Master-Recherche) qui n'est pas encore la
+ * piste active de son module n'existe pas dans le DOM tant que
+ * ModuleChapterBody n'a pas basculé dessus (voir lib/pendingSectionLevel.ts,
+ * consommé dans un useEffect — donc jamais synchrone avec cet appel). Sans
+ * cette attente, le scroll échouait silencieusement dès que la cible n'était
+ * pas déjà rendue à l'instant précis de l'appel.
  */
-export function openAndScrollTo(id: string) {
+export function openAndScrollTo(id: string, attemptsLeft = 20) {
   const el = document.getElementById(id)
-  const details = el?.closest("details")
+  if (!el) {
+    if (attemptsLeft > 0) requestAnimationFrame(() => openAndScrollTo(id, attemptsLeft - 1))
+    return
+  }
+  const details = el.closest("details")
   if (details) details.open = true
   scrollToAnchor(id)
 }

@@ -7,6 +7,7 @@ import { quizzes } from "@/data/quizzes"
 import { exercises } from "@/data/exercises"
 import { slugify } from "@/lib/slug"
 import { COURS_SLUGS, moduleTreeRoute as moduleRoute } from "@/lib/moduleRoute"
+import type { ContentLevel } from "@/content/types"
 
 export interface SearchEntry {
   label: string
@@ -15,6 +16,16 @@ export interface SearchEntry {
   /** id à ouvrir/faire défiler à l'arrivée (voir lib/lenisStore.ts::openAndScrollTo) — omis quand la cible est la page entière, pas une section précise. */
   scrollTo?: string
   group: "Chapitre" | "Section" | "Glossaire" | "Jeu" | "Page" | "Quiz" | "Exercice"
+  /**
+   * Piste (Lycée/Licence-BUT/Master-Recherche) à activer avant de faire défiler
+   * vers `scrollTo`, pour les modules à 3 pistes exclusives (voir
+   * ModuleChapterBody.tsx::isLeveledCourse) — sans ça, une section d'une piste
+   * autre que celle affichée par défaut n'existe pas dans le DOM et le scroll
+   * échoue silencieusement. Omis pour Méthodologie (cumulable, toujours entière
+   * visible) et pour toute entrée qui ne cible pas une section précise.
+   */
+  moduleSlug?: string
+  level?: ContentLevel
 }
 
 /**
@@ -39,7 +50,11 @@ export function buildSearchIndex(): SearchEntry[] {
     const blocks = moduleContent[m.slug] ?? []
     for (const b of blocks) {
       if (b.type === "heading") {
-        entries.push({ label: b.text, context: m.title, to: route, scrollTo: slugify(b.text), group: "Section" })
+        // Méthodologie reste cumulable (toutes ses sections déjà visibles à la
+        // fois, voir isLeveledCourse) : pas besoin d'y basculer de piste avant
+        // de scroller, contrairement aux modules de Cours et à l'Atelier.
+        const level = m.slug !== "methodologie" ? b.level : undefined
+        entries.push({ label: b.text, context: m.title, to: route, scrollTo: slugify(b.text), group: "Section", moduleSlug: m.slug, level })
       }
     }
 
@@ -76,11 +91,14 @@ export function buildSearchIndex(): SearchEntry[] {
     { label: "Discipulus", context: "Profil élève", to: "/discipulus", group: "Page" },
     { label: "Méthodes", context: "Commentaire, dissertation, rapport, mémoire", to: "/discipulus/methodes", group: "Page" },
     { label: "Magister", context: "Profil enseignant", to: "/magister", group: "Page" },
-    { label: "L'Atelier", context: "Douze séances autonomes et corrigées", to: "/magister/cours", group: "Page" },
+    { label: "L'Atelier", context: "Trente-six séances autonomes et corrigées", to: "/magister/cours", group: "Page" },
     { label: "Programme", context: "Progression suggérée pour enseigner", to: "/magister/programme", group: "Page" },
     { label: "Évaluation", context: "Grilles de correction par finalité : scolaire, concours, professionnel, recherche", to: "/magister/evaluation", group: "Page" },
+    { label: "Pédagogie", context: "Déblocage progressif, différenciation, animation de séance", to: "/magister/pedagogie", group: "Page" },
+    { label: "Suivi de classe", context: "Agréger les exports de progression de plusieurs élèves, sans compte ni serveur", to: "/magister/classe", group: "Page" },
     { label: "Parcours conseillés", context: "Choisir un ordre de lecture selon ton profil", to: "/parcours", group: "Page" },
     { label: "Bilan de progression", context: "Suivi personnel des salles visitées", to: "/discipulus/progression", group: "Page" },
+    { label: "Révision", context: "Répétition espacée (méthode Leitner) des salles déjà visitées", to: "/discipulus/revision", group: "Page" },
   )
 
   return entries

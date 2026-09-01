@@ -294,4 +294,10 @@ export const methodologieContent: ContentBlock[] = [
     title: "Citer une source, y compris une donnée géospatiale",
     text: "Le plagiat ne concerne pas que le texte : reprendre un jeu de données, un fond de carte ou une méthode de traitement sans en citer l'origine (producteur, date, licence) est une faute de même nature. Une donnée Copernicus, IGN ou OpenStreetMap réutilisée dans un mémoire doit être créditée avec la même rigueur qu'une citation d'auteur — attendu explicitement dans la section Méthode d'un travail IMRaD.",
   },
+  {
+    type: "link",
+    to: "/module/statistiques-spatiales",
+    label: "Continuer : tester la significativité d'un résultat spatial",
+    description: "Le module Les Statistiques applique concrètement la significativité et le p évoqués ici à des indices spatiaux réels (LISA, Gi*).",
+  },
 ]

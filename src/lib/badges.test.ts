@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { computeBadges } from "./badges"
 import { modules } from "@/data/modules"
+import { COURS_SLUGS } from "@/lib/moduleRoute"
 import type { ModuleProgress } from "@/lib/progress"
 
 describe("computeBadges", () => {
@@ -62,5 +63,23 @@ describe("computeBadges", () => {
     const persistent = computeBadges(progress).find((b) => b.id === "persistent")!
     expect(persistent.progress).toBe(12)
     expect(persistent.earned).toBe(true)
+  })
+
+  it("track badges only count the 12 leveled Cours modules, one piste at a time", () => {
+    const coursSlugs = [...COURS_SLUGS]
+    // Visiter Lycée sur toutes les salles de Cours ne doit pas suffire pour la piste Master.
+    const allLycee: Record<string, ModuleProgress> = Object.fromEntries(
+      coursSlugs.map((slug) => [slug, { visited: true, visitedLevels: ["lycee"] }]),
+    )
+    const badges = computeBadges(allLycee)
+    expect(badges.find((b) => b.id === "track-lycee")?.earned).toBe(true)
+    expect(badges.find((b) => b.id === "track-master")?.earned).toBe(false)
+  })
+
+  it("track badges ignore a module that only reports 'visited' without a level (legacy entries)", () => {
+    const coursSlugs = [...COURS_SLUGS]
+    const legacy: Record<string, ModuleProgress> = Object.fromEntries(coursSlugs.map((slug) => [slug, { visited: true }]))
+    const badges = computeBadges(legacy)
+    expect(badges.find((b) => b.id === "track-lycee")?.progress).toBe(0)
   })
 })

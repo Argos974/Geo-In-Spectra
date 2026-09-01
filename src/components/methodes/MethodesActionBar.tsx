@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom"
-import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 import { exercises } from "@/data/exercises"
+import { coursePdfName, fichePdfName } from "@/lib/pdfNames"
 
 /**
  * Barre d'action pour Méthodes — mêmes cibles (PDF/exercices/quiz) et même
  * style de bouton que l'action row de ModuleChapterBody (Cours), pour que les
  * deux onglets se comportent de façon cohérente plutôt que Méthodes ayant ses
- * propres boutons discrets en simple lien souligné.
+ * propres boutons discrets en simple lien souligné. Placée en fin de page
+ * (DiscipulusMethodesPage.tsx), après les 4 chapitres, pour la même raison
+ * que ModuleChapterBody : proposer PDF/exercices/quiz une fois le contenu
+ * effectivement lu, jamais avant.
  */
 export function MethodesActionBar() {
   const slug = "methodologie"
-  const index = modules.findIndex((m) => m.slug === slug)
-  const order = String(index + 1).padStart(2, "0")
-  const coursName = `${order}-${slug}-cours.pdf`
-  const ficheName = `${order}-${slug}-fiche-memo.pdf`
+  const coursName = coursePdfName(slug, false, "lycee")
+  const ficheName = fichePdfName(slug)
   const hasQuiz = Boolean(quizzes[slug])
   const hasExercises = Boolean(exercises[slug])
 

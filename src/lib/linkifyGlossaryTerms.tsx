@@ -14,9 +14,11 @@ function termsForModule(moduleSlug: string): { label: string; term: string }[] {
   if (!cachedByModule) {
     cachedByModule = new Map()
     for (const g of glossary) {
-      const list = cachedByModule.get(g.moduleSlug) ?? []
-      list.push({ label: primaryLabel(g.term), term: g.term })
-      cachedByModule.set(g.moduleSlug, list)
+      for (const slug of [g.moduleSlug, ...(g.alsoModuleSlugs ?? [])]) {
+        const list = cachedByModule.get(slug) ?? []
+        list.push({ label: primaryLabel(g.term), term: g.term })
+        cachedByModule.set(slug, list)
+      }
     }
     // Termes longs d'abord : évite qu'un match court ("SIG") capture une partie
     // d'un terme plus long qui le contient, avant que le terme long ait sa chance.

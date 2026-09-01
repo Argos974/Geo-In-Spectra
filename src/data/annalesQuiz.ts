@@ -173,7 +173,7 @@ export const annalesQuiz: Record<string, QuizQuestion[]> = {
         "Une alternance stricte de valeurs opposées entre voisins",
       ],
       correctIndex: 1,
-      explanation: "Un Moran proche de 0 indique l'absence de structure spatiale détectable ; proche de +1, un regroupement ; proche de -1, une alternance — voir Le Compas, section 4.",
+      explanation: "Un Moran proche de 0 indique l'absence de structure spatiale détectable ; proche de +1, un regroupement ; proche de -1, une alternance — voir Le Compas (piste Licence/BUT), fondements théoriques de l'analyse spatiale.",
     },
     {
       question: "Avant de combiner plusieurs couches statistiques en un indice de priorisation territoriale (ex. un indice de risque), une démarche rigoureuse doit surtout :",

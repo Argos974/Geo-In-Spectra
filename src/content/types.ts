@@ -10,7 +10,7 @@ export type ContentBlock =
   | { type: "paragraph"; text: string }
   | { type: "list"; items: string[]; ordered?: boolean }
   | { type: "formula"; label: string; formula: string; note?: string }
-  | { type: "callout"; tone?: "info" | "warning" | "example"; title: string; text: string }
+  | { type: "callout"; tone?: "info" | "warning" | "example" | "question" | "rappel"; title: string; text: string }
   | { type: "comparison"; items: { label: string; points: string[] }[] }
   | { type: "table"; headers: string[]; rows: string[][] }
   | { type: "diagram"; name: DiagramName; caption?: string }
@@ -19,7 +19,16 @@ export type ContentBlock =
   | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "imagepair"; images: [ImagePairItem, ImagePairItem] }
   | { type: "marginnote"; title: string; text: string }
-  | { type: "live"; name: "osm-buffer-vitrolles" | "raster-explorer" | "grid-choropleth" | "sentinel-swipe"; caption?: string }
+  /**
+   * Sous-groupe nommé et adressable de blocs à l'intérieur d'un chapitre — une
+   * "brique" : le contenu le plus directement réutilisable (définition + formule
+   * ou exemple court), enveloppé sans être dupliqué, pour être repris ailleurs
+   * (voir lib/briques.ts::getBrique) — typiquement par une séance de l'Atelier
+   * (travaux-pratiques.ts) qui dépend de cette notion plutôt que de la
+   * reformuler. `id` unique au sein du module qui la déclare.
+   */
+  | { type: "brique"; id: string; title: string; blocks: ContentBlock[] }
+  | { type: "live"; name: "osm-buffer-vitrolles" | "raster-explorer" | "grid-choropleth" | "sentinel-swipe" | "rtk-network-map" | "gps-live-demo" | "wildfire-kde-map" | "tile-pyramid-explorer"; caption?: string }
   | { type: "live-game"; name: "draw-operation" }
   | { type: "game" }
   | { type: "devoir"; format: string; title: string; prompt: string; criteria: string[] }

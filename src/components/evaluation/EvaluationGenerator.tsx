@@ -134,7 +134,7 @@ export function EvaluationGenerator() {
                     <li key={ci} className={cn("flex items-start gap-2 text-sm", showAnswers && ci === q.correctIndex && "font-semibold")}>
                       <span className="font-mono text-ink-deep/50">{String.fromCharCode(65 + ci)}.</span>
                       <span>{choice}</span>
-                      {showAnswers && ci === q.correctIndex && <span className="text-lapis">✓</span>}
+                      {showAnswers && ci === q.correctIndex && <span className="text-lapis-bright">✓</span>}
                     </li>
                   ))}
                 </ul>

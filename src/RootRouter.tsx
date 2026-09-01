@@ -35,6 +35,7 @@ const MagisterPage = lazy(() => import("@/pages/MagisterPage").then((m) => ({ de
 const MagisterCoursPage = lazy(() => import("@/pages/MagisterCoursPage").then((m) => ({ default: m.MagisterCoursPage })))
 const MagisterEvaluationPage = lazy(() => import("@/pages/MagisterEvaluationPage").then((m) => ({ default: m.MagisterEvaluationPage })))
 const MagisterPedagogiePage = lazy(() => import("@/pages/MagisterPedagogiePage").then((m) => ({ default: m.MagisterPedagogiePage })))
+const MagisterClassePage = lazy(() => import("@/pages/MagisterClassePage").then((m) => ({ default: m.MagisterClassePage })))
 const RessourcesPage = lazy(() => import("@/pages/RessourcesPage").then((m) => ({ default: m.RessourcesPage })))
 const ProgrammePage = lazy(() => import("@/pages/ProgrammePage").then((m) => ({ default: m.ProgrammePage })))
 const RecherchePage = lazy(() => import("@/pages/RecherchePage").then((m) => ({ default: m.RecherchePage })))
@@ -53,6 +54,14 @@ function AppShell() {
 
   return (
     <>
+      {!isPrint && (
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-ink focus:text-gilt-bright focus:px-4 focus:py-2 focus:border focus:border-gilt focus:font-mono focus:text-[11px] focus:uppercase focus:tracking-wider"
+        >
+          Aller au contenu
+        </a>
+      )}
       <RoomTransition />
       {!isPrint && <CanvasGrain />}
       {!isPrint && <SiteHeader />}
@@ -61,8 +70,10 @@ function AppShell() {
           landmark-one-main/region sur chaque route, confirmée par un audit axe-core)
           — chaque page enveloppait son contenu dans un simple <div>. Toutes les
           routes passent déjà par ce même point d'entrée, donc un seul <main> ici
-          corrige l'ensemble d'un coup plutôt que route par route. */}
-      <main>
+          corrige l'ensemble d'un coup plutôt que route par route. tabIndex={-1}
+          permet au lien d'évitement ci-dessus de déplacer réellement le focus
+          clavier sur le contenu, pas seulement le défilement visuel. */}
+      <main id="main-content" tabIndex={-1}>
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -74,6 +85,7 @@ function AppShell() {
           <Route path="/magister/programme" element={<ProgrammePage />} />
           <Route path="/magister/evaluation" element={<MagisterEvaluationPage />} />
           <Route path="/magister/pedagogie" element={<MagisterPedagogiePage />} />
+          <Route path="/magister/classe" element={<MagisterClassePage />} />
           <Route path="/ressources" element={<RessourcesPage />} />
           <Route path="/recherche" element={<RecherchePage />} />
           <Route path="/module/:slug" element={<ModulePage />} />

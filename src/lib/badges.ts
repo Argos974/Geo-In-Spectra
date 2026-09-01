@@ -1,5 +1,8 @@
 import { modules } from "@/data/modules"
+import { COURS_SLUGS } from "@/lib/moduleRoute"
+import { LEVEL_TOGGLE_LABEL } from "@/lib/levelFilter"
 import type { ModuleProgress } from "@/lib/progress"
+import type { ContentLevel } from "@/content/types"
 
 export interface Badge {
   id: string
@@ -26,17 +29,33 @@ export interface Badge {
  * de jalon. `progress`/`target` exposés (pas juste `earned`) pour la barre de
  * progression affichée au clic (voir BadgeModal).
  */
+/**
+ * Salles à 3 pistes indépendantes (les 12 salles de Cours) — "visité" au sens
+ * de ModuleProgress.visited ne dit qu'"au moins une piste vue" ; ces badges
+ * comptent une piste précise sur les 12, seule mesure fidèle à ce qu'une
+ * salle à 3 pistes veut réellement dire "terminée" à ce niveau.
+ */
+const LEVELED_SLUGS = [...COURS_SLUGS]
+
+function countTrackCompletion(progress: Record<string, ModuleProgress>, level: ContentLevel): number {
+  return LEVELED_SLUGS.filter((slug) => progress[slug]?.visitedLevels?.includes(level)).length
+}
+
 export function computeBadges(progress: Record<string, ModuleProgress>): Badge[] {
   const visitedCount = modules.filter((m) => progress[m.slug]?.visited).length
   const quizzesTaken = Object.values(progress).filter((p) => p.quizScore).length
   const perfectQuizzes = Object.values(progress).filter((p) => p.quizScore && p.quizScore.score === p.quizScore.total).length
   const exercisesDone = Object.values(progress).filter((p) => p.exercisesVisited).length
   const totalAttempts = Object.values(progress).reduce((n, p) => n + (p.quizHistory?.length ?? 0), 0)
+  const lyceeCount = countTrackCompletion(progress, "lycee")
+  const licenceCount = countTrackCompletion(progress, "superieur")
+  const masterCount = countTrackCompletion(progress, "approfondissement")
 
   const explorerTarget = Math.max(5, Math.ceil(modules.length * 0.6))
   const rigueurTarget = Math.max(3, Math.ceil(modules.length * 0.4))
   const exercisesTarget = Math.max(5, Math.ceil(modules.length * 0.6))
   const persistentTarget = 12
+  const trackTarget = LEVELED_SLUGS.length
 
   return [
     {
@@ -101,6 +120,33 @@ export function computeBadges(progress: Record<string, ModuleProgress>): Badge[]
       icon: "Flame",
       progress: totalAttempts,
       target: persistentTarget,
+    },
+    {
+      id: "track-lycee",
+      label: `Piste ${LEVEL_TOGGLE_LABEL.lycee} complète`,
+      detail: `Ouvrir la piste ${LEVEL_TOGGLE_LABEL.lycee} des ${trackTarget} salles de Cours.`,
+      earned: lyceeCount >= trackTarget,
+      icon: "BookOpen",
+      progress: lyceeCount,
+      target: trackTarget,
+    },
+    {
+      id: "track-licence",
+      label: `Piste ${LEVEL_TOGGLE_LABEL.superieur} complète`,
+      detail: `Ouvrir la piste ${LEVEL_TOGGLE_LABEL.superieur} des ${trackTarget} salles de Cours.`,
+      earned: licenceCount >= trackTarget,
+      icon: "GraduationCap",
+      progress: licenceCount,
+      target: trackTarget,
+    },
+    {
+      id: "track-master",
+      label: `Piste ${LEVEL_TOGGLE_LABEL.approfondissement} complète`,
+      detail: `Ouvrir la piste ${LEVEL_TOGGLE_LABEL.approfondissement} des ${trackTarget} salles de Cours.`,
+      earned: masterCount >= trackTarget,
+      icon: "Microscope",
+      progress: masterCount,
+      target: trackTarget,
     },
   ]
 }

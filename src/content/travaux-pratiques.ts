@@ -1,4 +1,14 @@
 import type { ContentBlock } from "./types"
+import { getBrique } from "@/lib/briques"
+// Import direct des tableaux de blocs (jamais via src/content/index.ts, qui
+// agrège aussi travauxPratiquesContent lui-même — passer par lui créerait un
+// cycle d'import où moduleContent n'est pas encore prêt à l'évaluation de ce
+// fichier, voir lib/briques.ts).
+import { fondamentauxContent } from "./fondamentaux"
+import { outilsSigContent } from "./outils-sig"
+import { teledetectionContent } from "./teledetection"
+import { indicesSpectrauxContent } from "./indices-spectraux"
+import { traitementsIaContent } from "./traitements-ia"
 
 export const travauxPratiquesContent: ContentBlock[] = [
   {
@@ -130,6 +140,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Comprendre concrètement ce que veut dire une coordonnée projetée (module Fondements) en la manipulant réellement, avant de l'utiliser sans y penser dans toutes les séances suivantes.",
   },
+  ...getBrique(fondamentauxContent, "lambert93-coordonnees"),
   {
     type: "list",
     ordered: true,
@@ -168,6 +179,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Le module Fondements distingue vecteur et raster en théorie : cette séance fait manipuler les deux sur le même territoire pour rendre la différence concrète, pas seulement mémorisée.",
   },
+  ...getBrique(fondamentauxContent, "vecteur-raster"),
   {
     type: "list",
     ordered: true,
@@ -211,6 +223,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Répondre à une vraie question spatiale (« quelles parcelles sont concernées par telle contrainte ? ») en enchaînant deux opérations plutôt qu'en cherchant une réponse à l'œil sur la carte.",
   },
+  ...getBrique(outilsSigContent, "buffer-intersection"),
   {
     type: "list",
     ordered: true,
@@ -279,14 +292,14 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Avant tout calcul d'indice, savoir lire une image à l'œil reste une compétence à part entière (module Le Regard, section 9) : les six clés classiques de la photo-interprétation, appliquées à une vraie image.",
+    text: "Avant tout calcul d'indice, savoir lire une image à l'œil reste une compétence à part entière (module Le Regard, piste Lycée : la photo-interprétation) : les six clés classiques de la photo-interprétation, appliquées à une vraie image.",
   },
   {
     type: "list",
     ordered: true,
     items: [
       "Charger la composition couleur naturelle du jeu de données Vitrolles (voir Ressources → Jeux de données)",
-      "Identifier, une par une, les six clés de lecture sur l'image : texture, teinte, ombre portée, motif, association/contexte, forme (voir module Le Regard, section 9)",
+      "Identifier, une par une, les six clés de lecture sur l'image : texture, teinte, ombre portée, motif, association/contexte, forme (voir module Le Regard, piste Lycée : la photo-interprétation)",
       "Pour chaque clé, noter au moins un exemple précis localisé sur l'image (ex. « motif régulier » = rangées d'arbres visibles au sud-est)",
       "Rédiger une légende commentée de l'image en dix lignes maximum, une clé de lecture par ligne",
     ],
@@ -324,6 +337,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Calculer le NDVI une première fois, sur une seule date, pour comprendre la mécanique de la formule (module Les Couleurs) avant toute complication (comparaison de dates, seuils de classification).",
   },
+  ...getBrique(indicesSpectrauxContent, "ndvi-formule"),
   {
     type: "list",
     ordered: true,
@@ -493,7 +507,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Le module Fondements retrace la petite histoire de la cartographie (section 10) : cette séance confronte concrètement un document ancien à une donnée satellite actuelle, sur le même territoire.",
+    text: "Le module Fondements retrace la petite histoire de la cartographie (piste Lycée) : cette séance confronte concrètement un document ancien à une donnée satellite actuelle, sur le même territoire.",
   },
   {
     type: "list",
@@ -537,7 +551,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Le module Fondements présente le débat Mercator/Peters (section 12) : cette séance fait mesurer, pas seulement lire, l'ampleur réelle d'une déformation de projection.",
+    text: "Le module Fondements présente le débat Mercator/Peters (piste Master/Recherche) : cette séance fait mesurer, pas seulement lire, l'ampleur réelle d'une déformation de projection.",
   },
   {
     type: "list",
@@ -668,6 +682,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module Le Compas présente le modeleur graphique et l'automatisation Python avant de les pratiquer ici.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : ton modèle fonctionne sur le territoire A mais échoue avec une erreur de CRS sur le territoire B. L'erreur est-elle plus probablement dans l'étape de buffer, ou dans l'étape de reprojection ?",
+      "Exercice éclair 2 : pourquoi une distance de buffer figée en dur dans le sous-outil, plutôt qu'exposée en haut du formulaire, rend le modèle moins réutilisable — même s'il fonctionne parfaitement au premier essai ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 1",
+    items: [
+      "1. La reprojection : elle est en amont dans la chaîne, un buffer calculé sur une géométrie mal reprojetée (ou dans un CRS incohérent avec le territoire B) produit un résultat faux ou une erreur avant même l'intersection finale.",
+      "2. Un tiers qui veut réutiliser le modèle sur un autre territoire ou une autre distance devrait rouvrir et modifier le sous-outil lui-même — exactement ce que le critère 2 (paramètres exposés, pas figés) cherche à éviter.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Modèle documenté",
     title: "Modèle de traitement réutilisable",
@@ -723,6 +753,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     ],
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : avec seulement 4 points de contrôle et une transformation polynomiale d'ordre 2, QGIS affiche un résidu par point quasi nul. Est-ce un bon signe ?",
+      "Exercice éclair 2 : sur une grille régulière sans rotation, pourquoi une transformation polynomiale d'ordre élevé serait un mauvais choix par défaut, comparée à une transformation affine ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 2",
+    items: [
+      "1. Non : avec seulement 4 points pour un polynôme d'ordre 2 (qui a besoin d'au moins 6 points pour être bien contraint), un résidu quasi nul est le symptôme d'un sur-ajustement, pas d'une bonne précision.",
+      "2. Une transformation affine correspond exactement à la nature de la déformation (translation/échelle/rotation simples) d'une grille régulière sans rotation ; un polynôme d'ordre élevé ajoute une flexibilité inutile, au risque de déformer l'image entre les points de contrôle.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Introduction",
     title: "Rédiger l'introduction d'un compte-rendu de géoréférencement",
@@ -739,6 +785,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Cette séance part directement du résultat de la séance Licence/BUT 2 : une image auparavant sans coordonnées, maintenant géoréférencée.",
   },
+  ...getBrique(indicesSpectrauxContent, "ndvi-formule"),
   {
     type: "list",
     ordered: true,
@@ -772,6 +819,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module Les Couleurs détaille la logique des indices composés avant de les mettre en pratique ici.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : une cellule de la grille 100 m affiche un ΔNDVI de -0.08 entre les deux dates. Faut-il la classer en zone de perte de végétation ?",
+      "Exercice éclair 2 : comment vérifier que ton calcul de NDVI par fishnet + statistiques de zone est correct, sans attendre le devoir final ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 3",
+    items: [
+      "1. Non : -0.08 reste dans la fourchette ±0.05 à ±0.1 considérée stable — l'écart est trop faible pour dépasser le bruit de mesure normal (saison, angle de prise de vue).",
+      "2. En comparant tes résultats à grille_100m_indices.geojson, qui donne déjà la moyenne réelle de NDVI pour les mêmes 1122 cellules — un calcul correct doit la reproduire à peu de choses près.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Analyse de texte",
     title: "Analyser l'article fondateur d'un indice que tu viens d'utiliser",
@@ -792,6 +855,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Aller au-delà du buffer/intersection de base : jointure spatiale et clip sont les deux opérations les plus fréquentes d'un vrai projet SIG professionnel, rarement pratiquées ensemble en formation.",
   },
+  ...getBrique(outilsSigContent, "buffer-intersection"),
   {
     type: "list",
     ordered: true,
@@ -825,6 +889,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module Le Compas détaille ces opérations avant de les pratiquer ici en contexte professionnel.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : un bâtiment se voit attribuer 0 commune après la jointure spatiale, alors qu'il est clairement visible dans un territoire communal sur la carte. Quelle est l'hypothèse la plus probable ?",
+      "Exercice éclair 2 : un bâtiment exactement sur la frontière entre deux communes obtient une commune différente selon que tu choisis le prédicat « intersecte » ou « contient ». Est-ce une erreur du logiciel ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 4",
+    items: [
+      "1. Une confusion entre jointure spatiale et jointure attributaire, ou un prédicat spatial mal choisi — exactement le symptôme décrit dans l'avertissement de cette séance : un résultat vide ou aberrant sans message d'erreur.",
+      "2. Non, c'est le comportement attendu d'un cas limite documenté dans la solution de cette séance — à signaler explicitement dans un vrai livrable plutôt qu'à traiter comme un bug.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Tableau de bord",
     title: "Comptage par commune, jointure + découpage",
@@ -840,6 +920,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Quatre exercices courts, indépendants, qui couvrent les besoins les plus fréquents en géographie et télédétection : lire/transformer une donnée vecteur, mesurer, automatiser un calcul raster répétitif, et interroger une donnée en ligne de commande.",
   },
+  ...getBrique(outilsSigContent, "pyqgis-automation"),
   {
     type: "formula",
     label: "Exercice 1 : d'un CSV à une carte",
@@ -928,6 +1009,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Voir le thème « Géomatique, SIG et données géographiques » dans les Références.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : deux requêtes donnent le même résultat — l'une calcule ST_Distance(geom, point) puis filtre < 500, l'autre utilise directement ST_DWithin(geom, point, 500). Laquelle choisir sur une grande table, et pourquoi ?",
+      "Exercice éclair 2 : ta requête ST_DWithin met plusieurs secondes à s'exécuter sur une table de 500 000 parcelles. Quelle est la première chose à vérifier ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 6",
+    items: [
+      "1. ST_DWithin : contrairement à ST_Distance suivi d'un filtre, elle peut s'appuyer directement sur l'index spatial GiST de la table plutôt que de calculer la distance exacte pour chaque ligne avant de filtrer.",
+      "2. Si un index spatial GiST existe sur la colonne géométrie (CREATE INDEX ... USING GIST) — sans lui, la requête scanne toutes les lignes une par une, la différence de performance devenant flagrante au-delà de quelques dizaines de milliers d'entités.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Requêtes documentées",
     title: "Trois requêtes SQL spatiales sur un jeu de données réel",
@@ -945,6 +1042,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     title: "Objectif méthodologique",
     text: "Aller jusqu'au bout d'une classification : constituer des échantillons d'entraînement représentatifs, entraîner un classifieur, puis évaluer honnêtement sa précision, l'étape la plus souvent négligée dans un premier projet de classification.",
   },
+  ...getBrique(traitementsIaContent, "classification-matrice-confusion"),
   {
     type: "list",
     ordered: true,
@@ -979,6 +1077,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module L'Intelligence détaille les méthodes de classification et les métriques d'évaluation avant de les pratiquer ici.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : un camarade tire ses pixels d'entraînement et de test au hasard, pixel par pixel, sur toute l'image plutôt que par découpage spatial en deux zones. Son modèle atteint 99.8 % de précision sur le test. Pourquoi ce chiffre est-il trompeur ?",
+      "Exercice éclair 2 : le kappa mesuré sur le jeu Vitrolles est de 0.640 alors que la précision globale est de 96.2 %. Ces deux chiffres racontent-ils la même chose ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 7",
+    items: [
+      "1. Un tirage aléatoire pixel par pixel produit des pixels de test spatialement très proches (souvent voisins) de pixels d'entraînement, très corrélés entre eux — une fuite de données, pas une vraie généralisation à une zone jamais vue.",
+      "2. Non : la précision globale peut rester élevée même avec des erreurs concentrées sur une classe minoritaire (ici, la classe eau très peu représentée dans le test), alors que le kappa, qui corrige l'accord attendu par hasard, révèle mieux ce déséquilibre.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Rapport technique",
     title: "Rapport de classification sur le jeu Vitrolles",
@@ -995,7 +1109,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Combiner plusieurs rasters par calcul algébrique (module Le Compas, section 5) est une compétence distincte du simple calcul d'un indice sur une seule image : cette séance la pratique sur un cas à plusieurs couches.",
+    text: "Combiner plusieurs rasters par calcul algébrique (module Le Compas, piste Licence/BUT : algèbre raster) est une compétence distincte du simple calcul d'un indice sur une seule image : cette séance la pratique sur un cas à plusieurs couches.",
   },
   {
     type: "list",
@@ -1024,6 +1138,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module Le Compas détaille ces techniques avant de les pratiquer ici sur un cas composite.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : deux camarades construisent le même indice composite « stress hydrique » mais avec des seuils NDVI/NDMI légèrement différents, et obtiennent des cellules extrêmes assez différentes. Qui a raison ?",
+      "Exercice éclair 2 : après avoir identifié les 10 cellules les plus en stress, l'une d'elles ne présente visuellement aucun signe de stress sur la composition couleur naturelle. Que faut-il faire ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 8",
+    items: [
+      "1. La question est mal posée : un indice composite par seuils logiques n'a pas de « bonne » valeur unique comme le NDVI (formule fermée) — ce qui compte est que chacun documente explicitement ses seuils et en teste la sensibilité, pas qu'ils tombent sur le même chiffre.",
+      "2. Revenir sur les seuils ou la cohérence du calcul avant de conserver cette cellule dans le résultat — la vérification visuelle demandée à l'étape 4 sert exactement à détecter ce genre d'incohérence avant de la présenter comme fiable.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Note technique",
     title: "Indice composite documenté",
@@ -1039,6 +1169,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Deux techniques présentées en théorie (module Le Regard pour le SAR, module Le Compas pour le krigeage) mais jamais pratiquées jusqu'ici.",
   },
+  ...getBrique(teledetectionContent, "capteurs-optique-radar"),
   {
     type: "list",
     ordered: true,
@@ -1073,6 +1204,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     description: "Le module Le Compas détaille le variogramme et la théorie du krigeage avant de les pratiquer ici.",
   },
   {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : sur ta scène Sentinel-1 en VV, une parcelle labourée apparaît nettement plus claire qu'un champ voisin de blé mûr. Est-ce cohérent avec ce qui a été observé sur l'eau et le bâti ?",
+      "Exercice éclair 2 : ton variogramme expérimental montre un effet de pépite presque aussi élevé que le palier. Cela remet-il en cause l'intérêt du krigeage par rapport à l'IDW ici ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 9",
+    items: [
+      "1. Oui : un sol labouré rugueux rétrodiffuse davantage vers le capteur (signal fort, clair) qu'une surface lisse ou un couvert homogène — la même logique physique que le contraste eau sombre / bâti brillant.",
+      "2. Pas nécessairement l'intérêt du krigeage lui-même, mais ça signale un point de mesure bruité ou une variabilité spatiale plus fine que l'espacement du réseau de points — à vérifier avant d'interpréter la carte de variance, l'apport propre au krigeage face à l'IDW.",
+    ],
+  },
+  {
     type: "devoir",
     format: "Étude bibliographique",
     title: "Un cas réel d'usage opérationnel du radar ou du krigeage",
@@ -1089,7 +1236,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Un jeu de données n'est exploitable que si sa qualité a été vérifiée au préalable, pas supposée : une compétence professionnelle distincte de celle de produire une carte (module Le Compas, section 10, qualité des données et métadonnées).",
+    text: "Un jeu de données n'est exploitable que si sa qualité a été vérifiée au préalable, pas supposée : une compétence professionnelle distincte de celle de produire une carte (module Le Compas, piste Licence/BUT : qualité des données et métadonnées).",
   },
   {
     type: "list",
@@ -1123,6 +1270,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     to: "/module/outils-sig",
     label: "Revoir : qualité des données et métadonnées",
     description: "Le module Le Compas détaille la norme ISO 19115 et les critères classiques de qualité d'un jeu de données géographique.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : ton fichier grille_100m_indices.geojson contient 1119 cellules au lieu des 1122 annoncées par la documentation. Est-ce automatiquement une erreur bloquante ?",
+      "Exercice éclair 2 : tu observes une valeur de NDVI de 1.4 dans une cellule de la grille. Que fait cette valeur dans un audit de qualité ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 10",
+    items: [
+      "1. Pas automatiquement, mais c'est une anomalie de complétude à documenter explicitement dans la fiche de métadonnées avec une hypothèse (cellules en bordure d'emprise exclues, par exemple) — le réflexe attendu par cette séance plutôt que d'ignorer l'écart.",
+      "2. 1.4 est hors de la plage théorique [-1, 1] du NDVI — exactement le type de vérification de plausibilité attendu à l'étape 4, signe d'une erreur en amont à signaler plutôt qu'à laisser passer.",
+    ],
   },
   {
     type: "devoir",
@@ -1169,6 +1332,22 @@ export const travauxPratiquesContent: ContentBlock[] = [
     to: "/magister/evaluation",
     label: "Voir la grille de correction Professionnel",
     description: "La page Évaluation détaille les critères attendus d'un rapport technique SIG.",
+  },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Exercice éclair 1 : une phrase de ton rapport dit « Le NDVI moyen de la parcelle est de 0.42, ce qui suggère un possible stress hydrique en fin de saison. » Appartient-elle à la section résultats ou à la section discussion ?",
+      "Exercice éclair 2 : ta synthèse exécutive fait 12 lignes et utilise le terme « kappa » sans le définir. Respecte-t-elle les critères de cette séance ?",
+    ],
+  },
+  {
+    type: "solution",
+    title: "Réponses — exercices éclair, Séance Licence/BUT 11",
+    items: [
+      "1. Elle mélange les deux : « 0.42 » est un résultat (un fait mesuré), « suggère un possible stress hydrique » est déjà une interprétation — exactement l'erreur la plus fréquente identifiée dans la solution de cette séance.",
+      "2. Non, sur les deux points : elle dépasse la limite de 5 lignes, et un terme technique non défini échoue au critère « lisible par un non-spécialiste ».",
+    ],
   },
   {
     type: "devoir",
@@ -1288,14 +1467,14 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Une image satellite brute (DN, Digital Number) n'est pas directement une réflectance physique comparable entre capteurs ou dates (module Le Regard, section 10). Un travail de recherche exige de documenter explicitement ce prétraitement, jamais de le supposer déjà fait.",
+    text: "Une image satellite brute (DN, Digital Number) n'est pas directement une réflectance physique comparable entre capteurs ou dates (module Le Regard, piste Licence/BUT : de la valeur brute à la réflectance physique). Un travail de recherche exige de documenter explicitement ce prétraitement, jamais de le supposer déjà fait.",
   },
   {
     type: "list",
     ordered: true,
     items: [
       "Vérifier le niveau de traitement de l'image utilisée (L1C brut vs L2A corrigé atmosphériquement, pour Sentinel-2) et le documenter explicitement",
-      "Pour une image L1C, appliquer la formule DN → radiance → réflectance TOA (module Le Regard, section 10)",
+      "Pour une image L1C, appliquer la formule DN → radiance → réflectance TOA (module Le Regard, piste Licence/BUT : de la valeur brute à la réflectance physique)",
       "Comparer, sur une même zone, une réflectance TOA (L1C corrigé) à une réflectance BOA déjà fournie (L2A) : quantifier l'écart",
       "Documenter dans un tableau chaque étape de correction appliquée, avec la formule et les paramètres utilisés",
     ],
@@ -1338,7 +1517,7 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Un indice spectral n'est qu'une approximation optique d'une grandeur biophysique réelle (module Les Couleurs, section 11) : sa valeur n'a de sens scientifique que confrontée à une mesure de terrain indépendante.",
+    text: "Un indice spectral n'est qu'une approximation optique d'une grandeur biophysique réelle (module Les Couleurs, piste Master/Recherche : valider un indice) : sa valeur n'a de sens scientifique que confrontée à une mesure de terrain indépendante.",
   },
   {
     type: "list",
@@ -1389,8 +1568,9 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Une seule date ne renseigne qu'un instant. Une série temporelle d'un indice (module Les Couleurs, section 12) permet d'étudier la phénologie (le cycle saisonnier de la végétation) et de détecter une rupture réelle plutôt qu'une simple variation saisonnière.",
+    text: "Une seule date ne renseigne qu'un instant. Une série temporelle d'un indice (module Les Couleurs, piste Master/Recherche : séries temporelles et phénologie) permet d'étudier la phénologie (le cycle saisonnier de la végétation) et de détecter une rupture réelle plutôt qu'une simple variation saisonnière.",
   },
+  ...getBrique(indicesSpectrauxContent, "series-temporelles"),
   {
     type: "list",
     ordered: true,
@@ -1609,8 +1789,9 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Certaines décisions territoriales combinent plusieurs critères de nature différente (module Le Compas, section 9) : l'analyse multicritère (AHP, Analytic Hierarchy Process) structure ce type de décision de façon reproductible, plutôt que par jugement intuitif non documenté.",
+    text: "Certaines décisions territoriales combinent plusieurs critères de nature différente (module Le Compas, piste Master/Recherche : analyse multicritère) : l'analyse multicritère (AHP, Analytic Hierarchy Process) structure ce type de décision de façon reproductible, plutôt que par jugement intuitif non documenté.",
   },
+  ...getBrique(outilsSigContent, "krigeage-multicritere"),
   {
     type: "list",
     ordered: true,
@@ -1660,8 +1841,9 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Le multispectral (6 bandes, comme le jeu Vitrolles) résume le spectre en quelques bandes larges. L'hyperspectral (module Le Regard, section 12) mesure des centaines de bandes contiguës très fines : cette séance manipule une vraie signature spectrale complète plutôt qu'un simple indice à deux bandes.",
+    text: "Le multispectral (6 bandes, comme le jeu Vitrolles) résume le spectre en quelques bandes larges. L'hyperspectral (module Le Regard, piste Master/Recherche : imagerie hyperspectrale) mesure des centaines de bandes contiguës très fines : cette séance manipule une vraie signature spectrale complète plutôt qu'un simple indice à deux bandes.",
   },
+  ...getBrique(teledetectionContent, "resolutions-capteurs"),
   {
     type: "list",
     ordered: true,
@@ -1705,8 +1887,9 @@ export const travauxPratiquesContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Objectif méthodologique",
-    text: "Le module Le Regard présente la physique complète du transfert radiatif et de la polarimétrie SAR (section 13) : cette séance en pratique un aspect concret, la décomposition polarimétrique.",
+    text: "Le module Le Regard présente la physique complète du transfert radiatif et de la polarimétrie SAR (piste Master/Recherche) : cette séance en pratique un aspect concret, la décomposition polarimétrique.",
   },
+  ...getBrique(teledetectionContent, "capteurs-optique-radar"),
   {
     type: "list",
     ordered: true,

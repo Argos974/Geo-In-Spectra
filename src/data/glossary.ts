@@ -2,6 +2,8 @@ export interface GlossaryTerm {
   term: string
   definition: string
   moduleSlug: string
+  /** Modules supplémentaires où ce terme mérite aussi un lien automatique en ligne (linkifyGlossaryTerms.tsx) — n'affecte pas /glossaire, où l'entrée n'apparaît qu'une fois, sous son moduleSlug principal. */
+  alsoModuleSlugs?: string[]
   source: string
 }
 
@@ -48,7 +50,18 @@ export const glossary: GlossaryTerm[] = [
   { term: "Géoïde", definition: "Surface équipotentielle du champ de gravité terrestre, qui coïncide en moyenne avec le niveau des mers au repos ; sert de référence à l'altitude \"vraie\" (orthométrique), distincte de l'altitude ellipsoïdale mesurée par GPS.", moduleSlug: "fondamentaux", source: "Institut national de l'information géographique et forestière (IGN) : geodesie.ign.fr" },
   { term: "GNSS (Global Navigation Satellite System)", definition: "Famille de systèmes de positionnement par satellites (GPS, Galileo, GLONASS, BeiDou) qui calculent une position par trilatération à partir de la distance à plusieurs satellites.", moduleSlug: "fondamentaux", source: "Hofmann-Wellenhof, B., Lichtenegger, H. & Wasle, E. : GNSS, Springer" },
   { term: "Trilatération", definition: "Méthode de calcul d'une position à partir des distances mesurées à plusieurs points de référence de position connue (principe de base du GPS).", moduleSlug: "fondamentaux", source: "Hofmann-Wellenhof, B., Lichtenegger, H. & Wasle, E. : GNSS, Springer" },
-  { term: "RMSE (erreur quadratique moyenne)", definition: "Racine carrée de la moyenne des écarts au carré entre une position mesurée et une position de référence ; mesure standard de la précision géométrique d'un géoréférencement.", moduleSlug: "outils-sig", source: "Longley, P. A. et al. : Geographic Information Science and Systems, Wiley" },
+  {
+    term: "RMSE (erreur quadratique moyenne)",
+    definition: "Racine carrée de la moyenne des écarts au carré entre une position mesurée et une position de référence ; mesure standard de la précision géométrique d'un géoréférencement.",
+    moduleSlug: "outils-sig",
+    // La RMSE est utilisée (pas seulement définie) dès l'exercice de fondamentaux
+    // et dans une formule d'indices-spectraux, avant/à côté de sa définition
+    // complète ici : ces modules profitent donc aussi du lien automatique
+    // (linkifyGlossaryTerms.tsx), sans dupliquer l'entrée elle-même (qui
+    // resterait sinon affichée plusieurs fois, identique, sur /glossaire).
+    alsoModuleSlugs: ["fondamentaux", "indices-spectraux", "photogrammetrie-drones"],
+    source: "Longley, P. A. et al. : Geographic Information Science and Systems, Wiley",
+  },
   { term: "Autocorrélation spatiale (indice de Moran)", definition: "Mesure de la ressemblance entre valeurs voisines dans l'espace ; proche de +1, elle signale un fort regroupement de valeurs similaires.", moduleSlug: "outils-sig", source: "Moran, P. A. P. (1950) : Notes on Continuous Stochastic Phenomena, Biometrika" },
   { term: "MAUP (Modifiable Areal Unit Problem)", definition: "Propriété structurelle des données agrégées par zone : un même jeu de données peut donner des résultats statistiques différents selon le découpage spatial choisi.", moduleSlug: "outils-sig", source: "Openshaw, S. (1984) : The Modifiable Areal Unit Problem, CATMOG 38" },
   { term: "Première loi de la géographie (Tobler)", definition: "\"Tout est lié à tout le reste, mais les choses proches sont plus liées que les choses distantes\", justifie théoriquement l'interpolation et le lissage spatial.", moduleSlug: "outils-sig", source: "Tobler, W. R. (1970) : A Computer Movie Simulating Urban Growth in the Detroit Region, Economic Geography" },
@@ -86,7 +99,7 @@ export const glossary: GlossaryTerm[] = [
   { term: "LISA (Local Indicator of Spatial Association)", definition: "Décomposition locale de l'indice de Moran global : chaque entité reçoit sa propre valeur, classée en cluster (HH/LL) ou anomalie locale (HL/LH).", moduleSlug: "statistiques-spatiales", source: "Anselin, L. (1995) : Local Indicators of Spatial Association—LISA, Geographical Analysis" },
   { term: "Gi* (statistique de Getis-Ord)", definition: "Statistique locale qui identifie spécifiquement les points chauds (valeurs élevées regroupées) et points froids (valeurs faibles regroupées), sous forme de score Z testable.", moduleSlug: "statistiques-spatiales", source: "Getis, A. & Ord, J. K. (1992) : The Analysis of Spatial Association by Use of Distance Statistics, Geographical Analysis" },
   { term: "KDE (estimation de densité par noyau)", definition: "Construction d'une surface continue de densité à partir d'un semis de points, sans découpage préalable en zones ; sensible au choix de la largeur de bande (h).", moduleSlug: "statistiques-spatiales", source: "Littérature statistique standard" },
-  { term: "Aléa / Enjeux / Vulnérabilité", definition: "Trois composantes distinctes d'un risque naturel : la probabilité/intensité du phénomène (aléa), ce qui y est exposé (enjeux), et sa sensibilité au phénomène (vulnérabilité).", moduleSlug: "statistiques-spatiales", source: "Cadre d'action de Hyogo, ONU (2005)" },
+  { term: "Aléa / Enjeux / Vulnérabilité", definition: "Trois composantes distinctes d'un risque naturel : la probabilité/intensité du phénomène (aléa), ce qui y est exposé (enjeux), et sa sensibilité au phénomène (vulnérabilité).", moduleSlug: "statistiques-spatiales", source: "Doctrine standard de gestion des risques, formalisée par le Cadre d'action de Hyogo, ONU (2005)" },
   { term: "Structure from Motion (SfM)", definition: "Algorithme qui reconstruit simultanément la trajectoire d'une caméra et la géométrie 3D d'une scène à partir de correspondances de points entre plusieurs photos qui se recouvrent.", moduleSlug: "photogrammetrie-drones", source: "Ullman, S. (1979) : The Interpretation of Visual Motion, MIT Press" },
   { term: "GCP (point d'appui au sol)", definition: "Point mesuré précisément au GPS, identifiable sur plusieurs photos, servant à caler un modèle photogrammétrique sur un référentiel géographique réel.", moduleSlug: "photogrammetrie-drones", source: "Littérature standard de photogrammétrie de drone" },
   { term: "GSD (résolution au sol)", definition: "Taille réelle au sol représentée par un pixel d'une photo aérienne ou satellite, dépendant de l'altitude de vol et des caractéristiques du capteur.", moduleSlug: "photogrammetrie-drones", source: "Littérature standard de photogrammétrie de drone" },

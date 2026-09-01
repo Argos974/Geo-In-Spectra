@@ -23,7 +23,7 @@ export function BadgeList({ badges }: { badges: Badge[] }) {
               title={b.detail}
               className={cn(
                 "w-full border px-3 py-3 text-center transition-colors",
-                b.earned ? "border-gilt/40 bg-gilt/[0.08] hover:bg-gilt/[0.12]" : "border-gilt/10 opacity-50 hover:opacity-80",
+                b.earned ? "border-gilt/40 bg-gilt/[0.08] hover:bg-gilt/[0.12]" : "border-gilt/10 opacity-80 hover:opacity-100",
               )}
             >
               <BadgeIcon icon={b.icon} earned={b.earned} />

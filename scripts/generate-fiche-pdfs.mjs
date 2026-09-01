@@ -9,7 +9,7 @@
 
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
-import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN, PDF_HEADER_TEMPLATE, footerTemplateForSlug } from "./lib/pdfServer.mjs"
+import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN, PDF_HEADER_TEMPLATE, PDF_ACCESSIBILITY_OPTIONS, footerTemplateForSlug } from "./lib/pdfServer.mjs"
 
 async function main() {
   const slugs = resolveRequestedSlugs()
@@ -34,6 +34,7 @@ async function main() {
         displayHeaderFooter: true,
         headerTemplate: PDF_HEADER_TEMPLATE,
         footerTemplate: footerTemplateForSlug(slug),
+        ...PDF_ACCESSIBILITY_OPTIONS,
       })
     }
   })

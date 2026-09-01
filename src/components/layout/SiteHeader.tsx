@@ -4,9 +4,13 @@ import { Menu, X, Sun, Moon, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTheme } from "@/hooks/useTheme"
 
+// Le repère latin seul dans le header (hérité des cartes d'accueil, où il est
+// toujours accompagné d'un sous-titre français) reste opaque pour qui arrive sur
+// une page interne par un lien direct plutôt que par l'accueil — un `title` suffit
+// à lever l'ambiguïté au survol sans alourdir visuellement la nav.
 const PROFILE_LINKS = [
-  { to: "/discipulus", label: "Discipulus" },
-  { to: "/magister", label: "Magister" },
+  { to: "/discipulus", label: "Discipulus", hint: "Discipulus — profil élève" },
+  { to: "/magister", label: "Magister", hint: "Magister — profil enseignant" },
 ]
 
 const DISCIPULUS_SUBNAV = [
@@ -17,14 +21,16 @@ const DISCIPULUS_SUBNAV = [
 ]
 
 const MAGISTER_SUBNAV = [
-  { to: "/magister/cours", label: "Cours" },
+  { to: "/magister/cours", label: "Atelier" },
   { to: "/magister/programme", label: "Programme" },
   { to: "/magister/pedagogie", label: "Pédagogie" },
   { to: "/magister/evaluation", label: "Évaluation" },
+  { to: "/magister/classe", label: "Classe" },
 ]
 
 const MUTUALISE_LINKS = [
   { to: "/ressources", label: "Ressources" },
+  { to: "/parcours", label: "Parcours" },
 ]
 
 export function SiteHeader() {
@@ -35,6 +41,8 @@ export function SiteHeader() {
   // Referme le menu mobile à chaque changement de route (sélection d'un lien,
   // navigation arrière du navigateur…) plutôt que de dépendre uniquement du clic.
   useEffect(() => {
+    // Synchronise l'UI avec la navigation du routeur (système externe), pas un état dérivé du rendu.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false)
   }, [location.pathname])
 
@@ -53,7 +61,7 @@ export function SiteHeader() {
 
         <div className="hidden lg:flex flex-1 items-center justify-center gap-10 font-mono text-[11px] uppercase tracking-[0.2em] text-parchment-dim">
           {PROFILE_LINKS.map((p) => (
-            <Link key={p.to} to={p.to} className={navLinkClass(location.pathname === p.to || location.pathname.startsWith(`${p.to}/`))}>
+            <Link key={p.to} to={p.to} title={p.hint} className={navLinkClass(location.pathname === p.to || location.pathname.startsWith(`${p.to}/`))}>
               {p.label}
             </Link>
           ))}
@@ -69,7 +77,7 @@ export function SiteHeader() {
           to="/recherche"
           aria-label="Recherche"
           title="Recherche"
-          className={cn("shrink-0 p-1 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors", location.pathname === "/recherche" && "text-gilt")}
+          className={cn("shrink-0 p-2.5 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors", location.pathname === "/recherche" && "text-gilt")}
         >
           <Search size={18} />
         </Link>
@@ -79,7 +87,7 @@ export function SiteHeader() {
           onClick={toggleTheme}
           aria-label={theme === "dark" ? "Passer au thème clair" : "Passer au thème sombre"}
           title={theme === "dark" ? "Thème clair (lecture en extérieur)" : "Thème sombre"}
-          className="shrink-0 p-1 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors"
+          className="shrink-0 p-2.5 sm:p-1.5 text-parchment-dim hover:text-gilt transition-colors"
         >
           {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
         </button>
@@ -90,13 +98,13 @@ export function SiteHeader() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden p-1.5 -mr-1 sm:p-2 sm:-mr-2 text-parchment hover:text-gilt transition-colors"
+          className="lg:hidden p-2.5 -mr-1.5 sm:p-2 sm:-mr-2 text-parchment hover:text-gilt transition-colors"
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </nav>
 
-      {/* Sous-navigation du profil actif — Cours/Méthodes (Discipulus) ou Cours (Magister), visible dès qu'on est dans l'un des deux, pour sauter d'une section à l'autre sans repasser par la page de profil. */}
+      {/* Sous-navigation du profil actif — Cours/Méthodes (Discipulus) ou Atelier/Programme/Pédagogie/Évaluation/Classe (Magister), visible dès qu'on est dans l'un des deux, pour sauter d'une section à l'autre sans repasser par la page de profil. "Atelier", pas "Cours" : Magister → Cours contient en réalité les 36 séances de l'Atelier, un label distinct de Discipulus → Cours (les 12 chapitres théoriques) évite de nommer deux contenus différents pareil. */}
       {subnav && (
         <div className="hidden lg:flex justify-center gap-8 border-t border-gilt/10 py-2 font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80">
           {subnav.map((s) => (

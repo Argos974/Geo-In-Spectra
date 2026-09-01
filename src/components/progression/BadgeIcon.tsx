@@ -1,4 +1,4 @@
-import { Rocket, Compass, Trophy, Star, ShieldCheck, Target, Flame, type LucideIcon } from "lucide-react"
+import { Rocket, Compass, Trophy, Star, ShieldCheck, Target, Flame, BookOpen, GraduationCap, Microscope, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const ICONS: Record<string, LucideIcon> = {
@@ -9,6 +9,9 @@ const ICONS: Record<string, LucideIcon> = {
   ShieldCheck,
   Target,
   Flame,
+  BookOpen,
+  GraduationCap,
+  Microscope,
 }
 
 interface BadgeIconProps {

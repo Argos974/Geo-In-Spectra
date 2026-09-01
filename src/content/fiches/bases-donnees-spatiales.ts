@@ -19,6 +19,7 @@ export const basesDonneesSpatialesFiche: ContentBlock[] = [
       "EXPLAIN ANALYZE avant tout diagnostic de lenteur : vérifier Index Scan vs Seq Scan",
       "Topologie : impose des règles de cohérence (pas de chevauchement) que le fichier seul ne garantit jamais",
       "SpatiaLite = PostGIS sans serveur, pour un usage local/embarqué",
+      "Sécurité : GRANT/REVOKE (table), Row-Level Security (ligne, via une politique SQL) — un rôle applicatif unique partagé casse toute traçabilité individuelle",
     ],
   },
   {

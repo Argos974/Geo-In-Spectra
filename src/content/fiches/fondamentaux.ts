@@ -26,7 +26,7 @@ export const fondamentauxFiche: ContentBlock[] = [
     rows: [
       ["Conforme (Lambert-93)", "Les angles et les formes"],
       ["Équivalente", "Les surfaces"],
-      ["Équidistante", "Certaines distances"],
+      ["Aphylactique", "Un compromis (Winkel, Robinson)"],
     ],
   },
   {

@@ -53,8 +53,16 @@
   --color-canvas: 236 224 200;
   --color-parchment: 43 33 22;
   --color-parchment-dim: 92 81 64;
-  --color-gilt: 138 106 47;
-  --color-gilt-bright: 166 127 61;
+  /* Contrairement à lapis/oxblood ci-dessous, l'ancien gilt clair (138 106 47,
+     ~3.8:1 sur canvas) tombait sous le seuil AA (4.5:1) pour le texte — or c'est
+     la couleur d'accent la plus utilisée du site (en-têtes de tableau, libellés
+     de niveau, cartels...), presque toujours en petite capitale. Assombri à
+     ~5.4:1 sur canvas / ~6:1 sur ink, même teinte. gilt-bright s'alignait sur le
+     même défaut (166 127 61, plus clair donc moins contrasté sur fond clair) ;
+     corrigé pour suivre la même règle que lapis-bright/oxblood-bright : la
+     variante "bright" vaut la couleur normale une fois celle-ci déjà contrastée. */
+  --color-gilt: 110 84 35;
+  --color-gilt-bright: 110 84 35;
   --color-lapis: 51 70 92;
   --color-oxblood: 122 47 36;
   --color-lapis-bright: 51 70 92;
@@ -104,6 +112,17 @@ body {
 ::selection {
   background: rgb(var(--color-gilt) / 0.35);
   color: rgb(var(--color-parchment));
+}
+
+/* Le texte courant est justifié (text-justify, ContentBlocks.tsx) sans jamais
+   couper les mots : sur les lignes longues du site (max-w-4xl, ~100+ signes en
+   EB Garamond), ça crée des espacements irréguliers ("rivières" blanches),
+   d'autant plus visible avec le vocabulaire technique long du domaine
+   (géoréférencement, orthorectification...). `lang="fr"` est déjà posé sur
+   <html> (index.html), donc la césure suit les règles françaises. */
+.text-justify {
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 /* Flash bref quand on arrive sur une partie via le plan de la salle (RoomIndex) */
@@ -166,6 +185,26 @@ body {
     transition: none;
     display: none;
   }
+}
+
+/* Indice visuel de défilement horizontal sur les tableaux plus larges que
+   l'écran (mobile, colonnes nombreuses) — sans JS ni media query : deux
+   dégradés collés au contenu (background-attachment: local) recouvrent
+   l'ombre correspondante (attachment: scroll, fixée au cadre visible) dès
+   qu'il n'y a plus rien à faire défiler de ce côté, donc l'ombre gauche
+   n'apparaît qu'après un premier défilement et la droite s'efface une fois
+   la fin atteinte — s'annule aussi de lui-même quand le tableau tient déjà
+   entièrement dans l'écran (rien à faire défiler = jamais découverte). */
+.scroll-shadow-x {
+  background-image:
+    linear-gradient(to right, rgb(var(--color-canvas)) 50%, transparent),
+    linear-gradient(to left, rgb(var(--color-canvas)) 50%, transparent),
+    linear-gradient(to right, rgb(var(--color-gilt) / 0.55), transparent),
+    linear-gradient(to left, rgb(var(--color-gilt) / 0.55), transparent);
+  background-position: left, right, left, right;
+  background-repeat: no-repeat;
+  background-size: 24px 100%, 24px 100%, 8px 100%, 8px 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 
 /* Export PDF (scripts/generate-course-pdfs.mjs) — masque le chrome de navigation,

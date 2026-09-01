@@ -16,19 +16,19 @@ export const BASE_URL = `http://localhost:${PORT}`
 // dépendre d'un loader TypeScript dans ces scripts Node autonomes.
 export const ALL_SLUGS = [
   "fondamentaux",
+  "projections-avancees",
+  "outils-sig",
+  "statistiques-spatiales",
+  "bases-donnees-spatiales",
+  "cartographie-web",
   "teledetection",
   "indices-spectraux",
-  "outils-sig",
-  "traitements-ia",
-  "methodologie",
-  "travaux-pratiques",
-  "projections-avancees",
-  "cartographie-web",
-  "statistiques-spatiales",
   "photogrammetrie-drones",
   "lidar",
-  "bases-donnees-spatiales",
+  "traitements-ia",
   "etudes-de-cas-sectorielles",
+  "methodologie",
+  "travaux-pratiques",
 ]
 
 // Même numérotation romaine que ROOT_NUMERALS côté React (Home.tsx, ModulePage.tsx) —
@@ -113,6 +113,14 @@ export async function withPdfServer(fn) {
 // activé pour le pied de page ci-dessous.
 export const PDF_MARGIN = { top: "16mm", bottom: "16mm", left: "14mm", right: "14mm" }
 export const PDF_HEADER_TEMPLATE = "<span></span>"
+
+// tagged: structure le PDF avec de vrais tags (titres, paragraphes, listes…) reflétant
+// la sémantique HTML de la page source plutôt qu'un simple flux de texte/images sans
+// ordre de lecture — condition de base d'un PDF conforme PDF/UA, jusqu'ici jamais
+// activée (Playwright le supporte via ce paramètre depuis peu, exposé sur Page.pdf()).
+// outline : construit les signets du PDF à partir de la même hiérarchie de titres,
+// pour une table des matières navigable dans le lecteur PDF en plus du sommaire imprimé.
+export const PDF_ACCESSIBILITY_OPTIONS = { tagged: true, outline: true }
 
 /**
  * Pied de page minimal, sur toutes les pages : le repère de salle (cohérent

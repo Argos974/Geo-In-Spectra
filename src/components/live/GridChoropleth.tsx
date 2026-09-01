@@ -162,6 +162,24 @@ export function GridChoropleth() {
     if (hit) setPicked(hit)
   }
 
+  // Les 1122 cellules n'ont pas d'index ligne/colonne exploitable (un GeoJSON
+  // de polygones, pas une grille adressable) : plutôt qu'une fausse navigation
+  // spatiale aux flèches, on parcourt le tableau dans l'ordre — moins intuitif
+  // qu'un vrai déplacement haut/bas/gauche/droite, mais chaque cellule reste
+  // atteignable au clavier, ce qu'un <canvas> seul ne permet jamais.
+  function handleKeyDown(e: React.KeyboardEvent<HTMLCanvasElement>) {
+    if (state.status !== "done" || !state.cells || state.cells.length === 0) return
+    if (!["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(e.key)) return
+    e.preventDefault()
+    const cells = state.cells
+    const currentIndex = picked ? cells.indexOf(picked) : -1
+    const forward = e.key === "ArrowRight" || e.key === "ArrowDown"
+    const nextIndex = forward
+      ? (currentIndex + 1) % cells.length
+      : (currentIndex - 1 + cells.length) % cells.length
+    setPicked(cells[nextIndex])
+  }
+
   return (
     <div className="border border-gilt/25 bg-black/20 p-5 md:p-8">
       <p className="font-mono text-[10px] uppercase tracking-wider text-gilt/80 mb-1">Planche vivante · Grille 100 m, résultat réel</p>
@@ -205,10 +223,18 @@ export function GridChoropleth() {
                 </button>
               ))}
             </div>
-            <canvas ref={canvasRef} onClick={handleClick} className="w-full h-auto border border-gilt/15 cursor-pointer" />
+            <canvas
+              ref={canvasRef}
+              onClick={handleClick}
+              onKeyDown={handleKeyDown}
+              tabIndex={0}
+              role="application"
+              aria-label="Grille de cellules à 100 m, flèches pour passer à la cellule suivante ou précédente"
+              className="w-full h-auto border border-gilt/15 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-gilt-bright"
+            />
           </div>
 
-          <div className="border border-gilt/15 bg-gilt/[0.03] p-4">
+          <div className="border border-gilt/15 bg-gilt/[0.03] p-4" aria-live="polite">
             <p className="font-mono text-[10px] uppercase tracking-wider text-gilt mb-3">Cellule sélectionnée</p>
             {picked ? (
               <table className="w-full font-mono text-[11px]">

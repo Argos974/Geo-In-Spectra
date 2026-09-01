@@ -12,6 +12,13 @@ gsap.registerPlugin(ScrollTrigger)
  */
 export function useSmoothScroll() {
   useEffect(() => {
+    // Le scroll par inertie de Lenis est un mouvement continu, plus perturbant
+    // pour un trouble vestibulaire qu'une transition ponctuelle — on ne l'attache
+    // pas du tout si prefers-reduced-motion est actif ; le scroll natif du
+    // navigateur prend le relais (lenisStore.ts retombe déjà sur window.scrollTo/
+    // scrollIntoView quand activeLenis est null).
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
     const lenis = new Lenis({
       duration: 1.1,
       smoothWheel: true,

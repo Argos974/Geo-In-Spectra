@@ -9,19 +9,27 @@
 
 import { mkdir } from "node:fs/promises"
 import path from "node:path"
-import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN, PDF_HEADER_TEMPLATE, footerTemplateForSlug } from "./lib/pdfServer.mjs"
+import { ROOT, BASE_URL, ALL_SLUGS, resolveRequestedSlugs, withPdfServer, PDF_MARGIN, PDF_HEADER_TEMPLATE, PDF_ACCESSIBILITY_OPTIONS, footerTemplateForSlug } from "./lib/pdfServer.mjs"
 
-// travaux-pratiques (l'Atelier) n'est pas stratifié comme les autres salles : ce sont
-// trois pistes indépendantes de 12 séances (Lycée / Licence-BUT / Master-Recherche,
-// voir ModuleChapterBody.tsx côté React), pas un même contenu simplement enrichi par
-// niveau. Sans ce traitement à part, le PDF "Cours" empilait les trois pistes à la
-// suite (~64 pages) — un lycéen qui télécharge le PDF récupérait aussi les séances
-// Master/Recherche, corrigés d'exercice compris (toujours dépliés à l'impression,
-// voir ContentBlocks.tsx). On génère donc un PDF par piste, filtré côté route
-// d'impression via ?level=<niveau> (voir PrintCourse.tsx). Dupliqué depuis
-// content/types.ts::ContentLevel pour la même raison que ALL_SLUGS ci-dessus (ce
-// script Node autonome n'importe pas de TypeScript).
-const TRAVAUX_PRATIQUES_TRACKS = [
+// Chaque salle de Cours (et l'Atelier) est trois pistes indépendantes (Lycée /
+// Licence-BUT / Master-Recherche, voir ModuleChapterBody.tsx côté React), pas un
+// même contenu simplement enrichi par niveau. Sans ce traitement, le PDF "Cours"
+// empilait les trois pistes à la suite — un lycéen qui télécharge le PDF
+// récupérait aussi les sections Master/Recherche, corrigés d'exercice compris
+// (toujours dépliés à l'impression, voir ContentBlocks.tsx). On génère donc un
+// PDF par piste, filtré côté route d'impression via ?level=<niveau> (voir
+// PrintCourse.tsx). Dupliqué depuis content/types.ts::ContentLevel pour la même
+// raison que ALL_SLUGS ci-dessus (ce script Node autonome n'importe pas de
+// TypeScript).
+//
+// Méthodologie fait exception : ce n'est pas un "Cours" à 3 pistes de niveau
+// mais un contenu regroupé par finalité (Scolaire/Concours/Professionnel/
+// Recherche, voir DiscipulusMethodesPage.tsx) rendu sur sa propre page, jamais
+// via le sélecteur de piste de ModuleChapterBody. Son bouton "Cours (PDF)" actif
+// (MethodesActionBar.tsx) télécharge encore le nom de fichier non suffixé
+// `<NN>-methodologie-cours.pdf` : générer 3 fichiers suffixés à la place
+// casserait ce lien réel sans qu'aucune page ne les propose jamais.
+const LEVEL_TRACKS = [
   { level: "lycee", suffix: "lycee" },
   { level: "superieur", suffix: "licence-but" },
   { level: "approfondissement", suffix: "master-recherche" },
@@ -36,7 +44,7 @@ async function main() {
       const outDir = path.join(ROOT, "public", "pdf", slug)
       await mkdir(outDir, { recursive: true })
 
-      const tracks = slug === "travaux-pratiques" ? TRAVAUX_PRATIQUES_TRACKS : [{ level: undefined, suffix: undefined }]
+      const tracks = slug === "methodologie" ? [{ level: undefined, suffix: undefined }] : LEVEL_TRACKS
 
       for (const { level, suffix } of tracks) {
         const fileName = suffix ? `${order}-${slug}-cours-${suffix}.pdf` : `${order}-${slug}-cours.pdf`
@@ -54,6 +62,7 @@ async function main() {
           displayHeaderFooter: true,
           headerTemplate: PDF_HEADER_TEMPLATE,
           footerTemplate: footerTemplateForSlug(slug),
+          ...PDF_ACCESSIBILITY_OPTIONS,
         })
       }
     }

@@ -3,7 +3,23 @@ const EVENT = "active-parcours-changed"
 
 export interface ParcoursStop {
   label: string
+  /**
+   * Route réelle vers ce contenu (voir lib/moduleRoute.ts::moduleTreeRoute) —
+   * la maison canonique actuelle du chapitre (ex. /discipulus/cours), pas la
+   * page de lien profond /module/:slug, qui n'est plus le chemin de navigation
+   * normal.
+   */
   to: string
+  /** State de navigation pour rouvrir/faire défiler jusqu'au bon chapitre à l'arrivée (voir lib/moduleRoute.ts::moduleTreeState). */
+  state?: { scrollTo?: string }
+  /**
+   * Slug de module associé à ce stop, si applicable. Indépendant de `to`, qui
+   * peut pointer vers une page mutualisée (ex. /discipulus/cours) où plusieurs
+   * stops de plusieurs slugs différents partagent la même route — sert à
+   * data/parcours.ts::getParcoursModuleSlugs (mode express de RevisionPage),
+   * qui ne peut plus retrouver le slug en parsant l'URL comme avant.
+   */
+  moduleSlug?: string
 }
 
 export interface ActiveParcoursState {

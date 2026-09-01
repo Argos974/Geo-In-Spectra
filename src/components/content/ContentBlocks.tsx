@@ -18,6 +18,10 @@ import { linkifyGlossaryTerms } from "@/lib/linkifyGlossaryTerms"
 const RasterExplorer = lazy(() => import("@/components/live/RasterExplorer").then((m) => ({ default: m.RasterExplorer })))
 const GridChoropleth = lazy(() => import("@/components/live/GridChoropleth").then((m) => ({ default: m.GridChoropleth })))
 const SentinelSwipe = lazy(() => import("@/components/live/SentinelSwipe").then((m) => ({ default: m.SentinelSwipe })))
+const RtkNetworkMap = lazy(() => import("@/components/live/RtkNetworkMap").then((m) => ({ default: m.RtkNetworkMap })))
+const GpsLiveDemo = lazy(() => import("@/components/live/GpsLiveDemo").then((m) => ({ default: m.GpsLiveDemo })))
+const WildfireKdeMap = lazy(() => import("@/components/live/WildfireKdeMap").then((m) => ({ default: m.WildfireKdeMap })))
+const TilePyramidExplorer = lazy(() => import("@/components/live/TilePyramidExplorer").then((m) => ({ default: m.TilePyramidExplorer })))
 const DrawOperationGame = lazy(() => import("@/components/games/DrawOperationGame").then((m) => ({ default: m.DrawOperationGame })))
 
 function LivePlaceholder({ textDim }: { textDim: string }) {
@@ -30,17 +34,23 @@ const calloutStylesDark: Record<NonNullable<Extract<ContentBlock, { type: "callo
   info: "border-lapis/40 bg-lapis/[0.08]",
   warning: "border-oxblood/40 bg-oxblood/[0.08]",
   example: "border-gilt/40 bg-gilt/[0.07]",
+  question: "border-parchment/35 bg-parchment/[0.06]",
+  rappel: "border-dashed border-lapis-bright/45 bg-lapis-bright/[0.05]",
 }
 const calloutStylesPrint: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
   info: "border-lapis/50 bg-lapis/[0.05]",
   warning: "border-oxblood/50 bg-oxblood/[0.05]",
   example: "border-[#8a6a2f]/50 bg-[#8a6a2f]/[0.05]",
+  question: "border-[#2b2116]/35 bg-[#2b2116]/[0.04]",
+  rappel: "border-dashed border-[#2f5a8a]/50 bg-[#2f5a8a]/[0.05]",
 }
 
 const calloutLabel: Record<NonNullable<Extract<ContentBlock, { type: "callout" }>["tone"]>, string> = {
   info: "Remarque",
   warning: "Attention",
   example: "Exemple",
+  question: "À toi de voir",
+  rappel: "↺ Rappel",
 }
 
 const levelLabel: Record<NonNullable<Extract<ContentBlock, { type: "heading" }>["level"]>, string> = {
@@ -215,28 +225,23 @@ function MarginNoteAnchor({
  * colonne), vérifiée pixel pour pixel par mesure directe du DOM — d'où une boîte
  * de même largeur (`w-48`) que lui, cohérent avec "la même colonne".
  *
- * À droite, une boîte à la largeur de ChapterNav (`w-48`) déborderait sur le texte
- * à la largeur `xl` minimale (1280px) : ChapterNav absorbe ce même manque de place
- * en tronquant ses titres sur une ligne (`truncate`), ce qu'un paragraphe
- * d'anecdote ne peut pas faire proprement. La colonne droite est donc plus étroite
- * (`w-40`) avec un espacement fixe (24px, indépendant de la largeur du viewport)
- * entre son bord gauche et le bord droit du texte — jamais de chevauchement, à
- * aucune largeur `xl` et au-delà.
- *
- * Colonne gauche : positionnée sous la hauteur habituelle de ChapterNav (`top`
- * généreux) pour ne jamais se superposer à lui — ChapterNav reste épinglé en haut
- * de cette même colonne pour la quasi-totalité du défilement d'une page Cours.
- * Colonne droite : rien à éviter (colonne vide), au même niveau que ChapterNav
- * pour l'équilibre visuel.
+ * Une boîte à la largeur de ChapterNav (`w-48`) déborderait sur le texte à la
+ * largeur `xl` minimale (1280px) : ChapterNav absorbe ce même manque de place en
+ * tronquant ses titres sur une ligne (`truncate`), ce qu'un paragraphe d'anecdote
+ * ne peut pas faire proprement. La colonne est donc plus étroite (`w-40`) avec un
+ * espacement fixe (24px, indépendant de la largeur du viewport) entre son bord
+ * gauche et le bord droit du texte — jamais de chevauchement, à aucune largeur
+ * `xl` et au-delà. Toutes les anecdotes sortent systématiquement à droite (jamais
+ * en alternance avec une colonne gauche) : c'est là que l'œil du lecteur les
+ * retrouve toujours, sans devoir balayer les deux côtés de la page.
  */
-function MarginSlot({ side, note, isPrint, textDim }: { side: "left" | "right"; note: ActiveMarginNote | null; isPrint: boolean; textDim: string }) {
+function MarginSlot({ note, isPrint, textDim }: { note: ActiveMarginNote | null; isPrint: boolean; textDim: string }) {
   if (isPrint) return null
   return (
     <div
       aria-hidden={!note}
       className={cn(
-        "hidden xl:block xl:fixed xl:transition-opacity xl:duration-700 xl:ease-out",
-        side === "left" ? "xl:w-48 xl:top-[31.25rem] xl:left-[calc(50vw-656px)]" : "xl:w-40 xl:top-32 xl:right-[calc(50vw-632px)]",
+        "hidden xl:block xl:fixed xl:w-40 xl:top-32 xl:right-[calc(50vw-632px)] xl:transition-opacity xl:duration-700 xl:ease-out",
         note ? "xl:opacity-100" : "xl:opacity-0",
       )}
     >
@@ -263,31 +268,22 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
   const calloutStyles = isPrint ? calloutStylesPrint : calloutStylesDark
   const levelStyle = isPrint ? levelStylePrint : levelStyleDark
 
-  // Alterne le côté des anecdotes en marge (gauche/droite) selon leur ordre
-  // d'apparition — pas un choix par bloc dans les données, juste un compteur
-  // incrémenté ici, dans l'ordre de rendu (le .map ci-dessous est synchrone).
-  let marginnoteSeq = 0
-
-  // Anecdote actuellement affichée dans chaque colonne de marge (voir MarginSlot) —
+  // Anecdote actuellement affichée dans la colonne de marge (voir MarginSlot) —
   // `id` (index du bloc) sert à arbitrer les activations concurrentes : un ancrage
   // ne peut effacer la colonne que s'il en est bien l'auteur actuel, sinon un
   // ancrage qui sort du viewport après qu'un autre y soit déjà entré écraserait le
   // nouveau contenu avec `null`.
-  const [activeLeft, setActiveLeft] = useState<ActiveMarginNote | null>(null)
   const [activeRight, setActiveRight] = useState<ActiveMarginNote | null>(null)
-  const activateLeft = useCallback((id: number, note: { title: string; text: string } | null) => {
-    setActiveLeft((prev) => (note ? { id, ...note } : prev?.id === id ? null : prev))
-  }, [])
   const activateRight = useCallback((id: number, note: { title: string; text: string } | null) => {
     setActiveRight((prev) => (note ? { id, ...note } : prev?.id === id ? null : prev))
   }, [])
 
-  return (
-    <div className="space-y-6">
-      <MarginSlot side="left" note={activeLeft} isPrint={isPrint} textDim={textDim} />
-      <MarginSlot side="right" note={activeRight} isPrint={isPrint} textDim={textDim} />
-      {blocks.map((block, i) => {
-        switch (block.type) {
+  // Extrait en fonction nommée (plutôt qu'une closure inline dans blocks.map)
+  // pour être réutilisable récursivement par le case "brique" ci-dessous, qui
+  // doit rendre son propre sous-tableau de blocs avec exactement la même
+  // logique que le niveau racine.
+  function renderBlock(block: ContentBlock, i: number) {
+    switch (block.type) {
           case "heading":
             return (
               <div key={i} id={slugify(block.text)} className="pt-8 first:pt-0 scroll-mt-28">
@@ -317,6 +313,10 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
               "raster-explorer": "Cette planche décode le GeoTIFF réel du jeu de données dans le navigateur, consulter la version web du module pour l'explorer pixel par pixel.",
               "grid-choropleth": "Cette planche affiche la grille 100 m interactive, consulter la version web du module pour cliquer une cellule.",
               "sentinel-swipe": "Cette planche interroge en direct le catalogue Sentinel-2 (Element84/AWS) pour deux dates réelles, consulter la version web du module pour la voir.",
+              "rtk-network-map": "Cette planche affiche une carte interactive du réseau GNSS permanent français par région, consulter la version web du module pour l'explorer région par région.",
+              "gps-live-demo": "Cette planche interroge la géolocalisation réelle de l'appareil du lecteur, consulter la version web du module pour te localiser toi-même.",
+              "wildfire-kde-map": "Cette planche affiche une carte de densité par noyau interactive sur six mégafeux français réels, consulter la version web du module pour faire varier la bande passante h.",
+              "tile-pyramid-explorer": "Cette planche calcule en direct les indices de tuile z/x/y et la résolution au sol pour un point choisi, consulter la version web du module pour l'utiliser.",
             }
             if (isPrint) {
               return (
@@ -334,6 +334,10 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                   {block.name === "raster-explorer" && <RasterExplorer />}
                   {block.name === "grid-choropleth" && <GridChoropleth />}
                   {block.name === "sentinel-swipe" && <SentinelSwipe />}
+                  {block.name === "rtk-network-map" && <RtkNetworkMap />}
+                  {block.name === "gps-live-demo" && <GpsLiveDemo />}
+                  {block.name === "wildfire-kde-map" && <WildfireKdeMap />}
+                  {block.name === "tile-pyramid-explorer" && <TilePyramidExplorer />}
                 </Suspense>
                 {block.caption && <p className={cn("mt-3 text-sm", textDim)}>{block.caption}</p>}
               </div>
@@ -368,7 +372,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                     Devoir à rendre : {block.format}
                   </p>
                 </div>
-                <p className={cn("font-heading text-lg mb-2", text)}>{block.title}</p>
+                <h3 className={cn("font-heading text-lg mb-2", text)}>{block.title}</h3>
                 <p className={cn("leading-relaxed text-justify mb-4", textDim)}>{block.prompt}</p>
                 <ul className="space-y-1.5">
                   {block.criteria.map((c, j) => (
@@ -412,16 +416,10 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
               </div>
             )
 
-          case "marginnote": {
-            // Alterne gauche/droite (voir marginnoteSeq plus haut) : le but n'est pas
-            // seulement de désencombrer le texte, mais de faire bouger le regard du
-            // lecteur d'un côté puis de l'autre entre deux paragraphes techniques denses.
-            const onLeft = marginnoteSeq % 2 === 1
-            marginnoteSeq++
+          case "marginnote":
             return (
-              <MarginNoteAnchor key={i} id={i} block={block} isPrint={isPrint} textDim={textDim} onActivate={onLeft ? activateLeft : activateRight} />
+              <MarginNoteAnchor key={i} id={i} block={block} isPrint={isPrint} textDim={textDim} onActivate={activateRight} />
             )
-          }
 
           case "link":
             // En impression/PDF, un renvoi vers une autre salle n'est pas cliquable (document
@@ -445,7 +443,12 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "paragraph":
             return (
-              <p key={i} className={cn("leading-relaxed text-justify", textDim)}>
+              // max-w-[70ch] : sans ça, la prose court sur toute la largeur du
+              // conteneur (max-w-4xl, ~896px), partagée avec tableaux/diagrammes —
+              // soit 100+ signes par ligne en EB Garamond, bien au-delà des ~65-75
+              // recommandés pour une lecture confortable. Les tableaux/diagrammes/
+              // formules, eux, restent en pleine largeur : ils en profitent.
+              <p key={i} className={cn("max-w-[70ch] leading-relaxed text-justify", textDim)}>
                 {isPrint ? block.text : linkifyGlossaryTerms(block.text, moduleSlug)}
               </p>
             )
@@ -459,7 +462,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // correctement dans les deux cas, avec ou sans puce flex.
             const Tag = block.ordered ? "ol" : "ul"
             return (
-              <Tag key={i} className={cn("space-y-2", textDim, block.ordered ? "list-decimal pl-5" : "pl-0")}>
+              <Tag key={i} className={cn("max-w-[70ch] space-y-2", textDim, block.ordered ? "list-decimal pl-5" : "pl-0")}>
                 {block.items.map((item, j) => (
                   <li key={j} className={cn("text-justify", !block.ordered && "flex items-start gap-3")}>
                     {!block.ordered && <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />}
@@ -485,7 +488,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                 <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", textDim)}>
                   {calloutLabel[block.tone ?? "info"]}
                 </p>
-                <p className={cn("font-heading text-lg mb-1", text)}>{block.title}</p>
+                <h3 className={cn("font-heading text-lg mb-1", text)}>{block.title}</h3>
                 <p className={cn("leading-relaxed text-justify", textDim)}>{block.text}</p>
               </div>
             )
@@ -495,7 +498,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
               <div key={i} className="grid gap-4 md:grid-cols-2">
                 {block.items.map((col) => (
                   <div key={col.label} className={cn("border p-5", borderSoft, isPrint ? "bg-black/[0.015]" : "bg-white/[0.02]")}>
-                    <p className={cn("font-heading mb-3", text)}>{col.label}</p>
+                    <h3 className={cn("font-heading mb-3", text)}>{col.label}</h3>
                     <ul className="space-y-2">
                       {col.points.map((p, j) => (
                         <li key={j} className={cn("flex items-start gap-2 text-sm", textDim)}>
@@ -525,12 +528,12 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "table":
             return (
-              <div key={i} className={cn("overflow-x-auto border bg-canvas", borderSoft)}>
+              <div key={i} className={cn("overflow-x-auto border bg-canvas scroll-shadow-x", borderSoft)}>
                 <table className="w-full text-sm">
                   <thead>
                     <tr className={panelBg}>
                       {block.headers.map((h) => (
-                        <th key={h} className={cn("text-left font-mono text-[11px] uppercase tracking-wider px-4 py-3 whitespace-nowrap", accent)}>
+                        <th key={h} className={cn("text-left font-mono text-[11px] uppercase tracking-wider px-3 py-3 sm:px-4 sm:whitespace-nowrap", accent)}>
                           {h}
                         </th>
                       ))}
@@ -540,7 +543,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                     {block.rows.map((row, j) => (
                       <tr key={j} className={cn("border-t", borderSoft)}>
                         {row.map((cell, k) => (
-                          <td key={k} className={cn("px-4 py-3 align-top", textDim)}>
+                          <td key={k} className={cn("px-3 py-3 sm:px-4 align-top", textDim)}>
                             {cell}
                           </td>
                         ))}
@@ -551,10 +554,27 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
               </div>
             )
 
+          case "brique":
+            // Sous-groupe adressable (voir lib/briques.ts::getBrique) — encart
+            // visuellement distinct pour signaler "ce fragment est réutilisé
+            // ailleurs" quand il apparaît dans une séance de l'Atelier, et
+            // reste lisible tel quel dans sa salle d'origine.
+            return (
+              <div key={i} className={cn("border-2 p-5 md:p-6 space-y-4 avoid-break", isPrint ? "border-[#8a6a2f]/45" : "border-gilt/35")}>
+                <p className={cn("font-mono text-[10px] uppercase tracking-wider", accent)}>Brique — {block.title}</p>
+                {block.blocks.map(renderBlock)}
+              </div>
+            )
+
           default:
             return null
-        }
-      })}
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      <MarginSlot note={activeRight} isPrint={isPrint} textDim={textDim} />
+      {blocks.map(renderBlock)}
     </div>
   )
 }

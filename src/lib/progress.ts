@@ -1,3 +1,5 @@
+import type { ContentLevel } from "@/content/types"
+
 const KEY = "geo-in-spectra-progress-v1"
 
 export interface QuizAttempt {
@@ -20,6 +22,15 @@ export interface ModuleProgress {
   visited?: boolean
   /** ISO de la visite la plus récente — alimente le radar/heatmap, absent sur les anciennes entrées (rétrocompatible). */
   visitedAt?: string
+  /**
+   * Pistes (Lycée/Licence-BUT/Master-Recherche) réellement ouvertes dans cette
+   * salle — `visited` seul ne dit qu'"au moins une piste vue", une salle à 3
+   * pistes indépendantes peut rester aux deux tiers non lue sans que rien ne
+   * le signale. Absent sur les entrées d'avant le passage à 3 pistes
+   * (rétrocompatible, traité comme un ensemble vide) et sur les salles qui
+   * n'ont pas ce modèle (Méthodologie).
+   */
+  visitedLevels?: ContentLevel[]
   quizScore?: { score: number; total: number }
   /** Historique complet des tentatives (contrairement à quizScore qui ne garde que le meilleur) — sert au radar/heatmap et n'écrase jamais rien. */
   quizHistory?: QuizAttempt[]
@@ -61,10 +72,21 @@ function write(state: ProgressState) {
   }
 }
 
-export function markVisited(slug: string) {
+export function markVisited(slug: string, level?: ContentLevel) {
   const s = read()
-  s[slug] = { ...s[slug], visited: true, visitedAt: new Date().toISOString() }
+  const prevLevels = s[slug]?.visitedLevels ?? []
+  s[slug] = {
+    ...s[slug],
+    visited: true,
+    visitedAt: new Date().toISOString(),
+    visitedLevels: level && !prevLevels.includes(level) ? [...prevLevels, level] : prevLevels,
+  }
   write(s)
+}
+
+/** Pistes déjà ouvertes dans cette salle (voir ModuleProgress.visitedLevels), jamais undefined pour rester simple à consommer côté badges/UI. */
+export function getVisitedLevels(slug: string): ContentLevel[] {
+  return read()[slug]?.visitedLevels ?? []
 }
 
 /** Ne garde que le meilleur score obtenu comme quizScore, mais pousse chaque tentative dans quizHistory — un essai raté n'écrase jamais un bon résultat antérieur, mais n'est plus perdu non plus. */

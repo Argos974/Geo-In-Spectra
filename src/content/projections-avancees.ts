@@ -3,7 +3,7 @@ import type { ContentBlock } from "./types"
 export const projectionsAvanceesContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "Le module Fondements pose l'essentiel : une projection transforme la surface courbe de la Terre en un plan, et cette transformation déforme nécessairement quelque chose (angle, surface ou distance). Cette salle va plus loin : comment ces déformations sont réparties selon la famille de projection choisie, comment Lambert-93 et l'UTM sont réellement construits, et comment choisir une projection selon l'usage réel plutôt que par habitude.",
+    text: "Le module Fondements pose l'essentiel : une projection transforme la surface courbe de la Terre en un plan, et cette transformation déforme nécessairement quelque chose (angle, surface ou distance). Cette salle va plus loin : comment ces déformations sont réparties selon la famille de projection choisie, comment Lambert-93 et l'UTM sont réellement construits, et comment choisir une projection selon l'usage réel plutôt que par habitude. Trois pistes complètes ci-dessous (choisis la tienne dans le filtre « Afficher ») : chacune se lit seule, du début à la fin.",
   },
   {
     type: "link",
@@ -12,6 +12,9 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     description: "Si la distinction entre système géographique (degrés) et système projeté (mètres) n'est pas encore claire, elle est posée dans le module Fondements.",
   },
 
+  // ================================================================
+  // PISTE LYCÉE
+  // ================================================================
   { type: "heading", text: "1. Pourquoi aucune projection n'est parfaite", level: "lycee" },
   {
     type: "paragraph",
@@ -24,10 +27,10 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Nicolas Tissot (1881) propose de tracer, en plusieurs points du globe, un petit cercle identique avant projection : après projection, ce cercle devient une ellipse dont la forme et la taille révèlent exactement la déformation locale (angle, surface, ou les deux) en ce point précis de la carte. C'est l'outil standard pour comparer visuellement des projections entre elles.",
   },
 
-  { type: "heading", text: "2. Les trois familles de déformation", level: "lycee" },
+  { type: "heading", text: "2. Les trois familles de projection", level: "lycee" },
   {
     type: "paragraph",
-    text: "Toute projection appartient à l'une de ces trois familles, selon ce qu'elle choisit de préserver localement — jamais les trois à la fois, c'est mathématiquement impossible dès qu'une zone dépasse un point isolé :",
+    text: "La bonne question n'est pas « quelle projection déforme le moins » mais « quelle projection préserve ce dont j'ai besoin ». Toute projection appartient à l'une de ces trois familles, selon ce qu'elle choisit de préserver localement — jamais les trois à la fois, c'est mathématiquement impossible dès qu'une zone dépasse un point isolé :",
   },
   {
     type: "table",
@@ -50,7 +53,86 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Mercator est conforme : les angles (donc les formes locales) sont préservés, ce qui en fait l'outil historique de la navigation (un cap compas y est une ligne droite). Le prix : les surfaces sont de plus en plus exagérées en s'éloignant de l'équateur. Le Groenland y paraît de la taille de l'Afrique, alors qu'il fait réellement environ 14 fois moins de superficie. Ce n'est pas une erreur de la projection, c'est exactement ce qu'elle a choisi de préserver, au détriment des surfaces.",
   },
 
-  { type: "heading", text: "3. La projection conique conforme de Lambert (Lambert-93)", level: "superieur" },
+  { type: "heading", text: "3. Choisir sa projection, sans formule, selon l'usage", level: "lycee" },
+  {
+    type: "table",
+    headers: ["Usage", "Projection recommandée", "Pourquoi"],
+    rows: [
+      ["Carte topographique française, calcul de surface/distance en France", "Lambert-93 (EPSG:2154)", "Conforme et quasi sans déformation sur tout le territoire national"],
+      ["Carte web mondiale, tuiles (Leaflet, Google Maps, OSM)", "Web Mercator (EPSG:3857)", "Pratique pour naviguer/zoomer, pas pour mesurer une surface"],
+      ["Comparer des surfaces à l'échelle mondiale (déforestation, occupation du sol)", "Une projection équivalente (ex. Mollweide)", "Seule une projection équivalente garantit qu'un même nombre de km² à l'écran représente la même surface réelle partout"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "question",
+    title: "À toi de voir",
+    text: "Une association qui compare la superficie déboisée par pays sur une carte du monde utilise, par facilité, le même fond de carte Web Mercator que son site web. Que risque de fausser ce choix dans sa comparaison, et quelle famille de projection (section 2) serait plus appropriée ?",
+  },
+
+  { type: "heading", text: "4. Vérifier qu'un fichier a réellement une projection déclarée", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un fichier géographique sans système de coordonnées correctement déclaré n'est pas une exception rare : c'est une source d'erreur fréquente, en particulier avec le format Shapefile, où cette information vit dans un fichier annexe séparé, facile à perdre en cours de route.",
+  },
+  {
+    type: "list",
+    items: [
+      "Un Shapefile stocke son système de coordonnées dans un fichier .prj distinct du .shp — copier uniquement le .shp (ou l'envoyer seul par e-mail) laisse les coordonnées valides mais sans système déclaré",
+      "Un logiciel SIG qui charge une couche sans .prj ne devine jamais le bon système : il en suppose un par défaut (souvent WGS84) ou affiche un avertissement, mais ne peut pas reconstruire une information qui n'existe plus",
+      "GeoJSON ne porte généralement aucun code EPSG explicite : la convention veut qu'il soit en WGS84 (EPSG:4326), mais ce n'est qu'une convention, pas une garantie vérifiable dans le fichier lui-même",
+      "En cas de doute, comparer l'ordre de grandeur des coordonnées à ce qui est attendu : des valeurs proches de 6 et 43 sont des degrés (WGS84), des valeurs proches de 900 000 et 6 300 000 sont des mètres Lambert-93",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un système « supposé » n'est pas un système « vérifié »",
+    text: "Une couche qui s'affiche au bon endroit dans un logiciel SIG ne prouve pas que son système de coordonnées est correctement déclaré : si le logiciel applique par défaut le même système erroné à l'affichage qu'à l'origine des données, l'erreur reste invisible jusqu'au premier calcul de distance, de surface, ou au premier croisement avec une couche dans un système différent, correctement déclaré celui-là.",
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : aucune projection ne préserve tout à la fois (angles, surfaces, distances) ; conforme (angles), équivalente (surfaces), aphylactique (compromis) sont les trois familles possibles ; Lambert-93 pour la France, Web Mercator pour naviguer sur le web, jamais pour mesurer une surface ; un fichier sans .prj ou sans EPSG explicite n'a pas de système « vérifié », seulement supposé.",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/statistiques-spatiales",
+    label: "Continuer : LISA, points chauds et régression spatiale",
+    description: "Le module Les Statistiques suppose des données déjà dans un système projeté cohérent — la vigilance sur les CRS acquise ici en est le socle.",
+  },
+
+  // ================================================================
+  // PISTE LICENCE / BUT
+  // ================================================================
+  { type: "heading", text: "1. Les trois familles de projection, quantifiées", level: "superieur" },
+  {
+    type: "paragraph",
+    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois — c'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss. Plutôt que de partir de « ce qui se déforme », il est plus utile de partir de ce qu'une projection choisit de préserver : c'est ce qui définit sa famille, et donc son bon usage.",
+  },
+  {
+    type: "table",
+    headers: ["Famille", "Ce qui est préservé", "Ce qui est déformé", "Exemple"],
+    rows: [
+      ["Conforme", "Les angles locaux (formes préservées à petite échelle)", "Les surfaces, fortement aux hautes latitudes", "Lambert-93, Mercator, UTM"],
+      ["Équivalente", "Les surfaces (aires exactement conservées)", "Les angles et les formes", "Albers, Mollweide"],
+      ["Aphylactique", "Ni les angles ni les surfaces exactement — un compromis", "Un peu des deux, réparti", "Projection de Winkel, Robinson (cartes murales du monde)"],
+    ],
+  },
+  {
+    type: "diagram",
+    name: "tissot-distortion",
+    caption: "Le même cercle avant projection : une conforme le garde circulaire mais l'exagère en surface vers les hautes latitudes, une équivalente conserve son aire au prix de sa forme.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une carte du monde en Mercator exagère les hautes latitudes",
+    text: "Mercator est conforme : les angles (donc les formes locales) sont préservés, ce qui en fait l'outil historique de la navigation (un cap compas y est une ligne droite). Le prix : les surfaces sont de plus en plus exagérées en s'éloignant de l'équateur. Le Groenland y paraît de la taille de l'Afrique, alors qu'il fait réellement environ 14 fois moins de superficie.",
+  },
+
+  { type: "heading", text: "2. La projection conique conforme de Lambert (Lambert-93)", level: "superieur" },
   {
     type: "paragraph",
     text: "Lambert-93 (EPSG:2154), référence officielle française depuis 2006, est une projection conique conforme sécante : on imagine un cône posé sur l'ellipsoïde terrestre, qui coupe sa surface le long de deux parallèles dits « parallèles standards » (44° N et 49° N pour la France métropolitaine). Le long de ces deux lignes, il n'y a strictement aucune déformation d'échelle ; entre elles et au-delà, la déformation croît progressivement mais reste minime sur toute l'étendue du territoire français, ce qui justifie ce choix plutôt qu'une projection cylindrique pour une carte nationale à cette latitude.",
@@ -68,7 +150,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Les deux parallèles standards sont choisis pour encadrer symétriquement l'étendue en latitude du territoire couvert (la France métropolitaine s'étend d'environ 41° à 51° N), ce qui répartit la déformation résiduelle le plus uniformément possible sur l'ensemble du pays plutôt que de la concentrer sur un seul bord. Un pays plus étroit en latitude (la Belgique, par exemple) choisirait des parallèles standards plus rapprochés.",
   },
 
-  { type: "heading", text: "4. Le système UTM (Universal Transverse Mercator)", level: "superieur" },
+  { type: "heading", text: "3. Le système UTM (Universal Transverse Mercator)", level: "superieur" },
   {
     type: "paragraph",
     text: "L'UTM découpe le globe en 60 fuseaux (zones) de 6° de longitude chacun, chaque fuseau étant projeté séparément par une Mercator transverse (le cylindre de projection est couché sur le côté, tangent à un méridien central plutôt qu'à l'équateur). Contrairement à Lambert-93 qui couvre tout un pays d'un seul tenant, l'UTM est pensé pour un usage global : n'importe quel point du globe appartient à une zone UTM précise, identifiée par un numéro (1 à 60) et un hémisphère (Nord/Sud).",
@@ -90,7 +172,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Une zone d'étude à cheval sur deux fuseaux UTM (par exemple près de 6° E ou 12° E) pose un vrai problème pratique : les coordonnées ne sont continues qu'à l'intérieur d'un même fuseau, un calcul de distance entre deux points de fuseaux différents sans reprojection commune donne un résultat faux. C'est un avantage supplémentaire de Lambert-93 pour un usage strictement national : la France entière tient dans un seul système cohérent, sans découpage arbitraire.",
   },
 
-  { type: "heading", text: "5. Choisir sa projection selon l'usage réel", level: "superieur" },
+  { type: "heading", text: "4. Choisir sa projection selon l'usage réel", level: "superieur" },
   {
     type: "paragraph",
     text: "La question n'est jamais « quelle est la meilleure projection » dans l'absolu, mais « quelle déformation puis-je me permettre pour cet usage précis ». Un même jeu de données peut légitimement être projeté différemment selon la question posée.",
@@ -113,7 +195,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     description: "Le module Cartographie web explique pourquoi presque tous les fonds de carte en ligne utilisent EPSG:3857, malgré sa déformation de surface.",
   },
 
-  { type: "heading", text: "6. Datum et transformation : ne pas confondre projection et système géodésique", level: "superieur" },
+  { type: "heading", text: "5. Datum et transformation : ne pas confondre projection et système géodésique", level: "superieur" },
   {
     type: "paragraph",
     text: "Un système de coordonnées complet combine deux choses distinctes, souvent confondues : un datum géodésique (le modèle de référence de la forme de la Terre — un ellipsoïde et son point d'ancrage) et une projection cartographique (la transformation mathématique vers un plan). Deux jeux de données dans des projections différentes mais surtout dans des datums différents ne se superposent jamais correctement sans une transformation explicite entre les deux datums, une étape distincte d'un simple changement de projection.",
@@ -134,19 +216,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Superposer une couche encore en NTF avec une couche en RGF93/WGS84 sans transformation de datum produit un décalage systématique, dans la même direction et de la même ampleur partout sur la carte — un symptôme caractéristique qui distingue cette erreur d'un simple problème de projection (qui, lui, déforme de façon variable selon la position). L'IGN fournit les grilles de transformation officielles (ex. NTF vers RGF93) que tout logiciel SIG sérieux applique automatiquement une fois le datum source correctement déclaré.",
   },
 
-  { type: "heading", text: "7. Web Mercator (EPSG:3857) : pratique mais déformée", level: "approfondissement" },
-  {
-    type: "paragraph",
-    text: "EPSG:3857 (aussi appelée Pseudo-Mercator ou Google Web Mercator) est une variante simplifiée de Mercator, quasi universelle sur les cartes interactives en ligne : elle traite la Terre comme une sphère (calcul plus rapide qu'un ellipsoïde) et découpe le monde en tuiles carrées qui s'emboîtent parfaitement à tout niveau de zoom, un besoin technique propre au web que Lambert-93 ou l'UTM (pensés pour des zones limitées) ne remplissent pas nativement à l'échelle mondiale.",
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Ne jamais mesurer une surface directement en EPSG:3857",
-    text: "La déformation de surface en Web Mercator croît fortement avec la latitude (elle diverge même mathématiquement aux pôles, EPSG:3857 est d'ailleurs indéfinie exactement à 90°). Une mesure de surface faite directement sur des données en EPSG:3857, sans reprojection préalable vers un système équivalent ou local adapté, donne un résultat faux — d'autant plus faux que la zone étudiée est éloignée de l'équateur. C'est une erreur fréquente chez qui affiche des données sur un fond Leaflet/OSM (nativement en EPSG:3857) puis calcule une surface sans reprojeter d'abord.",
-  },
-
-  { type: "heading", text: "8. Mesurer une distance ou une surface correctement", level: "superieur" },
+  { type: "heading", text: "6. Mesurer une distance ou une surface correctement", level: "superieur" },
   {
     type: "list",
     ordered: true,
@@ -159,19 +229,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
   },
   { type: "game" },
 
-  { type: "heading", text: "9. Cas particuliers : hautes latitudes et projections polaires", level: "approfondissement" },
-  {
-    type: "paragraph",
-    text: "Ni Lambert-93 ni l'UTM ne conviennent près des pôles : une projection conique ou cylindrique y déforme excessivement, voire devient mathématiquement indéfinie exactement au pôle. Les études polaires (calotte arctique, Antarctique) utilisent des projections azimutales dédiées, en particulier la projection stéréographique polaire (conforme, tangente ou sécante au pôle) et le système UPS (Universal Polar Stereographic, le complément polaire de l'UTM au-delà de 84° N et 80° S, où l'UTM cesse d'être défini).",
-  },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Le repère general : aucune projection universelle",
-    text: "Il n'existe aucune projection unique adaptée à tous les usages et toutes les zones du globe : Lambert-93 pour la France, UTM pour une zone locale ailleurs, une projection équivalente pour comparer des surfaces à grande échelle, une projection polaire pour les hautes latitudes. Le bon réflexe méthodologique n'est pas de mémoriser une seule projection « par défaut », mais de toujours se demander : quelle déformation ce projet peut-il tolérer, et où.",
-  },
-
-  { type: "heading", text: "10. Erreurs fréquentes et vérifications pratiques", level: "superieur" },
+  { type: "heading", text: "7. Erreurs fréquentes et vérifications pratiques", level: "superieur" },
   {
     type: "list",
     items: [
@@ -188,7 +246,7 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Avant de lancer un calcul de surface ou de distance dans un logiciel SIG : vérifier le système de coordonnées du projet (pas seulement de chaque couche individuellement), s'assurer qu'il s'agit bien d'un système projeté métrique et non géographique, et confirmer que toutes les couches partagent le même datum. Ces trois vérifications, prises ensemble, évitent la grande majorité des erreurs de mesure spatiale en pratique.",
   },
 
-  { type: "heading", text: "11. La convergence du méridien : nord géographique et nord de la grille", level: "superieur" },
+  { type: "heading", text: "8. La convergence du méridien : nord géographique et nord de la grille", level: "superieur" },
   {
     type: "paragraph",
     text: "Sur une carte projetée, les lignes verticales de la grille (le « nord de la grille », ou nord quadrillage) ne pointent pas exactement vers le pôle Nord géographique, sauf très précisément sur le méridien central de la projection. Cet écart angulaire, appelé convergence du méridien, croît avec la distance en longitude au méridien central et avec la latitude du point considéré.",
@@ -206,39 +264,15 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     text: "Un cap mesuré à la boussole est repéré par rapport au nord magnétique (lui-même décalé du nord géographique par la déclinaison magnétique, variable selon le lieu et l'année) ; un azimut calculé depuis des coordonnées projetées est repéré par rapport au nord de la grille. Confondre ces trois nords sans appliquer les corrections correspondantes (déclinaison magnétique, puis convergence du méridien) introduit une erreur d'orientation systématique, faible près du méridien central d'une projection mais significative en bordure de zone ou aux latitudes élevées.",
   },
 
-  { type: "heading", text: "12. Au-delà de la métropole : les projections des territoires ultramarins", level: "approfondissement" },
-  {
-    type: "paragraph",
-    text: "Lambert-93 n'est défini, et n'a de sens géométrique, que pour la France métropolitaine : ses deux parallèles standards (44° N et 49° N) et son méridien central (3° E) sont calés sur cette seule étendue. Chaque territoire ultramarin français dispose de son propre système géodésique de référence — souvent un datum local plutôt que RGF93, la dérive tectonique locale n'étant pas négligeable partout — et d'une projection UTM adaptée à sa zone, entièrement distincte du système métropolitain.",
-  },
-  {
-    type: "table",
-    headers: ["Territoire", "Datum officiel", "Projection / EPSG"],
-    rows: [
-      ["Guadeloupe, Martinique", "RGAF09", "UTM fuseau 20 N — EPSG:5490"],
-      ["Guyane", "RGFG95", "UTM fuseau 22 N — EPSG:2972"],
-      ["La Réunion", "RGR92", "UTM fuseau 40 S — EPSG:2975"],
-      ["Mayotte", "RGM04", "UTM fuseau 38 S — EPSG:4471"],
-      ["Saint-Pierre-et-Miquelon", "RGSPM06", "UTM fuseau 21 N — EPSG:4467"],
-      ["Nouvelle-Calédonie, Polynésie française", "Datums locaux propres à chaque territoire", "Projections UTM ou Lambert dédiées, distinctes de la métropole"],
-    ],
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "EPSG:2154 appliqué à une donnée guyanaise : une erreur silencieuse",
-    text: "Déclarer une couche de Guyane en Lambert-93 (EPSG:2154) parce que c'est le système « par défaut » du projet ne produit pas nécessairement une erreur bloquante dans le logiciel : les coordonnées existent mathématiquement, mais elles sont géométriquement absurdes, très éloignées de la position réelle, car la Guyane se trouve hors du domaine de validité de cette projection. Le bon réflexe est de partir du territoire réellement concerné pour choisir le système, jamais de l'habitude prise en métropole.",
-  },
-
-  { type: "heading", text: "13. Cas d'usage détaillé : cartographier l'urbanisation autour de Cayenne", level: "superieur" },
+  { type: "heading", text: "9. Cas d'usage détaillé : cartographier l'urbanisation autour de Cayenne", level: "superieur" },
   {
     type: "callout",
     tone: "example",
     title: "Du besoin au système de coordonnées",
-    text: "Objectif : mesurer l'évolution de la surface urbanisée autour de Cayenne (Guyane) entre deux dates, à partir d'images satellite classifiées. Démarche : (1) le territoire d'étude impose déjà l'écart avec la métropole, Lambert-93 est hors sujet (section 12) ; (2) RGFG95 / UTM fuseau 22 N (EPSG:2972) est le système projeté officiel du territoire, donc le bon choix pour un calcul de surface fiable et pour croiser le résultat avec des données IGN locales ; (3) les images sources (souvent livrées en UTM WGS84) doivent être reprojetées vers EPSG:2972 avant toute mesure de surface, pas seulement affichées par-dessus une couche déjà dans ce système ; (4) le résultat final (hectares urbanisés par date) est un nombre en principe indépendant du système de coordonnées, mais seule une chaîne de traitement cohérente en EPSG:2972 de bout en bout en garantit l'exactitude.",
+    text: "Objectif : mesurer l'évolution de la surface urbanisée autour de Cayenne (Guyane) entre deux dates, à partir d'images satellite classifiées. Démarche : (1) le territoire d'étude impose déjà l'écart avec la métropole, Lambert-93 est hors sujet (piste Master/Recherche, territoires ultramarins) ; (2) RGFG95 / UTM fuseau 22 N (EPSG:2972) est le système projeté officiel du territoire, donc le bon choix pour un calcul de surface fiable et pour croiser le résultat avec des données IGN locales ; (3) les images sources (souvent livrées en UTM WGS84) doivent être reprojetées vers EPSG:2972 avant toute mesure de surface, pas seulement affichées par-dessus une couche déjà dans ce système ; (4) le résultat final (hectares urbanisés par date) est un nombre en principe indépendant du système de coordonnées, mais seule une chaîne de traitement cohérente en EPSG:2972 de bout en bout en garantit l'exactitude.",
   },
 
-  { type: "heading", text: "14. Système national sur mesure ou grille standardisée : une synthèse", level: "superieur" },
+  { type: "heading", text: "10. Système national sur mesure ou grille standardisée : une synthèse", level: "superieur" },
   {
     type: "paragraph",
     text: "Les sections précédentes opposent en pratique deux logiques de conception, au-delà du seul cas français : une projection dédiée, taillée pour un territoire précis, ou une grille universelle, découpée en fuseaux identiques partout sur le globe.",
@@ -266,8 +300,71 @@ export const projectionsAvanceesContent: ContentBlock[] = [
       },
     ],
   },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : Lambert-93 est une conique conforme sécante calée sur 44°N/49°N, l'UTM découpe le globe en 60 fuseaux de 6° avec un facteur d'échelle de 0,9996 ; datum ≠ projection, une différence de datum non transformée laisse un décalage constant ; toujours reprojeter en système métrique avant un calcul de distance/surface, jamais en degrés ni en Web Mercator ; la convergence du méridien distingue nord géographique, nord magnétique et nord de la grille.",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/statistiques-spatiales",
+    label: "Continuer : LISA, points chauds et régression spatiale",
+    description: "Le module Les Statistiques suppose des données déjà dans un système projeté cohérent — la vigilance sur les CRS acquise ici en est le socle.",
+  },
 
-  { type: "heading", text: "15. Un usage plus spécifique : les projections azimutales équidistantes", level: "approfondissement" },
+  // ================================================================
+  // PISTE MASTER / RECHERCHE
+  // ================================================================
+  { type: "heading", text: "1. Web Mercator (EPSG:3857) : pratique mais déformée", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "EPSG:3857 (aussi appelée Pseudo-Mercator ou Google Web Mercator) est une variante simplifiée de Mercator, quasi universelle sur les cartes interactives en ligne : elle traite la Terre comme une sphère (calcul plus rapide qu'un ellipsoïde) et découpe le monde en tuiles carrées qui s'emboîtent parfaitement à tout niveau de zoom, un besoin technique propre au web que Lambert-93 ou l'UTM (pensés pour des zones limitées) ne remplissent pas nativement à l'échelle mondiale.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne jamais mesurer une surface directement en EPSG:3857",
+    text: "La déformation de surface en Web Mercator croît fortement avec la latitude (elle diverge même mathématiquement aux pôles, EPSG:3857 est d'ailleurs indéfinie exactement à 90°). Une mesure de surface faite directement sur des données en EPSG:3857, sans reprojection préalable vers un système équivalent ou local adapté, donne un résultat faux — d'autant plus faux que la zone étudiée est éloignée de l'équateur. C'est une erreur fréquente chez qui affiche des données sur un fond Leaflet/OSM (nativement en EPSG:3857) puis calcule une surface sans reprojeter d'abord.",
+  },
+
+  { type: "heading", text: "2. Cas particuliers : hautes latitudes et projections polaires", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Ni Lambert-93 ni l'UTM ne conviennent près des pôles : une projection conique ou cylindrique y déforme excessivement, voire devient mathématiquement indéfinie exactement au pôle. Les études polaires (calotte arctique, Antarctique) utilisent des projections azimutales dédiées, en particulier la projection stéréographique polaire (conforme, tangente ou sécante au pôle) et le système UPS (Universal Polar Stereographic, le complément polaire de l'UTM au-delà de 84° N et 80° S, où l'UTM cesse d'être défini).",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Le repère général : aucune projection universelle",
+    text: "Il n'existe aucune projection unique adaptée à tous les usages et toutes les zones du globe : Lambert-93 pour la France, UTM pour une zone locale ailleurs, une projection équivalente pour comparer des surfaces à grande échelle, une projection polaire pour les hautes latitudes. Le bon réflexe méthodologique n'est pas de mémoriser une seule projection « par défaut », mais de toujours se demander : quelle déformation ce projet peut-il tolérer, et où.",
+  },
+
+  { type: "heading", text: "3. Au-delà de la métropole : les projections des territoires ultramarins", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Lambert-93 n'est défini, et n'a de sens géométrique, que pour la France métropolitaine : ses deux parallèles standards (44° N et 49° N) et son méridien central (3° E) sont calés sur cette seule étendue. Chaque territoire ultramarin français dispose de son propre système géodésique de référence — souvent un datum local plutôt que RGF93, la dérive tectonique locale n'étant pas négligeable partout — et d'une projection UTM adaptée à sa zone, entièrement distincte du système métropolitain.",
+  },
+  {
+    type: "table",
+    headers: ["Territoire", "Datum officiel", "Projection / EPSG"],
+    rows: [
+      ["Guadeloupe, Martinique", "RGAF09", "UTM fuseau 20 N — EPSG:5490"],
+      ["Guyane", "RGFG95", "UTM fuseau 22 N — EPSG:2972"],
+      ["La Réunion", "RGR92", "UTM fuseau 40 S — EPSG:2975"],
+      ["Mayotte", "RGM04", "UTM fuseau 38 S — EPSG:4471"],
+      ["Saint-Pierre-et-Miquelon", "RGSPM06", "UTM fuseau 21 N — EPSG:4467"],
+      ["Nouvelle-Calédonie, Polynésie française", "Datums locaux propres à chaque territoire", "Projections UTM ou Lambert dédiées, distinctes de la métropole"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "EPSG:2154 appliqué à une donnée guyanaise : une erreur silencieuse",
+    text: "Déclarer une couche de Guyane en Lambert-93 (EPSG:2154) parce que c'est le système « par défaut » du projet ne produit pas nécessairement une erreur bloquante dans le logiciel : les coordonnées existent mathématiquement, mais elles sont géométriquement absurdes, très éloignées de la position réelle, car la Guyane se trouve hors du domaine de validité de cette projection. Le bon réflexe est de partir du territoire réellement concerné pour choisir le système, jamais de l'habitude prise en métropole.",
+  },
+
+  { type: "heading", text: "4. Un usage plus spécifique : les projections azimutales équidistantes", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Aucune des familles vues jusqu'ici (conique conforme, cylindrique, UTM) ne répond bien à un besoin précis : représenter fidèlement la distance et la direction depuis un seul point central vers n'importe quel autre point de la carte. C'est le rôle des projections azimutales équidistantes, centrées sur ce point unique plutôt que sur un parallèle ou un méridien.",
@@ -278,26 +375,17 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     title: "Un usage concret : cercles de portée et épicentres",
     text: "Une carte de portée radio, d'autonomie de vol depuis un aéroport, ou de propagation d'une onde sismique depuis un épicentre est presque toujours tracée en azimutale équidistante centrée sur ce point précis : sur cette projection, un cercle de rayon constant depuis le centre représente exactement une distance réelle constante, une propriété qu'aucune projection conique ou cylindrique ne garantit simultanément dans toutes les directions autour d'un point donné. Le drapeau des Nations unies, centré sur le pôle Nord, en est un exemple bien connu.",
   },
-
-  { type: "heading", text: "16. Vérifier qu'un fichier a réellement une projection déclarée", level: "lycee" },
   {
-    type: "paragraph",
-    text: "Un fichier géographique sans système de coordonnées correctement déclaré n'est pas une exception rare : c'est une source d'erreur fréquente, en particulier avec le format Shapefile, où cette information vit dans un fichier annexe séparé, facile à perdre en cours de route.",
+    type: "callout",
+    tone: "question",
+    title: "À toi de voir",
+    text: "La carte interactive du réseau RTK présentée dans le module Fondements (piste Master/Recherche) utilise le contour réel de la France en Lambert-93, pas en azimutale équidistante centrée sur une station. Pourquoi Lambert-93 reste-t-il le bon choix pour cette carte-là, malgré la propriété intéressante de l'azimutale équidistante décrite ci-dessus ?",
   },
   {
     type: "list",
     items: [
-      "Un Shapefile stocke son système de coordonnées dans un fichier .prj distinct du .shp — copier uniquement le .shp (ou l'envoyer seul par e-mail) laisse les coordonnées valides mais sans système déclaré",
-      "Un logiciel SIG qui charge une couche sans .prj ne devine jamais le bon système : il en suppose un par défaut (souvent WGS84) ou affiche un avertissement, mais ne peut pas reconstruire une information qui n'existe plus",
-      "GeoJSON ne porte généralement aucun code EPSG explicite : la convention veut qu'il soit en WGS84 (EPSG:4326), mais ce n'est qu'une convention, pas une garantie vérifiable dans le fichier lui-même",
-      "En cas de doute, comparer l'ordre de grandeur des coordonnées à ce qui est attendu : des valeurs proches de 6 et 43 sont des degrés (WGS84), des valeurs proches de 900 000 et 6 300 000 sont des mètres Lambert-93",
+      "Bilan — à retenir : Web Mercator (EPSG:3857) est pratique pour naviguer, jamais pour mesurer une surface, et indéfini aux pôles ; les hautes latitudes utilisent des projections azimutales polaires (UPS) plutôt que Lambert-93 ou l'UTM ; chaque territoire ultramarin français a son propre datum et sa propre projection, distincts de la métropole ; une azimutale équidistante préserve la distance et la direction depuis un point central unique, utile pour un rayon de portée ou un épicentre.",
     ],
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Un système « supposé » n'est pas un système « vérifié »",
-    text: "Une couche qui s'affiche au bon endroit dans un logiciel SIG ne prouve pas que son système de coordonnées est correctement déclaré : si le logiciel applique par défaut le même système erroné à l'affichage qu'à l'origine des données, l'erreur reste invisible jusqu'au premier calcul de distance, de surface, ou au premier croisement avec une couche dans un système différent, correctement déclaré celui-là.",
   },
   {
     type: "link",

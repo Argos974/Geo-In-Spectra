@@ -3,10 +3,13 @@ import type { ContentBlock } from "./types"
 export const teledetectionContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "La télédétection consiste à observer et mesurer la surface terrestre à distance, sans contact physique, généralement depuis un satellite ou un avion. Le principe physique commun à tous les capteurs optiques : chaque matériau (végétation, eau, bâti, sol nu) réfléchit la lumière différemment selon la longueur d'onde. En mesurant cette réflectance sur plusieurs bandes du spectre, on peut identifier et quantifier ce qui recouvre le sol. Ce module va plus loin que la seule intuition physique : il pose les bases quantitatives (rayonnement, résolutions, orbites, corrections) qui permettent de comprendre pourquoi un capteur est construit d'une façon plutôt qu'une autre, et pourquoi une image brute n'est jamais directement exploitable.",
+    text: "La télédétection consiste à observer et mesurer la surface terrestre à distance, sans contact physique, généralement depuis un satellite ou un avion. Le principe physique commun à tous les capteurs optiques : chaque matériau (végétation, eau, bâti, sol nu) réfléchit la lumière différemment selon la longueur d'onde. En mesurant cette réflectance sur plusieurs bandes du spectre, on peut identifier et quantifier ce qui recouvre le sol. Trois pistes complètes ci-dessous (choisis la tienne dans le filtre « Afficher ») : chacune se lit seule, du début à la fin.",
   },
 
-  { type: "heading", text: "1. Le rayonnement électromagnétique" },
+  // ================================================================
+  // PISTE LYCÉE
+  // ================================================================
+  { type: "heading", text: "1. Le rayonnement électromagnétique : la base de tout capteur", level: "lycee" },
   {
     type: "paragraph",
     text: "Le Soleil émet un rayonnement qui couvre un large spectre de longueurs d'onde. Une partie atteint le sol, y est en partie absorbée et en partie réfléchie vers le capteur satellite. La proportion réfléchie, la réflectance, varie selon la longueur d'onde et selon la nature de la surface observée. C'est cette signature spectrale qui permet de distinguer une forêt d'un champ, d'un parking ou d'un plan d'eau.",
@@ -31,6 +34,151 @@ export const teledetectionContent: ContentBlock[] = [
     tone: "info",
     title: "Pourquoi la végétation est \"rouge\" en proche infrarouge",
     text: "La chlorophylle absorbe fortement le rouge visible (pour la photosynthèse) mais la structure interne des feuilles (les espaces intercellulaires du mésophylle spongieux) réfléchit très fortement le proche infrarouge. Ce contraste rouge/NIR est si marqué et si stable qu'il constitue la base de l'indice le plus utilisé en télédétection végétale : le NDVI (module suivant).",
+  },
+  {
+    type: "diagram",
+    name: "reflectance-curve",
+    caption: "La courbe de réflectance d'une végétation en bonne santé : le creux dans le rouge, le sursaut dans le proche infrarouge.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Exemple chiffré : trois signatures très différentes",
+    text: "En ordre de grandeur, la réflectance dans le rouge puis dans le proche infrarouge : végétation saine ≈ 5 % puis ≈ 45 % (fort contraste) ; eau claire ≈ 5 % puis ≈ 2 % (faible partout, encore plus faible en NIR) ; sol nu sec ≈ 20 % puis ≈ 30 % (élevée mais peu contrastée). C'est cet écart rouge/NIR, très spécifique à la végétation, que les indices du module suivant exploitent.",
+  },
+
+  { type: "heading", text: "2. Capteurs optiques vs radar : deux façons de voir", level: "lycee" },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Optique (passif)",
+        points: [
+          "Mesure la lumière solaire réfléchie",
+          "Nécessite un ciel dégagé (bloqué par les nuages)",
+          "Résolution spectrale riche (plusieurs bandes fines)",
+          "Ex. : Sentinel-2, Landsat, Pléiades",
+        ],
+      },
+      {
+        label: "Radar / SAR (actif)",
+        points: [
+          "Émet sa propre onde radar et mesure le signal retour",
+          "Traverse les nuages, fonctionne de nuit",
+          "Sensible à la structure/rugosité/teneur en eau de surface, pas à la couleur",
+          "Ex. : Sentinel-1, TerraSAR-X",
+        ],
+      },
+    ],
+  },
+
+  { type: "heading", text: "3. Les quatre résolutions d'une image satellite", level: "lycee" },
+  {
+    type: "list",
+    items: [
+      "Résolution spatiale : taille au sol d'un pixel (ex. Sentinel-2 : 10 m en visible/NIR)",
+      "Résolution spectrale : nombre et finesse des bandes mesurées (Sentinel-2 : 13 bandes, du visible au SWIR)",
+      "Résolution temporelle : fréquence de revisite du même endroit (Sentinel-2 : ~5 jours avec les deux satellites jumeaux)",
+      "Résolution radiométrique : nombre de niveaux d'intensité codés par pixel, plus il y en a, plus les nuances fines sont distinguées",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un compromis, jamais gratuit",
+    text: "Aucun satellite ne maximise les quatre résolutions à la fois. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) capte moins de photons par pixel, donc élargit ses bandes spectrales ou réduit sa fréquence de passage pour compenser. Un capteur à revisite quotidienne (ex. MODIS) a en retour une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
+  },
+  { type: "game" },
+
+  { type: "heading", text: "4. La photo-interprétation", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Avant tout calcul d'indice, la première compétence en télédétection reste la lecture directe de l'image à l'œil, une compétence qui reste précieuse aujourd'hui pour vérifier un résultat automatique, et directement utile en épreuve de commentaire de document. Six clés de lecture classiques, héritées de la photo-interprétation aérienne militaire et civile du XXᵉ siècle :",
+  },
+  {
+    type: "list",
+    items: [
+      "La forme : un rectangle très régulier évoque un bâtiment ou une serre, une ligne sinueuse un cours d'eau ou une route",
+      "La texture : lisse pour un plan d'eau ou un toit, grenue pour une forêt vue en résolution fine",
+      "La teinte / le ton : la coloration en composition naturelle (rouge/vert/bleu) ou fausse couleur (souvent NIR/rouge/vert, qui fait ressortir la végétation en rouge vif)",
+      "L'ombre portée : trahit la hauteur d'un objet (bâtiment, arbre) que l'image seule, vue du dessus, ne montre pas directement",
+      "Le motif (pattern) : une répétition régulière (rangées d'arbres d'un verger, trame d'un lotissement) signale une organisation humaine ou agricole",
+      "L'association / le contexte : un bâtiment isolé au milieu de parcelles agricoles se lit différemment du même bâtiment en plein tissu urbain",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Composition naturelle vs fausse couleur",
+    text: "Une composition \"fausse couleur\" affiche le proche infrarouge à la place du rouge visible : la végétation, très réfléchissante en NIR, apparaît alors en rouge vif plutôt qu'en vert. Ce n'est pas une erreur de calibration : c'est un choix délibéré, hérité des premiers films infrarouges aériens des années 1940, qui rend la végétation immédiatement identifiable à l'œil, sans calculer le moindre indice.",
+  },
+
+  { type: "heading", text: "5. Les principales plateformes accessibles gratuitement", level: "lycee" },
+  {
+    type: "table",
+    headers: ["Mission", "Opérateur", "Résolution", "Revisite", "Accès"],
+    rows: [
+      ["Sentinel-2", "ESA / Copernicus", "10–20 m", "~5 jours (2 satellites)", "Copernicus Data Space Ecosystem (gratuit)"],
+      ["Sentinel-1 (radar)", "ESA / Copernicus", "5–20 m", "~6 jours", "Copernicus Data Space Ecosystem (gratuit)"],
+      ["Landsat 8/9", "USGS/NASA", "15–30 m (pan 15 m)", "~16 jours (8 jours combiné)", "USGS EarthExplorer (gratuit)"],
+    ],
+  },
+  {
+    type: "marginnote",
+    title: "Anecdote : Landsat 1 ne s'est jamais appelé Landsat 1",
+    text: "Lancé le 23 juillet 1972, le tout premier satellite civil d'observation de la Terre s'appelait ERTS-1 (Earth Resources Technology Satellite). La NASA le rebaptise \"Landsat 1\" en 1975, seulement après le lancement d'ERTS-2, pour donner à toute la future famille de satellites un nom de programme cohérent.",
+  },
+  {
+    type: "paragraph",
+    text: "La résolution temporelle n'a d'intérêt que si elle sert à voir un changement réel. La planche suivante interroge en direct le catalogue public Sentinel-2 et compare deux vraies acquisitions de la même emprise, été et hiver.",
+  },
+  {
+    type: "live",
+    name: "sentinel-swipe",
+    caption: "Planche vivante. NDVI recalculé en direct sur deux acquisitions Sentinel-2 réelles, même emprise que le jeu de données canonique.",
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : la réflectance varie selon la longueur d'onde et la surface, c'est la base de toute image satellite ; l'optique voit la lumière réfléchie (bloqué par les nuages), le radar émet sa propre onde (traverse les nuages) ; quatre résolutions (spatiale, spectrale, temporelle, radiométrique) s'opposent toujours en compromis ; la photo-interprétation (forme, texture, teinte, ombre, motif, contexte) reste la première compétence, avant tout calcul.",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Continuer : du rouge et du NIR au NDVI",
+    description: "Le module Les Couleurs combine les bandes présentées ici (rouge, NIR, SWIR) en indices interprétables : NDVI, NDMI, NDBI et au-delà.",
+  },
+
+  // ================================================================
+  // PISTE LICENCE / BUT
+  // ================================================================
+  { type: "heading", text: "1. Le rayonnement électromagnétique et la signature spectrale", level: "superieur" },
+  {
+    type: "brique",
+    id: "em-spectrum-luminance",
+    title: "Spectre électromagnétique et luminance",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "Le Soleil émet un rayonnement qui couvre un large spectre de longueurs d'onde. Une partie atteint le sol, y est en partie absorbée et en partie réfléchie vers le capteur satellite. La proportion réfléchie, la réflectance, varie selon la longueur d'onde et selon la nature de la surface observée. C'est cette signature spectrale qui permet de distinguer une forêt d'un champ, d'un parking ou d'un plan d'eau.",
+      },
+      {
+        type: "table",
+        headers: ["Domaine", "Longueur d'onde", "Usage typique"],
+        rows: [
+          ["Visible (bleu, vert, rouge)", "~ 0.4 – 0.7 µm", "Composition couleur naturelle, distinction eau/sol/végétation"],
+          ["Proche infrarouge (NIR)", "~ 0.7 – 1.3 µm", "Très réfléchi par la végétation en bonne santé ; cœur de la plupart des indices de végétation"],
+          ["Infrarouge à ondes courtes (SWIR)", "~ 1.3 – 2.5 µm", "Sensible à l'humidité (végétation, sol) ; cœur des indices d'humidité et de stress hydrique"],
+          ["Infrarouge thermique", "~ 8 – 14 µm", "Température de surface, détection de foyers actifs, îlots de chaleur urbains"],
+        ],
+      },
+    ],
+  },
+  {
+    type: "diagram",
+    name: "em-spectrum",
+    caption: "Les quatre domaines du spectre utilisés en télédétection, du visible au thermique.",
   },
   {
     type: "diagram",
@@ -68,26 +216,33 @@ export const teledetectionContent: ContentBlock[] = [
     text: "La bande B11 (SWIR) de Sentinel-2 est calée à 1.61 µm précisément parce que cette longueur d'onde tombe dans une fenêtre atmosphérique propre, entre deux bandes d'absorption de la vapeur d'eau. Un capteur mal positionné spectralement mesurerait surtout l'humidité de l'atmosphère traversée, pas celle de la végétation au sol : ce qui invaliderait un indice comme le NDMI.",
   },
 
-  { type: "heading", text: "4. Capteurs optiques vs radar (SAR)" },
+  { type: "heading", text: "4. Capteurs optiques vs radar (SAR)", level: "superieur" },
   {
-    type: "comparison",
-    items: [
+    type: "brique",
+    id: "capteurs-optique-radar",
+    title: "Capteurs optiques vs radar",
+    blocks: [
       {
-        label: "Optique (passif)",
-        points: [
-          "Mesure la lumière solaire réfléchie",
-          "Nécessite un ciel dégagé (bloqué par les nuages)",
-          "Résolution spectrale riche (plusieurs bandes fines)",
-          "Ex. : Sentinel-2, Landsat, Pléiades",
-        ],
-      },
-      {
-        label: "Radar / SAR (actif)",
-        points: [
-          "Émet sa propre onde radar et mesure le signal retour (rétrodiffusion)",
-          "Traverse les nuages, fonctionne de nuit",
-          "Sensible à la structure/rugosité/teneur en eau de surface, pas à la couleur",
-          "Ex. : Sentinel-1, TerraSAR-X, ALOS PALSAR",
+        type: "comparison",
+        items: [
+          {
+            label: "Optique (passif)",
+            points: [
+              "Mesure la lumière solaire réfléchie",
+              "Nécessite un ciel dégagé (bloqué par les nuages)",
+              "Résolution spectrale riche (plusieurs bandes fines)",
+              "Ex. : Sentinel-2, Landsat, Pléiades",
+            ],
+          },
+          {
+            label: "Radar / SAR (actif)",
+            points: [
+              "Émet sa propre onde radar et mesure le signal retour (rétrodiffusion)",
+              "Traverse les nuages, fonctionne de nuit",
+              "Sensible à la structure/rugosité/teneur en eau de surface, pas à la couleur",
+              "Ex. : Sentinel-1, TerraSAR-X, ALOS PALSAR",
+            ],
+          },
         ],
       },
     ],
@@ -102,7 +257,7 @@ export const teledetectionContent: ContentBlock[] = [
     rows: [
       ["Bande X", "~ 2.5 – 3.75 cm", "Très sensible à la texture fine ; usage militaire, urbain haute résolution"],
       ["Bande C", "~ 3.75 – 7.5 cm", "Compromis pénétration/sensibilité ; standard de Sentinel-1"],
-      ["Bande L", "~ 15 – 30 cm", "Pénètre la canopée forestière et le sol sec ; ALOS PALSAR, NISAR (2024)"],
+      ["Bande L", "~ 15 – 30 cm", "Pénètre la canopée forestière et le sol sec ; ALOS PALSAR, NISAR (lancé en 2025)"],
     ],
   },
   {
@@ -141,65 +296,43 @@ export const teledetectionContent: ContentBlock[] = [
     text: "La réflectance mesurée d'une même surface varie selon l'angle d'éclairage solaire et l'angle de visée du capteur, un effet décrit par la fonction de distribution de réflectance bidirectionnelle (BRDF). Deux images d'un même champ, prises à des heures ou des saisons différentes, ne sont donc jamais strictement comparables sans en tenir compte : c'est une des raisons pour lesquelles les grands producteurs de données (Copernicus, USGS) livrent des composites normalisés BRDF pour les analyses de longues séries temporelles.",
   },
 
-  { type: "heading", text: "6. Les quatre résolutions d'une image satellite" },
+  { type: "heading", text: "6. Les quatre résolutions, quantifiées", level: "superieur" },
   {
-    type: "list",
-    items: [
-      "Résolution spatiale : taille au sol d'un pixel (ex. Sentinel-2 : 10 m en visible/NIR, 20 m sur certaines bandes SWIR)",
-      "Résolution spectrale : nombre et finesse des bandes mesurées (Sentinel-2 : 13 bandes, du visible au SWIR)",
-      "Résolution temporelle : fréquence de revisite du même endroit (Sentinel-2 : ~5 jours avec les deux satellites jumeaux)",
-      "Résolution radiométrique : nombre de niveaux d'intensité codés par pixel (Sentinel-2 : quantification 12 bits, soit 4096 niveaux par bande)",
+    type: "brique",
+    id: "resolutions-capteurs",
+    title: "Résolutions spatiale, spectrale, temporelle",
+    blocks: [
+      {
+        type: "list",
+        items: [
+          "Résolution spatiale : taille au sol d'un pixel (ex. Sentinel-2 : 10 m en visible/NIR, 20 m sur certaines bandes SWIR)",
+          "Résolution spectrale : nombre et finesse des bandes mesurées (Sentinel-2 : 13 bandes, du visible au SWIR)",
+          "Résolution temporelle : fréquence de revisite du même endroit (Sentinel-2 : ~5 jours avec les deux satellites jumeaux)",
+          "Résolution radiométrique : nombre de niveaux d'intensité codés par pixel (Sentinel-2 : quantification 12 bits, soit 4096 niveaux par bande)",
+        ],
+      },
+      {
+        type: "formula",
+        label: "Résolution radiométrique : le nombre de niveaux codables",
+        formula: "Nombre de niveaux = 2^(nombre de bits)",
+        note: "8 bits → 256 niveaux (image classique) ; 10 bits → 1024 niveaux ; 12 bits → 4096 niveaux (Sentinel-2) ; 16 bits → 65 536 niveaux. Plus la résolution radiométrique est élevée, plus le capteur distingue de nuances fines de réflectance, un enjeu direct pour la sensibilité d'un indice comme le NDVI dans les valeurs intermédiaires.",
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        title: "Un compromis, jamais gratuit",
+        text: "Aucun satellite ne maximise les quatre résolutions à la fois : c'est un compromis physique et budgétaire, imposé par la conservation de l'énergie du signal. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) capte moins de photons par pixel : il doit soit élargir ses bandes spectrales (moins de résolution spectrale), soit réduire sa fauchée (moins de résolution temporelle) pour conserver un rapport signal/bruit exploitable. Un capteur à revisite quotidienne (ex. MODIS) a en retour une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
+      },
     ],
   },
-  {
-    type: "formula",
-    label: "Résolution radiométrique : le nombre de niveaux codables",
-    formula: "Nombre de niveaux = 2^(nombre de bits)",
-    note: "8 bits → 256 niveaux (image classique) ; 10 bits → 1024 niveaux ; 12 bits → 4096 niveaux (Sentinel-2) ; 16 bits → 65 536 niveaux. Plus la résolution radiométrique est élevée, plus le capteur distingue de nuances fines de réflectance, un enjeu direct pour la sensibilité d'un indice comme le NDVI dans les valeurs intermédiaires.",
-  },
-  {
-    type: "callout",
-    tone: "warning",
-    title: "Un compromis, jamais gratuit",
-    text: "Aucun satellite ne maximise les quatre résolutions à la fois : c'est un compromis physique et budgétaire, imposé par la conservation de l'énergie du signal. Un capteur très haute résolution spatiale (ex. Pléiades, 0.5 m) capte moins de photons par pixel : il doit soit élargir ses bandes spectrales (moins de résolution spectrale), soit réduire sa fauchée (moins de résolution temporelle) pour conserver un rapport signal/bruit exploitable. Un capteur à revisite quotidienne (ex. MODIS) a en retour une résolution spatiale grossière (250 m à 1 km). Le choix du capteur dépend toujours de l'échelle du phénomène étudié.",
-  },
   { type: "game" },
-
-  {
-    type: "paragraph",
-    text: "La résolution temporelle n'a d'intérêt que si elle sert à voir un changement réel. La planche suivante interroge en direct le catalogue public Sentinel-2 (même source qu'utilisée pour construire le jeu de données canonique du site) et compare deux vraies acquisitions de la même emprise, été et hiver.",
-  },
   {
     type: "live",
     name: "sentinel-swipe",
     caption: "Planche vivante. NDVI recalculé en direct sur deux acquisitions Sentinel-2 réelles, même emprise que le jeu de données canonique.",
   },
 
-  { type: "heading", text: "7. Architecture d'un capteur : push-broom vs whisk-broom", level: "approfondissement" },
-  {
-    type: "comparison",
-    items: [
-      {
-        label: "Push-broom (barrette)",
-        points: [
-          "Une ligne fixe de détecteurs, perpendiculaire à la trajectoire",
-          "Chaque ligne au sol est imagée d'un coup, le déplacement du satellite balaie les lignes suivantes",
-          "Pas de pièce mobile : plus fiable, plus léger, meilleur rapport signal/bruit",
-          "Cas de Sentinel-2, SPOT, Pléiades",
-        ],
-      },
-      {
-        label: "Whisk-broom (miroir oscillant)",
-        points: [
-          "Un miroir mobile balaie chaque ligne perpendiculairement à la trajectoire, détecteur par détecteur",
-          "Mécanique plus complexe, historiquement plus simple à fabriquer avec peu de détecteurs",
-          "Cas de Landsat TM/ETM+ et de MODIS",
-        ],
-      },
-    ],
-  },
-
-  { type: "heading", text: "8. Les principales plateformes accessibles gratuitement" },
+  { type: "heading", text: "7. Les principales plateformes accessibles gratuitement", level: "superieur" },
   {
     type: "table",
     headers: ["Mission", "Opérateur", "Résolution", "Revisite", "Accès"],
@@ -213,41 +346,12 @@ export const teledetectionContent: ContentBlock[] = [
     ],
   },
   {
-    type: "callout",
-    tone: "example",
-    title: "Lien avec le module Indices spectraux",
-    text: "Sentinel-2 est la référence utilisée dans quasiment tous les cas pratiques de ce cours : gratuite, résolution spatiale suffisante pour du travail à l'échelle d'une parcelle ou d'un massif, et dotée des bandes rouge/NIR/SWIR nécessaires au calcul du NDVI, NDMI et NDBI présentés dans le module suivant.",
-  },
-  {
     type: "marginnote",
     title: "Anecdote : Landsat 1 ne s'est jamais appelé Landsat 1",
     text: "Lancé le 23 juillet 1972, le tout premier satellite civil d'observation de la Terre s'appelait ERTS-1 (Earth Resources Technology Satellite). La NASA le rebaptise \"Landsat 1\" en 1975, seulement après le lancement d'ERTS-2, pour donner à toute la future famille de satellites un nom de programme cohérent. Le nom d'origine ne survit aujourd'hui que dans les archives scientifiques les plus anciennes.",
   },
 
-  { type: "heading", text: "9. La photo-interprétation", level: "lycee" },
-  {
-    type: "paragraph",
-    text: "Avant tout calcul d'indice, la première compétence en télédétection reste la lecture directe de l'image à l'œil, une compétence qui reste précieuse aujourd'hui pour vérifier un résultat automatique, et directement utile en épreuve de commentaire de document. Six clés de lecture classiques, héritées de la photo-interprétation aérienne militaire et civile du XXᵉ siècle :",
-  },
-  {
-    type: "list",
-    items: [
-      "La forme : un rectangle très régulier évoque un bâtiment ou une serre, une ligne sinueuse un cours d'eau ou une route",
-      "La texture : lisse pour un plan d'eau ou un toit, grenue pour une forêt vue en résolution fine",
-      "La teinte / le ton : la coloration en composition naturelle (rouge/vert/bleu) ou fausse couleur (souvent NIR/rouge/vert, qui fait ressortir la végétation en rouge vif)",
-      "L'ombre portée : trahit la hauteur d'un objet (bâtiment, arbre) que l'image seule, vue du dessus, ne montre pas directement",
-      "Le motif (pattern) : une répétition régulière (rangées d'arbres d'un verger, trame d'un lotissement) signale une organisation humaine ou agricole",
-      "L'association / le contexte : un bâtiment isolé au milieu de parcelles agricoles se lit différemment du même bâtiment en plein tissu urbain",
-    ],
-  },
-  {
-    type: "callout",
-    tone: "info",
-    title: "Composition naturelle vs fausse couleur",
-    text: "Une composition \"fausse couleur\" affiche le proche infrarouge à la place du rouge visible : la végétation, très réfléchissante en NIR, apparaît alors en rouge vif plutôt qu'en vert. Ce n'est pas une erreur de calibration : c'est un choix délibéré, hérité des premiers films infrarouges aériens des années 1940, qui rend la végétation immédiatement identifiable à l'œil, sans calculer le moindre indice.",
-  },
-
-  { type: "heading", text: "10. De la valeur brute (DN) à la réflectance physique", level: "superieur" },
+  { type: "heading", text: "8. De la valeur brute (DN) à la réflectance physique", level: "superieur" },
   {
     type: "paragraph",
     text: "La valeur d'un pixel telle qu'enregistrée par le capteur (Digital Number, DN) n'est pas directement une réflectance : c'est une mesure brute de luminance, propre au capteur et à ses réglages. Il faut la convertir en une grandeur physique standardisée avant de pouvoir comparer deux images entre elles, ou de calculer un indice dont le sens physique est garanti.",
@@ -259,7 +363,7 @@ export const teledetectionContent: ContentBlock[] = [
     note: "L = luminance mesurée, ESUN = éclairement solaire exo-atmosphérique dans la bande, d = distance Terre-Soleil en unités astronomiques, θs = angle zénithal solaire. Cette formule ramène toute image, quel que soit le capteur, l'heure et la saison, à une réflectance comparable, comprise entre 0 et 1.",
   },
 
-  { type: "heading", text: "11. Prétraiter une image avant de l'utiliser", level: "superieur" },
+  { type: "heading", text: "9. Prétraiter une image avant de l'utiliser", level: "superieur" },
   {
     type: "paragraph",
     text: "Une image satellite brute (niveau L1C pour Sentinel-2) n'est pas directement comparable à une autre image, ni même exploitable pour un indice fiable, sans un minimum de correction :",
@@ -317,8 +421,53 @@ export const teledetectionContent: ContentBlock[] = [
     title: "Toujours vérifier le masque de nuages",
     text: "Le niveau L2A de Sentinel-2 fournit une bande SCL (Scene Classification Layer) qui classe chaque pixel : végétation, sol nu, eau, nuage, ombre de nuage, neige... Calculer un indice sans exclure les pixels nuageux ou leurs ombres produit des valeurs aberrantes, parfois indétectables à l'œil sur une seule bande mais visibles comme un bruit incohérent sur une série temporelle.",
   },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : rayonnement réfléchi (visible/NIR/SWIR, dépend du Soleil) ≠ rayonnement émis (thermique, dépend de la température de la surface, loi de Wien) ; une bande n'existe que dans une fenêtre atmosphérique propre ; optique = passif/bloqué par les nuages, radar = actif/traverse les nuages ; quatre résolutions en compromis permanent ; DN → réflectance TOA → réflectance BOA (correction atmosphérique) est la chaîne de traitement avant tout indice fiable.",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Lien avec le module Indices spectraux",
+    text: "Sentinel-2 est la référence utilisée dans quasiment tous les cas pratiques de ce cours : gratuite, résolution spatiale suffisante pour du travail à l'échelle d'une parcelle ou d'un massif, et dotée des bandes rouge/NIR/SWIR nécessaires au calcul du NDVI, NDMI et NDBI présentés dans le module suivant.",
+  },
+  {
+    type: "link",
+    to: "/module/indices-spectraux",
+    label: "Continuer : du rouge et du NIR au NDVI",
+    description: "Le module Les Couleurs combine les bandes présentées ici (rouge, NIR, SWIR) en indices interprétables : NDVI, NDMI, NDBI et au-delà.",
+  },
 
-  { type: "heading", text: "12. Au-delà du multispectral : l'imagerie hyperspectrale", level: "approfondissement" },
+  // ================================================================
+  // PISTE MASTER / RECHERCHE
+  // ================================================================
+  { type: "heading", text: "1. Architecture d'un capteur : push-broom vs whisk-broom", level: "approfondissement" },
+  {
+    type: "comparison",
+    items: [
+      {
+        label: "Push-broom (barrette)",
+        points: [
+          "Une ligne fixe de détecteurs, perpendiculaire à la trajectoire",
+          "Chaque ligne au sol est imagée d'un coup, le déplacement du satellite balaie les lignes suivantes",
+          "Pas de pièce mobile : plus fiable, plus léger, meilleur rapport signal/bruit",
+          "Cas de Sentinel-2, SPOT, Pléiades",
+        ],
+      },
+      {
+        label: "Whisk-broom (miroir oscillant)",
+        points: [
+          "Un miroir mobile balaie chaque ligne perpendiculairement à la trajectoire, détecteur par détecteur",
+          "Mécanique plus complexe, historiquement plus simple à fabriquer avec peu de détecteurs",
+          "Cas de Landsat TM/ETM+ et de MODIS",
+        ],
+      },
+    ],
+  },
+
+  { type: "heading", text: "2. Au-delà du multispectral : l'imagerie hyperspectrale", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Un capteur multispectral comme Sentinel-2 mesure une dizaine de bandes larges (quelques dizaines à une centaine de nanomètres chacune). Un capteur hyperspectral (ex. PRISMA de l'agence spatiale italienne, EnMAP allemand, ou l'instrument aéroporté AVIRIS de la NASA) mesure plusieurs centaines de bandes contiguës, chacune large de quelques nanomètres seulement, une courbe de réflectance quasi continue par pixel plutôt qu'un échantillonnage épars.",
@@ -338,20 +487,20 @@ export const teledetectionContent: ContentBlock[] = [
     text: "Un pixel de 20-30 m (résolution typique des capteurs hyperspectraux actuels) contient presque toujours plusieurs matériaux mélangés. Le démélange spectral (spectral unmixing) exploite la richesse des centaines de bandes pour estimer la proportion de chaque matériau \"pur\" (endmember) dans un pixel, un problème mal posé avec seulement une dizaine de bandes multispectrales, mais abordable avec un vrai spectre hyperspectral.",
   },
 
-  { type: "heading", text: "13. La physique complète : équation de transfert radiatif et polarimétrie SAR", level: "approfondissement" },
+  { type: "heading", text: "3. La physique complète : équation de transfert radiatif et polarimétrie SAR", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "La formule DN → réflectance TOA de la section 10 est une approximation calibrée ; la grandeur physique réellement mesurée par le capteur obéit à l'équation de transfert radiatif (ETR), qui décrit tout ce que subit le rayonnement entre le Soleil et le capteur.",
+    text: "La formule DN → réflectance TOA (piste Licence/BUT) est une approximation calibrée ; la grandeur physique réellement mesurée par le capteur obéit à l'équation de transfert radiatif (ETR), qui décrit tout ce que subit le rayonnement entre le Soleil et le capteur.",
   },
   {
     type: "formula",
     label: "Équation de transfert radiatif simplifiée (cas optique)",
     formula: "L_capteur = L_surface · T_atm + L_path",
-    note: "L_surface = radiance réellement issue de la surface (ce qu'on veut mesurer), T_atm = transmittance de l'atmosphère (fraction du signal qui la traverse sans être diffusée ni absorbée), L_path = radiance de trajet (\"path radiance\", la lumière diffusée par l'atmosphère elle-même qui atteint le capteur sans jamais avoir touché le sol : c'est ce terme, non nul même au-dessus d'une surface parfaitement noire, qui justifie la Dark Object Subtraction de la section précédente). Un modèle comme 6S (Vermote et al., 1997) résout cette équation en modélisant T_atm et L_path à partir de la composition atmosphérique réelle, plutôt que de l'estimer empiriquement comme le fait la DOS.",
+    note: "L_surface = radiance réellement issue de la surface (ce qu'on veut mesurer), T_atm = transmittance de l'atmosphère (fraction du signal qui la traverse sans être diffusée ni absorbée), L_path = radiance de trajet (\"path radiance\", la lumière diffusée par l'atmosphère elle-même qui atteint le capteur sans jamais avoir touché le sol : c'est ce terme, non nul même au-dessus d'une surface parfaitement noire, qui justifie la Dark Object Subtraction). Un modèle comme 6S (Vermote et al., 1997) résout cette équation en modélisant T_atm et L_path à partir de la composition atmosphérique réelle, plutôt que de l'estimer empiriquement comme le fait la DOS.",
   },
   {
     type: "paragraph",
-    text: "Côté radar, la rétrodiffusion (σ°, module Le Regard section 4) dépend du mécanisme physique de diffusion, que la polarimétrie SAR permet de distinguer en combinant plusieurs polarisations d'émission/réception (HH, VV, HV, VH) :",
+    text: "Côté radar, la rétrodiffusion (σ°) dépend du mécanisme physique de diffusion, que la polarimétrie SAR permet de distinguer en combinant plusieurs polarisations d'émission/réception (HH, VV, HV, VH) :",
   },
   {
     type: "list",
@@ -368,16 +517,28 @@ export const teledetectionContent: ContentBlock[] = [
     text: "La décomposition de Freeman-Durden (1998) exploite précisément ces trois mécanismes pour recomposer, à partir des polarisations mesurées, la contribution relative de la diffusion de surface, de volume et du double rebond dans chaque pixel, une méthode qui permet, par exemple, de distinguer une forêt inondée (double rebond tronc/eau, signature radar unique) d'une forêt sur sol sec (diffusion de volume dominante), invisible en optique sous la canopée.",
   },
 
-  { type: "heading", text: "14. Température de brillance : de la radiance thermique à la température", level: "approfondissement" },
+  { type: "heading", text: "4. Température de brillance : de la radiance thermique à la température", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "La bande thermique (module précédent, section \"rayonnement réfléchi et émis\") mesure une radiance, pas directement une température : il faut inverser la loi de Planck pour retrouver la température de brillance du pixel.",
+    text: "La bande thermique (piste Licence/BUT, section rayonnement réfléchi/émis) mesure une radiance, pas directement une température : il faut inverser la loi de Planck pour retrouver la température de brillance du pixel.",
   },
   {
     type: "formula",
     label: "Température de brillance (inversion simplifiée de Planck)",
     formula: "T_b = K2 / ln(K1/L_capteur + 1)",
     note: "K1 et K2 sont des constantes de calibration propres à chaque capteur thermique (ex. Landsat TIRS bandes 10/11), fournies dans les métadonnées de chaque scène. T_b est une température de brillance, pas la température de surface réelle : elle suppose un corps noir parfait (émissivité = 1). La température de surface réelle (Land Surface Temperature, LST) nécessite une correction d'émissivité supplémentaire, propre à chaque type de surface (l'eau et la végétation dense ont une émissivité proche de 1 ; le métal ou le sable sec, nettement plus faible).",
+  },
+  {
+    type: "callout",
+    tone: "question",
+    title: "À toi de voir",
+    text: "Une friche industrielle en tôle métallique et un plan d'eau adjacent peuvent afficher, sur une même image thermique, une température de brillance très proche alors que leur température physique réelle diffère nettement. En te basant sur la formule ci-dessus et sur l'émissivité de chaque surface, explique pourquoi — et ce que cela implique pour interpréter une carte d'îlot de chaleur urbain sans correction d'émissivité.",
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : push-broom (barrette fixe, Sentinel-2) vs whisk-broom (miroir mobile, Landsat/MODIS) ; l'hyperspectral échantillonne un spectre quasi continu, au prix d'un volume de données démultiplié ; l'équation de transfert radiatif (L_surface, T_atm, L_path) formalise ce que la DOS ne fait qu'approcher empiriquement ; la polarimétrie SAR distingue diffusion de surface, de volume et double rebond ; une température de brillance suppose une émissivité de 1, jamais vraie en pratique.",
+    ],
   },
   {
     type: "link",

@@ -45,6 +45,7 @@ export function GuidedCase({ set }: { set: ExerciseSet }) {
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Rédige ta réponse avant de voir le corrigé (non enregistrée)…"
+            aria-label="Ta réponse au cas pratique"
             rows={3}
             className="w-full bg-ink border border-gilt/20 px-3 py-2 text-sm text-parchment placeholder:text-parchment-dim/40 focus:outline-none focus:border-gilt/50 mb-3"
           />

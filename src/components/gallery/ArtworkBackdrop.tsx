@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from "react"
 import type { Artwork } from "@/data/artworks"
 import { cn } from "@/lib/utils"
+import { toWebpSrc } from "@/lib/imageSrc"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import { useArtworkKenBurns } from "@/hooks/useArtworkKenBurns"
 import { useArtworkParallax } from "@/hooks/useArtworkParallax"
@@ -39,15 +40,25 @@ export function ArtworkBackdrop({ art, figure, children, className, eager = true
           bord — l'image elle-même (Ken Burns) continue de zoomer/panner à
           l'intérieur, les deux mouvements se composent sans se gêner. */}
       <div ref={parallaxRef} className="absolute -inset-y-[10%] inset-x-0">
-        <img
-          ref={imgRef}
-          src={art.src}
-          alt={art.alt}
-          loading={eager ? "eager" : "lazy"}
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <picture>
+          <source srcSet={toWebpSrc(art.src)} type="image/webp" />
+          <img
+            ref={imgRef}
+            src={art.src}
+            alt={art.alt}
+            loading={eager ? "eager" : "lazy"}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </picture>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/25" />
+      {/* Voile de lisibilité volontairement fixé au noir (pas à `ink`, qui suit le
+          thème) : son rôle est d'assombrir la toile photographiée pour que le texte
+          reste lisible dessus, pas de suivre le confort jour/nuit du site — en
+          thème clair, `ink` devient crème et un lavis crème à 25-60% n'assombrit
+          quasiment pas une zone déjà claire de l'œuvre (Cellarius, ciels de
+          Vermeer…), contrairement à un lavis sombre. Imperceptible en thème
+          sombre : `ink` y vaut déjà rgb(13 14 18), presque noir. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/25" />
       <div className="pointer-events-none absolute inset-0 shadow-[inset_0_0_180px_rgba(0,0,0,0.7)]" />
 
       <div className="relative z-10 h-full">{children}</div>

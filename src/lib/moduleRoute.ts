@@ -8,16 +8,16 @@ import { slugify } from "@/lib/slug"
  */
 export const COURS_SLUGS = new Set([
   "fondamentaux",
+  "projections-avancees",
+  "outils-sig",
+  "statistiques-spatiales",
+  "bases-donnees-spatiales",
+  "cartographie-web",
   "teledetection",
   "indices-spectraux",
-  "outils-sig",
-  "traitements-ia",
-  "projections-avancees",
-  "cartographie-web",
-  "statistiques-spatiales",
   "photogrammetrie-drones",
   "lidar",
-  "bases-donnees-spatiales",
+  "traitements-ia",
   "etudes-de-cas-sectorielles",
 ])
 

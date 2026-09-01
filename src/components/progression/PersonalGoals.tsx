@@ -79,12 +79,14 @@ export function PersonalGoals() {
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="Nouvel objectif (ex. terminer Les Couleurs)"
+          aria-label="Intitulé du nouvel objectif"
           className="bg-ink border border-gilt/20 px-3 py-2 text-sm text-parchment placeholder:text-parchment-dim/40 focus:outline-none focus:border-gilt/50"
         />
         <div className="flex gap-2">
           <select
             value={moduleSlug}
             onChange={(e) => setModuleSlug(e.target.value)}
+            aria-label="Salle liée à l'objectif (optionnel)"
             className="flex-1 bg-ink border border-gilt/20 px-3 py-2 text-sm text-parchment-dim focus:outline-none focus:border-gilt/50"
           >
             <option value="">Salle liée (optionnel)</option>
@@ -98,6 +100,7 @@ export function PersonalGoals() {
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            aria-label="Date d'échéance de l'objectif"
             className="bg-ink border border-gilt/20 px-3 py-2 text-sm text-parchment-dim focus:outline-none focus:border-gilt/50"
           />
         </div>
@@ -111,8 +114,8 @@ export function PersonalGoals() {
         </button>
       </div>
 
-      <p className="font-mono text-[10px] text-parchment-dim/50 mt-4">
-        Stocké séparément de la progression, uniquement dans ce navigateur. <Link to="/parcours" className="underline hover:text-gilt">Voir les parcours conseillés</Link> pour t'inspirer d'une échéance.
+      <p className="font-mono text-[10px] text-parchment-dim/80 mt-4">
+        Stocké séparément de la progression, uniquement dans ce navigateur. <Link to="/parcours" className="text-gilt underline hover:text-gilt-bright">Voir les parcours conseillés</Link> pour t'inspirer d'une échéance.
       </p>
     </div>
   )
