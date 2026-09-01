@@ -4,6 +4,7 @@ import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { ChapterAccordion } from "@/components/content/ChapterAccordion"
 import { cn } from "@/lib/utils"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 const typeLabel: Record<string, string> = {
   manuel: "Manuel",
@@ -22,6 +23,7 @@ const typeStyle: Record<string, string> = {
 }
 
 export function ReferencesPage() {
+  usePageMeta("Références", "Bibliographie de géomatique et télédétection groupée par thème.")
   const art = artworks["ressources-references"]
 
   return (

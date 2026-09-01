@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Site en HashRouter (React Router, hébergement statique sans config serveur —
+  voir README.md) : toutes les routes ci-dessous partagent le même document
+  servi (/, avec un fragment #/route côté client), donc ce sitemap est un
+  best-effort plutôt qu'un sitemap strictement conforme à la spec (le fragment
+  après # n'est pas envoyé au serveur et certains robots l'ignorent). Il reste
+  utile pour les crawlers qui exécutent le JS et suivent les liens internes.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://geo-in-spectra.vercel.app/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+
+  <url><loc>https://geo-in-spectra.vercel.app/#/discipulus</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/discipulus/cours</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/discipulus/methodes</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/discipulus/progression</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/discipulus/revision</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister/cours</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister/programme</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister/evaluation</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister/pedagogie</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/magister/classe</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+
+  <url><loc>https://geo-in-spectra.vercel.app/#/ressources</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/recherche</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/glossaire</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/references</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/pieges-frequents</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/formulaire</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/jeux-de-donnees</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/parcours</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/annales</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/fondamentaux</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/teledetection</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/indices-spectraux</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/outils-sig</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/traitements-ia</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/methodologie</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/projections-avancees</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/cartographie-web</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/statistiques-spatiales</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/photogrammetrie-drones</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/lidar</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/bases-donnees-spatiales</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/etudes-de-cas-sectorielles</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://geo-in-spectra.vercel.app/#/module/travaux-pratiques</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>

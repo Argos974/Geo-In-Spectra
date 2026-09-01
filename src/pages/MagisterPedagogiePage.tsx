@@ -4,9 +4,10 @@ import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { ChapterAccordion } from "@/components/content/ChapterAccordion"
 import { ChapterNav } from "@/components/content/ChapterNav"
 import { slugify } from "@/lib/slug"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
- * Quatrième pilier de Magister (avec Cours, Programme et Évaluation) — comble
+ * Quatrième pilier de Magister (avec Atelier, Programme et Évaluation) — comble
  * l'asymétrie avec Discipulus (4 onglets : Cours/Méthodes/Progression/Révision
  * contre 3 jusqu'ici côté Magister). Symétrique de Méthodes (Discipulus,
  * "qu'est-ce qu'on attend dans la copie") et d'Évaluation ("comment noter la
@@ -133,6 +134,10 @@ const GROUPS: PedagogieGroup[] = [
 ]
 
 export function MagisterPedagogiePage() {
+  usePageMeta(
+    "Pédagogie — Magister",
+    "Séquence de guidage et blocages d'écriture fréquents par finalité, pour animer une séance de géomatique.",
+  )
   const art = artworks["magister-pedagogie"]
 
   return (
@@ -173,7 +178,7 @@ export function MagisterPedagogiePage() {
                   <ol className="space-y-3">
                     {grid.sequence.map((step, j) => (
                       <li key={j} className="flex gap-3">
-                        <span className="font-mono text-xs text-gilt/60 shrink-0 mt-1">{String(j + 1).padStart(2, "0")}</span>
+                        <span className="font-mono text-xs text-gilt shrink-0 mt-1">{String(j + 1).padStart(2, "0")}</span>
                         <span className="text-parchment-dim text-sm leading-relaxed text-justify">{step}</span>
                       </li>
                     ))}

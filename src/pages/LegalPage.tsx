@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom"
 import { artworks } from "@/data/artworks"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 export function LegalPage() {
+  usePageMeta("Mentions légales", "Éditeur, hébergement, données personnelles et crédits iconographiques de Geo-In-Spectra.")
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-4xl">

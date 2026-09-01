@@ -12,6 +12,7 @@ import { ActivityHeatmap } from "@/components/progression/ActivityHeatmap"
 import { PersonalGoals } from "@/components/progression/PersonalGoals"
 import { Recommendations } from "@/components/progression/Recommendations"
 import { BadgeList } from "@/components/progression/BadgeList"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
  * Bilan cumulé, entièrement local (localStorage, rien n'est envoyé à un
@@ -24,6 +25,10 @@ import { BadgeList } from "@/components/progression/BadgeList"
  * de compte — écrase le bilan local à l'import, ne fusionne pas.
  */
 export function BilanPage() {
+  usePageMeta(
+    "Progression — Discipulus",
+    "Bilan personnel : salles visitées, scores aux quiz, badges et objectifs, entièrement local au navigateur.",
+  )
   const art = artworks["discipulus-progression"]
   const [progress, setProgress] = useState<Record<string, ModuleProgress>>(() => getProgress())
   const [importFeedback, setImportFeedback] = useState<"ok" | "error" | null>(null)

@@ -5,6 +5,7 @@ import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { scrollToAnchor } from "@/lib/lenisStore"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 function groupByLetter(terms: typeof glossary) {
   const groups = new Map<string, typeof glossary>()
@@ -17,6 +18,10 @@ function groupByLetter(terms: typeof glossary) {
 }
 
 export function GlossaryPage() {
+  usePageMeta(
+    "Glossaire",
+    "Glossaire des termes de géomatique et télédétection, sourcé, avec recherche et renvoi vers chaque salle.",
+  )
   const art = artworks["ressources-glossaire"]
   const location = useLocation()
   // Arrivée depuis un renvoi inline (linkifyGlossaryTerms, dans une salle de
@@ -64,6 +69,7 @@ export function GlossaryPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher un terme…"
+          aria-label="Rechercher un terme du glossaire"
           className="w-full bg-white/[0.02] border border-gilt/25 px-4 py-3 mb-12 font-body text-parchment placeholder:text-parchment-dim/50 focus:outline-none focus:border-gilt/60 transition-colors"
         />
 

@@ -1,29 +1,45 @@
 import { Link } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { moduleContent } from "@/content"
-import type { ContentBlock } from "@/content/types"
+import type { ContentBlock, ContentLevel } from "@/content/types"
 import { slugify } from "@/lib/slug"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { moduleTreeRoute } from "@/lib/moduleRoute"
+import { setPendingSectionLevel } from "@/lib/pendingSectionLevel"
+import { LEVEL_TOGGLE_LABEL } from "@/lib/levelFilter"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 type WarningCallout = Extract<ContentBlock, { type: "callout" }> & { tone: "warning" }
 
 /**
  * Page dérivée du contenu existant, pas rédigée à la main : rassemble tous les
  * callouts "warning" ("À ne pas confondre", mises en garde...) déjà écrits
- * dans les 7 salles. Aucun risque de désynchronisation — un nouveau piège
+ * dans les salles. Aucun risque de désynchronisation — un nouveau piège
  * ajouté à une salle apparaît ici automatiquement, sans rien dupliquer.
+ *
+ * Voir FormulairePage.tsx pour la même remarque sur les 3 pistes : un piège
+ * répété tel quel dans 2 pistes porte désormais son étiquette de niveau, et
+ * le clic bascule sur cette piste avant de faire défiler (lib/pendingSectionLevel.ts).
  */
 export function PiegesPage() {
+  usePageMeta(
+    "Pièges fréquents",
+    "Toutes les mises en garde du cours rassemblées en un seul endroit, dérivées automatiquement du contenu des salles.",
+  )
   const art = artworks["ressources-pieges"]
   const sections = modules.map((m) => {
     const blocks = moduleContent[m.slug] ?? []
     let lastHeading = ""
-    const items: { heading: string; callout: WarningCallout }[] = []
+    let lastLevel: ContentLevel | undefined
+    const items: { heading: string; level: ContentLevel | undefined; callout: WarningCallout }[] = []
     for (const b of blocks) {
-      if (b.type === "heading") lastHeading = b.text
+      if (b.type === "heading") {
+        lastHeading = b.text
+        lastLevel = b.level
+      }
       if (b.type === "callout" && b.tone === "warning") {
-        items.push({ heading: lastHeading, callout: b as WarningCallout })
+        items.push({ heading: lastHeading, level: lastLevel, callout: b as WarningCallout })
       }
     }
     return { module: m, items }
@@ -57,13 +73,24 @@ export function PiegesPage() {
             <section key={module.slug}>
               <h2 className="font-heading text-2xl text-gilt mb-6 pb-3 border-b border-gilt/15">{module.navLabel}</h2>
               <div className="space-y-4">
-                {items.map(({ heading, callout }, i) => (
+                {items.map(({ heading, level, callout }, i) => (
                   <Link
                     key={i}
-                    to={`/module/${module.slug}#${slugify(heading)}`}
+                    to={moduleTreeRoute(module.slug)}
+                    state={{ scrollTo: slugify(heading) }}
+                    onClick={() => {
+                      if (level) setPendingSectionLevel(module.slug, level)
+                    }}
                     className="block border border-oxblood/40 bg-oxblood/[0.08] p-5 hover:bg-oxblood/[0.12] transition-colors"
                   >
-                    {heading && <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mb-2">{heading}</p>}
+                    <div className="flex items-center justify-between gap-3 mb-2">
+                      {heading && <p className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80">{heading}</p>}
+                      {level && (
+                        <span className="shrink-0 font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 border border-oxblood/40 text-parchment-dim/80">
+                          {LEVEL_TOGGLE_LABEL[level]}
+                        </span>
+                      )}
+                    </div>
                     <p className="font-heading text-lg mb-1 text-parchment">{callout.title}</p>
                     <p className="text-parchment-dim leading-relaxed text-justify">{callout.text}</p>
                   </Link>

@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { artworks } from "@/data/artworks"
+import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
  * Frontispice + choix de profil. Les anciennes "sept salles" en scroll plein écran
@@ -12,12 +14,15 @@ import { artworks } from "@/data/artworks"
 export function Home() {
   const cardsRef = useRef<HTMLDivElement>(null)
   const hero = artworks.hero
+  const reducedMotion = useReducedMotion()
+  usePageMeta("")
 
   useEffect(() => {
+    if (reducedMotion) return
     const cards = cardsRef.current?.querySelectorAll("[data-profile-card]")
     if (!cards) return
     gsap.fromTo(cards, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out", stagger: 0.15, delay: 0.2 })
-  }, [])
+  }, [reducedMotion])
 
   return (
     <div className="bg-ink text-parchment">

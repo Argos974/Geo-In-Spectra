@@ -6,11 +6,17 @@ import { QuestionAnswerBlock } from "@/components/quiz/QuestionAnswerBlock"
 import { recordQuizScore, recordWrongQuestion, clearWrongQuestion } from "@/lib/progress"
 import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 import { cn } from "@/lib/utils"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 export function QuizPage() {
   const { slug } = useParams<{ slug: string }>()
   const module = modules.find((m) => m.slug === slug)
   const questions = slug ? quizzes[slug] : undefined
+
+  usePageMeta(
+    module ? `Quiz — ${module.title}` : "Quiz introuvable",
+    module ? `Quiz noté sur la salle « ${module.title} » : ${module.summary}` : undefined,
+  )
 
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)

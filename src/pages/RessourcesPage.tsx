@@ -2,9 +2,14 @@ import { Link } from "react-router-dom"
 import { RESOURCE_LINKS } from "@/data/resourceLinks"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /** Onglet mutualisé — même contenu, même route, accessible depuis Discipulus et Magister. */
 export function RessourcesPage() {
+  usePageMeta(
+    "Ressources pédagogiques",
+    "Glossaire, références, jeux de données, pièges fréquents et formulaire : les ressources communes aux deux profils du site.",
+  )
   const art = artworks.ressources
 
   return (

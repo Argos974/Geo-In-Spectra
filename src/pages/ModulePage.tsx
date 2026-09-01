@@ -6,19 +6,22 @@ import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { markVisited } from "@/lib/progress"
 import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
 
 /**
  * Lien profond / vue autonome d'un module (imprimée, partagée, indexée) — le
  * chemin de navigation normal passe désormais par Discipulus → Cours (chapitres
- * repliables sur une seule page, voir DiscipulusCoursPage) ou Magister → Cours
- * pour l'Atelier, qui réutilisent le même ModuleChapterBody. Cette route reste
+ * repliables sur une seule page, voir DiscipulusCoursPage) ou Magister → Atelier,
+ * qui réutilisent le même ModuleChapterBody. Cette route reste
  * intacte pour ne casser aucun lien existant (parcours, renvois croisés, PDF).
  */
 export function ModulePage() {
   const { slug } = useParams<{ slug: string }>()
   const module = modules.find((m) => m.slug === slug)
+
+  usePageMeta(module ? module.title : "Salle introuvable", module?.summary)
 
   useEffect(() => {
     if (module) markVisited(module.slug)

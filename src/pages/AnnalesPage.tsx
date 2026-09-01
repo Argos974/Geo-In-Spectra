@@ -3,6 +3,7 @@ import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { annalesQuiz } from "@/data/annalesQuiz"
 import { AnnalesPracticeQuiz } from "@/components/annales/AnnalesPracticeQuiz"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 interface AnnaleLink {
   label: string
@@ -100,6 +101,10 @@ const GROUPS: AnnaleGroup[] = [
 ]
 
 export function AnnalesPage() {
+  usePageMeta(
+    "Annales de concours",
+    "Sujets réels de concours et examens en géomatique, liés directement aux portails officiels qui les publient.",
+  )
   const art = artworks["ressources-annales"]
 
   return (

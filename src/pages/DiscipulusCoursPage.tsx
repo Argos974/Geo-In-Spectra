@@ -1,22 +1,29 @@
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ChapterAccordion } from "@/components/content/ChapterAccordion"
 import { ChapterNav } from "@/components/content/ChapterNav"
+import { LevelIntroBanner } from "@/components/content/LevelIntroBanner"
+import { CoursPlanOverview } from "@/components/content/CoursPlanOverview"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { getProgress, markVisited } from "@/lib/progress"
 import { COURS_SLUGS } from "@/lib/moduleRoute"
+import { usePageMeta } from "@/hooks/usePageMeta"
+import type { ContentLevel } from "@/content/types"
 
 const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 
 export function DiscipulusCoursPage() {
   // COURS_SLUGS est un Set (source unique, voir lib/moduleRoute.ts) mais son ordre
   // d'itération — l'ordre d'insertion — est celui d'affichage voulu ici. Mémorisé
-  // (référence stable) pour ne pas redéclencher l'effet "premier chapitre visité"
-  // à chaque rendu.
+  // (référence stable) pour ne pas recalculer courseModules à chaque rendu.
+  usePageMeta(
+    "Cours — Discipulus",
+    "Douze salles de cours de géomatique et télédétection, du socle lycée à l'approfondissement, en chapitres repliables.",
+  )
   const coursSlugs = useMemo(() => [...COURS_SLUGS], [])
   const courseModules = coursSlugs.map((slug) => modules.find((m) => m.slug === slug)).filter((m) => m !== undefined)
   const art = artworks["discipulus-cours"]
@@ -26,6 +33,25 @@ export function DiscipulusCoursPage() {
     return new Set(courseModules.filter((m) => progress[m.slug]?.visited).map((m) => m.slug))
   })
 
+  // Piste actuellement affichée par chaque salle, tenue à jour même repliée
+  // (voir ModuleChapterBody::onActiveTrackChange) — un ref, pas un state,
+  // aucune de ces mises à jour ne doit provoquer de rendu ici. `openSlug`
+  // retient LA salle actuellement dépliée (groupe d'exclusivité natif, une
+  // seule à la fois) : changer de piste alors qu'elle est déjà ouverte doit
+  // aussi compter comme "vu" — sans ce second déclenchement, seule la piste
+  // affichée pile au moment du clic d'ouverture (onOpen, qui ne se redéclenche
+  // pas pour un changement de contenu dans un <details> déjà ouvert) serait
+  // jamais enregistrée, alors que l'élève voit bien la piste suivante.
+  const activeTrackBySlug = useRef<Map<string, ContentLevel>>(new Map())
+  const openSlugRef = useRef<string | null>(null)
+  const handleActiveTrackChange = useCallback((slug: string, level: ContentLevel) => {
+    activeTrackBySlug.current.set(slug, level)
+    if (slug === openSlugRef.current) {
+      markVisited(slug, level)
+      setVisitedSlugs((prev) => (prev.has(slug) ? prev : new Set(prev).add(slug)))
+    }
+  }, [])
+
   // Arrivée depuis la recherche (RecherchePage) : ouvre et fait défiler jusqu'au
   // chapitre/section visé, transmis en state de navigation (pas d'URL — HashRouter
   // utilise déjà # pour les routes, pas de second fragment disponible pour l'ancre).
@@ -33,15 +59,6 @@ export function DiscipulusCoursPage() {
     const target = (location.state as { scrollTo?: string } | null)?.scrollTo
     if (target) openAndScrollTo(target)
   }, [location.state])
-
-  // Le premier chapitre est ouvert par défaut (defaultOpen) — le `toggle` natif ne
-  // se déclenche que sur un changement d'état ultérieur, pas pour l'attribut open
-  // initial, donc onOpen ne le marquerait jamais visité tout seul.
-  useEffect(() => {
-    const firstSlug = coursSlugs[0]
-    markVisited(firstSlug)
-    setVisitedSlugs((prev) => new Set(prev).add(firstSlug))
-  }, [coursSlugs])
 
   return (
     <div className="min-h-screen bg-ink text-parchment">
@@ -63,6 +80,12 @@ export function DiscipulusCoursPage() {
 
       <div className="px-6 pt-16 pb-24">
         <div className="mx-auto max-w-4xl">
+        <LevelIntroBanner />
+
+        <ChapterAccordion name="cours-chapitres" title="Plan du cours" subtitle="La trame générale, avant d'entrer dans une salle" defaultOpen>
+          <CoursPlanOverview />
+        </ChapterAccordion>
+
         <ChapterNav titles={courseModules.map((m) => m.title)} />
 
         {courseModules.map((courseModule, i) => {
@@ -74,14 +97,17 @@ export function DiscipulusCoursPage() {
               numeral={ROOM_NUMERALS[i]}
               title={courseModule.title}
               artwork={artworks[slug]}
-              defaultOpen={i === 0}
               visited={visitedSlugs.has(slug)}
               onOpen={() => {
-                markVisited(slug)
+                openSlugRef.current = slug
+                markVisited(slug, activeTrackBySlug.current.get(slug))
                 setVisitedSlugs((prev) => new Set(prev).add(slug))
               }}
             >
-              <ModuleChapterBody module={courseModule} />
+              <ModuleChapterBody
+                module={courseModule}
+                onActiveTrackChange={(level) => handleActiveTrackChange(slug, level)}
+              />
             </ChapterAccordion>
           )
         })}

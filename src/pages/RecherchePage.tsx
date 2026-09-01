@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { buildSearchIndex, searchEntries, type SearchEntry } from "@/lib/searchIndex"
+import { setPendingSectionLevel } from "@/lib/pendingSectionLevel"
 import { cn } from "@/lib/utils"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 const GROUP_LABEL: Record<SearchEntry["group"], string> = {
   Chapitre: "Cours",
@@ -15,12 +17,17 @@ const GROUP_LABEL: Record<SearchEntry["group"], string> = {
 
 /** Mutualisé — recherche texte simple sur tout le contenu indexé (voir lib/searchIndex.ts). */
 export function RecherchePage() {
+  usePageMeta("Recherche", "Recherche dans le contenu du site : cours, glossaire, ressources, jeux et quiz.")
   const [query, setQuery] = useState("")
   const navigate = useNavigate()
   const index = useMemo(() => buildSearchIndex(), [])
   const results = useMemo(() => searchEntries(index, query), [index, query])
 
   function go(entry: SearchEntry) {
+    // Bascule la piste AVANT de naviguer : ModuleChapterBody la consomme dans
+    // un effet au montage (voir lib/pendingSectionLevel.ts), et openAndScrollTo
+    // réessaie sur quelques frames le temps que ce re-rendu ait lieu.
+    if (entry.moduleSlug && entry.level) setPendingSectionLevel(entry.moduleSlug, entry.level)
     navigate(entry.to, entry.scrollTo ? { state: { scrollTo: entry.scrollTo } } : undefined)
   }
 
@@ -36,6 +43,7 @@ export function RecherchePage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Terme, notion, titre de section…"
+          aria-label="Rechercher sur le site"
           className="w-full bg-transparent border border-gilt/30 px-4 py-3 text-lg text-parchment placeholder:text-parchment-dim/50 focus:outline-none focus:border-gilt/60 mb-8"
         />
 

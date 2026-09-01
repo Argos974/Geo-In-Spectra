@@ -7,9 +7,10 @@ import { ChapterNav } from "@/components/content/ChapterNav"
 import { EvaluationGenerator } from "@/components/evaluation/EvaluationGenerator"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { slugify } from "@/lib/slug"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
- * Troisième pilier de Magister (avec Cours et Programme) — jusqu'ici rien ne
+ * Troisième pilier de Magister (avec Atelier et Programme) — jusqu'ici rien ne
  * couvrait le geste symétrique de Méthodes (Discipulus) : Méthodes explique
  * comment écrire un commentaire/une dissertation/un rapport/un mémoire,
  * Programme explique comment organiser une progression, mais personne
@@ -188,6 +189,10 @@ const GRIDS: Grid[] = [
 ]
 
 export function MagisterEvaluationPage() {
+  usePageMeta(
+    "Évaluation — Magister",
+    "Grilles d'évaluation et sujets blancs par finalité (scolaire, concours, professionnel, recherche).",
+  )
   const art = artworks["magister-evaluation"]
   const location = useLocation()
 

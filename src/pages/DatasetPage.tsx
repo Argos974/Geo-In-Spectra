@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
  * Avant ce correctif, la seule mention du jeu de données réel ("/data/sample-
@@ -27,6 +28,10 @@ const PARIS_DATASET_FILES = [
 ]
 
 export function DatasetPage() {
+  usePageMeta(
+    "Jeux de données",
+    "Jeux de données réels (Sentinel-2, indices spectraux, classification) téléchargeables pour les travaux pratiques.",
+  )
   const art = artworks["ressources-dataset"]
 
   return (

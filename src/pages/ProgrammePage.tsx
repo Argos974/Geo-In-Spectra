@@ -8,6 +8,7 @@ import { atelierSeances } from "@/data/atelierSeances"
 import { moduleContent } from "@/content"
 import type { ContentLevel } from "@/content/types"
 import { slugify } from "@/lib/slug"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 const LEVEL_LABEL: Record<ContentLevel, string> = {
   lycee: "Lycée",
@@ -55,6 +56,10 @@ function buildSeanceMeta(): Map<string, SeanceMeta> {
 }
 
 export function ProgrammePage() {
+  usePageMeta(
+    "Programme — Magister",
+    "Progression pédagogique reliant théorie, méthode et Atelier pour préparer un semestre de géomatique.",
+  )
   const base = PARCOURS.find((p) => p.id === "licence-but-sig")
   const autres = PARCOURS.filter((p) => p.id !== "licence-but-sig")
   const art = artworks["magister-programme"]

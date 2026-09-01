@@ -17,6 +17,7 @@ import { MethodesActionBar } from "@/components/methodes/MethodesActionBar"
 import { DecisionTree } from "@/components/methodes/DecisionTree"
 import { GuidedCase } from "@/components/methodes/GuidedCase"
 import { SelfCheckList } from "@/components/methodes/SelfCheckList"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 /**
  * "La Méthode" (7 sections numérotées) regroupées ici par finalité réelle plutôt
@@ -33,6 +34,10 @@ const GROUPS = [
 ]
 
 export function DiscipulusMethodesPage() {
+  usePageMeta(
+    "Méthodes — Discipulus",
+    "Méthodologie de géomatique par finalité : commentaire de document, dissertation, rapport technique, mémoire de recherche.",
+  )
   const blocks = moduleContent.methodologie ?? []
   const intro = leadingIntro(blocks)
   const chapters = splitIntoChapters(blocks)
@@ -70,8 +75,6 @@ export function DiscipulusMethodesPage() {
       )}
 
       <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
-        <MethodesActionBar />
-
         {intro.length > 0 && <ContentBlocks blocks={intro} game={games.methodologie} moduleSlug="methodologie" />}
 
         <DecisionTree />
@@ -97,6 +100,8 @@ export function DiscipulusMethodesPage() {
             </ChapterAccordion>
           )
         })}
+
+        <MethodesActionBar />
 
         {exercises.methodologie && <GuidedCase set={exercises.methodologie} />}
 

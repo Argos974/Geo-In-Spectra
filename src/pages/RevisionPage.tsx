@@ -6,6 +6,7 @@ import { useActiveParcours } from "@/hooks/useActiveParcours"
 import { PARCOURS, getParcoursModuleSlugs } from "@/data/parcours"
 import { QuestionAnswerBlock } from "@/components/quiz/QuestionAnswerBlock"
 import { cn } from "@/lib/utils"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 interface ReviewItem {
   slug: string
@@ -22,6 +23,10 @@ interface ReviewItem {
  * dépassé la boîte 5, pas après un seul succès.
  */
 export function RevisionPage() {
+  usePageMeta(
+    "Révision — Discipulus",
+    "Révision espacée (répétition de Leitner) des questions ratées, toutes salles confondues.",
+  )
   const activeParcours = useActiveParcours()
   const parcoursMeta = activeParcours ? PARCOURS.find((p) => p.id === activeParcours.id) : undefined
   const parcoursSlugs = useMemo(() => (parcoursMeta ? getParcoursModuleSlugs(parcoursMeta.id) : null), [parcoursMeta])

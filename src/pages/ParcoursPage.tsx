@@ -1,15 +1,20 @@
 import { Link, useNavigate } from "react-router-dom"
-import { PARCOURS } from "@/data/parcours"
+import { PARCOURS, type Parcours } from "@/data/parcours"
 import { startParcours } from "@/lib/activeParcours"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 export function ParcoursPage() {
+  usePageMeta(
+    "Parcours conseillés",
+    "Parcours guidés pas à pas à travers les salles du site, selon l'objectif visé (réviser, découvrir, approfondir).",
+  )
   const navigate = useNavigate()
   const active = useActiveParcours()
 
-  function begin(id: string, firstStop: string) {
+  function begin(id: string, firstStop: Parcours["stops"][number]) {
     startParcours(id)
-    navigate(firstStop)
+    navigate(firstStop.to, firstStop.state ? { state: firstStop.state } : undefined)
   }
 
   return (
@@ -22,8 +27,8 @@ export function ParcoursPage() {
         <p className="font-mono text-[12px] text-gilt mt-8">Ressources</p>
         <h1 className="font-heading text-4xl md:text-5xl mt-3 mb-4">Parcours conseillés</h1>
         <p className="text-parchment-dim text-lg mb-12 text-justify">
-          Les 7 salles se lisent dans l'ordre par défaut, mais le chemin le plus utile dépend de l'objectif. Quatre
-          parcours indicatifs, à ajuster librement. Choisis-en un pour être guidé étape par étape (un bandeau
+          Les salles de Cours se lisent dans l'ordre par défaut, mais le chemin le plus utile dépend de l'objectif.
+          Quatre parcours indicatifs, à ajuster librement. Choisis-en un pour être guidé étape par étape (un bandeau
           "Suivant →" reste affiché en haut de chaque page tant que le parcours est actif).
         </p>
 
@@ -38,7 +43,7 @@ export function ParcoursPage() {
                   </h2>
                   <button
                     type="button"
-                    onClick={() => begin(p.id, p.stops[0].to)}
+                    onClick={() => begin(p.id, p.stops[0])}
                     className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/40 px-3 py-1.5 hover:bg-gilt/10 transition-colors"
                   >
                     {isActive ? "Recommencer ce parcours →" : "Commencer ce parcours →"}

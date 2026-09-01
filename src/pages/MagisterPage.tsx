@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 export function MagisterPage() {
+  usePageMeta(
+    "Magister",
+    "Ressources pour préparer un cours de géomatique : Atelier, programme, évaluation, pédagogie et gestion de classe.",
+  )
   const art = artworks["methodologie-scolaire"]
 
   return (
@@ -26,7 +31,7 @@ export function MagisterPage() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <Link to="/magister/cours" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
-              <p className="font-heading text-2xl mb-2">Cours</p>
+              <p className="font-heading text-2xl mb-2">Atelier</p>
               <p className="text-parchment-dim text-sm leading-relaxed">L'Atelier en détail : objectifs, matériel, déroulé, corrigé et note d'animation de chaque séance.</p>
             </Link>
             <Link to="/magister/programme" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
@@ -40,6 +45,10 @@ export function MagisterPage() {
             <Link to="/magister/evaluation" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Évaluation</p>
               <p className="text-parchment-dim text-sm leading-relaxed">Grilles de correction par finalité, et un générateur de sujet QCM imprimable à partir des banques de quiz.</p>
+            </Link>
+            <Link to="/magister/classe" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
+              <p className="font-heading text-2xl mb-2">Suivi de classe</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">Déposer les exports de progression de plusieurs élèves pour une vue d'ensemble, sans compte ni serveur.</p>
             </Link>
           </div>
 

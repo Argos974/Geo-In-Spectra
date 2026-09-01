@@ -6,9 +6,14 @@ import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { markVisited } from "@/lib/progress"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
-/** Détail de l'Atelier (12 séances, autonomes et corrigées) — le kit pédagogique pour enseigner, pas pour réviser. */
+/** Détail de l'Atelier (36 séances, 3 pistes de 12, autonomes et corrigées) — le kit pédagogique pour enseigner, pas pour réviser. */
 export function MagisterCoursPage() {
+  usePageMeta(
+    "Atelier — Magister",
+    "L'Atelier en détail : douze séances pratiques autonomes et corrigées, réparties lycée/licence-BUT/master-recherche.",
+  )
   const atelier = modules.find((m) => m.slug === "travaux-pratiques")
   const art = artworks["magister-cours"]
   const location = useLocation()

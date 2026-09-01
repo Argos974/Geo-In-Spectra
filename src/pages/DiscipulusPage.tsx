@@ -3,8 +3,13 @@ import { PARCOURS } from "@/data/parcours"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
 import { artworks } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { usePageMeta } from "@/hooks/usePageMeta"
 
 export function DiscipulusPage() {
+  usePageMeta(
+    "Discipulus",
+    "Cours de géomatique et télédétection pour l'élève : douze salles du lycée à l'approfondissement, méthode, parcours conseillés, bilan et révision espacée.",
+  )
   const active = useActiveParcours()
   const activeParcours = active ? PARCOURS.find((p) => p.id === active.id) : undefined
   const art = artworks["discipulus-hub"]
@@ -32,7 +37,7 @@ export function DiscipulusPage() {
           <div className="grid sm:grid-cols-2 gap-4 mb-10">
             <Link to="/discipulus/cours" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Cours</p>
-              <p className="text-parchment-dim text-sm leading-relaxed">Douze chapitres de savoir, du socle lycée à l'approfondissement.</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">Douze chapitres de savoir, du socle lycée à l'approfondissement — avec le plan général en tête de page.</p>
             </Link>
             <Link to="/discipulus/methodes" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Méthodes</p>
