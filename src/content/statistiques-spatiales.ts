@@ -57,9 +57,47 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
     text: "Un massif forestier isolé, sans aucune habitation à des kilomètres à la ronde, présente un aléa incendie très élevé (végétation sèche, vent fort, pente marquée). Ce massif représente-t-il pour autant un risque incendie élevé au sens de la formule ci-dessus ? Justifie ta réponse.",
   },
   {
+    type: "callout",
+    tone: "example",
+    title: "Deux hameaux, deux risques différents pour un même aléa",
+    text: "Deux hameaux sont exposés au même aléa incendie (même végétation, même exposition au vent). Le premier compte 5 maisons en pierre entourées d'un jardin dégagé ; le second compte 30 maisons en bois serrées les unes contre les autres, sans espace tampon. Même aléa, mais enjeux et vulnérabilité bien plus élevés pour le second : c'est lui qui doit être priorisé en premier pour une action de prévention, pas le premier alors qu'il subit exactement le même danger physique.",
+  },
+
+  { type: "heading", text: "4. Une valeur isolée n'est pas la même chose qu'un vrai regroupement", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un indicateur local ne se contente pas de dire « fort » ou « faible » : il compare chaque zone à ses voisines directes. Une zone à valeur forte entourée d'autres zones fortes n'est pas classée pareil qu'une zone à valeur forte totalement isolée au milieu de zones faibles — la première signale un vrai regroupement, la seconde une anomalie ponctuelle, potentiellement une erreur de mesure ou un cas réellement particulier à examiner de plus près.",
+  },
+  {
+    type: "diagram",
+    name: "lisa-quadrant",
+    caption: "Chaque zone est classée selon sa propre valeur et celle de son voisinage : un vrai regroupement (haut-haut, bas-bas) ne se lit pas comme une anomalie isolée (haut-bas, bas-haut).",
+  },
+
+  { type: "heading", text: "5. Un piège fréquent : les bords de la zone étudiée", level: "lycee" },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un point au bord de la carte a mécaniquement moins de voisins",
+    text: "Une commune située tout au bord de la zone étudiée a, par construction, moins de voisines recensées dans l'analyse qu'une commune bien au centre — pas parce qu'elle en a réellement moins dans la réalité, mais simplement parce que l'étude s'arrête là. Ce biais, appelé effet de bord, peut fausser un indicateur local calculé sans précaution particulière sur les zones en périphérie de l'étude.",
+  },
+
+  { type: "heading", text: "6. Une carte de densité en direct : un vrai jeu de données", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Sur un semis de points réels (par exemple des départs de feu de forêt sur plusieurs décennies), une carte de densité par noyau (Kernel Density Estimation) construit une surface continue qui fait ressortir visuellement où les points se concentrent, sans avoir besoin de découper le territoire en zones administratives au préalable.",
+  },
+  { type: "live", name: "wildfire-kde-map" },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Le découpage choisi n'est jamais neutre",
+    text: "Recalculer le même taux (de criminalité, de chômage, de pollution) par quartier, puis par ville entière, peut donner des résultats très différents alors qu'aucune donnée n'a changé : seul le découpage a changé. Ce phénomène, appelé MAUP (Modifiable Areal Unit Problem), rappelle qu'une carte de statistiques par zone doit toujours être lue en gardant à l'esprit l'échelle de découpage choisie.",
+  },
+  {
     type: "list",
     items: [
-      "Bilan — à retenir : un indice global (Moran) donne un seul chiffre, un indicateur local situe précisément où la structure se manifeste ; un point chaud est une concentration statistique, pas seulement une forte densité brute ; le risque combine aléa (le phénomène), enjeux (ce qui est exposé) et vulnérabilité (la sensibilité de cette exposition), jamais un seul de ces trois facteurs isolément.",
+      "Bilan — à retenir : un indice global (Moran) donne un seul chiffre, un indicateur local situe précisément où la structure se manifeste, en distinguant un vrai regroupement d'une anomalie isolée ; un point chaud est une concentration statistique, pas seulement une forte densité brute ; une zone en bordure de l'étude a mécaniquement moins de voisins recensés (effet de bord) ; une carte de densité par noyau construit une surface continue à partir d'un semis de points ; le découpage choisi pour une carte de statistiques par zone (MAUP) n'est jamais neutre ; le risque combine aléa (le phénomène), enjeux (ce qui est exposé) et vulnérabilité (la sensibilité de cette exposition), jamais un seul de ces trois facteurs isolément.",
     ],
   },
   {
@@ -255,6 +293,11 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
   // ================================================================
   { type: "heading", text: "1. Régression spatiale : quand les résidus ne sont pas indépendants", level: "approfondissement" },
   {
+    type: "diagram",
+    name: "lisa-quadrant",
+    caption: "La même logique que le nuage de Moran, appliquée cette fois aux résidus d'un modèle : un regroupement (haut-haut, bas-bas) parmi les résidus signale une autocorrélation que l'OLS classique ignore.",
+  },
+  {
     type: "paragraph",
     text: "Une régression linéaire classique (moindres carrés ordinaires, OLS) suppose que ses résidus (l'écart entre valeur observée et valeur prédite) sont indépendants les uns des autres. Sur une donnée spatiale, cette hypothèse est régulièrement violée : si le phénomène étudié a une structure spatiale (la première loi de Tobler, encore), les résidus d'un modèle qui l'ignore présentent eux-mêmes de l'autocorrélation spatiale, détectable en calculant un indice de Moran directement sur les résidus du modèle.",
   },
@@ -273,6 +316,13 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
     description: "Le module Méthodes (section Mémoire de recherche) détaille l'interprétation correcte d'une p-value et le risque de pseudo-réplication sur des observations non indépendantes — directement lié à l'autocorrélation spatiale résiduelle décrite ici.",
   },
 
+  {
+    type: "callout",
+    tone: "info",
+    title: "Aller plus loin : la régression géographiquement pondérée (GWR)",
+    text: "Le spatial lag et le spatial error (ci-dessus) corrigent l'autocorrélation mais gardent des coefficients uniques pour toute la zone d'étude. La régression géographiquement pondérée (Geographically Weighted Regression, Fotheringham, Brunsdon & Charlton, 2002) va plus loin : elle ajuste une régression locale différente en chaque point, pondérée par la proximité (encore Tobler), produisant une carte de coefficients qui varient dans l'espace plutôt qu'un coefficient global unique — utile quand la relation entre deux variables (ex. NDVI et précipitations) n'a pas de raison d'être identique partout sur un grand territoire.",
+  },
+
   { type: "heading", text: "2. Analyse de semis de points : la fonction K de Ripley", level: "approfondissement" },
   {
     type: "paragraph",
@@ -289,6 +339,12 @@ export const statistiquesSpatialesContent: ContentBlock[] = [
     tone: "example",
     title: "Pourquoi tester plusieurs échelles à la fois",
     text: "Un semis de points peut être regroupé à petite échelle (des feux qui démarrent près des axes routiers, à quelques centaines de mètres) tout en restant réparti de façon quasi aléatoire à grande échelle (aucune région entière plus touchée qu'une autre). La fonction K, en balayant h de façon continue, révèle ce changement d'échelle, invisible à un indice global unique comme le Moran ou une simple densité moyenne.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "La fonction K brute est sensible au bord de la zone d'étude",
+    text: "Comme les indicateurs locaux (LISA, Gi*), l'estimateur empirique de K(h) sous-compte systématiquement les paires de points proches du bord de la zone d'étude, une partie de leur voisinage réel tombant hors de la zone observée. Les logiciels dédiés (spatstat en R, PySAL en Python) appliquent une correction de bord (ex. correction de Ripley elle-même, ou de translation) avant de comparer K(h) à sa valeur théorique sous CSR — une étape à vérifier, jamais à supposer automatique.",
   },
 
   { type: "heading", text: "3. Étude de cas : cartographier un risque à partir de trois couches", level: "approfondissement" },

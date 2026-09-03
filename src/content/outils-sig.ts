@@ -69,10 +69,58 @@ export const outilsSigContent: ContentBlock[] = [
     formula: "\"altitude\" > 500 AND \"pente\" > 15",
     note: "Sélectionne les entités dont l'altitude dépasse 500 m ET la pente dépasse 15° : syntaxe du générateur d'expressions QGIS, proche du SQL.",
   },
+  { type: "heading", text: "4. Pourquoi la proximité compte en géographie", level: "lycee" },
+  {
+    type: "callout",
+    tone: "info",
+    title: "La première loi de la géographie (Tobler, 1970)",
+    text: "« Tout est lié à tout le reste, mais les choses proches sont plus liées que les choses distantes. » Cette phrase, formulée par le géographe Waldo Tobler, explique pourquoi la plupart des outils SIG (buffer, jointure spatiale, statistiques de zone) ont un sens : deux parcelles voisines se ressemblent en général plus que deux parcelles à l'autre bout du pays, en climat, en usage du sol, en prix. Sans cette proximité qui compte, un buffer ou une jointure spatiale ne serait qu'un calcul arbitraire.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Exemple concret",
+    text: "La qualité de l'air mesurée par une station se ressemble davantage avec celle d'une station à 2 km qu'avec celle d'une station à 200 km : c'est cette idée, si intuitive qu'elle semble évidente une fois énoncée, qui justifie qu'on puisse estimer la qualité de l'air à un endroit sans station en s'appuyant sur les stations proches plutôt que sur une moyenne nationale.",
+  },
+
+  { type: "heading", text: "5. Résumer un raster par zone : les statistiques de zone", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un indice calculé pixel par pixel (comme le NDVI, module Les Couleurs) reste difficile à comparer d'une parcelle à l'autre tant qu'il reste éclaté en des milliers de valeurs individuelles. Les statistiques de zone résument un raster à l'intérieur de chaque polygone d'une couche vectorielle : par exemple, la moyenne du NDVI de chaque parcelle agricole, un seul chiffre par parcelle plutôt qu'une valeur par pixel.",
+  },
+  {
+    type: "live",
+    name: "grid-choropleth",
+    caption: "Planche vivante. Statistiques de zone réelles : 1122 cellules de 100 m, moyenne NDVI/NDMI/NDBI par cellule.",
+  },
+
+  { type: "heading", text: "6. Automatiser plutôt que répéter à la main", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Refaire à la main la même suite de clics QGIS sur cinquante fichiers différents prend du temps et multiplie le risque d'erreur (un clic oublié sur le fichier 37). Un script Python automatise exactement cette suite d'étapes : on l'écrit une fois, il s'exécute ensuite identiquement sur autant de fichiers que nécessaire, sans jamais se fatiguer ni se tromper d'étape.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Deux façons d'automatiser en géomatique",
+    text: "PyQGIS permet de piloter QGIS lui-même par un script, sans reproduire les clics à la souris. GeoPandas, une bibliothèque Python indépendante de QGIS, manipule directement les données géographiques (calculer une surface, filtrer des entités) sans passer par une interface graphique du tout — l'outil de référence pour un traitement répété sur de nombreux fichiers.",
+  },
+
+  { type: "heading", text: "7. Une donnée n'est jamais parfaite : le rôle des métadonnées", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Une donnée géographique téléchargée sur un portail public (data.gouv.fr, Géoportail) n'est jamais exacte à 100 % : la question utile n'est pas « est-elle juste ? » mais « à quel point, et depuis quand ? ». Les métadonnées documentent cette information : la source, la date de production, la précision estimée — sans elles, une donnée reste invérifiable.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une carte sans date n'est pas fiable",
+    text: "Une couche de bâti téléchargée sans indication de date peut avoir plusieurs années : des constructions récentes peuvent manquer, ou d'anciens bâtiments démolis peuvent encore y figurer. Vérifier la date de production avant d'utiliser une donnée est un réflexe aussi basique que vérifier l'échelle d'une carte papier (module Fondements).",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : QGIS reprojette à la volée mais tout calcul de distance/surface exige un CRS projeté ; buffer/intersection/union/différence/jointure sont les cinq opérations spatiales de base ; une requête filtre par attribut, une requête spatiale filtre par position relative à une autre couche.",
+      "Bilan — à retenir : QGIS reprojette à la volée mais tout calcul de distance/surface exige un CRS projeté ; buffer/intersection/union/différence/jointure sont les cinq opérations spatiales de base ; une requête filtre par attribut, une requête spatiale filtre par position relative à une autre couche ; la loi de Tobler (proximité = ressemblance) justifie l'essentiel de l'analyse spatiale ; les statistiques de zone résument un raster par polygone ; un script Python (PyQGIS, GeoPandas) automatise une suite de traitements répétitifs ; une donnée sans métadonnées (source, date, précision) reste invérifiable.",
     ],
   },
   {
@@ -394,6 +442,11 @@ export const outilsSigContent: ContentBlock[] = [
     ],
   },
   {
+    type: "diagram",
+    name: "spatial-index-tree",
+    caption: "Un index GiST organise les géométries en rectangles englobants imbriqués : éliminer vite les candidats impossibles avant de tester la géométrie exacte.",
+  },
+  {
     type: "link",
     to: "/module/bases-donnees-spatiales",
     label: "Aller plus loin : index GiST, jointures spatiales et performance",
@@ -442,6 +495,12 @@ export const outilsSigContent: ContentBlock[] = [
       "Analyse réseau (plus court chemin) : un réseau routier ou hydrographique est modélisé comme un graphe (nœuds = intersections, arêtes = tronçons pondérés par une distance, un temps ou un coût) ; l'algorithme de Dijkstra (1959) calcule le chemin de coût minimal entre deux nœuds, la base de tout calcul d'itinéraire ou de zone de chalandise (isochrone)",
       "Zone de service (service area) : ensemble des points atteignables depuis un point donné en deçà d'un coût maximal (ex. tout ce qui est à moins de 15 minutes d'un hôpital), une extension directe de Dijkstra, pas un algorithme différent",
     ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "A* : Dijkstra guidé par une estimation de la distance restante",
+    text: "Sur un très grand réseau routier national, Dijkstra explore le graphe dans toutes les directions à partir du point de départ, y compris à l'opposé de la destination réelle. L'algorithme A* (Hart, Nilsson & Raphael, 1968) ajoute une heuristique (typiquement la distance à vol d'oiseau restante jusqu'à la destination) qui oriente la recherche, réduisant fortement le nombre de nœuds explorés sans jamais renoncer à trouver le chemin réellement optimal, tant que l'heuristique ne surestime jamais la distance réelle restante. C'est l'algorithme derrière la quasi-totalité des calculs d'itinéraire routier grand public.",
   },
   {
     type: "brique",

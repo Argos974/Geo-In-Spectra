@@ -70,10 +70,43 @@ export const lidarContent: ContentBlock[] = [
     title: "Un ordre de grandeur pour un programme national",
     text: "Lidar HD vise une densité d'environ 10 points par m² sur l'ensemble du territoire métropolitain, diffusée en accès libre sur la plateforme de l'IGN. À cette échelle, l'acquisition d'un seul département représente déjà plusieurs dizaines de milliards de points bruts, ce qui explique un déploiement étalé sur plusieurs années plutôt qu'une campagne unique.",
   },
+  { type: "heading", text: "4. Trier le nuage de points : sol, végétation, bâti", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un relevé LiDAR brut n'est au départ qu'un immense nuage de points X, Y, Z, sans étiquette : rien ne dit encore si un point donné appartient au sol, à un arbre ou à un toit. Un algorithme de classification trie ensuite chaque point dans une catégorie, un peu comme trier un tas de billes mélangées par couleur avant de pouvoir compter combien il y en a de chaque sorte.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Deux surfaces, une différence",
+    text: "Une fois les points triés, on peut construire deux surfaces distinctes : le Modèle Numérique de Surface (MNS), l'altitude de tout ce qui est visible d'en haut (toits, cimes d'arbres, sol), et le Modèle Numérique de Terrain (MNT), l'altitude du sol nu seul, obtenu en ne gardant que les points classés « sol ». La différence entre les deux, point par point, donne directement la hauteur de ce qui dépasse du sol : un arbre de 15 m de haut, un bâtiment de 8 m.",
+  },
+
+  { type: "heading", text: "5. Plus de points, plus de détails : la densité", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "La densité d'un relevé LiDAR (le nombre de points par m²) dépend de l'altitude de vol et de la vitesse à laquelle le capteur émet ses impulsions. Plus la densité est élevée, plus de petits objets deviennent détectables (un muret bas, un piquet), mais aussi plus le volume de données et le temps de vol augmentent : jamais un réglage gratuit.",
+  },
+
+  { type: "heading", text: "6. Le LiDAR au sol : une autre échelle de précision", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Le LiDAR ne s'utilise pas que depuis un avion : posé sur un trépied ou embarqué sur un véhicule, un scanner LiDAR terrestre relève un monument, une façade ou une rue avec une précision bien plus fine (souvent millimétrique), au prix d'une couverture beaucoup plus locale qu'un survol aérien.",
+  },
+
+  { type: "heading", text: "7. Des usages très concrets, du feu de forêt aux ruines cachées", level: "lycee" },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : le LiDAR mesure une distance par temps de vol d'un pulse laser (d = c×t/2) ; un même pulse peut produire plusieurs retours, dont le dernier atteint souvent le sol sous une canopée pas trop dense ; Lidar HD (IGN) numérise la France entière en données ouvertes, environ 10 points/m².",
+      "Forêt : mesurer la hauteur des arbres et estimer un volume de bois sans y aller à pied, sur des massifs entiers",
+      "Risques naturels : un MNT LiDAR précis modélise beaucoup mieux l'écoulement de l'eau lors d'une inondation qu'un modèle grossier",
+      "Patrimoine et archéologie : le LiDAR aéroporté a révélé des cités entières, des routes et des structures agricoles cachées sous une canopée forestière dense (par exemple au Cambodge, autour d'Angkor), invisibles sur n'importe quelle photo aérienne classique puisque les arbres masquent tout depuis le ciel",
+    ],
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : le LiDAR mesure une distance par temps de vol d'un pulse laser (d = c×t/2) ; un même pulse peut produire plusieurs retours, dont le dernier atteint souvent le sol sous une canopée pas trop dense ; un algorithme trie ensuite chaque point en sol/végétation/bâti, ce qui permet de construire un MNS et un MNT distincts ; une densité de points plus élevée révèle plus de détails, au prix d'un volume de données et d'un temps de vol accrus ; Lidar HD (IGN) numérise la France entière en données ouvertes, environ 10 points/m² ; le LiDAR terrestre relève un monument au millimètre, sur une zone plus restreinte qu'un survol aérien.",
     ],
   },
   {
@@ -300,13 +333,37 @@ export const lidarContent: ContentBlock[] = [
     text: "Lidar HD vise une densité d'environ 10 points par m² sur l'ensemble du territoire métropolitain, un nuage de points classé (sol, végétation, bâti) diffusé en dalles LAZ, ainsi que des MNT et MNS dérivés à 1 m de résolution, en accès libre sur la plateforme de l'IGN. À cette échelle, l'acquisition d'un seul département représente déjà plusieurs dizaines de milliards de points bruts, ce qui explique un déploiement étalé sur plusieurs années plutôt qu'une campagne unique.",
   },
 
+  {
+    type: "diagram",
+    name: "lidar-returns",
+    caption: "Un capteur en mode discret ne garde que les pics détectés en vol ; un capteur full waveform enregistre la courbe d'énergie complète, décomposée après coup — potentiellement plus de structure verticale extraite du même signal physique.",
+  },
+
   { type: "heading", text: "2. LiDAR bathymétrique : voir sous l'eau", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Une variante du LiDAR utilise une longueur d'onde verte (plutôt que le proche infrarouge du LiDAR terrestre classique) qui pénètre l'eau claire sur plusieurs mètres à quelques dizaines de mètres de profondeur selon la turbidité, permettant de cartographier simultanément la topographie terrestre et la bathymétrie côtière depuis une même plateforme aéroportée — une application directement utile à la gestion du trait de côte et des zones littorales.",
   },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Deux échos pour un seul pulse",
+    text: "Un pulse LiDAR bathymétrique génère typiquement deux retours distincts pour un même point : un premier sur la surface de l'eau elle-même, un second sur le fond une fois la lumière verte réfractée dans l'eau puis réfléchie sur le sédiment. La profondeur se déduit du décalage temporel entre ces deux retours, corrigé de l'indice de réfraction de l'eau (environ 1,33), qui ralentit la lumière par rapport à sa vitesse dans l'air.",
+  },
 
-  { type: "heading", text: "3. Comparer LiDAR, radar et photogrammétrie", level: "approfondissement" },
+  { type: "heading", text: "3. Le LiDAR satellite : GEDI et ICESat-2", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Contrairement au LiDAR aéroporté (couverture continue sur une emprise donnée), un LiDAR embarqué sur satellite échantillonne le globe le long de traces étroites et espacées, sans jamais produire une grille continue comme un MNT classique. GEDI (Global Ecosystem Dynamics Investigation, NASA, installé sur la Station spatiale internationale depuis 2018) est optimisé pour la structure verticale de la végétation ; ICESat-2 (NASA, lancé en 2018) est optimisé pour l'altimétrie de précision (glace polaire, niveau des eaux continentales).",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un échantillonnage épars, pas une carte complète",
+    text: "GEDI ne couvre que la bande de latitudes entre 51,6° N et 51,6° S (l'inclinaison orbitale de l'ISS), sous forme d'empreintes au sol de 25 m de diamètre espacées le long de traces parallèles, jamais une couverture continue comme Lidar HD. Pour produire une carte de biomasse forestière continue à l'échelle d'un pays, on combine typiquement ces mesures ponctuelles mais très précises avec une image satellite optique ou radar continue (Sentinel-2, Sentinel-1), en calibrant la seconde sur la première plutôt que d'utiliser GEDI seul.",
+  },
+
+  { type: "heading", text: "4. Comparer LiDAR, radar et photogrammétrie", level: "approfondissement" },
   {
     type: "comparison",
     items: [
@@ -316,7 +373,7 @@ export const lidarContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "4. Limites et pièges du LiDAR", level: "approfondissement" },
+  { type: "heading", text: "5. Limites et pièges du LiDAR", level: "approfondissement" },
   {
     type: "list",
     items: [
@@ -336,7 +393,7 @@ export const lidarContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : Lidar HD numérise la France entière à ~10 points/m² en données ouvertes ; une longueur d'onde verte pénètre l'eau claire pour la bathymétrie, mais pas l'eau turbide ; LiDAR (distance directe), radar (phase), photogrammétrie (reconstruction indirecte) répondent à des contraintes différentes ; coût, absence de texture native et limite sous canopée très dense restent les pièges principaux du LiDAR.",
+      "Bilan — à retenir : Lidar HD numérise la France entière à ~10 points/m² en données ouvertes ; une longueur d'onde verte pénètre l'eau claire pour la bathymétrie (deux retours, surface puis fond), mais pas l'eau turbide ; GEDI/ICESat-2 échantillonnent le globe par traces étroites et espacées, jamais une grille continue, et se combinent avec une image satellite continue pour cartographier une biomasse à l'échelle d'un pays ; LiDAR (distance directe), radar (phase), photogrammétrie (reconstruction indirecte) répondent à des contraintes différentes ; coût, absence de texture native et limite sous canopée très dense restent les pièges principaux du LiDAR.",
     ],
   },
   {

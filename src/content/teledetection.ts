@@ -137,10 +137,33 @@ export const teledetectionContent: ContentBlock[] = [
     name: "sentinel-swipe",
     caption: "Planche vivante. NDVI recalculé en direct sur deux acquisitions Sentinel-2 réelles, même emprise que le jeu de données canonique.",
   },
+  { type: "heading", text: "6. Une image de jour, une image de nuit : deux physiques différentes", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Une image en visible ou en proche infrarouge (sections précédentes) mesure de la lumière solaire réfléchie : elle est donc inutilisable de nuit, faute de Soleil à réfléchir. Une bande thermique, elle, mesure une chaleur émise directement par la surface elle-même — n'importe quel objet suffisamment chaud émet son propre rayonnement, indépendamment de tout éclairage. C'est pour cette raison qu'un capteur thermique peut repérer un incendie actif ou une chaleur urbaine aussi bien de nuit que de jour.",
+  },
+
+  { type: "heading", text: "7. Pourquoi une image satellite doit être « nettoyée » avant usage", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Une image satellite brute contient toujours un peu de bruit parasite : un nuage fin, une brume, un pixel masqué par l'ombre d'un nuage voisin. Avant tout calcul sérieux (comme un indice de végétation), les fournisseurs de données appliquent une correction atmosphérique et fournissent un masque qui signale quels pixels sont fiables et lesquels sont à écarter.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ignorer les nuages fausse un résultat sans que ça se voie",
+    text: "Calculer un indice sur un pixel nuageux ou son ombre, sans l'exclure au préalable, produit une valeur aberrante qui n'a rien à voir avec la vraie surface au sol — un piège d'autant plus dangereux qu'il n'est pas toujours visible à l'œil sur une seule image isolée.",
+  },
+
+  { type: "heading", text: "8. Le radar peut aussi mesurer un mouvement du sol", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Au-delà de traverser les nuages, un satellite radar peut comparer deux passages successifs au-dessus du même endroit pour détecter un déplacement du sol de l'ordre du millimètre — un affaissement minier, un glissement de terrain, ou la déformation du sol après un séisme. Cette capacité (l'interférométrie radar) n'existe pas en optique, qui ne mesure jamais ce type d'information.",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : la réflectance varie selon la longueur d'onde et la surface, c'est la base de toute image satellite ; l'optique voit la lumière réfléchie (bloqué par les nuages), le radar émet sa propre onde (traverse les nuages) ; quatre résolutions (spatiale, spectrale, temporelle, radiométrique) s'opposent toujours en compromis ; la photo-interprétation (forme, texture, teinte, ombre, motif, contexte) reste la première compétence, avant tout calcul.",
+      "Bilan — à retenir : la réflectance varie selon la longueur d'onde et la surface, c'est la base de toute image satellite ; l'optique voit la lumière réfléchie (bloqué par les nuages, inutilisable de nuit), le radar émet sa propre onde (traverse les nuages, fonctionne de nuit) ; une bande thermique mesure une chaleur émise, utilisable de jour comme de nuit ; quatre résolutions (spatiale, spectrale, temporelle, radiométrique) s'opposent toujours en compromis ; une image doit être nettoyée (nuages, ombres) avant tout calcul d'indice ; le radar peut aussi détecter un mouvement du sol au millimètre près, une capacité que l'optique n'a pas ; la photo-interprétation (forme, texture, teinte, ombre, motif, contexte) reste la première compétence, avant tout calcul.",
     ],
   },
   {
@@ -468,6 +491,11 @@ export const teledetectionContent: ContentBlock[] = [
   },
 
   { type: "heading", text: "2. Au-delà du multispectral : l'imagerie hyperspectrale", level: "approfondissement" },
+  {
+    type: "diagram",
+    name: "spectral-signatures",
+    caption: "Un capteur multispectral échantillonne cette courbe en quelques points larges ; un capteur hyperspectral la mesure quasi continûment, révélant des bandes d'absorption fines invisibles au premier.",
+  },
   {
     type: "paragraph",
     text: "Un capteur multispectral comme Sentinel-2 mesure une dizaine de bandes larges (quelques dizaines à une centaine de nanomètres chacune). Un capteur hyperspectral (ex. PRISMA de l'agence spatiale italienne, EnMAP allemand, ou l'instrument aéroporté AVIRIS de la NASA) mesure plusieurs centaines de bandes contiguës, chacune large de quelques nanomètres seulement, une courbe de réflectance quasi continue par pixel plutôt qu'un échantillonnage épars.",

@@ -90,10 +90,32 @@ export const projectionsAvanceesContent: ContentBlock[] = [
     title: "Un système « supposé » n'est pas un système « vérifié »",
     text: "Une couche qui s'affiche au bon endroit dans un logiciel SIG ne prouve pas que son système de coordonnées est correctement déclaré : si le logiciel applique par défaut le même système erroné à l'affichage qu'à l'origine des données, l'erreur reste invisible jusqu'au premier calcul de distance, de surface, ou au premier croisement avec une couche dans un système différent, correctement déclaré celui-là.",
   },
+  { type: "heading", text: "5. Deux choses différentes : le système de référence et la projection", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "On confond souvent deux choses pourtant distinctes : le système géodésique (le modèle de la forme de la Terre utilisé comme référence, comme WGS84 ou RGF93) et la projection (la transformation mathématique qui aplatit ce modèle sur un plan, comme Lambert-93). Reprojeter une donnée sans changer son système de référence ne suffit pas toujours : si deux jeux de données utilisent des systèmes de référence différents, ils ne se superposeront jamais correctement, même parfaitement reprojetés dans la même projection.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un exemple concret : la Guadeloupe n'utilise pas Lambert-93",
+    text: "Lambert-93 n'a de sens géométrique que pour la France métropolitaine : chaque territoire ultramarin français (Guadeloupe, Martinique, Guyane, La Réunion, Mayotte) a son propre système de référence et sa propre projection UTM adaptée à sa position sur le globe. Utiliser Lambert-93 par habitude sur une donnée guyanaise placerait les points à un endroit géométriquement absurde, très loin de la réalité.",
+  },
+
+  { type: "heading", text: "6. Trois vérifications avant tout calcul de distance ou de surface", level: "lycee" },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Vérifier le système de coordonnées déclaré de la couche, jamais le supposer",
+      "S'assurer qu'il s'agit bien d'un système projeté en mètres, pas d'un système géographique en degrés",
+      "Confirmer que toutes les couches comparées partagent le même système de référence, pas seulement la même projection apparente",
+    ],
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : aucune projection ne préserve tout à la fois (angles, surfaces, distances) ; conforme (angles), équivalente (surfaces), aphylactique (compromis) sont les trois familles possibles ; Lambert-93 pour la France, Web Mercator pour naviguer sur le web, jamais pour mesurer une surface ; un fichier sans .prj ou sans EPSG explicite n'a pas de système « vérifié », seulement supposé.",
+      "Bilan — à retenir : aucune projection ne préserve tout à la fois (angles, surfaces, distances) ; conforme (angles), équivalente (surfaces), aphylactique (compromis) sont les trois familles possibles ; Lambert-93 pour la France, Web Mercator pour naviguer sur le web, jamais pour mesurer une surface ; un fichier sans .prj ou sans EPSG explicite n'a pas de système « vérifié », seulement supposé ; système de référence (le modèle de la Terre) et projection (l'aplatissement en un plan) sont deux choses distinctes, chaque territoire ultramarin ayant les siens propres.",
     ],
   },
   {
@@ -317,6 +339,11 @@ export const projectionsAvanceesContent: ContentBlock[] = [
   // PISTE MASTER / RECHERCHE
   // ================================================================
   { type: "heading", text: "1. Web Mercator (EPSG:3857) : pratique mais déformée", level: "approfondissement" },
+  {
+    type: "diagram",
+    name: "tissot-distortion",
+    caption: "Web Mercator est conforme, comme Lambert-93 et l'UTM : le même compromis angle/surface, mais appliqué sans les parallèles standards qui limitent la déformation d'une projection taillée pour un territoire précis.",
+  },
   {
     type: "paragraph",
     text: "EPSG:3857 (aussi appelée Pseudo-Mercator ou Google Web Mercator) est une variante simplifiée de Mercator, quasi universelle sur les cartes interactives en ligne : elle traite la Terre comme une sphère (calcul plus rapide qu'un ellipsoïde) et découpe le monde en tuiles carrées qui s'emboîtent parfaitement à tout niveau de zoom, un besoin technique propre au web que Lambert-93 ou l'UTM (pensés pour des zones limitées) ne remplissent pas nativement à l'échelle mondiale.",

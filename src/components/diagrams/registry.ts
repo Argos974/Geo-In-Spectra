@@ -21,6 +21,7 @@ import { TilePyramid } from "./TilePyramid"
 import { FlightOverlap } from "./FlightOverlap"
 import { RiskLayers } from "./RiskLayers"
 import { TrilaterationCircles } from "./TrilaterationCircles"
+import { SemiologyVariables } from "./SemiologyVariables"
 
 export const diagramRegistry = {
   "coordinate-systems": { Component: CoordinateSystems, plate: "I" },
@@ -46,6 +47,7 @@ export const diagramRegistry = {
   "flight-overlap": { Component: FlightOverlap, plate: "XXI" },
   "risk-layers": { Component: RiskLayers, plate: "XXII" },
   "trilateration-circles": { Component: TrilaterationCircles, plate: "XXIII" },
+  "semiology-variables": { Component: SemiologyVariables, plate: "XXIV" },
 } as const
 
 export type DiagramName = keyof typeof diagramRegistry

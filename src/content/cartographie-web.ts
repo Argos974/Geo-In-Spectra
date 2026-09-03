@@ -43,6 +43,11 @@ export const cartographieWebContent: ContentBlock[] = [
     title: "Identifier une tuile",
     text: "L'URL https://tile.openstreetmap.org/14/8281/5928.png demande la tuile au zoom 14 (z), colonne 8281 (x, comptée depuis l'ouest) et ligne 5928 (y, comptée depuis le nord). Un client de cartographie web calcule automatiquement quelles tuiles z/x/y couvrent la zone visible avant de les demander une à une au serveur.",
   },
+  {
+    type: "live",
+    name: "tile-pyramid-explorer",
+    caption: "Choisis un point et un niveau de zoom : la planche calcule en direct ses indices z/x/y, le nombre total de tuiles à ce niveau, et la résolution au sol correspondante.",
+  },
 
   { type: "heading", text: "3. Tuiles raster vs tuiles vectorielles", level: "lycee" },
   {
@@ -56,10 +61,53 @@ export const cartographieWebContent: ContentBlock[] = [
       { label: "Tuiles vectorielles", points: ["Géométrie brute, transmise au client", "Style modifiable en direct côté client", "Rotation/inclinaison 3D possibles"] },
     ],
   },
+
+  { type: "heading", text: "4. Comment un site affiche sa carte : une bibliothèque JavaScript", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un développeur qui veut afficher une carte interactive sur son site ne réécrit jamais lui-même la gestion du zoom, du déplacement à la souris ou du chargement des tuiles : il utilise une bibliothèque JavaScript déjà prête, qui s'occupe de tout ça, et ne lui laisse plus qu'à indiquer quel fond de carte afficher et quelles données ajouter par-dessus.",
+  },
+  {
+    type: "table",
+    headers: ["Bibliothèque", "Ce qui la distingue", "Exemple de site qui l'utilise"],
+    rows: [
+      ["Leaflet", "La plus simple à apprendre, quelques lignes de code suffisent pour une première carte", "De très nombreux sites associatifs et institutionnels"],
+      ["MapLibre GL", "Affiche des tuiles vectorielles, peut incliner et faire tourner la carte en 3D", "Applications cartographiques plus récentes, cartes très animées"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Une carte que tu utilises tous les jours en cache probablement une",
+    text: "Une application de covoiturage, un site immobilier qui affiche les biens sur une carte, un site de randonnée : presque tous s'appuient sur une bibliothèque comme Leaflet ou MapLibre GL plutôt que de programmer leur propre moteur de carte depuis zéro. Repérer laquelle est utilisée est possible en ouvrant les outils de développement du navigateur (F12), onglet réseau : le nom de la bibliothèque apparaît généralement dans les fichiers chargés par la page.",
+  },
+
+  { type: "heading", text: "5. D'où vient la donnée affichée, et pourquoi il faut toujours citer sa source", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Le fond de carte affiché (les rues, les bâtiments, les frontières) ne sort pas de nulle part : il vient presque toujours d'un jeu de données ouvert, le plus connu étant OpenStreetMap (OSM), une carte du monde construite et mise à jour en continu par des milliers de contributeurs bénévoles, un peu comme Wikipédia mais pour la géographie.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "L'attribution n'est pas une option de politesse",
+    text: "La licence d'OpenStreetMap (ODbL) exige explicitement de mentionner sa source sur toute carte qui l'utilise (généralement un petit texte « © OpenStreetMap contributors » discret dans un coin de la carte) : ce n'est pas une simple courtoisie, c'est une condition légale d'utilisation des données, au même titre que citer un auteur pour un texte.",
+  },
+  { type: "heading", text: "6. Pourquoi une carte avec beaucoup de données reste fluide", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Afficher des dizaines de milliers de routes ou de points d'intérêt d'un coup ferait ramer n'importe quel navigateur. Deux astuces simples permettent d'éviter ça : simplifier une géométrie complexe (garder moins de détails à un zoom éloigné, où ils ne seraient de toute façon pas visibles), et regrouper les points trop proches en un seul symbole numéroté tant que le zoom ne permet pas de les distinguer un par un.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Une tuile déjà servie n'est pas redessinée",
+    text: "Une tuile de fond de carte change rarement une fois publiée : le navigateur, et souvent un serveur intermédiaire, la garde en mémoire (cache) plutôt que de la redemander à chaque fois. C'est cette mise en cache, bien plus qu'une connexion internet rapide, qui explique pourquoi zoomer et dézoomer sur une carte déjà visitée semble quasi instantané.",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : une carte web découpe le monde en tuiles carrées (2^z × 2^z au zoom z) pour n'envoyer que ce qui est visible ; une tuile raster est une image déjà dessinée, une tuile vectorielle transmet la géométrie et laisse le navigateur la dessiner.",
+      "Bilan — à retenir : une carte web découpe le monde en tuiles carrées (2^z × 2^z au zoom z) pour n'envoyer que ce qui est visible ; une tuile raster est une image déjà dessinée, une tuile vectorielle transmet la géométrie et laisse le navigateur la dessiner ; une bibliothèque comme Leaflet ou MapLibre GL gère le zoom/déplacement/chargement des tuiles pour qu'un site n'ait pas à le reprogrammer ; la donnée affichée (souvent OpenStreetMap) doit toujours être créditée, une obligation de licence, pas une option ; simplifier les géométries et regrouper les points denses garde une carte fluide, une tuile déjà servie est mise en cache plutôt que redessinée.",
     ],
   },
   {
@@ -264,7 +312,28 @@ export const cartographieWebContent: ContentBlock[] = [
   // ================================================================
   // PISTE MASTER / RECHERCHE
   // ================================================================
-  { type: "heading", text: "1. Performance à grande échelle : simplification, clustering, découpage", level: "approfondissement" },
+  { type: "heading", text: "1. Générer un pipeline de tuiles vectorielles en production", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Produire des tuiles MVT (piste Licence/BUT) pour un jeu de données volumineux n'est jamais une simple exportation : c'est un pipeline dédié, qui doit décider, à chaque niveau de zoom, quelles géométries garder, lesquelles simplifier, et lesquelles fusionner, avant même de découper le résultat en tuiles z/x/y.",
+  },
+  {
+    type: "table",
+    headers: ["Outil", "Approche", "Contexte typique"],
+    rows: [
+      ["Tippecanoe (Mapbox)", "Génère un jeu complet de tuiles .mbtiles en un seul passage batch, à partir de GeoJSON en entrée", "Jeu de données statique, régénéré périodiquement (OSM extrait, cadastre)"],
+      ["ST_AsMVT (PostGIS)", "Génère une tuile MVT à la demande, directement par une requête SQL sur la base", "Donnée qui change souvent, tuile toujours à jour sans re-génération complète"],
+      ["Planetiler / tilemaker", "Pipeline optimisé pour tuiler l'intégralité d'OpenStreetMap en quelques heures plutôt qu'en jours", "Fond de carte mondial auto-hébergé, alternative aux fournisseurs commerciaux"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Simplifier trop tôt dans la chaîne casse la topologie",
+    text: "Simplifier chaque géométrie indépendamment (Douglas-Peucker naïf, appliqué polygone par polygone) peut ouvrir des trous entre deux polygones normalement adjacents, une fois simplifiés séparément avec des tolérances légèrement différentes. Un pipeline de tuilage sérieux (Tippecanoe, avec son option de préservation topologique) simplifie en tenant compte des géométries voisines, pas une par une isolément.",
+  },
+
+  { type: "heading", text: "2. Performance à grande échelle : simplification, clustering, découpage", level: "approfondissement" },
   {
     type: "list",
     items: [
@@ -276,10 +345,15 @@ export const cartographieWebContent: ContentBlock[] = [
   },
   { type: "game" },
 
-  { type: "heading", text: "2. Mise en cache et diffusion : CDN et en-têtes HTTP", level: "approfondissement" },
+  { type: "heading", text: "3. Mise en cache et diffusion : CDN et en-têtes HTTP", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Une tuile change rarement une fois publiée : c'est cette stabilité que toute l'architecture de diffusion à grande échelle exploite, en évitant de redessiner ou même de retransmettre une tuile déjà servie une première fois.",
+  },
+  {
+    type: "diagram",
+    name: "tile-pyramid",
+    caption: "Pré-générer (seeding) une pyramide entière coûte cher en stockage à mesure que le zoom augmente : chaque niveau contient quatre fois plus de tuiles que le précédent.",
   },
   {
     type: "list",
@@ -297,7 +371,7 @@ export const cartographieWebContent: ContentBlock[] = [
     text: "Mettre à jour la donnée source (une nouvelle route, un bâtiment démoli) ne suffit pas à mettre à jour ce que voit l'utilisateur si les anciennes tuiles restent servies depuis un cache HTTP ou un CDN qui n'a aucune raison de les considérer périmées. Les stratégies courantes consistent soit à purger explicitement le cache après chaque mise à jour, soit à versionner l'URL des tuiles (un paramètre ou un chemin qui change avec chaque nouvelle génération), pour que l'ancienne et la nouvelle version cohabitent sans jamais se confondre.",
   },
 
-  { type: "heading", text: "3. Cartographie web et accessibilité", level: "approfondissement" },
+  { type: "heading", text: "4. Cartographie web et accessibilité", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Une carte interactive pose des défis d'accessibilité spécifiques : elle est par nature visuelle et dépend de la souris/du tactile pour se déplacer. Les bonnes pratiques incluent une navigation clavier alternative (zoomer/déplacer sans souris), un contraste suffisant pour les fonds de carte et les symboles, et systématiquement un résumé textuel ou tabulaire de la donnée essentielle affichée sur la carte, pour qu'un lecteur d'écran ne dépende pas uniquement du rendu graphique.",
@@ -330,7 +404,7 @@ export const cartographieWebContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : Douglas-Peucker simplifie une géométrie selon le zoom, le clustering regroupe des points denses ; Cache-Control et CDN évitent de redessiner une tuile déjà servie, mais invalider un cache a un coût réel ; une carte accessible combine navigation clavier, ARIA, contraste, palettes daltonisme-sûres et un résumé textuel indépendant du rendu graphique.",
+      "Bilan — à retenir : un pipeline de tuilage (Tippecanoe, ST_AsMVT, Planetiler) simplifie en préservant la topologie, jamais géométrie par géométrie isolément ; Douglas-Peucker simplifie une géométrie selon le zoom, le clustering regroupe des points denses ; Cache-Control et CDN évitent de redessiner une tuile déjà servie, mais invalider un cache a un coût réel ; une carte accessible combine navigation clavier, ARIA, contraste, palettes daltonisme-sûres et un résumé textuel indépendant du rendu graphique.",
     ],
   },
   {

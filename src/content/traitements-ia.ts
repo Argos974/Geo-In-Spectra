@@ -51,10 +51,55 @@ export const traitementsIaContent: ContentBlock[] = [
   },
   { type: "game" },
 
+  { type: "heading", text: "3. Faire aussi ressortir les contours", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "À l'inverse d'un filtre qui lisse (moyenne du voisinage), un filtre à noyau peut aussi être réglé pour faire l'inverse : accentuer ce qui change brutalement d'un pixel à l'autre, comme les limites d'une parcelle ou le bord d'un bâtiment. C'est le même principe (un petit tableau de coefficients appliqué au voisinage), seuls les coefficients changent.",
+  },
+
+  { type: "heading", text: "4. Classer avec ou sans exemples : deux méthodes très différentes", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "La classification non supervisée (vue ci-dessus) trie les pixels sans savoir à l'avance ce qu'ils représentent. La classification supervisée fait l'inverse : on montre d'abord à l'algorithme des zones où l'on connaît déjà la bonne réponse (« ici, c'est de la forêt », « là, c'est un champ »), et il apprend à reconnaître ce type de signature avant de l'appliquer au reste de l'image — un peu comme montrer à quelqu'un dix photos de chats étiquetées avant de lui demander de reconnaître un chat sur une onzième photo, plutôt que de le laisser deviner seul.",
+  },
+
+  { type: "heading", text: "5. Vérifier qu'une classification est vraiment bonne", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Une classification qui « a l'air juste » à l'œil n'est pas suffisante : on la compare systématiquement à des points de terrain déjà connus, dont on est sûr de la vraie catégorie. Le pourcentage de points correctement retrouvés donne la précision globale de la classification.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Apprendre par cœur n'est pas la même chose que comprendre",
+    text: "Un modèle qui « mémorise » trop précisément ses exemples d'entraînement peut sembler excellent sur ces exemples-là, mais se tromper beaucoup sur des données nouvelles jamais vues — exactement comme un élève qui aurait appris par cœur les réponses d'un exercice précis sans en comprendre la méthode, et qui échoue dès qu'un exercice légèrement différent est posé. C'est pour cette raison qu'on teste toujours un modèle sur des données qu'il n'a jamais vues pendant son entraînement.",
+  },
+
+  { type: "heading", text: "6. Un réseau qui apprend lui-même son filtre", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Le filtre à noyau de la section 1 a des coefficients fixés à la main par une personne (une moyenne, un contour). Un réseau de neurones convolutif (CNN), la technique derrière la plupart des progrès récents en reconnaissance d'image, fait autrement : il apprend lui-même les meilleurs coefficients, à force de voir des milliers d'exemples déjà étiquetés, plutôt que de suivre une règle écrite d'avance par un humain.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Des motifs simples aux motifs complexes",
+    text: "Empilé sur plusieurs couches successives, un CNN détecte d'abord des motifs très simples (un contour, une texture), puis combine ces motifs simples en des formes de plus en plus reconnaissables (un toit, une route, une parcelle) — un peu comme reconnaître d'abord des traits et des courbes avant de reconnaître un visage entier.",
+  },
+
+  { type: "heading", text: "7. Où l'IA change déjà la pratique", level: "lycee" },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : un filtre à noyau recalcule un pixel à partir de son voisinage, pas de lui seul (lissage, contours) ; classer une image, c'est attribuer une catégorie à chaque pixel ; la classification non supervisée (k-means) regroupe sans exemple étiqueté, l'opérateur nomme les classes après coup.",
+      "Cartographier automatiquement l'occupation du sol d'un pays entier, mise à jour chaque année plutôt que tous les dix ans",
+      "Repérer une déforestation ou une urbanisation nouvelle sur des années d'images, sans qu'un humain n'examine chaque image une par une",
+      "Délimiter automatiquement chaque bâtiment ou chaque parcelle sur une image, plutôt que de simplement la classer globalement",
+    ],
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : un filtre à noyau recalcule un pixel à partir de son voisinage, pas de lui seul (lissage, contours) ; classer une image, c'est attribuer une catégorie à chaque pixel ; la classification non supervisée (k-means) regroupe sans exemple étiqueté, l'opérateur nomme les classes après coup ; la classification supervisée apprend au contraire à partir d'exemples déjà étiquetés ; on vérifie toujours une classification sur des points de terrain connus, jamais seulement à l'œil ; un modèle doit être testé sur des données jamais vues pendant l'entraînement, pas seulement sur ses propres exemples.",
     ],
   },
   {

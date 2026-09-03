@@ -802,6 +802,11 @@ export const fondamentauxContent: ContentBlock[] = [
 
   { type: "heading", text: "6. Le débat des projections : Mercator contre Peters", level: "approfondissement" },
   {
+    type: "diagram",
+    name: "tissot-distortion",
+    caption: "Le même cercle avant projection : Mercator (conforme) le garde circulaire mais l'exagère en surface, Peters (équivalente) conserve son aire au prix de sa forme — le compromis au cœur du débat.",
+  },
+  {
     type: "paragraph",
     text: "La projection de Mercator conserve les angles, ce qui la rend précieuse pour la navigation, mais déforme considérablement les surfaces aux hautes latitudes : le Groenland y paraît aussi grand que l'Afrique, alors qu'il est en réalité environ 14 fois plus petit. La projection de Peters (1973), équivalente (elle préserve les surfaces, famille définie dans la piste Licence/BUT ci-dessus), corrige les surfaces mais déforme fortement les formes.",
   },

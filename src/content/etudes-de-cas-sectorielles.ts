@@ -32,8 +32,70 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
     title: "Un ordre de grandeur d'économie d'intrant",
     text: "Sur une parcelle de 20 ha zonée en trois classes de vigueur, une modulation qui réduit la dose d'azote de 20 % sur les zones déjà bien pourvues et l'augmente de 15 % sur les zones faibles se traduit typiquement par une économie nette de quelques pourcents à l'échelle de la parcelle entière, sans perte de rendement sur les zones auparavant sous-dosées — l'ordre de grandeur exact dépend entièrement du contexte agronomique local.",
   },
+  {
+    type: "list",
+    ordered: true,
+    items: [
+      "Un drone ou un satellite survole la parcelle et mesure le rouge et le proche infrarouge",
+      "Un logiciel calcule le NDVI pixel par pixel, puis regroupe la parcelle en 3 à 5 zones de vigueur",
+      "Chaque zone reçoit une dose d'intrant différente, exportée vers le système de guidage du tracteur",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un NDVI faible n'a pas une seule cause",
+    text: "Une zone de NDVI faible peut venir d'un manque d'eau, d'un manque d'engrais, d'une maladie, ou simplement d'un sol naturellement moins profond à cet endroit précis. Le NDVI seul signale où regarder, jamais pourquoi — un agriculteur ou un agronome doit toujours vérifier sur place avant d'agir.",
+  },
 
-  { type: "heading", text: "3. Ce que ces secteurs partagent, malgré leurs différences", level: "lycee" },
+  { type: "heading", text: "3. Urbanisme : suivre l'artificialisation des sols dans le temps", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "L'artificialisation, c'est la transformation d'un sol naturel ou agricole en surface bâtie ou bitumée. La France s'est fixé un objectif de « zéro artificialisation nette » : pour vérifier si une commune progresse vers cet objectif, il faut pouvoir mesurer, année après année, combien d'hectares ont réellement changé — un calcul qui, fait à la main sur le terrain, serait beaucoup trop long à l'échelle de milliers de communes.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "La méthode, en une phrase",
+    text: "On calcule le NDBI (module Les Couleurs, l'indice qui fait ressortir le bâti) sur deux images satellite prises à plusieurs années d'écart, sur la même commune ; les pixels où le NDBI a fortement augmenté entre les deux dates signalent une zone récemment artificialisée, qu'il ne reste plus qu'à additionner en hectares.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Une conséquence qui se mesure aussi : l'îlot de chaleur",
+    text: "Le bitume et le béton stockent et restituent la chaleur bien plus qu'un sol végétalisé, ce qui crée des écarts de température de plusieurs degrés entre un centre-ville dense et sa périphérie verte — mesurable par satellite, et directement lié à l'artificialisation suivie ci-dessus : plus une zone s'artificialise, plus son échauffement local tend à s'accentuer.",
+  },
+
+  { type: "heading", text: "4. Risque incendie : ne jamais confondre le danger et la conséquence", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un massif forestier très inflammable (végétation sèche, vent fort, pente marquée) ne représente pas le même risque selon qu'il est désert ou bordé de maisons. Cartographier un risque suppose donc de croiser trois couches bien distinctes plutôt qu'une seule carte de danger.",
+  },
+  {
+    type: "diagram",
+    name: "risk-layers",
+    caption: "Trois couches distinctes, jamais confondues : un aléa fort sans aucun enjeu exposé ne produit aucun risque au sens opérationnel.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Deux secteurs, un classement qui peut surprendre",
+    text: "Un massif forestier isolé peut avoir un aléa incendie très fort (végétation sèche, vent) mais un risque final faible, faute d'enjeux exposés. Une lisière avec des maisons dispersées, même avec un aléa plus modéré, peut ressortir plus prioritaire dès qu'on prend en compte les enjeux et la vulnérabilité du bâti — c'est tout l'intérêt de croiser les trois couches plutôt que de classer uniquement sur le danger physique.",
+  },
+
+  { type: "heading", text: "5. Foresterie : mesurer une forêt entière sans y aller à pied", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Estimer le volume de bois d'une forêt entière, arbre par arbre, sur le terrain prendrait des années. En croisant un modèle de hauteur de canopée obtenu par LiDAR (module LiDAR) avec quelques mesures de vérification au sol, on peut estimer ce volume sur un massif entier depuis les airs, puis repérer une coupe rase récente en comparant deux dates d'images satellite.",
+  },
+  {
+    type: "callout",
+    tone: "info",
+    title: "Pourquoi ça compte concrètement",
+    text: "Une commune ou un office forestier peut ainsi planifier une coupe durable (savoir combien de bois est réellement disponible avant de couper) et détecter une coupe illégale ou non déclarée en comparant deux relevés dans le temps, sans avoir à parcourir le massif entier à pied pour le vérifier.",
+  },
+
+  { type: "heading", text: "6. Ce que ces secteurs partagent, malgré leurs différences", level: "lycee" },
   {
     type: "comparison",
     items: [
@@ -54,7 +116,7 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : les trois secteurs suivent le même enchaînement — donnée datée, indice ou classification intermédiaire, décision finale — même quand le vocabulaire professionnel diffère ; un indice satellite (NDVI, NDBI) sert toujours de première étape, jamais de décision en lui-même.",
+      "Bilan — à retenir : ces secteurs (agriculture, urbanisme, risque, foresterie) suivent le même enchaînement — donnée datée, indice ou classification intermédiaire, décision finale — même quand le vocabulaire professionnel diffère ; un indice satellite (NDVI, NDBI) ou un modèle LiDAR sert toujours de première étape, jamais de décision en lui-même.",
     ],
   },
   {
@@ -218,6 +280,11 @@ export const etudesDeCasSectoriellesContent: ContentBlock[] = [
   // PISTE MASTER / RECHERCHE
   // ================================================================
   { type: "heading", text: "1. Étude de cas : hiérarchiser un risque incendie à l'échelle communale", level: "approfondissement" },
+  {
+    type: "diagram",
+    name: "risk-layers",
+    caption: "Trois couches distinctes, combinées ici avec une pondération AHP explicite plutôt qu'une moyenne naïve.",
+  },
   {
     type: "table",
     headers: ["Composante", "Donnée mobilisée", "Salle de référence"],

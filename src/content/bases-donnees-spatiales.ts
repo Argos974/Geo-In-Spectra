@@ -60,6 +60,11 @@ export const basesDonneesSpatialesContent: ContentBlock[] = [
     text: "Chercher « toutes les parcelles qui touchent cette rivière » sans index revient à comparer la rivière à chaque parcelle de la base, une par une, jusqu'à la dernière — un peu comme chercher un mot dans un dictionnaire en lisant chaque page depuis le début plutôt qu'en utilisant l'ordre alphabétique. Un index spatial range les géométries par zone plutôt que par ordre alphabétique (une géométrie n'a pas d'ordre naturel comme un mot), pour éliminer d'un coup l'immense majorité des entités qui ne peuvent géométriquement pas être concernées.",
   },
   {
+    type: "diagram",
+    name: "spatial-index-tree",
+    caption: "Un index range les géométries par zone plutôt qu'une par une : il élimine d'un coup l'immense majorité des candidats impossibles avant de vérifier les rares candidats restants.",
+  },
+  {
     type: "callout",
     tone: "warning",
     title: "Sans index, chaque requête ralentit avec la taille de la base",
@@ -71,10 +76,41 @@ export const basesDonneesSpatialesContent: ContentBlock[] = [
     type: "paragraph",
     text: "Une base spatiale n'est utile à une carte web (module Cartographie web) que si elle est exposée par un service intermédiaire, jamais en donnant à chaque visiteur du site un accès direct à la base elle-même. GeoServer ou MapServer publient une base PostGIS en WMS/WFS (les mêmes standards que ceux vus côté client dans le module Cartographie web), une couche de sécurité et de contrôle indispensable dès qu'un site est accessible publiquement.",
   },
+  { type: "heading", text: "4. Une base peut refuser une donnée mal formée", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un fichier accepte en général n'importe quelle géométrie qu'on y ajoute, sans vérification. Une base de données spatiale peut au contraire imposer des règles strictes dès l'écriture : un type de géométrie précis (uniquement des polygones, jamais des points mélangés par erreur), un système de coordonnées imposé, ou encore l'interdiction que deux parcelles se chevauchent (la topologie). Une donnée qui ne respecte pas ces règles est rejetée immédiatement, plutôt que de corrompre silencieusement la base.",
+  },
+
+  { type: "heading", text: "5. Garder la trace de chaque modification", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Contrairement à un fichier réécrit à chaque modification (l'ancienne version perdue sauf sauvegarde manuelle), une base spatiale peut conserver un historique complet : qui a modifié quelle géométrie, et quand. Une exigence fréquente en cadastre ou en urbanisme réglementaire, où il faut parfois reconstituer l'état d'une parcelle à une date passée.",
+  },
+
+  { type: "heading", text: "6. Une alternative sans serveur : SpatiaLite", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "PostGIS demande d'installer et d'administrer un vrai serveur, ce qui n'est pas toujours utile. SpatiaLite offre l'essentiel du même principe (types géométriques, requêtes spatiales) dans un seul fichier autonome, sans serveur à gérer — un bon compromis pour un petit projet ou une donnée à distribuer facilement.",
+  },
+
+  { type: "heading", text: "7. Un exemple concret : combien de temps gagne un index", level: "lycee" },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Chercher toutes les parcelles qui touchent une rivière",
+    text: "Sur une base de 10 000 parcelles, comparer chacune à la rivière une par une prend une fraction de seconde : imperceptible. Sur 10 millions de parcelles (l'échelle d'un cadastre national), la même recherche sans index peut prendre plusieurs minutes, alors qu'avec un index spatial bien construit, elle reste de l'ordre de la seconde — l'index ne change rien au résultat, seulement au temps pour l'obtenir, et cet écart grandit avec la taille de la base plutôt que de rester constant.",
+  },
+  {
+    type: "callout",
+    tone: "question",
+    title: "À toi de voir",
+    text: "Une base contient 500 000 bâtiments. Sans index spatial, une requête « tous les bâtiments à moins de 100 m d'une école » doit comparer chaque bâtiment individuellement à chaque école. Pourquoi cette même requête devient-elle beaucoup plus rapide dès qu'un index spatial est créé, sans que le résultat final ne change ?",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : une base spatiale gère l'accès concurrent et garantit une cohérence qu'un fichier ne garantit pas ; un index spatial élimine d'un coup les entités impossibles avant de tester la géométrie exacte, indispensable dès que la base grandit ; une carte web n'accède jamais directement à la base, toujours via un service intermédiaire (GeoServer, MapServer).",
+      "Bilan — à retenir : une base spatiale gère l'accès concurrent et garantit une cohérence qu'un fichier ne garantit pas ; un index spatial élimine d'un coup les entités impossibles avant de tester la géométrie exacte, indispensable dès que la base grandit ; une base peut refuser une donnée mal formée (mauvais type, chevauchement interdit) ; elle peut aussi garder un historique complet des modifications ; SpatiaLite offre l'essentiel sans serveur à administrer ; une carte web n'accède jamais directement à la base, toujours via un service intermédiaire (GeoServer, MapServer).",
     ],
   },
   {
@@ -205,6 +241,12 @@ export const basesDonneesSpatialesContent: ContentBlock[] = [
     tone: "example",
     title: "Pourquoi un index existant n'est parfois pas utilisé",
     text: "PostgreSQL peut ignorer un index spatial existant si les statistiques internes de la table sont obsolètes (résolu par `ANALYZE nom_table`), ou si la requête compare la géométrie à une expression calculée plutôt qu'à une valeur directe (ex. reprojeter une colonne à la volée dans la clause WHERE empêche souvent l'utilisation de l'index sur cette colonne) — un piège classique, la reprojection doit être faite une fois, en amont, pas répétée à chaque ligne comparée dans la requête.",
+  },
+
+  {
+    type: "diagram",
+    name: "spatial-index-tree",
+    caption: "Ce que EXPLAIN ANALYZE vérifie concrètement : l'index GiST (rectangles englobants imbriqués) a-t-il bien été utilisé pour éliminer les candidats avant de tester la géométrie exacte ?",
   },
 
   { type: "heading", text: "2. Raster en base : PostGIS Raster", level: "approfondissement" },

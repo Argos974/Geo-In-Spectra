@@ -46,7 +46,91 @@ export const methodologieContent: ContentBlock[] = [
     ],
   },
 
-  { type: "heading", text: "2. La dissertation de géographie", level: "superieur" },
+  { type: "heading", text: "2. Le paragraphe argumenté (méthode AEI)", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Avant la dissertation complète (niveau post-bac, section suivante), le lycée entraîne d'abord à une brique plus courte mais tout aussi exigeante : le paragraphe argumenté, qui répond à une question précise en quelques phrases construites, jamais en une accumulation de connaissances en vrac.",
+  },
+  {
+    type: "table",
+    headers: ["Étape (AEI)", "Rôle", "Erreur fréquente"],
+    rows: [
+      ["Affirmation", "Une idée claire, qui répond directement à une partie de la question", "Une affirmation trop vague pour être vérifiable par l'exemple qui suit"],
+      ["Exemple", "Un fait précis, daté et localisé, qui illustre concrètement l'affirmation", "Un exemple flou, sans date ni lieu, qui pourrait illustrer n'importe quelle affirmation"],
+      ["Interprétation", "Expliquer en quoi l'exemple confirme (ou nuance) l'affirmation", "S'arrêter à l'exemple sans jamais revenir répondre à la question posée"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Un paragraphe AEI appliqué à la télédétection",
+    text: "Affirmation : « Le satellite permet de suivre un phénomène à une échelle que le terrain seul ne peut pas couvrir. » Exemple : « Le suivi de l'artificialisation des sols en France par NDBI (module Études de cas) compare des images Sentinel-2 sur l'ensemble du territoire, commune par commune, chaque année. » Interprétation : « Un relevé de terrain exhaustif à cette échelle prendrait des années à une seule équipe ; le satellite rend ce suivi national annuel matériellement possible. »",
+  },
+
+  { type: "heading", text: "3. Bien choisir un figuré pour une carte : les bases de la sémiologie", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Une carte n'est pas une illustration libre : elle obéit à un langage visuel formalisé par Jacques Bertin (Sémiologie graphique, 1967). L'essentiel à retenir avant de construire un croquis : le type de figuré choisi doit correspondre à la nature de la donnée représentée, jamais au hasard ou par simple goût esthétique.",
+  },
+  {
+    type: "list",
+    items: [
+      "Une quantité (une population, un nombre) se représente par la taille d'un symbole (des ronds plus ou moins gros), pas par sa couleur",
+      "Un ordre ou une intensité (un taux croissant) se représente par un dégradé de couleur d'une même teinte (clair → foncé), jamais par plusieurs couleurs différentes sans ordre naturel",
+      "Une catégorie sans ordre (un type d'occupation du sol : forêt, culture, bâti) se représente par des couleurs différentes, une par catégorie",
+    ],
+  },
+  {
+    type: "diagram",
+    name: "semiology-variables",
+    caption: "Trois familles de figurés, trois usages : la taille pour une quantité, la valeur pour un ordre, la forme ou la couleur pour une catégorie sans ordre.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "L'erreur la plus fréquente en croquis de bac",
+    text: "Utiliser un dégradé de couleurs différentes (rouge puis bleu puis vert) pour une donnée qui progresse (un taux croissant) brouille la lecture : l'œil ne perçoit aucun ordre naturel entre des teintes différentes. Un dégradé de la même couleur, du clair au foncé, respecte au contraire l'ordre réel de la donnée.",
+  },
+
+  { type: "heading", text: "4. Construire un croquis de bac : titre et légende organisée", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Le croquis de géographie, fréquent en épreuve de bac, répond aux mêmes exigences de méthode qu'un paragraphe argumenté, mais transposées au langage cartographique.",
+  },
+  {
+    type: "list",
+    items: [
+      "Le titre doit annoncer une problématique, pas seulement répéter l'intitulé du sujet",
+      "La légende s'organise en 2 à 4 rubriques thématiques (jamais une liste de symboles dans l'ordre où ils viennent à l'esprit)",
+      "Chaque figuré choisi doit respecter la sémiologie vue ci-dessus : taille pour une quantité, dégradé pour un ordre, couleur pour une catégorie",
+    ],
+  },
+  {
+    type: "devoir",
+    format: "Croquis noté",
+    title: "Construire la légende d'un croquis de synthèse",
+    prompt: "À partir d'un sujet de ton choix portant sur un territoire connu (ta commune, ta région), rédige uniquement le titre problématisé et la légende organisée (2 à 4 rubriques, chaque figuré justifié) — sans tracer le fond de carte. L'objectif est d'évaluer la structuration de la légende indépendamment du dessin.",
+    criteria: [
+      "Le titre annonce une problématique, pas seulement le thème du sujet",
+      "La légende compte 2 à 4 rubriques thématiques cohérentes, pas une liste plate",
+      "Chaque figuré est justifié par la nature de la donnée qu'il représente",
+      "Aucun élément de légende ne dépasse ce qu'une échelle raisonnable permettrait réellement de représenter",
+    ],
+  },
+  {
+    type: "list",
+    items: [
+      "Bilan — à retenir : un commentaire de document progresse par étapes (identification, description, analyse, critique) ; un paragraphe argumenté suit la méthode AEI (Affirmation, Exemple précis, Interprétation) ; un figuré cartographique doit correspondre à la nature de la donnée (taille pour une quantité, dégradé pour un ordre, couleur pour une catégorie) ; un croquis de bac a un titre problématisé et une légende organisée en rubriques, jamais en vrac.",
+    ],
+  },
+  {
+    type: "link",
+    to: "/module/travaux-pratiques",
+    label: "Mettre en pratique : le mini-projet et son rapport",
+    description: "La séance 7 de l'Atelier applique cette méthode à un rapport complet, avec une grille d'auto-évaluation corrigée.",
+  },
+
+  { type: "heading", text: "1. La dissertation de géographie", level: "superieur" },
   {
     type: "paragraph",
     text: "Une dissertation répond à une question qui n'a pas de réponse évidente ni univoque : sinon, il n'y aurait rien à démontrer. La méthode se joue avant même la rédaction :",
@@ -92,7 +176,7 @@ export const methodologieContent: ContentBlock[] = [
     text: "Un plan-type plaqué sur un sujet qu'il ne sert pas est une des critiques les plus fréquentes en évaluation. Le test simple : si l'on peut permuter deux parties du plan sans rien perdre à la démonstration, c'est que le plan ne démontre en réalité rien de progressif : il ne fait qu'illustrer.",
   },
 
-  { type: "heading", text: "3. Le rapport technique SIG et télédétection", level: "superieur" },
+  { type: "heading", text: "2. Le rapport technique SIG et télédétection", level: "superieur" },
   {
     type: "paragraph",
     text: "En milieu professionnel ou en stage, le format change mais l'exigence de méthode reste : un rapport technique se lit dans l'ordre, mais doit aussi pouvoir être consulté par sections isolément (un décideur pressé lira le résumé et les recommandations, pas la méthode complète).",
@@ -122,7 +206,7 @@ export const methodologieContent: ContentBlock[] = [
     text: "\"Le NDVI moyen de la parcelle est de 0.62\" est une affirmation incomplète pour un rapport technique. \"Le NDVI moyen de la parcelle est de 0.62 (image Sentinel-2 du 14/07, niveau L2A, résolution 10 m, ±quelques pixels nuageux masqués sur le quart nord-est)\" permet à un lecteur externe d'évaluer lui-même la fiabilité du chiffre : c'est cette transparence, plus que le chiffre seul, qui distingue un rapport technique d'une simple affirmation.",
   },
 
-  { type: "heading", text: "4. La sémiologie graphique : le langage visuel de la carte", level: "superieur" },
+  { type: "heading", text: "3. La sémiologie graphique : le langage visuel de la carte", level: "superieur" },
   {
     type: "paragraph",
     text: "Une carte n'est pas une illustration libre : elle obéit à un langage visuel formalisé par Jacques Bertin dans la Sémiologie graphique (1967), qui reste la référence de toute cartographie thématique aujourd'hui enseignée en France. Bertin identifie six variables visuelles qu'un symbole cartographique peut porter, et associe chacune à un type de donnée qu'elle représente correctement, ou trahit, si mal choisie.",
@@ -138,6 +222,11 @@ export const methodologieContent: ContentBlock[] = [
       ["Orientation", "Rarement utilisée seule ; combinable avec d'autres variables"],
       ["Forme", "Une donnée qualitative catégorielle : ex. pictogrammes différenciant un type d'équipement"],
     ],
+  },
+  {
+    type: "diagram",
+    name: "semiology-variables",
+    caption: "Taille, valeur et forme/couleur ne sont pas interchangeables : chacune correspond à une nature de donnée précise, jamais à un simple choix esthétique.",
   },
   {
     type: "callout",
@@ -159,7 +248,7 @@ export const methodologieContent: ContentBlock[] = [
   },
   { type: "game" },
 
-  { type: "heading", text: "5. Le croquis et la carte de synthèse", level: "superieur" },
+  { type: "heading", text: "4. Le croquis et la carte de synthèse", level: "superieur" },
   {
     type: "paragraph",
     text: "Le croquis de géographie (fréquent en épreuve de bac et de concours) répond aux mêmes exigences de méthode qu'une dissertation, mais transposées au langage cartographique : il doit avoir un titre problématisé (pas un simple intitulé de sujet), une légende organisée en rubriques logiques (jamais une liste de symboles dans l'ordre où ils viennent à l'esprit), et une nomenclature choisie pour appuyer une démonstration, pas pour être exhaustive.",
@@ -169,7 +258,7 @@ export const methodologieContent: ContentBlock[] = [
     items: [
       "Le titre du croquis doit annoncer une problématique, comme le ferait l'intitulé d'un plan de dissertation",
       "La légende s'organise en 2 à 4 rubriques thématiques (ex. \"Les dynamiques du territoire\", \"Les contraintes physiques\", \"Les réseaux\"), jamais en vrac",
-      "Chaque figuré cartographique choisi doit respecter la sémiologie de Bertin (section 4) : le figuré doit être justifié par la nature de la donnée qu'il porte",
+      "Chaque figuré cartographique choisi doit respecter la sémiologie de Bertin (section 3) : le figuré doit être justifié par la nature de la donnée qu'il porte",
       "La légende, la nomenclature et le figuré ne doivent jamais être plus détaillés que ce que l'échelle du fond de carte permet réellement de représenter",
     ],
   },
@@ -208,12 +297,12 @@ export const methodologieContent: ContentBlock[] = [
     criteria: [
       "Le titre annonce une problématique, pas seulement le thème du sujet",
       "La légende compte 2 à 4 rubriques thématiques cohérentes, pas une liste plate",
-      "Chaque figuré est justifié par la nature de la donnée qu'il représente (sémiologie de Bertin, section 4)",
+      "Chaque figuré est justifié par la nature de la donnée qu'il représente (sémiologie de Bertin, section 3)",
       "Aucun élément de légende ne dépasse ce qu'une échelle raisonnable permettrait réellement de représenter",
     ],
   },
 
-  { type: "heading", text: "6. Préparer un concours (CAPES / Agrégation d'histoire-géographie)", level: "approfondissement" },
+  { type: "heading", text: "1. Préparer un concours (CAPES / Agrégation d'histoire-géographie)", level: "approfondissement" },
   {
     type: "paragraph",
     text: "Les épreuves de concours d'enseignement en histoire-géographie mobilisent directement les compétences des sections précédentes, avec des attentes spécifiques :",
@@ -222,7 +311,7 @@ export const methodologieContent: ContentBlock[] = [
     type: "list",
     items: [
       "L'épreuve écrite de dissertation attend un plan démonstratif rigoureux et des références précises (auteurs, exemples localisés, dates)",
-      "L'épreuve de cartographie thématique (fréquente à l'oral) évalue la capacité à choisir une sémiologie graphique adaptée au phénomène représenté (section 4), pas seulement une carte esthétique",
+      "L'épreuve de cartographie thématique (fréquente à l'oral) évalue la capacité à choisir une sémiologie graphique adaptée au phénomène représenté (section 3), pas seulement une carte esthétique",
       "Les rapports de jury, publiés après chaque session, sont la ressource la plus utile pour calibrer précisément le niveau d'exigence attendu, bien plus qu'un manuel générique",
     ],
   },
@@ -253,7 +342,12 @@ export const methodologieContent: ContentBlock[] = [
     description: "La séance 7 de l'Atelier applique cette méthode à un rapport complet, avec une grille d'auto-évaluation corrigée.",
   },
 
-  { type: "heading", text: "7. Le mémoire de recherche : structure IMRaD et rigueur statistique", level: "approfondissement" },
+  { type: "heading", text: "2. Le mémoire de recherche : structure IMRaD et rigueur statistique", level: "approfondissement" },
+  {
+    type: "diagram",
+    name: "dissertation-plan",
+    caption: "IMRaD répond à la même exigence qu'un plan de dissertation (section 1 de la piste Licence/BUT) : chaque partie a une fonction précise, jamais interchangeable avec une autre.",
+  },
   {
     type: "paragraph",
     text: "Un mémoire de master recherche ou un article scientifique obéit à une structure différente du rapport technique de la section 3 : la structure IMRaD (Introduction, Méthode, Résultats, and Discussion), quasi universelle dans les sciences empiriques, y compris en géographie quantitative et en télédétection.",

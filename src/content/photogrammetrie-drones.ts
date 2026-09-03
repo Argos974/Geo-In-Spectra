@@ -65,10 +65,45 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
       "Le survol de propriétés privées ou de personnes non impliquées dans l'opération reste encadré même en catégorie ouverte",
     ],
   },
+  { type: "heading", text: "4. Comment un logiciel devine où était le drone", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Un logiciel de photogrammétrie ne connaît au départ ni la position exacte du drone à chaque photo, ni la forme du terrain survolé : il repère automatiquement des détails reconnaissables (un coin de toiture, une pierre, une texture contrastée) présents sur plusieurs photos, et en déduit simultanément la trajectoire du drone et la géométrie 3D du terrain — un peu comme reconstituer le trajet d'un randonneur et le relief d'un sentier à partir de plusieurs photos qu'il aurait prises en chemin, sans qu'aucun GPS n'ait enregistré son parcours.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une surface bien reconstruite, pas forcément bien placée sur la carte",
+    text: "Ce calcul donne un modèle cohérent en lui-même (les distances entre points sont correctes les unes par rapport aux autres) mais pas nécessairement bien positionné sur une vraie carte : sans repère externe, le modèle pourrait être correct dans sa forme tout en étant décalé de plusieurs mètres, voire légèrement à la mauvaise échelle.",
+  },
+
+  { type: "heading", text: "5. Caler le modèle sur le terrain : les points d'appui au sol", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Pour résoudre ce problème, on mesure au GPS quelques points bien identifiables au sol avant le vol (un marquage peint, un piquet visible sur les photos), les points d'appui au sol (GCP). Une fois reconnus sur les photos, ils calent le modèle 3D sur ses vraies coordonnées géographiques — le même principe que le géoréférencement d'une carte scannée (module Fondements), appliqué ici à un modèle en trois dimensions plutôt qu'à une image plate.",
+  },
+
+  { type: "heading", text: "6. Deux surfaces à ne pas confondre : MNS et MNT", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "La reconstruction 3D produit d'abord un Modèle Numérique de Surface (MNS) : l'altitude de tout ce qui est visible d'en haut, toits et cimes d'arbres compris. Le Modèle Numérique de Terrain (MNT) ne garde que le sol nu, sans le bâti ni la végétation. La différence entre les deux, point par point, donne directement la hauteur de ce qui dépasse du sol.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Sous les arbres, la caméra ne voit rien",
+    text: "Contrairement au LiDAR (salle suivante), une caméra ne voit que la première surface opaque rencontrée : sous une forêt dense, aucune photo ne montre jamais le sol, donc aucun MNT fiable n'en sort directement. C'est la limite la plus citée de la photogrammétrie face au LiDAR.",
+  },
+
+  { type: "heading", text: "7. Assembler les photos en une seule carte : l'orthomosaïque", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Coller les photos brutes bord à bord donnerait une image déformée : chaque photo, prise depuis un angle, étire davantage ce qui est loin du centre. L'orthomosaïque corrige cette déformation photo par photo avant de les assembler, pour obtenir une seule image à l'échelle constante partout, directement superposable à une carte — le même principe qu'une orthophoto IGN classique.",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : la photogrammétrie reconstruit une scène 3D à partir de photos qui se recouvrent, comme une vision stéréoscopique généralisée ; un recouvrement insuffisant (moins de 70-80 % longitudinal, 60-70 % latéral) ne se révèle qu'au traitement ; un vol professionnel en France est encadré (catégories ouverte/spécifique, zones interdites, attestation de télépilote).",
+      "Bilan — à retenir : la photogrammétrie reconstruit une scène 3D à partir de photos qui se recouvrent, comme une vision stéréoscopique généralisée ; un recouvrement insuffisant (moins de 70-80 % longitudinal, 60-70 % latéral) ne se révèle qu'au traitement ; un logiciel déduit la trajectoire du drone et la géométrie 3D en même temps, à partir de détails reconnus sur plusieurs photos ; des points d'appui au sol calent ensuite le modèle sur de vraies coordonnées ; MNS = tout ce qui est visible d'en haut, MNT = sol nu seul ; une orthomosaïque corrige la déformation de chaque photo avant de les assembler ; un vol professionnel en France est encadré (catégories ouverte/spécifique, zones interdites, attestation de télépilote).",
     ],
   },
   {
@@ -282,7 +317,36 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
     text: "La précision horizontale (dx, dy) et la précision verticale (dz) d'un modèle photogrammétrique ne sont presque jamais du même ordre de grandeur : l'altitude est structurellement plus sensible à une mauvaise répartition des GCP ou à l'absence de RTK/PPK qu'elle ne l'est en position horizontale. Un rapport de précision sérieux documente les trois composantes séparément, pas seulement une RMSE 3D unique qui masque cette asymétrie.",
   },
 
-  { type: "heading", text: "3. Photogrammétrie vs LiDAR : forces et limites respectives", level: "approfondissement" },
+  { type: "heading", text: "3. Capteurs multispectraux embarqués : calibrer un indice depuis un drone", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un drone équipé d'un capteur multispectral (plutôt qu'un simple appareil photo RGB) peut calculer un NDVI ou un NDRE (module Les Couleurs) à une résolution centimétrique, bien plus fine que Sentinel-2. Contrairement à un satellite, dont l'éclairage solaire et la calibration sont standardisés par le fournisseur de données, un drone opère sous un éclairage qui change d'un vol à l'autre (nébulosité, heure) : sans étalonnage, deux vols réalisés à quelques jours d'écart ne sont pas directement comparables en valeur absolue.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Une cible de calibration radiométrique, pas une option",
+    text: "La pratique standard place au sol, avant chaque vol, une ou plusieurs cibles de réflectance connue et stable (souvent un panneau gris certifié à x % de réflectance) visible sur les photos : elle sert de référence pour convertir les valeurs brutes du capteur en réflectance physique comparable d'un vol à l'autre, exactement le même principe que la conversion DN → réflectance TOA d'un satellite (module Le Regard), mais réalisée ici avec une cible physique plutôt qu'un modèle atmosphérique.",
+  },
+
+  { type: "heading", text: "4. Suivi temporel par photogrammétrie répétée : chantiers et mouvements de terrain", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Répéter un vol identique sur le même site à intervalles réguliers (même trajectoire, mêmes GCP fixes) permet de comparer les modèles 3D successifs pour quantifier un volume de matériau extrait sur une carrière, suivre l'avancement d'un chantier, ou détecter un glissement de terrain lent — la même logique de détection de changement qu'un ΔNDVI (module Les Couleurs), appliquée ici à une altitude plutôt qu'à un indice spectral.",
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Calculer un volume déplacé entre deux relevés",
+    text: "Sur une carrière, un premier MNS donne un volume de matériau de référence ; un second MNS, un mois plus tard, calculé sur les mêmes GCP fixes, permet de calculer la différence de volume (intégrale de la différence d'altitude sur la zone d'extraction) directement en algèbre raster (module Le Compas) — un suivi de production bien plus fréquent et moins coûteux qu'un relevé topographique classique répété au même rythme.",
+  },
+
+  { type: "heading", text: "5. Photogrammétrie vs LiDAR : forces et limites respectives", level: "approfondissement" },
+  {
+    type: "diagram",
+    name: "lidar-returns",
+    caption: "Ce qu'une caméra photogrammétrique ne peut structurellement pas voir : un capteur LiDAR laisse une partie de son signal atteindre le sol sous la canopée, retour par retour.",
+  },
   {
     type: "comparison",
     items: [
@@ -299,7 +363,7 @@ export const photogrammetrieDronesContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : le nuage dense (MVS) précède le maillage 3D, deux produits distincts du même calcul ; une RMSE sur des checkpoints indépendants, jamais sur les GCP de calage eux-mêmes, documente la précision réelle d'un modèle, en distinguant horizontal et vertical ; la photogrammétrie et le LiDAR ne sont pas interchangeables, le second seul pénètre partiellement un couvert dense.",
+      "Bilan — à retenir : le nuage dense (MVS) précède le maillage 3D, deux produits distincts du même calcul ; une RMSE sur des checkpoints indépendants, jamais sur les GCP de calage eux-mêmes, documente la précision réelle d'un modèle, en distinguant horizontal et vertical ; un capteur multispectral embarqué exige une cible de calibration au sol pour rendre deux vols comparables en réflectance ; répéter un vol identique permet de suivre un volume, un chantier ou un mouvement de terrain dans le temps ; la photogrammétrie et le LiDAR ne sont pas interchangeables, le second seul pénètre partiellement un couvert dense.",
     ],
   },
   {

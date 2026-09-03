@@ -86,10 +86,45 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     name: "raster-explorer",
     caption: "Planche vivante. Mêmes bandes, mêmes formules que ci-dessus, appliquées pixel par pixel à la scène Sentinel-2 réelle de Vitrolles.",
   },
+  { type: "heading", text: "4. Pourquoi le NDVI ne suffit pas toujours : l'effet du sol", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Sur une parcelle où la végétation est clairsemée (semis récent, zone aride), une partie du sol reste visible entre les plants : sa propre réflectance vient alors « polluer » le calcul du NDVI, faussant légèrement l'estimation de la végétation réelle. Des indices corrigés comme le SAVI ajoutent un léger ajustement à la formule du NDVI, pensé spécifiquement pour atténuer cet effet du sol nu visible en transparence.",
+  },
+
+  { type: "heading", text: "5. D'autres indices, d'autres usages", level: "lycee" },
+  {
+    type: "table",
+    headers: ["Indice", "Ce qu'il détecte"],
+    rows: [
+      ["NDWI", "Surfaces en eau libre (lacs, rivières)"],
+      ["NBR", "Sévérité d'un incendie, comparé avant/après le feu"],
+      ["GNDVI", "Variante du NDVI plus sensible à la chlorophylle"],
+    ],
+  },
+  {
+    type: "diagram",
+    name: "spectral-signatures",
+    caption: "Végétation, eau, sol nu et bâti n'ont pas la même courbe de réflectance : c'est ce qui rend chaque indice possible.",
+  },
+
+  { type: "heading", text: "6. Un capteur un peu spécial : le red-edge de Sentinel-2", level: "lycee" },
+  {
+    type: "paragraph",
+    text: "Entre le rouge et le proche infrarouge, la réflectance d'une feuille change très brutalement sur une petite plage de longueurs d'onde : le « bord rouge » (red-edge). Sentinel-2 est l'un des rares capteurs gratuits à mesurer précisément cette zone, ce qui permet de détecter un début de stress de la plante (manque de chlorophylle) avant même que le NDVI, moins sensible à ce détail, ne réagisse.",
+  },
+
+  { type: "heading", text: "7. Un indice reste une mesure indirecte", level: "lycee" },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un indice élevé ou faible n'est pas un fait établi à lui seul",
+    text: "Un nuage fin, une ombre portée, ou un pixel qui mélange plusieurs types de sol au même endroit peuvent fausser un indice sans que rien ne le signale visuellement. Un indice reste une estimation indirecte, à confirmer par une vérification de terrain avant toute conclusion définitive.",
+  },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : NDVI = (NIR−Rouge)/(NIR+Rouge), élevé pour la végétation dense ; NDMI = (NIR−SWIR)/(NIR+SWIR), chute en cas de stress hydrique ; NDBI = (SWIR−NIR)/(SWIR+NIR), élevé pour le bâti ; les trois partagent la même forme (A−B)/(A+B) ; un indice composé combine plusieurs indices déjà calculés, pas seulement des bandes brutes.",
+      "Bilan — à retenir : NDVI = (NIR−Rouge)/(NIR+Rouge), élevé pour la végétation dense ; NDMI = (NIR−SWIR)/(NIR+SWIR), chute en cas de stress hydrique ; NDBI = (SWIR−NIR)/(SWIR+NIR), élevé pour le bâti ; les trois partagent la même forme (A−B)/(A+B) ; un indice composé combine plusieurs indices déjà calculés, pas seulement des bandes brutes ; des indices corrigés (SAVI) atténuent l'effet du sol nu visible en transparence ; un indice reste une mesure indirecte, jamais une preuve à lui seul.",
     ],
   },
   {
@@ -364,6 +399,11 @@ export const indicesSpectrauxContent: ContentBlock[] = [
 
   { type: "heading", text: "2. Valider un indice : le confronter à une mesure biophysique réelle", level: "approfondissement" },
   {
+    type: "diagram",
+    name: "ndvi-scale",
+    caption: "L'échelle du NDVI n'est qu'une interprétation qualitative par défaut : la valider suppose de la confronter statistiquement à une mesure terrain réelle (LAI), pas seulement à ce découpage indicatif.",
+  },
+  {
     type: "paragraph",
     text: "Un indice spectral reste, par construction, une mesure indirecte. Le valider scientifiquement suppose de le confronter statistiquement à une grandeur biophysique mesurée sur le terrain : le LAI (Leaf Area Index, surface foliaire par unité de surface au sol) est la référence la plus courante pour un indice de végétation.",
   },
@@ -380,7 +420,19 @@ export const indicesSpectrauxContent: ContentBlock[] = [
     text: "Comme pour un modèle de classification (module L'Intelligence, sur-apprentissage), une régression indice↔LAI calibrée et évaluée sur le même jeu de placettes terrain donne un R² optimiste. La validation rigoureuse exige un jeu de placettes de test indépendant, jamais utilisé pour ajuster (a, b, c).",
   },
 
-  { type: "heading", text: "3. Séries temporelles et phénologie", level: "approfondissement" },
+  { type: "heading", text: "3. Combiner optique et radar : un indice plus robuste face aux nuages", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Une série temporelle NDVI purement optique comporte des trous chroniques dès qu'une région connaît une saison nuageuse prolongée (tropiques humides, hiver océanique). Fusionner un indice optique avec un indicateur radar (module Le Regard, rétrodiffusion ou RVI ci-dessus) sur les mêmes dates comble ces trous : le radar continue de fournir une information de structure de végétation quand l'optique est aveuglé, au prix d'une grandeur physiquement différente qu'il faut recalibrer plutôt que substituer directement.",
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Ne jamais remplacer un NDVI manquant par une valeur radar brute",
+    text: "Le NDVI et la rétrodiffusion radar ne mesurent pas la même grandeur physique (réflectance optique contre structure/rugosité de surface) : une simple substitution valeur pour valeur produirait une série incohérente. Les approches robustes apprennent une relation statistique entre les deux sur les dates où l'optique est disponible, puis l'utilisent pour combler les seules dates manquantes, plutôt que de mélanger les deux échelles sans transformation.",
+  },
+
+  { type: "heading", text: "4. Séries temporelles et phénologie", level: "approfondissement" },
   {
     type: "brique",
     id: "series-temporelles",
@@ -415,7 +467,7 @@ export const indicesSpectrauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : un indice radar (VH/VV, RVI) remplace la réflectance par la rétrodiffusion, utile quand l'optique est aveugle (nuages) ; valider un indice suppose une régression contre une mesure terrain indépendante (LAI), avec RMSE et R² interprétés prudemment ; une série temporelle (régression harmonique + détection de rupture) sépare un signal réel d'une fluctuation saisonnière, mieux qu'une différence à deux dates seule.",
+      "Bilan — à retenir : un indice radar (VH/VV, RVI) remplace la réflectance par la rétrodiffusion, utile quand l'optique est aveugle (nuages) ; valider un indice suppose une régression contre une mesure terrain indépendante (LAI), avec RMSE et R² interprétés prudemment ; combiner optique et radar comble les trous d'une série sans jamais substituer directement les deux grandeurs ; une série temporelle (régression harmonique + détection de rupture) sépare un signal réel d'une fluctuation saisonnière, mieux qu'une différence à deux dates seule.",
     ],
   },
   {
