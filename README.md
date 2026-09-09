@@ -86,6 +86,69 @@ public/
   images/gallery/                                   # les 8 œuvres (domaine public, Wikimedia Commons)
 ```
 
+## Plan du site
+
+Deux diagrammes tenus à jour avec `RootRouter.tsx` : l'arborescence des routes,
+puis le circuit du contenu partagé par les trois profils de rendu (voir
+"Structure" ci-dessus pour le détail des fichiers). Rendus nativement par
+GitHub (Mermaid) ; une version illustrée reprenant la palette et les
+polices du site est conservée dans [`docs/plan-galerie.html`](docs/plan-galerie.html)
+(à ouvrir en local — GitHub n'exécute pas le CSS/JS d'un fichier HTML brut).
+
+### Arborescence des routes
+
+```mermaid
+flowchart TD
+    Home["/ — Home<br/>choix du profil"]
+    Home --> Disc["/discipulus<br/>Élève"]
+    Home --> Mag["/magister<br/>Enseignant"]
+    Home --> Trans["Pages transversales<br/>indépendantes du profil"]
+    Home --> Legacy["/module/:slug<br/>route héritée, liens profonds"]
+
+    Disc --> DCours["/discipulus/cours<br/>12 salles, accordéon"]
+    Disc --> DMeth["/discipulus/methodes<br/>Méthodologie"]
+    Disc --> DProg["/discipulus/progression<br/>Bilan"]
+    Disc --> DRev["/discipulus/revision<br/>Révision espacée (Leitner)"]
+
+    Mag --> MCours["/magister/cours<br/>= l'Atelier (TP)"]
+    Mag --> MProg["/magister/programme"]
+    Mag --> MEval["/magister/evaluation"]
+    Mag --> MPed["/magister/pedagogie"]
+    Mag --> MClasse["/magister/classe"]
+
+    Trans --> T1["/ressources · /recherche · /glossaire<br/>/references · /pieges-frequents · /formulaire<br/>/jeux-de-donnees · /parcours · /annales<br/>/mentions-legales"]
+
+    Legacy --> LChild["/exercices · /quiz"]
+    Legacy --> LPrint["Export PDF (Playwright)<br/>/print/module|fiche|quiz(-corrige)/:slug"]
+
+    classDef discipulus fill:#3f5066,stroke:#9db3cd,color:#fff;
+    classDef magister fill:#7a2f24,stroke:#d97d64,color:#fff;
+    classDef transversal fill:#3a2f18,stroke:#b8934f,color:#f0e3cf;
+    class Disc,DCours,DMeth,DProg,DRev discipulus;
+    class Mag,MCours,MProg,MEval,MPed,MClasse magister;
+    class Trans,T1,Legacy,LChild,LPrint transversal;
+```
+
+### Circuit du contenu
+
+Les 14 salles ne sont écrites qu'une fois : un même tableau de `ContentBlock`,
+filtré par niveau, alimente trois rendus web distincts et une mise en page
+dédiée à l'export PDF — jamais une capture de la page web.
+
+```mermaid
+flowchart LR
+    A["14 fichiers<br/>content/&lt;slug&gt;.ts"] --> B["moduleContent<br/>content/index.ts"]
+    B --> C["filterBlocksByLevel()<br/>lycée / supérieur / approfondissement"]
+    C --> D1["DiscipulusCoursPage<br/>accordéon élève"]
+    C --> D2["MagisterCoursPage<br/>accordéon Atelier"]
+    C --> D3["ModulePage (legacy)<br/>/module/:slug"]
+    C --> D4["Print* (variant=print)<br/>PrintCourse/Fiche/Quiz"]
+    D1 --> E1["Page web<br/>ContentBlocks variant=dark"]
+    D2 --> E1
+    D3 --> E1
+    D4 --> E2["Export PDF<br/>Playwright, Chromium headless"]
+```
+
 ## Ajouter une salle (module)
 
 1. Ajouter une entrée dans `src/data/modules.ts` (slug, titre, navLabel, résumé, thèmes, épigraphe).
@@ -150,9 +213,11 @@ quiz interactif.
 
 ## Feuille de route
 
-14 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
-socle d'origine ; les sept suivantes couvrent des thèmes spécialisés ajoutés ensuite,
-étoffées depuis à un niveau de détail comparable :
+18 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
+socle d'origine ; les onze suivantes couvrent des thèmes spécialisés ajoutés ensuite,
+étoffées depuis à un niveau de détail comparable — dont quatre salles-outils (QGIS,
+TerrSet, R, VS Code), chacune un tutoriel logiciel complet plutôt qu'une simple mention
+en passant dans Le Compas :
 
 1. **Fondements** (`fondamentaux`) — coordonnées/EPSG, projections, vecteur/raster,
    histoire de la cartographie, lecture de carte, débat Mercator/Peters, codes
@@ -163,26 +228,35 @@ socle d'origine ; les sept suivantes couvrent des thèmes spécialisés ajoutés
    indices composés (Tasseled Cap), validation statistique, séries temporelles
 4. **Le Compas** (`outils-sig`) — QGIS, analyses spatiales (Moran, MAUP),
    géostatistique (krigeage), PostGIS/PyQGIS
-5. **L'Intelligence** (`traitements-ia`) — filtres à noyau, classification,
+5. **QGIS** (`qgis`) — tutoriel complet du SIG open-source : interface, boîte à
+   outils de traitement, modeleur graphique, PyQGIS, extensions et automatisation
+6. **TerrSet** (`terrset`) — tutoriel complet du logiciel Clark Labs (ex-IDRISI) :
+   classification raster, évaluation multicritère, chaînes de Markov, automates
+   cellulaires et Land Change Modeler
+7. **R** (`programmation-r`) — tutoriel complet du langage : tidyverse, `sf`/`terra`,
+   statistique et géostatistique spatiales, reproductibilité (R Markdown/renv)
+8. **VS Code** (`vscode`) — tutoriel complet de l'éditeur : extensions Python/Jupyter,
+   débogueur, Git intégré, environnements distants et automatisation (tasks.json)
+9. **L'Intelligence** (`traitements-ia`) — filtres à noyau, classification,
    matrice de confusion/kappa, deep learning (CNN, U-Net, Transformers)
-6. **La Méthode** (`methodologie`) — commentaire de document, dissertation,
-   rapport technique SIG, sémiologie de Bertin, préparation aux concours,
-   mémoire IMRaD
-7. **Les Projections** (`projections-avancees`) — familles de déformation,
-   Lambert-93/UTM, datum et transformation, choix d'une projection
-8. **Le Web** (`cartographie-web`) — pyramide de tuiles, Leaflet/MapLibre,
-   standards OGC (WMS/WMTS/WFS), performance et accessibilité
-9. **Les Statistiques** (`statistiques-spatiales`) — LISA, Gi* de Getis-Ord,
-   estimation de densité par noyau, régression spatiale, cartographie du risque
-10. **Le Drone** (`photogrammetrie-drones`) — Structure from Motion, MNS/MNT,
+10. **La Méthode** (`methodologie`) — commentaire de document, dissertation,
+    rapport technique SIG, sémiologie de Bertin, préparation aux concours,
+    mémoire IMRaD
+11. **Les Projections** (`projections-avancees`) — familles de déformation,
+    Lambert-93/UTM, datum et transformation, choix d'une projection
+12. **Le Web** (`cartographie-web`) — pyramide de tuiles, Leaflet/MapLibre,
+    standards OGC (WMS/WMTS/WFS), performance et accessibilité
+13. **Les Statistiques** (`statistiques-spatiales`) — LISA, Gi* de Getis-Ord,
+    estimation de densité par noyau, régression spatiale, cartographie du risque
+14. **Le Drone** (`photogrammetrie-drones`) — Structure from Motion, MNS/MNT,
     points d'appui au sol, planification de vol, RTK/PPK
-11. **Le LiDAR** (`lidar`) — temps de vol laser, retours multiples, classification
+15. **Le LiDAR** (`lidar`) — temps de vol laser, retours multiples, classification
     du nuage de points, plateformes aéroportées/terrestres
-12. **La Base** (`bases-donnees-spatiales`) — index spatial GiST, requêtes et
+16. **La Base** (`bases-donnees-spatiales`) — index spatial GiST, requêtes et
     jointures spatiales, topologie, performance (EXPLAIN ANALYZE)
-13. **Les Secteurs** (`etudes-de-cas-sectorielles`) — agriculture de précision,
+17. **Les Secteurs** (`etudes-de-cas-sectorielles`) — agriculture de précision,
     artificialisation des sols, risque incendie, foresterie
-14. **L'Atelier** (`travaux-pratiques`), en clôture — douze séances pratiques
+18. **L'Atelier** (`travaux-pratiques`), en clôture — douze séances pratiques
     autonomes (un semestre universitaire), réparties sur les trois profils
     lycée/licence-BUT/master-recherche via le système de niveaux, qui réutilisent
     les compétences des salles précédentes (géoréférencement par grille,
@@ -190,7 +264,7 @@ socle d'origine ; les sept suivantes couvrent des thèmes spécialisés ajoutés
     étude de cas)
 
 Glossaire (avec sources et recherche), page Références (bibliographie par thème),
-quiz interactif et fiches mémo PDF couvrent les 14 salles.
+quiz interactif et fiches mémo PDF couvrent les 18 salles.
 
 ## Déploiement
 

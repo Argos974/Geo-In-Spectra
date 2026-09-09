@@ -1,0 +1,492 @@
+<title>Plan de la Galerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    /* dark-first — reprend telle quelle la palette réelle du site (src/index.css) */
+    --bg: 13 14 18;
+    --bg-deep: 7 8 10;
+    --surface: 23 20 15;
+    --text: 236 227 207;
+    --text-dim: 168 159 140;
+    --gold: 184 147 79;
+    --gold-bright: 217 180 106;
+    --lapis: 63 80 102;
+    --lapis-bright: 150 175 205;
+    --oxblood: 122 47 36;
+    --oxblood-bright: 217 125 100;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg: 243 236 221;
+      --bg-deep: 232 220 192;
+      --surface: 236 224 200;
+      --text: 43 33 22;
+      --text-dim: 92 81 64;
+      --gold: 110 84 35;
+      --gold-bright: 110 84 35;
+      --lapis: 51 70 92;
+      --lapis-bright: 51 70 92;
+      --oxblood: 122 47 36;
+      --oxblood-bright: 122 47 36;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg: 243 236 221;
+    --bg-deep: 232 220 192;
+    --surface: 236 224 200;
+    --text: 43 33 22;
+    --text-dim: 92 81 64;
+    --gold: 110 84 35;
+    --gold-bright: 110 84 35;
+    --lapis: 51 70 92;
+    --lapis-bright: 51 70 92;
+    --oxblood: 122 47 36;
+    --oxblood-bright: 122 47 36;
+  }
+  :root[data-theme="dark"]{
+    --bg: 13 14 18;
+    --bg-deep: 7 8 10;
+    --surface: 23 20 15;
+    --text: 236 227 207;
+    --text-dim: 168 159 140;
+    --gold: 184 147 79;
+    --gold-bright: 217 180 106;
+    --lapis: 63 80 102;
+    --lapis-bright: 150 175 205;
+    --oxblood: 122 47 36;
+    --oxblood-bright: 217 125 100;
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    background: rgb(var(--bg));
+    color: rgb(var(--text));
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  ::selection{ background: rgb(var(--gold) / .35); color: rgb(var(--text)); }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 56px 28px 80px; }
+
+  .cartel{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgb(var(--gold-bright));
+  }
+
+  header.frontispice{
+    text-align:center;
+    padding-bottom: 40px;
+    margin-bottom: 44px;
+    border-bottom: 1px solid rgb(var(--gold) / .35);
+  }
+  .kicker{ margin: 0 0 14px; }
+  h1{
+    font-family: "Cinzel", serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.4vw, 3.1rem);
+    letter-spacing: .06em;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .soustitre{
+    font-style: italic;
+    color: rgb(var(--text-dim));
+    font-size: 1.15rem;
+    max-width: 52ch;
+    margin: 0 auto 22px;
+    text-wrap: balance;
+  }
+  .facts{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px;
+    justify-content:center;
+  }
+  .fact{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: rgb(var(--text-dim));
+    border: 1px solid rgb(var(--gold) / .3);
+    padding: 5px 11px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .fact b{ color: rgb(var(--gold-bright)); font-weight: 600; }
+
+  section{ margin-bottom: 64px; }
+
+  .plate-head{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid rgb(var(--gold) / .35);
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .plate-head h2{
+    font-family:"Cinzel", serif;
+    font-size: 1.15rem;
+    letter-spacing: .05em;
+    margin: 0;
+    font-weight: 600;
+  }
+  .plate-num{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: rgb(var(--gold-bright));
+  }
+  .intro{
+    max-width: 68ch;
+    color: rgb(var(--text-dim));
+    margin: 0 0 26px;
+  }
+
+  figure{ margin: 0; }
+  .frame{
+    border: 1px solid rgb(var(--gold) / .4);
+    padding: 8px;
+    position: relative;
+  }
+  .frame::before{
+    content:"";
+    position:absolute; inset: 4px;
+    border: 1px solid rgb(var(--gold) / .22);
+    pointer-events:none;
+  }
+  .frame svg{ display:block; width:100%; height:auto; }
+  figcaption{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: rgb(var(--text-dim));
+    margin-top: 12px;
+    text-align:center;
+  }
+
+  svg text{ font-family:"IBM Plex Mono", monospace; fill: rgb(var(--text)); }
+  svg .lbl-title{ font-weight: 600; }
+  svg .lbl-sub{ font-family:"EB Garamond", serif; font-style: italic; fill: rgb(var(--text-dim)); }
+  svg .lbl-dim{ fill: rgb(var(--text-dim)); }
+  svg .lbl-gold{ fill: rgb(var(--gold-bright)); font-weight: 600; }
+  svg line, svg path.edge{ stroke: rgb(var(--text-dim) / .55); stroke-width: 1.2; fill: none; }
+  svg rect.node{ fill: rgb(var(--surface)); stroke-width: 1.4; }
+
+  /* grille des salles */
+  .salles-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .salle{
+    border: 1px solid rgb(var(--gold) / .3);
+    background: rgb(var(--surface));
+    padding: 16px 16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap: 8px;
+  }
+  .salle .num{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgb(var(--gold-bright));
+    letter-spacing: .1em;
+  }
+  .salle h3{
+    font-family:"Cinzel", serif;
+    font-size: .98rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.35;
+    letter-spacing: .01em;
+  }
+  .salle .navlabel{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: rgb(var(--text-dim));
+  }
+  .salle .route-row{
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px dashed rgb(var(--gold) / .25);
+    display:flex; align-items:center; justify-content: space-between; gap:8px;
+  }
+  .chip{
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.discipulus{ color: rgb(var(--lapis-bright)); border: 1px solid rgb(var(--lapis) / .8); }
+  .chip.magister{ color: rgb(var(--oxblood-bright)); border: 1px solid rgb(var(--oxblood) / .8); }
+  .chip.transversal{ color: rgb(var(--gold-bright)); border: 1px solid rgb(var(--gold) / .7); }
+  .slug{ font-family:"IBM Plex Mono", monospace; font-size: 10.5px; color: rgb(var(--text-dim)); }
+
+  footer{
+    border-top: 1px solid rgb(var(--gold) / .35);
+    padding-top: 20px;
+    font-family:"IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: rgb(var(--text-dim));
+    text-align:center;
+    letter-spacing: .04em;
+  }
+
+  @media (max-width: 720px){
+    .wrap{ padding: 40px 16px 60px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="frontispice">
+    <p class="cartel kicker">Cabinet des plans — établi le 10 septembre 2026</p>
+    <h1>Plan de la Galerie</h1>
+    <p class="soustitre">Arborescence des routes et circuit du contenu de Geo&#8209;In&#8209;Spectra, relevés depuis <code>RootRouter.tsx</code>.</p>
+    <div class="facts">
+      <span class="fact"><b>30</b> routes déclarées</span>
+      <span class="fact"><b>14</b> salles (modules)</span>
+      <span class="fact">React 19 + React Router 7 · <b>HashRouter</b></span>
+      <span class="fact">Progression &amp; parcours — <b>localStorage</b> seul</span>
+      <span class="fact">Toutes les routes sauf Home — <b>chargement à la demande</b></span>
+    </div>
+  </header>
+
+  <section aria-labelledby="plate1-title">
+    <div class="plate-head">
+      <h2 id="plate1-title">Le parcours du visiteur</h2>
+      <span class="plate-num">Planche I</span>
+    </div>
+    <p class="intro">Depuis l'accueil, le site se scinde en deux profils qui partagent le même fonds de salles — Discipulus (élève) et Magister (enseignant) — entourés de pages transversales indépendantes du profil, et d'une arborescence héritée conservée pour les liens profonds (parcours, recherche, export PDF).</p>
+    <figure class="frame">
+      <svg viewBox="0 0 1220 590" role="img" aria-label="Arbre des routes : la racine mène à Discipulus, Magister, les pages transversales et les routes héritées, chacune détaillée avec ses sous-routes.">
+        <!-- root -->
+        <rect class="node" x="450" y="40" width="240" height="56" rx="2" stroke="rgb(var(--gold-bright))"></rect>
+        <text x="570" y="63" text-anchor="middle" class="lbl-gold" font-size="14">/</text>
+        <text x="570" y="82" text-anchor="middle" class="lbl-sub" font-size="12">Home — choix du profil</text>
+
+        <!-- fan lines to 4 headers -->
+        <path class="edge" d="M570,96 L140,220"></path>
+        <path class="edge" d="M570,96 L400,220"></path>
+        <path class="edge" d="M570,96 L700,220"></path>
+        <path class="edge" d="M570,96 L1035,220"></path>
+
+        <!-- colA header: Discipulus -->
+        <rect class="node" x="30" y="170" width="220" height="50" rx="2" stroke="rgb(var(--lapis))"></rect>
+        <text x="140" y="191" text-anchor="middle" font-size="13" font-weight="600">/discipulus</text>
+        <text x="140" y="207" text-anchor="middle" class="lbl-sub" font-size="11">Élève — Discipulus</text>
+
+        <!-- colB header: Magister -->
+        <rect class="node" x="290" y="170" width="220" height="50" rx="2" stroke="rgb(var(--oxblood))"></rect>
+        <text x="400" y="191" text-anchor="middle" font-size="13" font-weight="600">/magister</text>
+        <text x="400" y="207" text-anchor="middle" class="lbl-sub" font-size="11">Enseignant — Magister</text>
+
+        <!-- colC header: transversal -->
+        <rect class="node" x="550" y="170" width="300" height="50" rx="2" stroke="rgb(var(--gold-bright))"></rect>
+        <text x="700" y="191" text-anchor="middle" font-size="13" font-weight="600">Pages transversales</text>
+        <text x="700" y="207" text-anchor="middle" class="lbl-sub" font-size="11">indépendantes du profil</text>
+
+        <!-- colD header: legacy -->
+        <rect class="node" x="885" y="170" width="300" height="50" rx="2" stroke="rgb(var(--text-dim))"></rect>
+        <text x="1035" y="191" text-anchor="middle" font-size="13" font-weight="600">/module/:slug</text>
+        <text x="1035" y="207" text-anchor="middle" class="lbl-sub" font-size="11">route héritée, liens profonds</text>
+
+        <!-- colA leaves -->
+        <line x1="140" y1="220" x2="140" y2="234"></line>
+        <rect class="node" x="30" y="234" width="220" height="48" rx="2" stroke="rgb(var(--lapis) / .6)"></rect>
+        <text x="140" y="255" text-anchor="middle" font-size="12.5" font-weight="600">/discipulus/cours</text>
+        <text x="140" y="271" text-anchor="middle" class="lbl-sub" font-size="10.5">12 salles, accordéon</text>
+
+        <line x1="140" y1="282" x2="140" y2="296"></line>
+        <rect class="node" x="30" y="296" width="220" height="48" rx="2" stroke="rgb(var(--lapis) / .6)"></rect>
+        <text x="140" y="317" text-anchor="middle" font-size="12.5" font-weight="600">/discipulus/methodes</text>
+        <text x="140" y="333" text-anchor="middle" class="lbl-sub" font-size="10.5">Méthodologie (par finalité)</text>
+
+        <line x1="140" y1="344" x2="140" y2="358"></line>
+        <rect class="node" x="30" y="358" width="220" height="48" rx="2" stroke="rgb(var(--lapis) / .6)"></rect>
+        <text x="140" y="379" text-anchor="middle" font-size="12.5" font-weight="600">/discipulus/progression</text>
+        <text x="140" y="395" text-anchor="middle" class="lbl-sub" font-size="10.5">Bilan (badges, objectifs)</text>
+
+        <line x1="140" y1="406" x2="140" y2="420"></line>
+        <rect class="node" x="30" y="420" width="220" height="48" rx="2" stroke="rgb(var(--lapis) / .6)"></rect>
+        <text x="140" y="441" text-anchor="middle" font-size="12.5" font-weight="600">/discipulus/revision</text>
+        <text x="140" y="457" text-anchor="middle" class="lbl-sub" font-size="10.5">Répétition espacée (Leitner)</text>
+
+        <!-- colB leaves -->
+        <line x1="400" y1="220" x2="400" y2="234"></line>
+        <rect class="node" x="290" y="234" width="220" height="48" rx="2" stroke="rgb(var(--oxblood) / .6)"></rect>
+        <text x="400" y="255" text-anchor="middle" font-size="12.5" font-weight="600">/magister/cours</text>
+        <text x="400" y="271" text-anchor="middle" class="lbl-sub" font-size="10.5">= l'Atelier (travaux pratiques)</text>
+
+        <line x1="400" y1="282" x2="400" y2="296"></line>
+        <rect class="node" x="290" y="296" width="220" height="48" rx="2" stroke="rgb(var(--oxblood) / .6)"></rect>
+        <text x="400" y="317" text-anchor="middle" font-size="12.5" font-weight="600">/magister/programme</text>
+
+        <line x1="400" y1="344" x2="400" y2="358"></line>
+        <rect class="node" x="290" y="358" width="220" height="48" rx="2" stroke="rgb(var(--oxblood) / .6)"></rect>
+        <text x="400" y="379" text-anchor="middle" font-size="12.5" font-weight="600">/magister/evaluation</text>
+
+        <line x1="400" y1="406" x2="400" y2="420"></line>
+        <rect class="node" x="290" y="420" width="220" height="48" rx="2" stroke="rgb(var(--oxblood) / .6)"></rect>
+        <text x="400" y="441" text-anchor="middle" font-size="12.5" font-weight="600">/magister/pedagogie</text>
+
+        <line x1="400" y1="468" x2="400" y2="482"></line>
+        <rect class="node" x="290" y="482" width="220" height="48" rx="2" stroke="rgb(var(--oxblood) / .6)"></rect>
+        <text x="400" y="503" text-anchor="middle" font-size="12.5" font-weight="600">/magister/classe</text>
+
+        <!-- colC list box -->
+        <line x1="700" y1="220" x2="700" y2="234"></line>
+        <rect class="node" x="550" y="234" width="300" height="242" rx="2" stroke="rgb(var(--gold) / .5)"></rect>
+        <text x="568" y="256" font-size="11.5">/ressources</text>
+        <text x="568" y="277" font-size="11.5">/recherche</text>
+        <text x="568" y="298" font-size="11.5">/glossaire</text>
+        <text x="568" y="319" font-size="11.5">/references</text>
+        <text x="568" y="340" font-size="11.5">/pieges-frequents</text>
+        <text x="568" y="361" font-size="11.5">/formulaire</text>
+        <text x="568" y="382" font-size="11.5">/jeux-de-donnees</text>
+        <text x="568" y="403" font-size="11.5">/parcours</text>
+        <text x="568" y="424" font-size="11.5">/annales</text>
+        <text x="568" y="445" font-size="11.5">/mentions-legales</text>
+
+        <!-- colD list box -->
+        <line x1="1035" y1="220" x2="1035" y2="234"></line>
+        <rect class="node" x="885" y="234" width="300" height="242" rx="2" stroke="rgb(var(--text-dim) / .5)"></rect>
+        <text x="903" y="257" font-size="12.5" font-weight="600">/module/:slug</text>
+        <text x="903" y="273" class="lbl-sub" font-size="10.5">parcours, recherche, PDF</text>
+        <text x="913" y="295" class="lbl-dim" font-size="11.5">├ /exercices</text>
+        <text x="913" y="316" class="lbl-dim" font-size="11.5">├ /quiz</text>
+        <line x1="903" y1="330" x2="1170" y2="330" stroke="rgb(var(--text-dim) / .3)"></line>
+        <text x="903" y="350" font-size="12" font-weight="600">Export PDF (Playwright)</text>
+        <text x="903" y="371" class="lbl-dim" font-size="11">/print/module/:slug</text>
+        <text x="903" y="392" class="lbl-dim" font-size="11">/print/fiche/:slug</text>
+        <text x="903" y="413" class="lbl-dim" font-size="11">/print/quiz/:slug</text>
+        <text x="903" y="434" class="lbl-dim" font-size="11">/print/quiz-corrige/:slug</text>
+      </svg>
+    </figure>
+    <figcaption>Racine → 4 branches : Discipulus (lapis), Magister (oxblood), pages transversales et arborescence héritée (or/neutre).</figcaption>
+  </section>
+
+  <section aria-labelledby="plate2-title">
+    <div class="plate-head">
+      <h2 id="plate2-title">Le circuit du contenu</h2>
+      <span class="plate-num">Planche II</span>
+    </div>
+    <p class="intro">Les 14 salles ne sont écrites qu'une fois : un même tableau de <code>ContentBlock</code>, filtré par niveau, alimente trois rendus web distincts et une mise en page dédiée à l'export PDF — jamais une capture de la page.</p>
+    <figure class="frame">
+      <svg viewBox="0 0 1200 330" role="img" aria-label="Pipeline : les fichiers de contenu par salle passent par un index commun et un filtre de niveau, puis se répartissent vers trois rendus web et un rendu d'impression, eux-mêmes convergeant vers une page web ou un export PDF.">
+        <!-- S1 -->
+        <rect class="node" x="15" y="126" width="170" height="64" rx="2" stroke="rgb(var(--gold) / .5)"></rect>
+        <text x="100" y="152" text-anchor="middle" font-size="12">14 fichiers</text>
+        <text x="100" y="169" text-anchor="middle" class="lbl-dim" font-size="10.5">content/&lt;slug&gt;.ts</text>
+
+        <line x1="185" y1="158" x2="225" y2="158" stroke="rgb(var(--gold-bright) / .8)"></line>
+
+        <!-- S2 -->
+        <rect class="node" x="225" y="126" width="190" height="64" rx="2" stroke="rgb(var(--gold) / .5)"></rect>
+        <text x="320" y="152" text-anchor="middle" font-size="12">moduleContent</text>
+        <text x="320" y="169" text-anchor="middle" class="lbl-dim" font-size="10.5">content/index.ts</text>
+
+        <line x1="415" y1="158" x2="455" y2="158" stroke="rgb(var(--gold-bright) / .8)"></line>
+
+        <!-- S3 -->
+        <rect class="node" x="455" y="126" width="225" height="64" rx="2" stroke="rgb(var(--gold) / .5)"></rect>
+        <text x="567" y="150" text-anchor="middle" font-size="12">filterBlocksByLevel()</text>
+        <text x="567" y="167" text-anchor="middle" class="lbl-dim" font-size="10">lycée / supérieur / approfondissement</text>
+
+        <!-- fan to renderers -->
+        <path class="edge" d="M680,158 L740,50"></path>
+        <path class="edge" d="M680,158 L740,122"></path>
+        <path class="edge" d="M680,158 L740,194"></path>
+        <path class="edge" d="M680,158 L740,266"></path>
+
+        <!-- renderers -->
+        <rect class="node" x="740" y="24" width="220" height="52" rx="2" stroke="rgb(var(--lapis) / .7)"></rect>
+        <text x="850" y="46" text-anchor="middle" font-size="11.5" font-weight="600">DiscipulusCoursPage</text>
+        <text x="850" y="62" text-anchor="middle" class="lbl-sub" font-size="10">accordéon, Cours élève</text>
+
+        <rect class="node" x="740" y="96" width="220" height="52" rx="2" stroke="rgb(var(--oxblood) / .7)"></rect>
+        <text x="850" y="118" text-anchor="middle" font-size="11.5" font-weight="600">MagisterCoursPage</text>
+        <text x="850" y="134" text-anchor="middle" class="lbl-sub" font-size="10">accordéon, l'Atelier</text>
+
+        <rect class="node" x="740" y="168" width="220" height="52" rx="2" stroke="rgb(var(--text-dim) / .6)"></rect>
+        <text x="850" y="190" text-anchor="middle" font-size="11.5" font-weight="600">ModulePage</text>
+        <text x="850" y="206" text-anchor="middle" class="lbl-sub" font-size="10">legacy, /module/:slug</text>
+
+        <rect class="node" x="740" y="240" width="220" height="52" rx="2" stroke="rgb(var(--gold) / .6)"></rect>
+        <text x="850" y="262" text-anchor="middle" font-size="11.5" font-weight="600">Print* (variant="print")</text>
+        <text x="850" y="278" text-anchor="middle" class="lbl-sub" font-size="10">PrintCourse / Fiche / Quiz</text>
+
+        <!-- to outputs -->
+        <path class="edge" d="M960,50 L995,87"></path>
+        <path class="edge" d="M960,122 L995,110"></path>
+        <path class="edge" d="M960,194 L995,133"></path>
+        <path class="edge" d="M960,266 L995,231"></path>
+
+        <rect class="node" x="995" y="87" width="190" height="70" rx="2" stroke="rgb(var(--gold-bright))"></rect>
+        <text x="1090" y="115" text-anchor="middle" font-size="12" font-weight="600">Page web</text>
+        <text x="1090" y="132" text-anchor="middle" class="lbl-sub" font-size="10">ContentBlocks variant="dark"</text>
+
+        <rect class="node" x="995" y="196" width="190" height="70" rx="2" stroke="rgb(var(--gold-bright))"></rect>
+        <text x="1090" y="224" text-anchor="middle" font-size="12" font-weight="600">Export PDF</text>
+        <text x="1090" y="241" text-anchor="middle" class="lbl-sub" font-size="10">Playwright, Chromium headless</text>
+      </svg>
+    </figure>
+    <figcaption>Un seul contenu, trois rendus web (par profil) et un rendu papier — aucun n'est une capture d'écran des autres.</figcaption>
+  </section>
+
+  <section aria-labelledby="plate3-title">
+    <div class="plate-head">
+      <h2 id="plate3-title">Les quatorze salles</h2>
+      <span class="plate-num">Cabinet des modules</span>
+    </div>
+    <p class="intro">Ordre pédagogique de <code>src/data/modules.ts</code> — même ordre que le préfixe numérique des PDF exportés. Chaque salle vit dans l'un des trois accordéons ci-dessus.</p>
+    <div class="salles-grid">
+
+      <div class="salle"><span class="num">01</span><h3>De la Terre et de ses Mesures</h3><span class="navlabel">Fondements · fondamentaux</span><div class="route-row"><span class="slug">fondamentaux</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">02</span><h3>Du Cône et du Cylindre</h3><span class="navlabel">Les Projections · projections-avancees</span><div class="route-row"><span class="slug">projections-avancees</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">03</span><h3>De l'Art du Compas</h3><span class="navlabel">Le Compas · outils-sig</span><div class="route-row"><span class="slug">outils-sig</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">04</span><h3>De ce qui se Regroupe</h3><span class="navlabel">Les Statistiques · statistiques-spatiales</span><div class="route-row"><span class="slug">statistiques-spatiales</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">05</span><h3>De l'Ordre des Registres</h3><span class="navlabel">La Base · bases-donnees-spatiales</span><div class="route-row"><span class="slug">bases-donnees-spatiales</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">06</span><h3>De la Carte qui Bouge</h3><span class="navlabel">Le Web · cartographie-web</span><div class="route-row"><span class="slug">cartographie-web</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">07</span><h3>De l'Œil qui Voit de Loin</h3><span class="navlabel">Le Regard · teledetection</span><div class="route-row"><span class="slug">teledetection</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">08</span><h3>Du Langage aux Couleurs</h3><span class="navlabel">Les Couleurs · indices-spectraux</span><div class="route-row"><span class="slug">indices-spectraux</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">09</span><h3>De l'Œil qui Vole Bas</h3><span class="navlabel">Le Drone · photogrammetrie-drones</span><div class="route-row"><span class="slug">photogrammetrie-drones</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">10</span><h3>De la Lumière qui Mesure</h3><span class="navlabel">Le LiDAR · lidar</span><div class="route-row"><span class="slug">lidar</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">11</span><h3>De la Machine qui Apprend</h3><span class="navlabel">L'Intelligence · traitements-ia</span><div class="route-row"><span class="slug">traitements-ia</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">12</span><h3>Des Champs et des Villes</h3><span class="navlabel">Les Secteurs · etudes-de-cas-sectorielles</span><div class="route-row"><span class="slug">etudes-de-cas-sectorielles</span><span class="chip discipulus">/discipulus/cours</span></div></div>
+
+      <div class="salle"><span class="num">13</span><h3>De l'Ordre des Idées</h3><span class="navlabel">La Méthode · methodologie</span><div class="route-row"><span class="slug">methodologie</span><span class="chip transversal">/discipulus/methodes</span></div></div>
+
+      <div class="salle"><span class="num">14</span><h3>Le Cabinet de l'Apprenti</h3><span class="navlabel">L'Atelier · travaux-pratiques</span><div class="route-row"><span class="slug">travaux-pratiques</span><span class="chip magister">/magister/cours</span></div></div>
+
+    </div>
+  </section>
+
+  <footer>
+    Relevé établi depuis src/RootRouter.tsx, src/data/modules.ts et src/lib/moduleRoute.ts — Geo&#8209;In&#8209;Spectra, 10 septembre 2026.
+  </footer>
+
+</div>
