@@ -78,41 +78,46 @@ export function DiscipulusCoursPage() {
         </ArtworkBackdrop>
       )}
 
-      <div className="px-6 pt-16 pb-24">
+      <div className="px-6 pt-8 pb-24">
         <div className="mx-auto max-w-4xl">
         <LevelIntroBanner />
 
-        <ChapterAccordion name="cours-chapitres" title="Plan du cours" subtitle="La trame générale, avant d'entrer dans une salle">
-          <CoursPlanOverview />
-        </ChapterAccordion>
+        {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+            aligne la nav pile avec "Plan du cours" (premier enfant ici) sans que sa
+            propre hauteur ne pousse quoi que ce soit vers le bas. */}
+        <div className="relative">
+          <ChapterNav titles={courseModules.map((m) => m.navLabel)} targets={courseModules.map((m) => m.title)} />
 
-        <ChapterNav titles={courseModules.map((m) => m.navLabel)} targets={courseModules.map((m) => m.title)} />
+          <ChapterAccordion name="cours-chapitres" title="Plan du cours" subtitle="La trame générale, avant d'entrer dans une salle">
+            <CoursPlanOverview />
+          </ChapterAccordion>
 
-        {courseModules.map((courseModule, i) => {
-          const slug = courseModule.slug
-          return (
-            <ChapterAccordion
-              key={slug}
-              name="cours-chapitres"
-              numeral={ROOM_NUMERALS[i]}
-              title={courseModule.title}
-              heading={courseModule.navLabel}
-              artwork={artworks[slug]}
-              visited={visitedSlugs.has(slug)}
-              lazyMount
-              onOpen={() => {
-                openSlugRef.current = slug
-                markVisited(slug, activeTrackBySlug.current.get(slug))
-                setVisitedSlugs((prev) => new Set(prev).add(slug))
-              }}
-            >
-              <ModuleChapterBody
-                module={courseModule}
-                onActiveTrackChange={(level) => handleActiveTrackChange(slug, level)}
-              />
-            </ChapterAccordion>
-          )
-        })}
+          {courseModules.map((courseModule, i) => {
+            const slug = courseModule.slug
+            return (
+              <ChapterAccordion
+                key={slug}
+                name="cours-chapitres"
+                numeral={ROOM_NUMERALS[i]}
+                title={courseModule.title}
+                heading={courseModule.navLabel}
+                artwork={artworks[slug]}
+                visited={visitedSlugs.has(slug)}
+                lazyMount
+                onOpen={() => {
+                  openSlugRef.current = slug
+                  markVisited(slug, activeTrackBySlug.current.get(slug))
+                  setVisitedSlugs((prev) => new Set(prev).add(slug))
+                }}
+              >
+                <ModuleChapterBody
+                  module={courseModule}
+                  onActiveTrackChange={(level) => handleActiveTrackChange(slug, level)}
+                />
+              </ChapterAccordion>
+            )
+          })}
+        </div>
         </div>
       </div>
     </div>

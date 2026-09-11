@@ -47,7 +47,7 @@ export function MagisterCoursPage() {
         </ArtworkBackdrop>
       )}
 
-      <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
+      <div className="mx-auto max-w-4xl px-6 pt-8 pb-24">
         <LevelIntroBanner />
         <ModuleChapterBody module={atelier} showTeacherMeta />
       </div>

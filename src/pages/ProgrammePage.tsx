@@ -84,7 +84,9 @@ export function ProgrammePage() {
       )}
 
       <div className="px-6 pt-16 pb-24">
-        <div className="mx-auto max-w-4xl">
+        {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+            aligne la nav pile avec la première section sans pousser le reste vers le bas. */}
+        <div className="relative mx-auto max-w-4xl">
           <ChapterNav titles={SECTIONS} />
 
           <ChapterAccordion name="programme-sections" title={SECTIONS[0]} defaultOpen>

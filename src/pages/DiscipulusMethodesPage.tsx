@@ -74,32 +74,36 @@ export function DiscipulusMethodesPage() {
         </ArtworkBackdrop>
       )}
 
-      <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
+      <div className="mx-auto max-w-4xl px-6 pt-8 pb-24">
         {intro.length > 0 && <ContentBlocks blocks={intro} game={games.methodologie} moduleSlug="methodologie" />}
 
         <DecisionTree />
 
-        <ChapterNav titles={GROUPS.map((g) => g.title)} />
+        {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+            aligne la nav pile avec le premier groupe sans pousser le reste vers le bas. */}
+        <div className="relative">
+          <ChapterNav titles={GROUPS.map((g) => g.title)} />
 
-        {grouped.map((g, i) => {
-          const source = GROUPS[i]
-          return (
-            <ChapterAccordion
-              key={g.title}
-              name="methodes-chapitres"
-              title={g.title}
-              subtitle={source?.subtitle}
-              artwork={source?.artworkKey ? artworks[source.artworkKey] : undefined}
-              defaultOpen={i === 0}
-            >
-              {/* Plan du chapitre — utile dès qu'un chapitre fusionne plusieurs sections
-                  d'origine (Concours, Professionnel) ; inutile pour un chapitre à une seule
-                  section (Scolaire, Recherche), RoomIndex se masque de lui-même sinon. */}
-              {(source?.indices.length ?? 0) > 1 && <RoomIndex blocks={g.blocks} />}
-              <ContentBlocks blocks={g.blocks} game={games.methodologie} moduleSlug="methodologie" />
-            </ChapterAccordion>
-          )
-        })}
+          {grouped.map((g, i) => {
+            const source = GROUPS[i]
+            return (
+              <ChapterAccordion
+                key={g.title}
+                name="methodes-chapitres"
+                title={g.title}
+                subtitle={source?.subtitle}
+                artwork={source?.artworkKey ? artworks[source.artworkKey] : undefined}
+                defaultOpen={i === 0}
+              >
+                {/* Plan du chapitre — utile dès qu'un chapitre fusionne plusieurs sections
+                    d'origine (Concours, Professionnel) ; inutile pour un chapitre à une seule
+                    section (Scolaire, Recherche), RoomIndex se masque de lui-même sinon. */}
+                {(source?.indices.length ?? 0) > 1 && <RoomIndex blocks={g.blocks} />}
+                <ContentBlocks blocks={g.blocks} game={games.methodologie} moduleSlug="methodologie" />
+              </ChapterAccordion>
+            )
+          })}
+        </div>
 
         <MethodesActionBar />
 

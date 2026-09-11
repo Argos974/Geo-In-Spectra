@@ -232,6 +232,9 @@ export function MagisterEvaluationPage() {
             reproduite (voir Annales de concours pour de vrais sujets sourcés).
           </p>
 
+          {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+              aligne la nav pile avec la première grille sans pousser le reste vers le bas. */}
+          <div className="relative">
           <ChapterNav titles={GRIDS.map((g) => g.title)} />
 
           {GRIDS.map((grid, i) => (
@@ -316,6 +319,7 @@ export function MagisterEvaluationPage() {
               </div>
             </ChapterAccordion>
           ))}
+          </div>
 
           <div className="mt-10 grid sm:grid-cols-2 gap-4">
             <Link

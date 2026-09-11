@@ -20,27 +20,29 @@ interface ChapterNavProps {
  * (même mécanisme natif que cliquer son résumé), pas juste un ancrage silencieux
  * vers un panneau resté fermé.
  *
- * Un seul élément `sticky` (pas `fixed`) pour les deux présentations — c'est ce
- * qui évite tout chevauchement avec le haut de page (bandeau œuvre plein écran
- * sur Méthodes, titre/résumé sur Cours) : un `sticky` ne peut jamais s'afficher
- * avant sa position naturelle dans le flux, où qu'il soit placé dans la page. En
- * dessous de xl (1280px) : bande horizontale à défilement (`flex-nowrap` +
- * `overflow-x-auto`, même motif que la rangée de boutons PDF/exercices/quiz
+ * En dessous de xl (1280px) : bande horizontale collante (`sticky`, `flex-nowrap`
+ * + `overflow-x-auto`, même motif que la rangée de boutons PDF/exercices/quiz
  * juste au-dessus dans ModuleChapterBody), pas un enroulement en plusieurs
  * lignes (`flex-wrap`) — un module à beaucoup de chapitres (ex. les 36 séances
  * de l'Atelier) faisait grimper la hauteur de cette barre collée en haut jusqu'à
  * masquer le corps du texte sur mobile ; en une seule ligne fixe (~44px), la
- * hauteur ne dépend plus du nombre de titres. À partir de xl : `translate-x` la
- * décale visuellement dans la marge gauche (espace vide à côté du corps de
- * texte en max-w-4xl) — un transform ne change pas la position de collage ni la
- * largeur du contenu, seulement le rendu visuel, donc ni chevauchement ni
- * recalcul de mise en page selon la largeur d'écran.
+ * hauteur ne dépend plus du nombre de titres.
+ *
+ * À partir de xl : colonne verticale dans la marge gauche, en `absolute` (pas
+ * `sticky`) — elle défile normalement avec la page plutôt que de rester rivée
+ * en haut de l'écran. Deux raisons : (1) avec beaucoup de titres (Cours, 19
+ * salles ; Atelier, 36 séances) la colonne dépasse largement un écran, donc la
+ * clouer en haut n'aide pas à voir les derniers titres et (2) un élément
+ * `absolute` sort du flux normal — son parent (le conteneur `relative` que
+ * chaque appelant place autour d'elle et du contenu qui suit) n'est donc pas
+ * poussé vers le bas par sa hauteur, `top-0` l'aligne pile avec le premier
+ * chapitre plutôt que de laisser un vide au-dessus de lui.
  */
 export function ChapterNav({ titles, targets }: ChapterNavProps) {
   return (
     <nav
       aria-label="Chapitres"
-      className="sticky top-32 z-10 mb-8 flex flex-row flex-nowrap items-center gap-1 overflow-x-auto bg-ink/90 backdrop-blur-sm border border-gilt/15 py-2 font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 xl:z-0 xl:w-48 xl:overflow-visible xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-0.5 xl:bg-transparent xl:border-0 xl:py-0 xl:-translate-x-[13rem] print:hidden"
+      className="sticky top-32 z-10 mb-8 flex flex-row flex-nowrap items-center gap-1 overflow-x-auto bg-ink/90 backdrop-blur-sm border border-gilt/15 py-2 font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 xl:absolute xl:top-0 xl:z-0 xl:mb-0 xl:w-48 xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-0.5 xl:bg-transparent xl:border-0 xl:py-0 xl:-translate-x-[13rem] print:hidden"
     >
       {titles.map((t, i) => {
         const target = targets?.[i] ?? t

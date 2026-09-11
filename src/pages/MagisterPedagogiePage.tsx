@@ -168,6 +168,9 @@ export function MagisterPedagogiePage() {
             grille d'Évaluation, jamais une généralité de didactique importée sans ancrage réel dans le site.
           </p>
 
+          {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+              aligne la nav pile avec le premier groupe sans pousser le reste vers le bas. */}
+          <div className="relative">
           <ChapterNav titles={GROUPS.map((g) => g.title)} />
 
           {GROUPS.map((grid, i) => (
@@ -219,6 +222,7 @@ export function MagisterPedagogiePage() {
               </div>
             </ChapterAccordion>
           ))}
+          </div>
 
           <div className="mt-10">
             <Link

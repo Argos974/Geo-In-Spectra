@@ -207,27 +207,31 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
         )}
       </div>
 
-      {module.slug === "travaux-pratiques" && visibleSeanceHeadings.length > 0 && <ChapterNav titles={visibleSeanceHeadings} />}
+      {/* `relative` : ancre pour ChapterNav en `xl:absolute` (voir ce composant) —
+          aligne la nav pile avec ce qui suit sans pousser le reste vers le bas. */}
+      <div className="relative">
+        {module.slug === "travaux-pratiques" && visibleSeanceHeadings.length > 0 && <ChapterNav titles={visibleSeanceHeadings} />}
 
-      {module.slug === "travaux-pratiques" ? (
-        <AtelierIndex activeLevels={activeLevels} showTeacherMeta={showTeacherMeta} />
-      ) : (
-        filteredBlocks && <RoomIndex blocks={filteredBlocks} />
-      )}
+        {module.slug === "travaux-pratiques" ? (
+          <AtelierIndex activeLevels={activeLevels} showTeacherMeta={showTeacherMeta} />
+        ) : (
+          filteredBlocks && <RoomIndex blocks={filteredBlocks} />
+        )}
 
-      {filteredBlocks ? (
-        filteredBlocks.length > 0 ? (
-          <ContentBlocks blocks={filteredBlocks} game={games[module.slug]} moduleSlug={module.slug} />
+        {filteredBlocks ? (
+          filteredBlocks.length > 0 ? (
+            <ContentBlocks blocks={filteredBlocks} game={games[module.slug]} moduleSlug={module.slug} />
+          ) : (
+            <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
+              <p className="font-mono text-sm">Aucun contenu à ce niveau, élargis le filtre ci-dessus.</p>
+            </div>
+          )
         ) : (
           <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
-            <p className="font-mono text-sm">Aucun contenu à ce niveau, élargis le filtre ci-dessus.</p>
+            <p className="font-mono text-sm">Contenu du module à venir.</p>
           </div>
-        )
-      ) : (
-        <div className="border border-dashed border-gilt/25 p-8 text-center text-parchment-dim">
-          <p className="font-mono text-sm">Contenu du module à venir.</p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/*
        * PDF cours / fiche mémo / entraînement / quiz : proposés une fois la
