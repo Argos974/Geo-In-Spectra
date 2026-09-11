@@ -91,7 +91,7 @@ function SolutionBlock({
   const panelId = `solution-${slugify(block.title)}`
 
   return (
-    <div className={cn("max-w-[70ch] border", border, panelBg)}>
+    <div className={cn("border", border, panelBg)}>
       {!isPrint && (
         <button
           type="button"
@@ -109,9 +109,9 @@ function SolutionBlock({
       {revealed && (
         <div id={panelId} className={cn(isPrint ? "p-5" : "px-5 pb-5", isPrint && "border-t", isPrint && border)}>
           {isPrint && <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", accent)}>Corrigé : {block.title}</p>}
-          {block.text && <p className={cn("max-w-[70ch] leading-relaxed text-justify mb-3 last:mb-0", textDim)}>{block.text}</p>}
+          {block.text && <p className={cn("leading-relaxed text-justify mb-3 last:mb-0", textDim)}>{block.text}</p>}
           {block.items && (
-            <ul className={cn("max-w-[70ch] space-y-2", textDim)}>
+            <ul className={cn("space-y-2", textDim)}>
               {block.items.map((item, j) => (
                 <li key={j} className="flex items-start gap-3">
                   <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />
@@ -366,15 +366,15 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // registre visuel que "warning", volontairement, pour qu'il se distingue
             // au premier coup d'œil de tout le reste du contenu de la séance.
             return (
-              <div key={i} className={cn("max-w-[70ch] border-2 p-5 md:p-6 avoid-break", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
+              <div key={i} className={cn("border-2 p-5 md:p-6 avoid-break", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
                   <p className={cn("font-mono text-[12px] uppercase tracking-wider", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>
                     Devoir à rendre : {block.format}
                   </p>
                 </div>
                 <h3 className={cn("font-heading text-lg mb-2", text)}>{block.title}</h3>
-                <p className={cn("max-w-[70ch] leading-relaxed text-justify mb-4", textDim)}>{block.prompt}</p>
-                <ul className="max-w-[70ch] space-y-1.5">
+                <p className={cn("leading-relaxed text-justify mb-4", textDim)}>{block.prompt}</p>
+                <ul className="space-y-1.5">
                   {block.criteria.map((c, j) => (
                     <li key={j} className="flex items-start gap-2 text-sm text-justify">
                       <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", isPrint ? "bg-[#7a2f24]" : "bg-oxblood")} />
@@ -443,12 +443,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "paragraph":
             return (
-              // max-w-[70ch] : sans ça, la prose court sur toute la largeur du
-              // conteneur (max-w-4xl, ~896px), partagée avec tableaux/diagrammes —
-              // soit 100+ signes par ligne en EB Garamond, bien au-delà des ~65-75
-              // recommandés pour une lecture confortable. Les tableaux/diagrammes/
-              // formules, eux, restent en pleine largeur : ils en profitent.
-              <p key={i} className={cn("max-w-[70ch] leading-relaxed text-justify", textDim)}>
+              <p key={i} className={cn("leading-relaxed text-justify", textDim)}>
                 {isPrint ? block.text : linkifyGlossaryTerms(block.text, moduleSlug)}
               </p>
             )
@@ -462,7 +457,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // correctement dans les deux cas, avec ou sans puce flex.
             const Tag = block.ordered ? "ol" : "ul"
             return (
-              <Tag key={i} className={cn("max-w-[70ch] space-y-2", textDim, block.ordered ? "list-decimal pl-5" : "pl-0")}>
+              <Tag key={i} className={cn("space-y-2", textDim, block.ordered ? "list-decimal pl-5" : "pl-0")}>
                 {block.items.map((item, j) => (
                   <li key={j} className={cn("text-justify", !block.ordered && "flex items-start gap-3")}>
                     {!block.ordered && <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />}
@@ -475,21 +470,21 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "formula":
             return (
-              <div key={i} className={cn("max-w-[70ch] border p-5 avoid-break", border, panelBg)}>
+              <div key={i} className={cn("border p-5 avoid-break", border, panelBg)}>
                 <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", accent)}>{block.label}</p>
                 <p className={cn("font-mono text-sm md:text-base break-words", text)}>{block.formula}</p>
-                {block.note && <p className={cn("max-w-[70ch] text-sm mt-3 text-justify", textDim)}>{block.note}</p>}
+                {block.note && <p className={cn("text-sm mt-3 text-justify", textDim)}>{block.note}</p>}
               </div>
             )
 
           case "callout":
             return (
-              <div key={i} className={cn("max-w-[70ch] border p-5 avoid-break", calloutStyles[block.tone ?? "info"])}>
+              <div key={i} className={cn("border p-5 avoid-break", calloutStyles[block.tone ?? "info"])}>
                 <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", textDim)}>
                   {calloutLabel[block.tone ?? "info"]}
                 </p>
                 <h3 className={cn("font-heading text-lg mb-1", text)}>{block.title}</h3>
-                <p className={cn("max-w-[70ch] leading-relaxed text-justify", textDim)}>{block.text}</p>
+                <p className={cn("leading-relaxed text-justify", textDim)}>{block.text}</p>
               </div>
             )
 
