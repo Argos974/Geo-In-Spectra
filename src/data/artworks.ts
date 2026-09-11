@@ -82,8 +82,8 @@ export const artworks: Record<string, Artwork> = {
   // Copie anonyme (XIXe s., domaine public confirmé) d'apres "Der alte
   // Schulmeister" de Gerrit Dou (1671, Gemaldegalerie Alte Meister, Dresde) --
   // l'original lui-meme n'est pas librement diffusable (droits reserves par
-  // le musee), voir la note dans generate-hotspot-cutouts.py. Meme sujet,
-  // memes objets, attribution honnete "d'apres" plutot que Dou lui-meme.
+  // le musee). Meme sujet, memes objets, attribution honnete "d'apres" plutot
+  // que Dou lui-meme.
   "magister-hub-dou": {
     src: "/images/gallery/magister-dou-schoolmaster.jpg",
     alt: "Le vieux maître d'école, d'après Gerrit Dou (copie anonyme du XIXe siècle) : un maître taillant une plume, un sablier et un livre devant lui, un groupe d'élèves derrière",

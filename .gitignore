@@ -13,8 +13,3 @@ coverage
 
 .vercel
 .env*
-
-# Environnement Python isole pour scripts/generate-hero-cutouts.py (voir son
-# en-tete) -- outil de generation d'assets ponctuel, jamais execute au build.
-.venv-rembg
-__pycache__

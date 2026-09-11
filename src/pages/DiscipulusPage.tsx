@@ -1,20 +1,10 @@
 import { Link } from "react-router-dom"
-import { useRef } from "react"
 import { PARCOURS } from "@/data/parcours"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
 import { artworks } from "@/data/artworks"
-import { ProfileHero } from "@/components/gallery/ProfileHero"
+import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { usePageMeta } from "@/hooks/usePageMeta"
-import { useReducedMotion } from "@/hooks/useReducedMotion"
-import { usePageEntrance } from "@/hooks/usePageEntrance"
 import { COURS_SLUGS } from "@/lib/moduleRoute"
-
-const HUB_PREFETCH: Record<string, () => Promise<unknown>> = {
-  "/discipulus/cours": () => import("@/pages/DiscipulusCoursPage"),
-  "/discipulus/methodes": () => import("@/pages/DiscipulusMethodesPage"),
-  "/discipulus/progression": () => import("@/pages/BilanPage"),
-  "/discipulus/revision": () => import("@/pages/RevisionPage"),
-}
 
 export function DiscipulusPage() {
   usePageMeta(
@@ -24,22 +14,17 @@ export function DiscipulusPage() {
   const active = useActiveParcours()
   const activeParcours = active ? PARCOURS.find((p) => p.id === active.id) : undefined
   const art = artworks["discipulus-hub"]
-  const reducedMotion = useReducedMotion()
-  const pageRef = useRef<HTMLDivElement>(null)
-  // Prolonge le zoom déclenché depuis le repère "Discipulus" de l'accueil
-  // (voir Home.tsx/ArtworkHotspot) plutôt que d'y couper sec ; discret sur une
-  // arrivée classique (lien direct, retour navigateur).
-  usePageEntrance(pageRef, !reducedMotion)
 
   return (
-    <div ref={pageRef} className="min-h-screen bg-ink text-parchment">
-      <ProfileHero
-        art={art}
-        title="Discipulus"
-        hint="Quatre repères dans le tableau — ou choisissez directement plus bas."
-        hotspotsKey="discipulus-hub"
-        prefetch={HUB_PREFETCH}
-      />
+    <div className="min-h-screen bg-ink text-parchment">
+      {art && (
+        <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
+          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
+            <p className="font-mono text-[12px] text-gilt mb-3">Profil</p>
+            <h1 className="font-heading text-4xl md:text-5xl">Discipulus</h1>
+          </div>
+        </ArtworkBackdrop>
+      )}
 
       <div className="px-6 pt-16 pb-24">
         <div className="mx-auto max-w-4xl">
