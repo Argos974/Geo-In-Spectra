@@ -6,7 +6,15 @@ import { slugify } from "@/lib/slug"
 import { cn } from "@/lib/utils"
 
 interface ChapterAccordionProps {
+  /** Ancre canonique (id={slugify(title)}) — jamais changé, c'est ce que ciblent ChapterNav/RoomIndex/recherche/parcours. */
   title: string
+  /**
+   * Texte affiché dans le résumé à la place de `title`, quand le titre réel est
+   * un nom stylisé trop long pour la nav (ex. "De la Terre et de ses Mesures").
+   * `title` reste alors affiché comme sous-titre, mais seulement une fois le
+   * chapitre ouvert (voir plus bas) — replié, seul `heading` est visible.
+   */
+  heading?: string
   subtitle?: string
   numeral?: string
   defaultOpen?: boolean
@@ -51,7 +59,7 @@ interface ChapterAccordionProps {
  * quand elle existe, reste dans le contenu du <details> (pas dans le <summary>) —
  * un chapitre fermé ne charge/affiche pas son image, seulement à l'ouverture.
  */
-export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwork, name, visited, onOpen, lazyMount, children, className }: ChapterAccordionProps) {
+export function ChapterAccordion({ title, heading, subtitle, numeral, defaultOpen, artwork, name, visited, onOpen, lazyMount, children, className }: ChapterAccordionProps) {
   const [hasOpened, setHasOpened] = useState(Boolean(defaultOpen))
   return (
     <details
@@ -76,7 +84,7 @@ export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwor
               navigation par titres d'un lecteur d'écran (seul le <h1> "Cours" existait). */}
           <span role="heading" aria-level={2} className="font-heading text-lg sm:text-2xl md:text-3xl">
             {numeral && <span className="sr-only">Salle {numeral} — </span>}
-            {title}
+            {heading ?? title}
           </span>
           {visited && (
             <span className="font-mono text-[11px] normal-case tracking-normal text-parchment-dim/80 shrink-0" title="Déjà visité">
@@ -93,6 +101,9 @@ export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwor
       )}
       {(!lazyMount || hasOpened) && (
         <>
+          {heading && heading !== title && (
+            <p className="font-heading italic text-parchment-dim/90 text-lg md:text-xl mb-4 -mt-1">{title}</p>
+          )}
           {subtitle && <p className="text-parchment-dim italic mb-4 -mt-2">{subtitle}</p>}
           <div className="pb-10">{children}</div>
         </>

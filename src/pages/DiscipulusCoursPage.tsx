@@ -82,7 +82,7 @@ export function DiscipulusCoursPage() {
         <div className="mx-auto max-w-4xl">
         <LevelIntroBanner />
 
-        <ChapterAccordion name="cours-chapitres" title="Plan du cours" subtitle="La trame générale, avant d'entrer dans une salle" defaultOpen>
+        <ChapterAccordion name="cours-chapitres" title="Plan du cours" subtitle="La trame générale, avant d'entrer dans une salle">
           <CoursPlanOverview />
         </ChapterAccordion>
 
@@ -96,6 +96,7 @@ export function DiscipulusCoursPage() {
               name="cours-chapitres"
               numeral={ROOM_NUMERALS[i]}
               title={courseModule.title}
+              heading={courseModule.navLabel}
               artwork={artworks[slug]}
               visited={visitedSlugs.has(slug)}
               lazyMount
