@@ -153,7 +153,7 @@ export const fondamentauxContent: ContentBlock[] = [
     rows: [
       ["Conforme", "Les angles et les formes locales", "Lambert-93, Mercator"],
       ["Équivalente", "Les surfaces exactes", "Albers, Mollweide"],
-      ["Aphylactique", "Ni les angles ni les surfaces exactement — un compromis", "Winkel, Robinson (cartes murales du monde)"],
+      ["Aphylactique", "Ni les angles ni les surfaces exactement, un compromis", "Winkel, Robinson (cartes murales du monde)"],
     ],
   },
   {
@@ -189,7 +189,7 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "7. Petite histoire de la cartographie", level: "lycee" },
   {
     type: "paragraph",
-    text: "Mesurer et représenter la Terre n'a rien d'une invention récente. Le fil qui va de Ptolémée aux satellites d'observation actuels est continu : à chaque époque, un instrument nouveau a permis de mesurer un peu plus précisément ce que l'époque précédente ne pouvait qu'estimer.",
+    text: "Mesurer et représenter la Terre est une entreprise ancienne : le fil qui va de Ptolémée aux satellites d'observation actuels est continu, chaque époque ayant mesuré un peu plus précisément ce que la précédente ne pouvait qu'estimer.",
   },
   {
     type: "diagram",
@@ -445,7 +445,7 @@ export const fondamentauxContent: ContentBlock[] = [
     rows: [
       ["Conforme", "Les angles locaux (formes préservées à petite échelle)", "Les surfaces, fortement aux hautes latitudes", "Lambert-93, Mercator, UTM"],
       ["Équivalente", "Les surfaces (aires exactement conservées)", "Les angles et les formes", "Albers, Mollweide"],
-      ["Aphylactique", "Ni les angles ni les surfaces exactement — un compromis", "Un peu des deux, réparti", "Winkel, Robinson (cartes murales du monde)"],
+      ["Aphylactique", "Ni les angles ni les surfaces exactement, un compromis", "Un peu des deux, réparti", "Winkel, Robinson (cartes murales du monde)"],
     ],
   },
   {
@@ -585,7 +585,7 @@ export const fondamentauxContent: ContentBlock[] = [
         type: "formula",
         label: "RMSE d'un géoréférencement",
         formula: "RMSE = √( (1/n) × Σ(dxᵢ² + dyᵢ²) )",
-        note: "n = nombre de points de contrôle, dxᵢ/dyᵢ = écart (résidu) entre la position calée et la position réelle du point i, en mètres. Plus la RMSE est petite, plus le calage est fidèle en moyenne sur les points utilisés — c'est la mesure standard de précision géométrique d'un géoréférencement, réutilisée telle quelle dans l'exercice de ce module.",
+        note: "n = nombre de points de contrôle, dxᵢ/dyᵢ = écart (résidu) entre la position calée et la position réelle du point i, en mètres. Plus la RMSE est petite, plus le calage est fidèle en moyenne sur les points utilisés. C'est la mesure standard de précision géométrique d'un géoréférencement, réutilisée telle quelle dans l'exercice de ce module.",
       },
       {
         type: "table",
@@ -600,7 +600,7 @@ export const fondamentauxContent: ContentBlock[] = [
         type: "callout",
         tone: "example",
         title: "Exemple chiffré",
-        text: "Somme des dx²+dy² = 0.73 + 1.46 + 0.97 = 3.16. Divisée par n = 3 points : 1.053. Racine carrée : RMSE ≈ 1.03 m. Ce calage géoréférence donc les points à environ 1 mètre près en moyenne — à comparer à la précision réellement nécessaire pour l'usage visé (1 m suffit pour une carte au 1:25 000, pas pour un cadastre).",
+        text: "Somme des dx²+dy² = 0.73 + 1.46 + 0.97 = 3.16. Divisée par n = 3 points : 1.053. Racine carrée : RMSE ≈ 1.03 m. Ce calage géoréférence donc les points à environ 1 mètre près en moyenne, à comparer à la précision réellement nécessaire pour l'usage visé (1 m suffit pour une carte au 1:25 000, pas pour un cadastre).",
       },
     ],
   },
@@ -647,7 +647,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "marginnote",
     title: "Anecdote : la Terre est-elle allongée ou aplatie ?",
-    text: "Au XVIIIe siècle, Newton prédisait une Terre aplatie aux pôles ; Cassini, depuis ses mesures françaises, penchait pour l'inverse. Pour trancher, l'Académie des sciences envoie deux expéditions mesurer un degré de méridien : Maupertuis en Laponie (1736), La Condamine au Pérou (1735-1744). Verdict : Newton avait raison — un contentieux scientifique tranché par la mesure de terrain, pas par le calcul de cabinet.",
+    text: "Au XVIIIe siècle, Newton prédisait une Terre aplatie aux pôles ; Cassini, depuis ses mesures françaises, penchait pour l'inverse. Pour trancher, l'Académie des sciences envoie deux expéditions mesurer un degré de méridien : Maupertuis en Laponie (1736), La Condamine au Pérou (1735-1744). Verdict : Newton avait raison, un contentieux scientifique tranché par la mesure de terrain plutôt que par le calcul de cabinet.",
   },
 
   { type: "heading", text: "2. Trilatération GNSS et triangulation géodésique : deux généalogies", level: "approfondissement" },
@@ -721,7 +721,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "formula",
     label: "Résoudre l'ambiguïté entière (principe)",
     formula: "distance = N × λ + φ_mesurée × λ / (2π)",
-    note: "λ = longueur d'onde de la porteuse (≈ 19 cm pour L1), φ_mesurée = phase mesurée (fraction de cycle, connue), N = nombre entier de cycles complets écoulés (inconnu). RTK/PPK déterminent N par double différence entre un récepteur mobile et une station de référence dont la position est connue, ce qui élimine une grande partie des erreurs communes (horloges, atmosphère) et permet de fixer N — l'étape qui fait passer d'une précision métrique à centimétrique.",
+    note: "λ = longueur d'onde de la porteuse (≈ 19 cm pour L1), φ_mesurée = phase mesurée (fraction de cycle, connue), N = nombre entier de cycles complets écoulés (inconnu). RTK/PPK déterminent N par double différence entre un récepteur mobile et une station de référence dont la position est connue, ce qui élimine une grande partie des erreurs communes (horloges, atmosphère) et permet de fixer N, l'étape qui fait passer d'une précision métrique à centimétrique.",
   },
   { type: "live", name: "rtk-network-map" },
   {
@@ -734,7 +734,7 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "3. Repères de référence : ITRF, ETRS89 et la dérive des plaques", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "WGS84 n'est pas un point fixe dans le temps : la croûte terrestre se déplace en permanence (dérive des plaques tectoniques, ~2 à 3 cm/an en Europe de l'Ouest). Deux familles de référentiels gèrent ce mouvement de façon radicalement différente.",
+    text: "La croûte terrestre se déplace en permanence (dérive des plaques tectoniques, ~2 à 3 cm/an en Europe de l'Ouest), si bien que WGS84 lui-même dérive dans le temps. Deux familles de référentiels gèrent ce mouvement de façon radicalement différente.",
   },
   {
     type: "comparison",
@@ -767,7 +767,7 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "example",
     title: "Exemple chiffré : dix ans de dérive",
-    text: "À 2,5 cm/an, un point mesuré en ITRF il y a dix ans s'est déplacé d'environ 25 cm par rapport à un point resté « gelé » en RGF93 sur la même période — un écart bien supérieur à la précision centimétrique d'un relevé RTK, qui rend indispensable la transformation ITRF → RGF93 avant toute comparaison entre deux campagnes de mesure espacées dans le temps.",
+    text: "À 2,5 cm/an, un point mesuré en ITRF il y a dix ans s'est déplacé d'environ 25 cm par rapport à un point resté « gelé » en RGF93 sur la même période. Un écart bien supérieur à la précision centimétrique d'un relevé RTK, qui rend indispensable la transformation ITRF → RGF93 avant toute comparaison entre deux campagnes de mesure espacées dans le temps.",
   },
 
   { type: "heading", text: "4. Le réseau GNSS permanent français : la référence pour le RTK", level: "approfondissement" },
@@ -779,13 +779,13 @@ export const fondamentauxContent: ContentBlock[] = [
     type: "callout",
     tone: "info",
     title: "Un réseau, pas une seule antenne",
-    text: "Un récepteur RTK isolé, sans station de référence à proximité, n'atteint pas la précision centimétrique : c'est la distance à la station de référence la plus proche (la « ligne de base ») qui conditionne la qualité de la correction — au-delà d'une vingtaine de kilomètres environ, les erreurs atmosphériques cessent d'être suffisamment corrélées entre le mobile et la référence, et la précision se dégrade.",
+    text: "Un récepteur RTK isolé, sans station de référence à proximité, n'atteint pas la précision centimétrique : c'est la distance à la station de référence la plus proche (la « ligne de base ») qui conditionne la qualité de la correction. Au-delà d'une vingtaine de kilomètres environ, les erreurs atmosphériques cessent d'être suffisamment corrélées entre le mobile et la référence, et la précision se dégrade.",
   },
 
   { type: "heading", text: "5. Passer d'un référentiel à un autre : la transformation à 7 paramètres de Helmert", level: "approfondissement" },
   {
     type: "paragraph",
-    text: "Convertir des coordonnées d'un système géodésique à un autre (par exemple d'un ancien référentiel local vers RGF93) n'est pas qu'une reprojection : c'est un changement de datum, qui suppose un modèle mathématique du décalage entre les deux ellipsoïdes de référence. Le modèle standard est la transformation de similitude à 7 paramètres de Helmert.",
+    text: "Convertir des coordonnées d'un système géodésique à un autre (par exemple d'un ancien référentiel local vers RGF93) va au-delà d'une simple reprojection : c'est un changement de datum, qui suppose un modèle mathématique du décalage entre les deux ellipsoïdes de référence. Le modèle standard est la transformation de similitude à 7 paramètres de Helmert.",
   },
   {
     type: "formula",
@@ -804,7 +804,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "diagram",
     name: "tissot-distortion",
-    caption: "Le même cercle avant projection : Mercator (conforme) le garde circulaire mais l'exagère en surface, Peters (équivalente) conserve son aire au prix de sa forme — le compromis au cœur du débat.",
+    caption: "Le même cercle avant projection : Mercator (conforme) le garde circulaire mais l'exagère en surface, Peters (équivalente) conserve son aire au prix de sa forme, le compromis au cœur du débat.",
   },
   {
     type: "paragraph",
