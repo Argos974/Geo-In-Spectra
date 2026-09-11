@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Check, X } from "lucide-react"
 import type { QuizQuestion } from "@/data/quizzes/types"
 import { cn } from "@/lib/utils"
 
@@ -28,8 +29,16 @@ export function QuestionAnswerBlock({ question, nextLabel, onAnswered, onNext }:
     onAnswered(i === shuffled.correctIndex)
   }
 
+  const isAnsweredCorrectly = selected !== null && selected === shuffled.correctIndex
+
   return (
     <>
+      {/* Annonce non visuelle du résultat : les <button> ci-dessous ne changent que
+          de couleur/bordure à la sélection, ce qu'un lecteur d'écran ne perçoit pas
+          tout seul. */}
+      <p role="status" className="sr-only">
+        {selected !== null ? (isAnsweredCorrectly ? "Bonne réponse." : "Réponse incorrecte.") : ""}
+      </p>
       <div className="space-y-3 mb-6">
         {shuffled.choices.map((choice, i) => {
           const isCorrect = i === shuffled.correctIndex
@@ -42,14 +51,23 @@ export function QuestionAnswerBlock({ question, nextLabel, onAnswered, onNext }:
               onClick={() => choose(i)}
               disabled={revealed}
               className={cn(
-                "w-full text-left px-4 py-3 border transition-colors",
+                "w-full flex items-center gap-2.5 text-left px-4 py-3 border transition-colors",
                 !revealed && "border-gilt/20 text-parchment-dim hover:border-gilt/50 hover:text-parchment",
                 revealed && isCorrect && "border-gilt bg-gilt/10 text-gilt",
                 revealed && isSelected && !isCorrect && "border-oxblood bg-oxblood/10 text-oxblood-bright",
-                revealed && !isSelected && !isCorrect && "border-gilt/10 text-parchment-dim/40",
+                revealed && !isSelected && !isCorrect && "border-gilt/10 text-parchment-dim/80",
               )}
             >
-              {choice}
+              {/* Le duo couleur or/bordeaux seul ne distingue pas bonne/mauvaise réponse
+                  pour un daltonien ou en niveaux de gris (impression) — icône + texte
+                  masqué comme second canal, indépendant de la couleur. */}
+              {revealed && isCorrect && <Check size={16} className="shrink-0" aria-hidden="true" />}
+              {revealed && isSelected && !isCorrect && <X size={16} className="shrink-0" aria-hidden="true" />}
+              <span>
+                {choice}
+                {revealed && isCorrect && <span className="sr-only"> (bonne réponse)</span>}
+                {revealed && isSelected && !isCorrect && <span className="sr-only"> (réponse incorrecte)</span>}
+              </span>
             </button>
           )
         })}
@@ -57,7 +75,7 @@ export function QuestionAnswerBlock({ question, nextLabel, onAnswered, onNext }:
 
       {selected !== null && (
         <div className="border border-gilt/20 bg-white/[0.02] p-5 mb-6">
-          <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">Explication</p>
+          <p className="font-mono text-[12px] uppercase tracking-wider text-gilt mb-2">Explication</p>
           <p className="text-parchment-dim leading-relaxed text-justify">{question.explanation}</p>
         </div>
       )}
@@ -66,7 +84,7 @@ export function QuestionAnswerBlock({ question, nextLabel, onAnswered, onNext }:
         <button
           type="button"
           onClick={onNext}
-          className="font-mono text-[12px] uppercase tracking-wider text-gilt border-b border-gilt/40 hover:border-gilt-bright hover:text-gilt-bright transition-colors pb-1"
+          className="font-mono text-[13px] uppercase tracking-wider text-gilt border-b border-gilt/40 hover:border-gilt-bright hover:text-gilt-bright transition-colors pb-1"
         >
           {nextLabel}
         </button>

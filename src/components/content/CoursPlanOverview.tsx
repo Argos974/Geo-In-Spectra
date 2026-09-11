@@ -14,7 +14,7 @@ import { slugify } from "@/lib/slug"
 import type { ContentLevel } from "@/content/types"
 import { cn } from "@/lib/utils"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX"]
 
 /** Titres des sections (headings) d'un module qui appartiennent à une piste donnée — le plan de la salle pour cette piste, sans dupliquer le contenu. */
 function chapterTitlesAtLevel(slug: string, level: ContentLevel): string[] {
@@ -23,14 +23,14 @@ function chapterTitlesAtLevel(slug: string, level: ContentLevel): string[] {
 }
 
 /**
- * Trame générale du cours, affichée EN TÊTE de DiscipulusCoursPage (avant les 12 salles
+ * Trame générale du cours, affichée EN TÊTE de DiscipulusCoursPage (avant les salles
  * elles-mêmes) — même piste alors que le sélecteur "Afficher" est par ailleurs indépendant
  * salle par salle : ce plan pilote donc explicitement la préférence globale
- * (setPreferredLevel), qu'un changement de piste ici s'applique aux 12 salles en même
+ * (setPreferredLevel), qu'un changement de piste ici s'applique à toutes les salles en même
  * temps, cohérent avec ce qu'un plan général doit montrer. Cliquer une salle ouvre son
  * accordéon et y défile (openAndScrollTo), sans navigation : tout se passe sur la même
  * page — contrairement à un lien externe, aucun besoin de relais one-shot
- * (pendingSectionLevel), les 12 salles sont déjà montées.
+ * (pendingSectionLevel), les salles sont déjà toutes montées.
  */
 export function CoursPlanOverview() {
   const [level, setLevel] = useState<ContentLevel>(() => getPreferredLevel() ?? "superieur")
@@ -48,12 +48,12 @@ export function CoursPlanOverview() {
   return (
     <div>
       <p className="text-parchment-dim leading-relaxed text-justify max-w-2xl mb-6">
-        Les douze salles vues d'un coup d'œil, piste par piste : choisis la tienne pour voir exactement ce qu'elle
+        Les {courseModules.length} salles vues d'un coup d'œil, piste par piste : choisis la tienne pour voir exactement ce qu'elle
         couvre, salle par salle, avant de plonger dans le détail ci-dessous.
       </p>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mr-1">Piste :</span>
+      <div className="flex flex-wrap items-center gap-2 mb-4" role="group" aria-labelledby="cours-plan-piste-label">
+        <span id="cours-plan-piste-label" className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mr-1">Piste :</span>
         {ALL_LEVELS.map((l) => (
           <button
             key={l}
@@ -61,7 +61,7 @@ export function CoursPlanOverview() {
             onClick={() => selectLevel(l)}
             aria-pressed={level === l}
             className={cn(
-              "font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
+              "font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
               level === l ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/80 hover:text-parchment-dim hover:border-gilt/30",
             )}
           >
@@ -70,7 +70,7 @@ export function CoursPlanOverview() {
         ))}
       </div>
 
-      <p className="font-mono text-[11px] text-parchment-dim mb-8">
+      <p className="font-mono text-[12px] text-parchment-dim mb-8">
         À cette piste : {withExercises}/{courseModules.length} salle{withExercises > 1 ? "s" : ""} avec exercices,{" "}
         {withQuiz}/{courseModules.length} avec quiz.
       </p>
@@ -86,7 +86,7 @@ export function CoursPlanOverview() {
             <div key={slug} className="border border-gilt/15 p-5">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-2">
                 <div>
-                  <p className="font-mono text-[11px] text-gilt mb-1">{ROOM_NUMERALS[i]}</p>
+                  <p className="font-mono text-[12px] text-gilt mb-1">{ROOM_NUMERALS[i]}</p>
                   <button
                     type="button"
                     onClick={() => openAndScrollTo(slugify(courseModule.title))}
@@ -100,14 +100,14 @@ export function CoursPlanOverview() {
                   <a
                     href={`/pdf/${slug}/${coursePdfName(slug, true, level)}`}
                     download={coursePdfName(slug, true, level)}
-                    className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-gilt border border-gilt/30 px-2.5 py-1.5 hover:bg-gilt/10 transition-colors"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-2.5 py-1.5 hover:bg-gilt/10 transition-colors"
                   >
                     ↓ PDF
                   </a>
                   {hasExercises && (
                     <Link
                       to={`/module/${slug}/exercices?level=${level}`}
-                      className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-2.5 py-1.5 hover:bg-lapis/10 transition-colors"
+                      className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-2.5 py-1.5 hover:bg-lapis/10 transition-colors"
                     >
                       Exercices
                     </Link>
@@ -115,7 +115,7 @@ export function CoursPlanOverview() {
                   {hasQuiz && (
                     <Link
                       to={`/module/${slug}/quiz`}
-                      className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-2.5 py-1.5 hover:border-gilt/40 hover:text-gilt transition-colors"
+                      className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-2.5 py-1.5 hover:border-gilt/40 hover:text-gilt transition-colors"
                     >
                       Quiz
                     </Link>
@@ -131,7 +131,7 @@ export function CoursPlanOverview() {
                   ))}
                 </ul>
               ) : (
-                <p className="text-parchment-dim/50 text-sm italic">Aucune section à cette piste pour l'instant.</p>
+                <p className="text-parchment-dim/80 text-sm italic">Aucune section à cette piste pour l'instant.</p>
               )}
             </div>
           )

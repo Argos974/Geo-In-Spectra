@@ -21,13 +21,13 @@ export function LevelIntroBanner() {
   return (
     <div className="print:hidden flex items-start gap-4 border border-gilt/30 bg-gilt/[0.05] px-5 py-4 mb-10">
       <p className="flex-1 text-sm text-parchment-dim leading-relaxed">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-gilt mr-2">Nouveau</span>
+        <span className="font-mono text-[11px] uppercase tracking-wider text-gilt mr-2">Nouveau</span>
         Chaque salle propose désormais 3 parcours complets et indépendants (Lycée, Licence/BUT, Master/Recherche) plutôt que des niveaux à cumuler : choisis le tien dans le filtre « Afficher », il reste mémorisé d'une salle à l'autre.
       </p>
       <button
         type="button"
         onClick={dismiss}
-        className="shrink-0 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-1.5 hover:bg-gilt/10 transition-colors"
+        className="shrink-0 font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-1.5 hover:bg-gilt/10 transition-colors"
       >
         Compris
       </button>

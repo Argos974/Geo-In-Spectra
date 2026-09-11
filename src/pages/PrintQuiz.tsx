@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { quizzes } from "@/data/quizzes"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"]
 const CHOICE_LETTERS = ["A", "B", "C", "D", "E", "F"]
 
 interface PrintQuizProps {

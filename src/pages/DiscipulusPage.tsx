@@ -1,29 +1,45 @@
 import { Link } from "react-router-dom"
+import { useRef } from "react"
 import { PARCOURS } from "@/data/parcours"
 import { useActiveParcours } from "@/hooks/useActiveParcours"
 import { artworks } from "@/data/artworks"
-import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
+import { ProfileHero } from "@/components/gallery/ProfileHero"
 import { usePageMeta } from "@/hooks/usePageMeta"
+import { useReducedMotion } from "@/hooks/useReducedMotion"
+import { usePageEntrance } from "@/hooks/usePageEntrance"
+import { COURS_SLUGS } from "@/lib/moduleRoute"
+
+const HUB_PREFETCH: Record<string, () => Promise<unknown>> = {
+  "/discipulus/cours": () => import("@/pages/DiscipulusCoursPage"),
+  "/discipulus/methodes": () => import("@/pages/DiscipulusMethodesPage"),
+  "/discipulus/progression": () => import("@/pages/BilanPage"),
+  "/discipulus/revision": () => import("@/pages/RevisionPage"),
+}
 
 export function DiscipulusPage() {
   usePageMeta(
     "Discipulus",
-    "Cours de géomatique et télédétection pour l'élève : douze salles du lycée à l'approfondissement, méthode, parcours conseillés, bilan et révision espacée.",
+    `Cours de géomatique et télédétection pour l'élève : ${COURS_SLUGS.size} salles du lycée à l'approfondissement, méthode, parcours conseillés, bilan et révision espacée.`,
   )
   const active = useActiveParcours()
   const activeParcours = active ? PARCOURS.find((p) => p.id === active.id) : undefined
   const art = artworks["discipulus-hub"]
+  const reducedMotion = useReducedMotion()
+  const pageRef = useRef<HTMLDivElement>(null)
+  // Prolonge le zoom déclenché depuis le repère "Discipulus" de l'accueil
+  // (voir Home.tsx/ArtworkHotspot) plutôt que d'y couper sec ; discret sur une
+  // arrivée classique (lien direct, retour navigateur).
+  usePageEntrance(pageRef, !reducedMotion)
 
   return (
-    <div className="min-h-screen bg-ink text-parchment">
-      {art && (
-        <ArtworkBackdrop art={art} className="h-64 md:h-80 w-full pt-24">
-          <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-10 max-w-3xl">
-            <p className="font-mono text-[12px] text-gilt mb-3">Profil</p>
-            <h1 className="font-heading text-4xl md:text-5xl">Discipulus</h1>
-          </div>
-        </ArtworkBackdrop>
-      )}
+    <div ref={pageRef} className="min-h-screen bg-ink text-parchment">
+      <ProfileHero
+        art={art}
+        title="Discipulus"
+        hint="Quatre repères dans le tableau — ou choisissez directement plus bas."
+        hotspotsKey="discipulus-hub"
+        prefetch={HUB_PREFETCH}
+      />
 
       <div className="px-6 pt-16 pb-24">
         <div className="mx-auto max-w-4xl">
@@ -34,10 +50,13 @@ export function DiscipulusPage() {
             Le filtre de niveau dans chaque chapitre et les parcours conseillés ci-dessous couvrent les trois.
           </p>
 
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-gilt mb-3">Sommaire</p>
+          <h2 className="font-heading text-3xl mb-8">Quatre entrées, un même cours</h2>
+
           <div className="grid sm:grid-cols-2 gap-4 mb-10">
             <Link to="/discipulus/cours" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Cours</p>
-              <p className="text-parchment-dim text-sm leading-relaxed">Douze chapitres de savoir, du socle lycée à l'approfondissement — avec le plan général en tête de page.</p>
+              <p className="text-parchment-dim text-sm leading-relaxed">{COURS_SLUGS.size} chapitres de savoir, du socle lycée à l'approfondissement — avec le plan général en tête de page.</p>
             </Link>
             <Link to="/discipulus/methodes" className="block border border-gilt/20 p-6 hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors">
               <p className="font-heading text-2xl mb-2">Méthodes</p>

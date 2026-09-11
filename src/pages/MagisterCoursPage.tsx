@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom"
 import { modules } from "@/data/modules"
 import { artworks } from "@/data/artworks"
 import { ModuleChapterBody } from "@/components/content/ModuleChapterBody"
+import { LevelIntroBanner } from "@/components/content/LevelIntroBanner"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
 import { openAndScrollTo } from "@/lib/lenisStore"
 import { markVisited } from "@/lib/progress"
@@ -47,6 +48,7 @@ export function MagisterCoursPage() {
       )}
 
       <div className="mx-auto max-w-4xl px-6 pt-16 pb-24">
+        <LevelIntroBanner />
         <ModuleChapterBody module={atelier} showTeacherMeta />
       </div>
     </div>

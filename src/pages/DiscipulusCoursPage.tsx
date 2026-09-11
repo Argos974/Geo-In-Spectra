@@ -14,18 +14,18 @@ import { COURS_SLUGS } from "@/lib/moduleRoute"
 import { usePageMeta } from "@/hooks/usePageMeta"
 import type { ContentLevel } from "@/content/types"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX"]
 
 export function DiscipulusCoursPage() {
   // COURS_SLUGS est un Set (source unique, voir lib/moduleRoute.ts) mais son ordre
   // d'itération — l'ordre d'insertion — est celui d'affichage voulu ici. Mémorisé
   // (référence stable) pour ne pas recalculer courseModules à chaque rendu.
-  usePageMeta(
-    "Cours — Discipulus",
-    "Douze salles de cours de géomatique et télédétection, du socle lycée à l'approfondissement, en chapitres repliables.",
-  )
   const coursSlugs = useMemo(() => [...COURS_SLUGS], [])
   const courseModules = coursSlugs.map((slug) => modules.find((m) => m.slug === slug)).filter((m) => m !== undefined)
+  usePageMeta(
+    "Cours — Discipulus",
+    `${courseModules.length} salles de cours de géomatique et télédétection, du socle lycée à l'approfondissement, en chapitres repliables.`,
+  )
   const art = artworks["discipulus-cours"]
   const location = useLocation()
   const [visitedSlugs, setVisitedSlugs] = useState<Set<string>>(() => {
@@ -65,13 +65,13 @@ export function DiscipulusCoursPage() {
       {art && (
         <ArtworkBackdrop art={art} figure="VIII" className="h-[70vh] min-h-[480px] w-full pt-24">
           <div className="h-full flex flex-col justify-end px-6 md:px-16 pb-16 max-w-3xl">
-            <Link to="/discipulus" className="font-mono text-[11px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
+            <Link to="/discipulus" className="font-mono text-[12px] uppercase tracking-wider text-gilt hover:underline w-fit mb-8">
               ← Discipulus
             </Link>
-            <p className="font-mono text-[12px] text-gilt mb-3">Discipulus</p>
+            <p className="font-mono text-[13px] text-gilt mb-3">Discipulus</p>
             <h1 className="font-heading text-4xl md:text-5xl mb-4">Cours</h1>
             <p className="font-body italic text-parchment-dim leading-relaxed text-justify border-l-2 border-gilt/30 pl-4">
-              Douze chapitres, du socle lycée à l'approfondissement. Déplie celui qu'il te faut : les autres se
+              {courseModules.length} chapitres, du socle lycée à l'approfondissement. Déplie celui qu'il te faut : les autres se
               referment tout seuls, rien à faire défiler en trop.
             </p>
           </div>
@@ -98,6 +98,7 @@ export function DiscipulusCoursPage() {
               title={courseModule.title}
               artwork={artworks[slug]}
               visited={visitedSlugs.has(slug)}
+              lazyMount
               onOpen={() => {
                 openSlugRef.current = slug
                 markVisited(slug, activeTrackBySlug.current.get(slug))

@@ -3,6 +3,13 @@ import { fondamentauxQuiz } from "./fondamentaux"
 import { teledetectionQuiz } from "./teledetection"
 import { indicesSpectrauxQuiz } from "./indices-spectraux"
 import { outilsSigQuiz } from "./outils-sig"
+import { qgisQuiz } from "./qgis"
+import { terrsetQuiz } from "./terrset"
+import { programmationRQuiz } from "./programmation-r"
+import { vscodeQuiz } from "./vscode"
+import { analyseStatistiqueQuiz } from "./analyse-statistique"
+import { algorithmesSpatiauxQuiz } from "./algorithmes-spatiaux"
+import { systemesMultiAgentsQuiz } from "./systemes-multi-agents"
 import { travauxPratiquesQuiz } from "./travaux-pratiques"
 import { traitementsIaQuiz } from "./traitements-ia"
 import { methodologieQuiz } from "./methodologie"
@@ -19,6 +26,13 @@ export const quizzes: Record<string, QuizQuestion[]> = {
   teledetection: teledetectionQuiz,
   "indices-spectraux": indicesSpectrauxQuiz,
   "outils-sig": outilsSigQuiz,
+  qgis: qgisQuiz,
+  terrset: terrsetQuiz,
+  "programmation-r": programmationRQuiz,
+  vscode: vscodeQuiz,
+  "analyse-statistique": analyseStatistiqueQuiz,
+  "algorithmes-spatiaux": algorithmesSpatiauxQuiz,
+  "systemes-multi-agents": systemesMultiAgentsQuiz,
   "travaux-pratiques": travauxPratiquesQuiz,
   "traitements-ia": traitementsIaQuiz,
   methodologie: methodologieQuiz,

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import { ChevronDown } from "lucide-react"
 import type { Artwork } from "@/data/artworks"
 import { ArtworkBackdrop } from "@/components/gallery/ArtworkBackdrop"
@@ -31,6 +31,15 @@ interface ChapterAccordionProps {
    * page pour les 5 chapitres à la fois, ouverts ou non.
    */
   onOpen?: () => void
+  /**
+   * Ne monte le corps (children) qu'à la première ouverture réelle, plutôt
+   * qu'au montage de la page — un `<details>` fermé garde ses enfants montés
+   * dans le DOM (voir plus haut), donc sans ça une page à 19+ chapitres rend
+   * les 19+ corps de cours (ContentBlocks, RoomIndex...) dès l'arrivée, ouverts
+   * ou non. Off par défaut (comportement inchangé) : à activer seulement là où
+   * le nombre de chapitres rend ce coût sensible (DiscipulusCoursPage).
+   */
+  lazyMount?: boolean
   children: ReactNode
   className?: string
 }
@@ -42,23 +51,35 @@ interface ChapterAccordionProps {
  * quand elle existe, reste dans le contenu du <details> (pas dans le <summary>) —
  * un chapitre fermé ne charge/affiche pas son image, seulement à l'ouverture.
  */
-export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwork, name, visited, onOpen, children, className }: ChapterAccordionProps) {
+export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwork, name, visited, onOpen, lazyMount, children, className }: ChapterAccordionProps) {
+  const [hasOpened, setHasOpened] = useState(Boolean(defaultOpen))
   return (
     <details
       id={slugify(title)}
       name={name}
       open={defaultOpen}
       onToggle={(e) => {
-        if (onOpen && e.currentTarget.open) onOpen()
+        if (e.currentTarget.open) {
+          if (lazyMount) setHasOpened(true)
+          onOpen?.()
+        }
       }}
       className={cn("group border-b border-gilt/15 scroll-mt-24", className)}
     >
       <summary className="cursor-pointer list-none flex items-center justify-between gap-4 py-6 select-none">
         <span className="flex items-baseline gap-4 min-w-0">
-          {numeral && <span className="font-mono text-[11px] text-gilt/85 shrink-0">{numeral}</span>}
-          <span className="font-heading text-lg sm:text-2xl md:text-3xl">{title}</span>
+          {numeral && <span aria-hidden="true" className="font-mono text-[12px] text-gilt/85 shrink-0">{numeral}</span>}
+          {/* role="heading" plutôt qu'un vrai <h2> : le contenu de <summary> mélange
+              ce titre à d'autres éléments (numéral, badge "visité"), ce que le modèle
+              de contenu HTML de <summary> n'autorise pas pour un heading réel. Sans
+              rôle explicite ici, les 12 chapitres de la page étaient absents de la
+              navigation par titres d'un lecteur d'écran (seul le <h1> "Cours" existait). */}
+          <span role="heading" aria-level={2} className="font-heading text-lg sm:text-2xl md:text-3xl">
+            {numeral && <span className="sr-only">Salle {numeral} — </span>}
+            {title}
+          </span>
           {visited && (
-            <span className="font-mono text-[10px] normal-case tracking-normal text-parchment-dim/80 shrink-0" title="Déjà visité">
+            <span className="font-mono text-[11px] normal-case tracking-normal text-parchment-dim/80 shrink-0" title="Déjà visité">
               ✓ visité
             </span>
           )}
@@ -70,8 +91,12 @@ export function ChapterAccordion({ title, subtitle, numeral, defaultOpen, artwor
           <></>
         </ArtworkBackdrop>
       )}
-      {subtitle && <p className="text-parchment-dim italic mb-4 -mt-2">{subtitle}</p>}
-      <div className="pb-10">{children}</div>
+      {(!lazyMount || hasOpened) && (
+        <>
+          {subtitle && <p className="text-parchment-dim italic mb-4 -mt-2">{subtitle}</p>}
+          <div className="pb-10">{children}</div>
+        </>
+      )}
     </details>
   )
 }

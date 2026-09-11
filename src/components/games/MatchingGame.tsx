@@ -74,9 +74,10 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
+      <p className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         {solved.size} / {pairs.length} trouvés · {attempts} essai{attempts !== 1 ? "s" : ""}
       </p>
+      <p role="status" className="sr-only">{wrongFlash ? "Association incorrecte, réessaie." : ""}</p>
 
       {isDone ? (
         <div className="border border-gilt/40 bg-gilt/[0.06] p-8 text-center">
@@ -87,7 +88,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
           <button
             type="button"
             onClick={reset}
-            className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
           >
             Rejouer
           </button>
@@ -106,7 +107,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
                   onClick={() => pickLeft(left)}
                   className={cn(
                     "w-full font-mono text-sm text-left px-4 py-3 border transition-colors",
-                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/50",
+                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/80",
                     !isSolved && isSelected && !wrongFlash && "border-gilt bg-gilt/10 text-gilt",
                     !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                     !isSolved && !isSelected && "border-gilt/20 text-parchment hover:border-gilt/50",
@@ -130,7 +131,7 @@ export function MatchingGame({ pairs }: { pairs: MatchingPair[] }) {
                   onClick={() => pickRight(right)}
                   className={cn(
                     "w-full text-sm text-left px-4 py-3 border transition-colors",
-                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/50",
+                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/80",
                     !isSolved && isSelected && !wrongFlash && "border-gilt bg-gilt/10 text-gilt",
                     !isSolved && isSelected && wrongFlash && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                     !isSolved && !isSelected && "border-gilt/20 text-parchment-dim hover:border-gilt/50",

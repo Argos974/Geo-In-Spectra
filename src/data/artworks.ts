@@ -79,6 +79,18 @@ export const artworks: Record<string, Artwork> = {
     title: "L'École de village",
     year: "1665",
   },
+  // Copie anonyme (XIXe s., domaine public confirmé) d'apres "Der alte
+  // Schulmeister" de Gerrit Dou (1671, Gemaldegalerie Alte Meister, Dresde) --
+  // l'original lui-meme n'est pas librement diffusable (droits reserves par
+  // le musee), voir la note dans generate-hotspot-cutouts.py. Meme sujet,
+  // memes objets, attribution honnete "d'apres" plutot que Dou lui-meme.
+  "magister-hub-dou": {
+    src: "/images/gallery/magister-dou-schoolmaster.jpg",
+    alt: "Le vieux maître d'école, d'après Gerrit Dou (copie anonyme du XIXe siècle) : un maître taillant une plume, un sablier et un livre devant lui, un groupe d'élèves derrière",
+    artist: "D'après Gerrit Dou",
+    title: "Der alte Schulmeister",
+    year: "d'après l'original de 1671",
+  },
   "methodologie-concours": {
     src: "/images/gallery/methodologie-concours-rembrandt-anatomy-lesson.jpg",
     alt: "La Leçon d'anatomie du Dr Nicolaes Tulp de Rembrandt, un groupe de chirurgiens assistant à une démonstration publique",
@@ -106,11 +118,11 @@ export const artworks: Record<string, Artwork> = {
   // répétition d'une même toile en fond appauvrit la diversité visuelle du
   // site, pas seulement une question de lien thématique.
   "discipulus-hub": {
-    src: "/images/gallery/discipulus-wright-orrery.jpg",
-    alt: "Un philosophe donnant une conférence sur l'orrery de Joseph Wright of Derby, un maître entouré d'un groupe attentif dont un enfant, éclairés par le modèle mécanique du système solaire",
-    artist: "Joseph Wright of Derby",
-    title: "A Philosopher Lecturing on the Orrery",
-    year: "1766",
+    src: "/images/gallery/discipulus-collier-vanitas.jpg",
+    alt: "Vanité d'Edwaert Collier, une nature morte de livres ouverts, une plume et son encrier, un parchemin scellé et un sablier devant deux globes",
+    artist: "Edwaert Collier",
+    title: "A Vanitas Still Life with a Flag, Candlestick, Musical Instruments, Books, Writing Paraphernalia, Globes, and Hourglass",
+    year: "1662",
   },
   "discipulus-cours": {
     src: "/images/gallery/discipulus-cours-rembrandt-faust.jpg",
@@ -254,5 +266,62 @@ export const artworks: Record<string, Artwork> = {
     artist: "Pieter Bruegel l'Ancien",
     title: "Les Moissonneurs",
     year: "1565",
+  },
+  // Quatre salles-outils (QGIS, TerrSet, R, VS Code) : chaque logiciel a sa
+  // propre œuvre plutôt que de reconduire Le Géographe de Vermeer (déjà pris
+  // par "outils-sig", qui reste l'introduction générale aux SIG) — cohérent
+  // avec le principe déjà appliqué à Méthodes/Ressources ci-dessus.
+  qgis: {
+    src: "/images/gallery/qgis-durer-melencolia.jpg",
+    alt: "Melencolia I d'Albrecht Dürer, gravure montrant un ange pensif entouré d'un compas, d'une sphère et d'un solide géométrique",
+    artist: "Albrecht Dürer",
+    title: "Melencolia I",
+    year: "1514",
+  },
+  terrset: {
+    src: "/images/gallery/terrset-bruegel-tower-of-babel.jpg",
+    alt: "La Tour de Babel de Pieter Bruegel l'Ancien, une tour monumentale en construction par étages successifs au-dessus d'un vaste paysage",
+    artist: "Pieter Bruegel l'Ancien",
+    title: "La Tour de Babel",
+    year: "1563",
+  },
+  "programmation-r": {
+    src: "/images/gallery/programmation-r-holbein-ambassadors.jpg",
+    alt: "Les Ambassadeurs de Hans Holbein le Jeune, deux hommes entourés d'instruments scientifiques : globe céleste, quadrants, cadrans solaires",
+    artist: "Hans Holbein le Jeune",
+    title: "Les Ambassadeurs",
+    year: "1533",
+  },
+  vscode: {
+    src: "/images/gallery/vscode-holbein-erasmus.jpg",
+    alt: "Portrait d'Érasme écrivant, de Hans Holbein le Jeune, un érudit de profil rédigeant un texte à la plume",
+    artist: "Hans Holbein le Jeune",
+    title: "Érasme écrivant",
+    year: "1523",
+  },
+  // Trois salles supplémentaires (systèmes multi-agents, analyse statistique
+  // générale, algorithmes d'analyse spatiale), chacune sa propre œuvre plutôt
+  // que de reconduire une déjà prise — même principe que les quatre salles-
+  // outils ci-dessus.
+  "systemes-multi-agents": {
+    src: "/images/gallery/multiagents-bruegel-childrens-games.jpg",
+    alt: "Jeux d'enfants de Pieter Bruegel l'Ancien, une place couverte de plus de deux cents enfants jouant chacun à un jeu différent",
+    artist: "Pieter Bruegel l'Ancien",
+    title: "Jeux d'enfants",
+    year: "1560",
+  },
+  "analyse-statistique": {
+    src: "/images/gallery/analyse-statistique-caravaggio-cardsharps.jpg",
+    alt: "Les Tricheurs de Caravage, un jeune joueur de cartes trompé par deux complices qui lisent son jeu et signalent ses cartes",
+    artist: "Le Caravage",
+    title: "Les Tricheurs",
+    year: "vers 1594",
+  },
+  "algorithmes-spatiaux": {
+    src: "/images/gallery/algorithmes-spatiaux-durer-draughtsman-lute.jpg",
+    alt: "Le Dessinateur du luth d'Albrecht Dürer, gravure montrant deux hommes qui transfèrent, point par point à travers une grille tendue, la forme d'un luth sur une surface plane",
+    artist: "Albrecht Dürer",
+    title: "Le Dessinateur du luth",
+    year: "1525",
   },
 }

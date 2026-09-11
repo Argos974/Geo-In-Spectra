@@ -114,6 +114,18 @@ body {
   color: rgb(var(--color-parchment));
 }
 
+/* Focus clavier visible partout, dans la palette du site — sans ça, la plupart
+   des boutons/liens/details n'avaient que le focus par défaut du navigateur
+   (souvent quasi invisible sur le fond sombre --color-ink), et quelques
+   composants le supprimaient carrément (focus:outline-none) sans le
+   remplacer. Un composant qui définit son propre focus-visible (ex. les
+   planches "live", déjà en focus-visible:ring/outline gilt-bright) prime
+   simplement sur cette règle via la cascade normale. */
+:focus-visible {
+  outline: 2px solid rgb(var(--color-gilt-bright));
+  outline-offset: 2px;
+}
+
 /* Le texte courant est justifié (text-justify, ContentBlocks.tsx) sans jamais
    couper les mots : sur les lignes longues du site (max-w-4xl, ~100+ signes en
    EB Garamond), ça crée des espacements irréguliers ("rivières" blanches),

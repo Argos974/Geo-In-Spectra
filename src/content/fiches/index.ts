@@ -3,6 +3,13 @@ import { fondamentauxFiche } from "./fondamentaux"
 import { teledetectionFiche } from "./teledetection"
 import { indicesSpectrauxFiche } from "./indices-spectraux"
 import { outilsSigFiche } from "./outils-sig"
+import { qgisFiche } from "./qgis"
+import { terrsetFiche } from "./terrset"
+import { programmationRFiche } from "./programmation-r"
+import { vscodeFiche } from "./vscode"
+import { analyseStatistiqueFiche } from "./analyse-statistique"
+import { algorithmesSpatiauxFiche } from "./algorithmes-spatiaux"
+import { systemesMultiAgentsFiche } from "./systemes-multi-agents"
 import { travauxPratiquesFiche } from "./travaux-pratiques"
 import { traitementsIaFiche } from "./traitements-ia"
 import { methodologieFiche } from "./methodologie"
@@ -19,6 +26,13 @@ export const ficheContent: Record<string, ContentBlock[]> = {
   teledetection: teledetectionFiche,
   "indices-spectraux": indicesSpectrauxFiche,
   "outils-sig": outilsSigFiche,
+  qgis: qgisFiche,
+  terrset: terrsetFiche,
+  "programmation-r": programmationRFiche,
+  vscode: vscodeFiche,
+  "analyse-statistique": analyseStatistiqueFiche,
+  "algorithmes-spatiaux": algorithmesSpatiauxFiche,
+  "systemes-multi-agents": systemesMultiAgentsFiche,
   "travaux-pratiques": travauxPratiquesFiche,
   "traitements-ia": traitementsIaFiche,
   methodologie: methodologieFiche,

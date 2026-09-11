@@ -54,12 +54,12 @@ export function SiteHeader() {
 
   return (
     <header className="print:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink/80 border-b border-gilt/15">
-      <nav className="mx-auto flex max-w-[1800px] items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 lg:gap-10 lg:px-8">
+      <nav aria-label="Navigation principale" className="mx-auto flex max-w-[1800px] items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6 lg:gap-10 lg:px-8">
         <Link to="/" className="font-heading text-xs uppercase tracking-[0.14em] text-parchment shrink-0 sm:text-sm sm:tracking-[0.28em]">
           Geo-In<span className="text-gilt">.</span>Spectra
         </Link>
 
-        <div className="hidden lg:flex flex-1 items-center justify-center gap-10 font-mono text-[11px] uppercase tracking-[0.2em] text-parchment-dim">
+        <div className="hidden lg:flex flex-1 items-center justify-center gap-10 font-mono text-[12px] uppercase tracking-[0.2em] text-parchment-dim">
           {PROFILE_LINKS.map((p) => (
             <Link key={p.to} to={p.to} title={p.hint} className={navLinkClass(location.pathname === p.to || location.pathname.startsWith(`${p.to}/`))}>
               {p.label}
@@ -106,21 +106,25 @@ export function SiteHeader() {
 
       {/* Sous-navigation du profil actif — Cours/Méthodes (Discipulus) ou Atelier/Programme/Pédagogie/Évaluation/Classe (Magister), visible dès qu'on est dans l'un des deux, pour sauter d'une section à l'autre sans repasser par la page de profil. "Atelier", pas "Cours" : Magister → Cours contient en réalité les 36 séances de l'Atelier, un label distinct de Discipulus → Cours (les 12 chapitres théoriques) évite de nommer deux contenus différents pareil. */}
       {subnav && (
-        <div className="hidden lg:flex justify-center gap-8 border-t border-gilt/10 py-2 font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80">
+        <nav
+          aria-label={inDiscipulus ? "Sous-navigation Discipulus" : "Sous-navigation Magister"}
+          className="hidden lg:flex justify-center gap-8 border-t border-gilt/10 py-2 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80"
+        >
           {subnav.map((s) => (
             <Link key={s.to} to={s.to} className={navLinkClass(location.pathname === s.to)}>
               {s.label}
             </Link>
           ))}
-        </div>
+        </nav>
       )}
 
       {mobileOpen && (
-        <div
+        <nav
           id="mobile-nav"
+          aria-label="Menu mobile"
           className="lg:hidden border-t border-gilt/15 bg-ink/95 backdrop-blur-md px-6 py-4 max-h-[calc(100vh-64px)] overflow-y-auto"
         >
-          <div className="flex flex-col gap-1 font-mono text-[13px] uppercase tracking-wider text-parchment-dim">
+          <div className="flex flex-col gap-1 font-mono text-[14px] uppercase tracking-wider text-parchment-dim">
             {PROFILE_LINKS.map((p) => (
               <Link
                 key={p.to}
@@ -133,7 +137,7 @@ export function SiteHeader() {
             {subnav && (
               <div className="pl-4 flex flex-col gap-1 border-b border-gilt/10">
                 {subnav.map((s) => (
-                  <Link key={s.to} to={s.to} className={cn("py-2 text-[11px] transition-colors hover:text-gilt", navLinkClass(location.pathname === s.to))}>
+                  <Link key={s.to} to={s.to} className={cn("py-2 text-[12px] transition-colors hover:text-gilt", navLinkClass(location.pathname === s.to))}>
                     {s.label}
                   </Link>
                 ))}
@@ -151,7 +155,7 @@ export function SiteHeader() {
               ))}
             </div>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   )

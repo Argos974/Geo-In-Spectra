@@ -54,6 +54,67 @@ export const modules: CourseModule[] = [
     topics: ["Prise en main QGIS", "Analyses spatiales, Moran et MAUP", "Géostatistique (krigeage) et décision multicritère", "Automatisation (Python/PyQGIS, PostGIS)"],
     epigraph: "Le géographe de Vermeer prend le compas pour mesurer sa carte. Le SIG est ce même compas, rendu numérique et systématique.",
   },
+  // Quatre salles-outils : chacune un tutoriel complet d'un logiciel/langage
+  // (et non plus seulement sa mention en passant dans "Le Compas"), avec sa
+  // propre œuvre choisie pour son lien avec le geste du logiciel plutôt que
+  // pour décorer — voir src/data/artworks.ts. Groupées juste après "Le
+  // Compas" (SIG en général) : de l'outil géométrique (QGIS) au langage de
+  // programmation généraliste (VS Code), en passant par la modélisation
+  // raster (TerrSet) et la statistique (R).
+  {
+    slug: "qgis",
+    title: "De la Géométrie Pensive",
+    navLabel: "QGIS",
+    summary: "Tutoriel complet de QGIS : interface, symbologie, boîte à outils de traitement, modeleur graphique, extensions et automatisation par lot, en trois parcours de niveau.",
+    topics: ["Interface et gestion des couches", "Symbologie et mise en page cartographique", "Boîte à outils de traitement et modeleur graphique", "Extensions, PyQGIS et automatisation par lot"],
+    epigraph: "Dürer entoure son ange pensif d'un compas, d'une sphère et d'un solide inachevé : cette même géométrie patiente, appliquée à la carte plutôt qu'à la pierre, est ce que QGIS met entre les mains de qui l'apprend.",
+  },
+  {
+    slug: "terrset",
+    title: "Des Couches qui se Bâtissent",
+    navLabel: "TerrSet",
+    summary: "Tutoriel complet de TerrSet (IDRISI) : algèbre raster, classification, chaînes de Markov, automates cellulaires et modélisation prédictive du changement d'occupation du sol, en trois parcours de niveau.",
+    topics: ["Interface et modules raster de TerrSet", "Classification et changement d'occupation du sol", "Chaînes de Markov et automates cellulaires (Land Change Modeler)", "Analyse multicritère et validation (indice kappa)"],
+    epigraph: "Bruegel peint une tour dont les étages anciens, en pierre grise, portent déjà les étages neufs, en brique rouge, encore en chantier : TerrSet modélise ce même empilement, couche de sol après couche de sol, pour prévoir l'étage que le territoire bâtira demain.",
+  },
+  {
+    slug: "programmation-r",
+    title: "De l'Instrument et du Nombre",
+    navLabel: "R",
+    summary: "Tutoriel complet du langage R : syntaxe, structures de données, visualisation avec ggplot2, statistique et cartographie spatiale, en trois parcours de niveau.",
+    topics: ["Syntaxe, vecteurs et data frames", "Visualisation avec ggplot2", "Statistique et cartographie spatiale (sf, tmap)", "Modèles, simulation et reproductibilité (R Markdown)"],
+    epigraph: "Les Ambassadeurs de Holbein posent leurs instruments de mesure du monde — globe, quadrant, cadran — sur un tapis richement chargé : R est ce même établi, réduit à un langage, où chaque fonction mesure, résume ou représente une donnée à la place d'un instrument de laiton.",
+  },
+  {
+    slug: "vscode",
+    title: "De la Plume et du Texte",
+    navLabel: "VS Code",
+    summary: "Tutoriel complet de Visual Studio Code : installation, interface, extensions Python/Jupyter/débogueur, Git intégré et automatisation, en trois parcours de niveau.",
+    topics: ["Installation, interface et terminal intégré", "Extensions Python, Jupyter et débogueur", "Git intégré et gestion de version", "Espaces de travail, snippets et automatisation (tasks.json)"],
+    epigraph: "Érasme, saisi par Holbein la plume à la main, corrige son texte mot à mot dans la marge : VS Code offre au code ce que l'écritoire offrait à l'humaniste, un espace pour écrire, corriger et reprendre, phrase après phrase.",
+  },
+  // Deux salles d'algorithmes généraux, juste avant leurs applications spatiales
+  // spécialisées (Les Statistiques, La Base) : l'analyse statistique générale
+  // d'abord (base commune, non spécifiquement spatiale), puis les algorithmes
+  // spatiaux qui la mobilisent concrètement (interpolation, indexation,
+  // réseau, géométrie), avant que Les Statistiques n'aille plus loin sur le
+  // versant proprement spatial (LISA, Gi*, régression).
+  {
+    slug: "analyse-statistique",
+    title: "Du Hasard et de la Preuve",
+    navLabel: "Analyse Statistique",
+    summary: "Statistique descriptive et inférentielle, tests d'hypothèse, corrélation et régression, analyse multivariée, apprentissage statistique : un très grand nombre de méthodes, en trois parcours de niveau.",
+    topics: ["Statistique descriptive et probabilités", "Tests d'hypothèse (Student, khi², ANOVA)", "Corrélation, régression linéaire et logistique", "Analyse multivariée (ACP, classification) et apprentissage statistique"],
+    epigraph: "Les Tricheurs du Caravage lisent et manipulent le hasard aux cartes ; l'analyse statistique fait, avec rigueur plutôt qu'avec tromperie, ce que ces joueurs pressentaient déjà : le hasard obéit à des lois qu'on peut mesurer.",
+  },
+  {
+    slug: "algorithmes-spatiaux",
+    title: "De la Grille et du Point",
+    navLabel: "Algorithmes Spatiaux",
+    summary: "Un catalogue très fourni d'algorithmes d'analyse spatiale : interpolation, indexation, géométrie computationnelle, analyse de réseau, détection de motifs — mécanique, complexité et cas d'usage, en trois parcours de niveau.",
+    topics: ["Interpolation spatiale (IDW, krigeage, TIN, splines)", "Structures d'indexation (quadtree, k-d tree, R-tree)", "Géométrie computationnelle (enveloppe convexe, Voronoï/Delaunay, Douglas-Peucker)", "Analyse de réseau et détection de motifs (Dijkstra, A*, DBSCAN, Ripley K)"],
+    epigraph: "Le dessinateur de Dürer transfère, point par point à travers une grille tendue, la forme d'un luth vers une surface plane : un algorithme spatial fait ce même geste méthodique, transposé au calcul plutôt qu'au trait de plume.",
+  },
   {
     slug: "statistiques-spatiales",
     title: "De ce qui se Regroupe",
@@ -117,6 +178,14 @@ export const modules: CourseModule[] = [
     summary: "Filtres à noyau, classification, évaluation de précision, deep learning : la place de l'IA en géomatique et télédétection.",
     topics: ["Filtres kernel et passe-haut", "Classification supervisée / non supervisée", "Matrice de confusion et kappa", "Deep learning : CNN, U-Net, Transformers"],
     epigraph: "Comme le cabinet de curiosités range chaque coquillage, chaque tableau, chaque médaille dans une catégorie pour le comprendre, l'algorithme range chaque pixel dans une classe pour lire le paysage.",
+  },
+  {
+    slug: "systemes-multi-agents",
+    title: "De Cent Jeux à la Fois",
+    navLabel: "Systèmes Multi-Agents",
+    summary: "Modélisation à base d'agents (ABM), automates cellulaires, essaims et algorithmes collectifs, plateformes NetLogo/Mesa/GAMA, validation et enjeux d'un modèle multi-agent en géographie, en trois parcours de niveau.",
+    topics: ["Agents, environnement et comportements (règles locales)", "Automates cellulaires et modèles de ségrégation/diffusion", "Intelligence en essaim (colonies de fourmis, PSO, boids)", "Plateformes (NetLogo, Mesa, GAMA), calibration et validation"],
+    epigraph: "Bruegel peint plus de deux cents enfants, chacun absorbé dans son propre jeu selon ses propres règles, sans chef d'orchestre : un système multi-agent modélise exactement cette idée, une multitude d'entités autonomes dont les interactions locales font émerger, sans plan centralisé, l'ordre collectif de toute la scène.",
   },
   {
     slug: "etudes-de-cas-sectorielles",

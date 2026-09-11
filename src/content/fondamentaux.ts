@@ -3,22 +3,22 @@ import type { ContentBlock } from "./types"
 export const fondamentauxContent: ContentBlock[] = [
   {
     type: "paragraph",
-    text: "La géomatique regroupe l'ensemble des disciplines qui permettent d'acquérir, de traiter, d'analyser et de représenter des données géographiques : cartographie, systèmes d'information géographique (SIG), télédétection, GPS. Ce module pose les bases indispensables avant d'aborder l'imagerie satellite : comment on repère un point sur Terre, et comment on le transforme en position sur une carte plane. Trois pistes complètes ci-dessous (choisis la tienne dans le filtre « Afficher ») : chacune se lit seule, du début à la fin.",
+    text: "La géomatique regroupe les disciplines qui acquièrent, traitent, analysent et représentent des données géographiques : cartographie, systèmes d'information géographique (SIG), télédétection, GPS. Ce module pose les bases indispensables avant l'imagerie satellite. Comment repère-t-on un point sur Terre, et comment le transforme-t-on en position sur une carte plane ? Trois pistes complètes ci-dessous, chacune se lit seule du début à la fin ; choisis la tienne dans le filtre « Afficher ».",
   },
 
   // ================================================================
   // PISTE LYCÉE
   // ================================================================
-  { type: "heading", text: "1. La Terre n'est pas plate : comment on la mesure quand même", level: "lycee" },
+  { type: "heading", text: "1. La forme de la Terre et comment on la mesure", level: "lycee" },
   {
     type: "paragraph",
-    text: "La Terre est un ellipsoïde : une sphère légèrement aplatie aux pôles par l'effet de sa propre rotation. Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme : c'est le rôle d'un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
+    text: "La Terre est un ellipsoïde, une sphère légèrement aplatie aux pôles par l'effet de sa propre rotation. Toute donnée géographique doit d'abord être rattachée à un modèle mathématique de cette forme, via un système géodésique (ou datum). Le plus utilisé au monde est WGS84, la référence du GPS. En France, l'IGN utilise RGF93, quasiment identique à WGS84 à quelques centimètres près.",
   },
   {
     type: "callout",
     tone: "info",
     title: "Latitude / longitude : ce ne sont pas des mètres",
-    text: "Un degré de longitude ne mesure pas la même distance au niveau de l'équateur qu'à Marseille : les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique.",
+    text: "Un degré de longitude ne mesure pas la même distance à l'équateur qu'à Marseille, car les méridiens se rapprochent vers les pôles. C'est pourquoi on ne calcule jamais une distance ou une surface directement en degrés : il faut d'abord projeter les coordonnées dans un système métrique.",
   },
   {
     type: "callout",

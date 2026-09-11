@@ -56,9 +56,10 @@ export function CategoryGame({ categories, items }: { categories: string[]; item
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
+      <p className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         {Object.keys(solved).length} / {items.length} classés · {attempts} essai{attempts !== 1 ? "s" : ""}
       </p>
+      <p role="status" className="sr-only">{wrongCategory ? "Catégorie incorrecte, réessaie." : ""}</p>
 
       {isDone ? (
         <div className="border border-gilt/40 bg-gilt/[0.06] p-8 text-center">
@@ -69,7 +70,7 @@ export function CategoryGame({ categories, items }: { categories: string[]; item
           <button
             type="button"
             onClick={reset}
-            className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
           >
             Rejouer
           </button>
@@ -88,7 +89,7 @@ export function CategoryGame({ categories, items }: { categories: string[]; item
                   onClick={() => pickItem(label)}
                   className={cn(
                     "font-mono text-sm px-4 py-2 border transition-colors",
-                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/40",
+                    isSolved && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/80",
                     !isSolved && isSelected && "border-gilt bg-gilt/10 text-gilt",
                     !isSolved && !isSelected && "border-gilt/20 text-parchment hover:border-gilt/50",
                   )}
@@ -111,7 +112,7 @@ export function CategoryGame({ categories, items }: { categories: string[]; item
                   "text-left px-4 py-3 border transition-colors",
                   wrongCategory === cat && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                   wrongCategory !== cat && selected && "border-lapis/50 text-parchment hover:bg-lapis/10",
-                  wrongCategory !== cat && !selected && "border-gilt/15 text-parchment-dim/50",
+                  wrongCategory !== cat && !selected && "border-gilt/15 text-parchment-dim/80",
                 )}
               >
                 {cat}

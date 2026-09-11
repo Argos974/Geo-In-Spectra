@@ -213,11 +213,13 @@ quiz interactif.
 
 ## Feuille de route
 
-18 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
-socle d'origine ; les onze suivantes couvrent des thèmes spécialisés ajoutés ensuite,
+21 salles en ligne aujourd'hui. Les six premières (plus L'Atelier, en clôture) sont le
+socle d'origine ; les quatorze suivantes couvrent des thèmes spécialisés ajoutés ensuite,
 étoffées depuis à un niveau de détail comparable — dont quatre salles-outils (QGIS,
 TerrSet, R, VS Code), chacune un tutoriel logiciel complet plutôt qu'une simple mention
-en passant dans Le Compas :
+en passant dans Le Compas, et trois salles-catalogues d'algorithmes (Analyse Statistique,
+Algorithmes Spatiaux, Systèmes Multi-Agents), pensées pour couvrir un très grand nombre
+de méthodes chacune plutôt qu'un petit nombre en profondeur :
 
 1. **Fondements** (`fondamentaux`) — coordonnées/EPSG, projections, vecteur/raster,
    histoire de la cartographie, lecture de carte, débat Mercator/Peters, codes
@@ -237,26 +239,35 @@ en passant dans Le Compas :
    statistique et géostatistique spatiales, reproductibilité (R Markdown/renv)
 8. **VS Code** (`vscode`) — tutoriel complet de l'éditeur : extensions Python/Jupyter,
    débogueur, Git intégré, environnements distants et automatisation (tasks.json)
-9. **L'Intelligence** (`traitements-ia`) — filtres à noyau, classification,
-   matrice de confusion/kappa, deep learning (CNN, U-Net, Transformers)
-10. **La Méthode** (`methodologie`) — commentaire de document, dissertation,
+9. **Analyse Statistique** (`analyse-statistique`) — statistique descriptive et
+   inférentielle, tests d'hypothèse (Student, khi², ANOVA), régression linéaire/
+   logistique, ACP, classification (k-means, CAH), forêts aléatoires, séries temporelles
+10. **Algorithmes Spatiaux** (`algorithmes-spatiaux`) — catalogue d'algorithmes :
+    interpolation (IDW, splines, TIN), indexation (quadtree, k-d tree), Delaunay/
+    Voronoï, Bellman-Ford/Floyd-Warshall, DBSCAN/OPTICS, Ripley K, TSP/VRP
+11. **L'Intelligence** (`traitements-ia`) — filtres à noyau, classification,
+    matrice de confusion/kappa, deep learning (CNN, U-Net, Transformers)
+12. **Systèmes Multi-Agents** (`systemes-multi-agents`) — modélisation à base
+    d'agents (ABM), automates cellulaires, essaims (ACO/PSO), boids, modèle de
+    Schelling, plateformes NetLogo/Mesa/GAMA, protocole ODD
+13. **La Méthode** (`methodologie`) — commentaire de document, dissertation,
     rapport technique SIG, sémiologie de Bertin, préparation aux concours,
     mémoire IMRaD
-11. **Les Projections** (`projections-avancees`) — familles de déformation,
+14. **Les Projections** (`projections-avancees`) — familles de déformation,
     Lambert-93/UTM, datum et transformation, choix d'une projection
-12. **Le Web** (`cartographie-web`) — pyramide de tuiles, Leaflet/MapLibre,
+15. **Le Web** (`cartographie-web`) — pyramide de tuiles, Leaflet/MapLibre,
     standards OGC (WMS/WMTS/WFS), performance et accessibilité
-13. **Les Statistiques** (`statistiques-spatiales`) — LISA, Gi* de Getis-Ord,
+16. **Les Statistiques** (`statistiques-spatiales`) — LISA, Gi* de Getis-Ord,
     estimation de densité par noyau, régression spatiale, cartographie du risque
-14. **Le Drone** (`photogrammetrie-drones`) — Structure from Motion, MNS/MNT,
+17. **Le Drone** (`photogrammetrie-drones`) — Structure from Motion, MNS/MNT,
     points d'appui au sol, planification de vol, RTK/PPK
-15. **Le LiDAR** (`lidar`) — temps de vol laser, retours multiples, classification
+18. **Le LiDAR** (`lidar`) — temps de vol laser, retours multiples, classification
     du nuage de points, plateformes aéroportées/terrestres
-16. **La Base** (`bases-donnees-spatiales`) — index spatial GiST, requêtes et
+19. **La Base** (`bases-donnees-spatiales`) — index spatial GiST, requêtes et
     jointures spatiales, topologie, performance (EXPLAIN ANALYZE)
-17. **Les Secteurs** (`etudes-de-cas-sectorielles`) — agriculture de précision,
+20. **Les Secteurs** (`etudes-de-cas-sectorielles`) — agriculture de précision,
     artificialisation des sols, risque incendie, foresterie
-18. **L'Atelier** (`travaux-pratiques`), en clôture — douze séances pratiques
+21. **L'Atelier** (`travaux-pratiques`), en clôture — douze séances pratiques
     autonomes (un semestre universitaire), réparties sur les trois profils
     lycée/licence-BUT/master-recherche via le système de niveaux, qui réutilisent
     les compétences des salles précédentes (géoréférencement par grille,
@@ -264,7 +275,7 @@ en passant dans Le Compas :
     étude de cas)
 
 Glossaire (avec sources et recherche), page Références (bibliographie par thème),
-quiz interactif et fiches mémo PDF couvrent les 18 salles.
+quiz interactif et fiches mémo PDF couvrent les 21 salles.
 
 ## Déploiement
 

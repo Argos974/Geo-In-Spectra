@@ -8,7 +8,7 @@ import { markVisited } from "@/lib/progress"
 import { moduleTreeRoute, moduleTreeState } from "@/lib/moduleRoute"
 import { usePageMeta } from "@/hooks/usePageMeta"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"]
 
 /**
  * Lien profond / vue autonome d'un module (imprimée, partagée, indexée) — le

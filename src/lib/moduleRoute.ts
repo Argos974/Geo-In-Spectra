@@ -10,6 +10,12 @@ export const COURS_SLUGS = new Set([
   "fondamentaux",
   "projections-avancees",
   "outils-sig",
+  "qgis",
+  "terrset",
+  "programmation-r",
+  "vscode",
+  "analyse-statistique",
+  "algorithmes-spatiaux",
   "statistiques-spatiales",
   "bases-donnees-spatiales",
   "cartographie-web",
@@ -18,6 +24,7 @@ export const COURS_SLUGS = new Set([
   "photogrammetrie-drones",
   "lidar",
   "traitements-ia",
+  "systemes-multi-agents",
   "etudes-de-cas-sectorielles",
 ])
 

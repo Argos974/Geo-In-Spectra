@@ -175,14 +175,14 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
   return (
     <div>
       {trackSubtitle && (
-        <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-2">
+        <p className="font-mono text-[12px] uppercase tracking-wider text-gilt mb-2">
           {activeTrack.shortLabel} — {trackSubtitle}
         </p>
       )}
       {!hideSummary && <p className="text-parchment-dim text-lg mb-6 text-justify">{module.summary}</p>}
 
-      <div className="print:hidden flex flex-wrap items-center gap-2 mb-10">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-parchment-dim/80 mr-1">Afficher :</span>
+      <div className="print:hidden flex flex-wrap items-center gap-2 mb-10" role="group" aria-labelledby={`level-toggle-label-${module.slug}`}>
+        <span id={`level-toggle-label-${module.slug}`} className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mr-1">Afficher :</span>
         {ALL_LEVELS.map((level) => {
           const active = activeLevels.has(level)
           return (
@@ -192,7 +192,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
               onClick={() => toggleLevel(level)}
               aria-pressed={active}
               className={cn(
-                "font-mono text-[10px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
+                "font-mono text-[11px] uppercase tracking-wider px-3 py-1.5 border transition-colors",
                 active ? "border-gilt/50 text-gilt bg-gilt/[0.06]" : "border-gilt/15 text-parchment-dim/80 hover:text-parchment-dim hover:border-gilt/30",
               )}
             >
@@ -201,7 +201,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
           )
         })}
         {parcours?.levels && (
-          <span className="font-mono text-[10px] text-parchment-dim/80">
+          <span className="font-mono text-[11px] text-parchment-dim/80">
             réglé par le parcours « {parcours.title} »
           </span>
         )}
@@ -240,21 +240,21 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
           <a
             href={`/pdf/${module.slug}/${trackCoursName}`}
             download={trackCoursName}
-            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-3 py-2 hover:bg-gilt/10 transition-colors"
           >
             ↓ Cours {isLeveledCourse ? `${activeTrack.shortLabel} ` : ""}(PDF)
           </a>
           <a
             href={`/pdf/${module.slug}/${ficheName}`}
             download={ficheName}
-            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
           >
             ↓ Fiche mémo (PDF)
           </a>
           {hasExercises && (
             <Link
               to={isLeveledCourse ? `/module/${module.slug}/exercices?level=${activeTrack.level}` : `/module/${module.slug}/exercices`}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-wider text-lapis-bright border border-lapis/40 px-3 py-2 hover:bg-lapis/10 transition-colors"
             >
               S'entraîner →
             </Link>
@@ -262,7 +262,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
           {hasQuiz && (
             <Link
               to={`/module/${module.slug}/quiz`}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
             >
               Faire le quiz →
             </Link>
@@ -271,7 +271,7 @@ export function ModuleChapterBody({ module, hideSummary, showTeacherMeta, onActi
             <a
               href={`/pdf/${module.slug}/${quizCorrigeName}`}
               download={quizCorrigeName}
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[12px] uppercase tracking-wider text-parchment-dim border border-gilt/15 px-3 py-2 hover:border-gilt/40 hover:text-gilt transition-colors"
             >
               ↓ Corrigé quiz (PDF)
             </a>

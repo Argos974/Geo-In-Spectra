@@ -130,9 +130,10 @@ export function SpatialOperationGame() {
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
+      <p className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         {solvedCount} / {questions.length} résolues · {attempts} essai{attempts !== 1 ? "s" : ""}
       </p>
+      <p role="status" className="sr-only">{wrongChoice ? "Réponse incorrecte, réessaie." : ""}</p>
 
       {isDone ? (
         <div className="border border-gilt/40 bg-gilt/[0.06] p-8 text-center">
@@ -143,7 +144,7 @@ export function SpatialOperationGame() {
           <button
             type="button"
             onClick={reset}
-            className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
           >
             Rejouer
           </button>

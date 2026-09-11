@@ -71,9 +71,10 @@ export function FormulaBuilderGame({ challenges }: { challenges: FormulaChalleng
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
+      <p className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         Formule {Math.min(round + 1, challenges.length)} / {challenges.length} · {attempts} essai{attempts !== 1 ? "s" : ""}
       </p>
+      <p role="status" className="sr-only">{wrongTile ? "Mauvaise tuile, réessaie." : ""}</p>
 
       {isGameDone ? (
         <div className="border border-gilt/40 bg-gilt/[0.06] p-8 text-center">
@@ -84,7 +85,7 @@ export function FormulaBuilderGame({ challenges }: { challenges: FormulaChalleng
           <button
             type="button"
             onClick={reset}
-            className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
           >
             Rejouer
           </button>
@@ -92,7 +93,7 @@ export function FormulaBuilderGame({ challenges }: { challenges: FormulaChalleng
       ) : (
         <div className="space-y-8">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-wider text-gilt mb-3">Construis : {challenge.name}</p>
+            <p className="font-mono text-[12px] uppercase tracking-wider text-gilt mb-3">Construis : {challenge.name}</p>
             <div className="border border-gilt/30 bg-gilt/[0.06] px-5 py-4 min-h-[4rem] flex items-center flex-wrap gap-2 font-mono text-lg text-parchment">
               {built.length === 0 && <span className="text-parchment-dim/80 text-sm">Clique les tuiles ci-dessous, dans l'ordre.</span>}
               {built.map((t, i) => (
@@ -113,7 +114,7 @@ export function FormulaBuilderGame({ challenges }: { challenges: FormulaChalleng
                   onClick={() => pick(id, label)}
                   className={cn(
                     "font-mono text-base px-4 py-2 border transition-colors",
-                    used && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/30",
+                    used && "border-gilt/20 bg-gilt/[0.04] text-parchment-dim/80",
                     !used && wrongTile === id && "border-oxblood bg-oxblood/10 text-oxblood-bright",
                     !used && wrongTile !== id && "border-gilt/20 text-parchment hover:border-gilt/50",
                   )}

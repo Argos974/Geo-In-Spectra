@@ -34,7 +34,7 @@ export function RecherchePage() {
   return (
     <div className="min-h-screen bg-ink text-parchment px-6 pt-32 pb-24">
       <div className="mx-auto max-w-2xl">
-        <p className="font-mono text-[12px] text-gilt mb-3">Discipulus · Magister</p>
+        <p className="font-mono text-[13px] text-gilt mb-3">Discipulus · Magister</p>
         <h1 className="font-heading text-4xl md:text-5xl mb-6">Recherche</h1>
 
         <input
@@ -44,11 +44,18 @@ export function RecherchePage() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Terme, notion, titre de section…"
           aria-label="Rechercher sur le site"
-          className="w-full bg-transparent border border-gilt/30 px-4 py-3 text-lg text-parchment placeholder:text-parchment-dim/50 focus:outline-none focus:border-gilt/60 mb-8"
+          className="w-full bg-transparent border border-gilt/30 px-4 py-3 text-lg text-parchment placeholder:text-parchment-dim/50 focus:border-gilt/60 mb-8"
         />
 
+        {/* Région permanente (jamais démontée) pour que le changement de texte soit
+            fiablement annoncé par un lecteur d'écran à chaque frappe — un <p>
+            aria-live qui n'existerait que le temps d'une requête non vide ne
+            garantit pas la même annonce à sa toute première apparition. */}
+        <p aria-live="polite" className="sr-only">
+          {query.trim() ? `${results.length} résultat${results.length !== 1 ? "s" : ""}` : ""}
+        </p>
         {query.trim() && (
-          <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-4">
+          <p aria-hidden="true" className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-4">
             {results.length} résultat{results.length !== 1 ? "s" : ""}
           </p>
         )}
@@ -63,14 +70,14 @@ export function RecherchePage() {
             >
               <span
                 className={cn(
-                  "shrink-0 mt-0.5 font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 border border-gilt/25 text-gilt/80",
+                  "shrink-0 mt-0.5 font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 border border-gilt/25 text-gilt/80",
                 )}
               >
                 {GROUP_LABEL[r.group]}
               </span>
               <span className="min-w-0">
-                <span className="block text-parchment truncate">{r.label}</span>
-                {r.context && <span className="block text-parchment-dim text-sm truncate">{r.context}</span>}
+                <span className="block text-parchment truncate" title={r.label}>{r.label}</span>
+                {r.context && <span className="block text-parchment-dim text-sm truncate" title={r.context}>{r.context}</span>}
               </span>
             </button>
           ))}

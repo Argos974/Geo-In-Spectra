@@ -32,7 +32,7 @@ export function ChapterNav({ titles }: ChapterNavProps) {
   return (
     <nav
       aria-label="Chapitres"
-      className="sticky top-32 z-10 mb-8 flex flex-row flex-nowrap items-center gap-1 overflow-x-auto bg-ink/90 backdrop-blur-sm border border-gilt/15 py-2 font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 xl:z-0 xl:w-48 xl:overflow-visible xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-0.5 xl:bg-transparent xl:border-0 xl:py-0 xl:-translate-x-[13rem] print:hidden"
+      className="sticky top-32 z-10 mb-8 flex flex-row flex-nowrap items-center gap-1 overflow-x-auto bg-ink/90 backdrop-blur-sm border border-gilt/15 py-2 font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 xl:z-0 xl:w-48 xl:overflow-visible xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-0.5 xl:bg-transparent xl:border-0 xl:py-0 xl:-translate-x-[13rem] print:hidden"
     >
       {titles.map((t) => (
         <button

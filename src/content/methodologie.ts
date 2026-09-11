@@ -394,4 +394,45 @@ export const methodologieContent: ContentBlock[] = [
     label: "Continuer : tester la significativité d'un résultat spatial",
     description: "Le module Les Statistiques applique concrètement la significativité et le p évoqués ici à des indices spatiaux réels (LISA, Gi*).",
   },
+
+  { type: "heading", text: "3. Valoriser un travail : poster, soutenance, publication", level: "approfondissement" },
+  {
+    type: "paragraph",
+    text: "Un mémoire IMRaD (section 2) n'a de valeur que s'il est aussi communiqué à un public qui ne le lira pas en entier : un jury de soutenance, les visiteurs d'un colloque devant un poster, ou les lecteurs d'un article. Chaque format impose ses propres règles, distinctes de celles de l'écrit long.",
+  },
+  {
+    type: "table",
+    headers: ["Format", "Ce qu'il doit transmettre en priorité", "Erreur fréquente à éviter"],
+    rows: [
+      ["Poster scientifique", "Une question et un résultat central, lisibles en mouvement à deux mètres", "Reproduire le mémoire en réduisant la taille de police plutôt que de sélectionner"],
+      ["Soutenance orale", "La démarche et sa justification, pas l'exhaustivité des résultats", "Dérouler un exposé appris par cœur qui ne survit pas à une question qui en sort"],
+      ["Article scientifique", "Un résultat reproductible, situé précisément dans la littérature existante", "Une discussion qui n'admet aucune limite, perçue comme moins crédible, pas plus"],
+    ],
+  },
+  {
+    type: "callout",
+    tone: "warning",
+    title: "Un poster n'est pas un mémoire imprimé en grand",
+    text: "La densité de texte qui fonctionne dans un mémoire (lu assis, au calme) devient illisible sur un poster (parcouru debout, en quelques minutes, au milieu d'autres posters). La hiérarchie visuelle — un titre de section qui résume la conclusion plutôt qu'un thème neutre, une carte ou un graphique en position centrale, du texte réduit à des légendes courtes — fait plus pour la compréhension qu'un paragraphe de plus.",
+  },
+  {
+    type: "list",
+    items: [
+      "Concevoir le poster à partir de la carte ou de la figure principale, et écrire le texte autour d'elle — jamais l'inverse, qui produit un mur de texte illustré",
+      "Préparer la soutenance comme l'oral de concours (section 1) : annoncer le plan, gérer le temps en deux passes, et surtout anticiper les trois questions les plus prévisibles du jury (limites de la méthode, choix d'échelle, robustesse statistique)",
+      "Sur une diapositive, ne jamais faire lire au public un tableau ou un paragraphe entier en même temps qu'on le commente à l'oral : c'est l'un ou l'autre qui est réellement suivi, rarement les deux",
+    ],
+  },
+  {
+    type: "callout",
+    tone: "example",
+    title: "Répondre à une question qui déstabilise",
+    text: "Face à une question sur une limite non anticipée (par exemple la non-indépendance d'un échantillon, section 2), la réponse la plus crédible reconnaît la limite puis explique en quoi elle borne l'interprétation du résultat — plutôt que de la nier ou de la minimiser. Un jury évalue la lucidité méthodologique autant que le résultat lui-même.",
+  },
+  {
+    type: "link",
+    to: "/module/cartographie-web",
+    label: "Voir aussi : concevoir une carte pour la diffusion en ligne",
+    description: "Les mêmes réflexes de hiérarchie visuelle (une information principale, un minimum de texte) s'appliquent à une carte web destinée à un public qui la parcourt en quelques secondes.",
+  },
 ]

@@ -9,7 +9,7 @@ import { slugify } from "@/lib/slug"
 import { filterBlocksByLevel } from "@/lib/levelFilter"
 import type { ContentBlock, ContentLevel } from "@/content/types"
 
-const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV"]
+const ROOM_NUMERALS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI"]
 
 /**
  * L'Atelier (travaux-pratiques) n'est pas un module stratifié comme les autres

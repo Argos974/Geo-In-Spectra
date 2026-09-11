@@ -100,7 +100,7 @@ function SolutionBlock({
           aria-controls={panelId}
           className={cn("w-full flex items-center justify-between gap-4 px-5 py-4 text-left transition-colors", !revealed && "hover:bg-white/[0.02]")}
         >
-          <span className={cn("font-mono text-[11px] uppercase tracking-wider", accent)}>
+          <span className={cn("font-mono text-[12px] uppercase tracking-wider", accent)}>
             {revealed ? "Corrigé" : "Voir le corrigé"} : {block.title}
           </span>
           <span className={cn("font-mono text-xs", accent)} aria-hidden="true">{revealed ? "▲" : "▼"}</span>
@@ -108,10 +108,10 @@ function SolutionBlock({
       )}
       {revealed && (
         <div id={panelId} className={cn(isPrint ? "p-5" : "px-5 pb-5", isPrint && "border-t", isPrint && border)}>
-          {isPrint && <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", accent)}>Corrigé : {block.title}</p>}
-          {block.text && <p className={cn("leading-relaxed text-justify mb-3 last:mb-0", textDim)}>{block.text}</p>}
+          {isPrint && <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", accent)}>Corrigé : {block.title}</p>}
+          {block.text && <p className={cn("max-w-[70ch] leading-relaxed text-justify mb-3 last:mb-0", textDim)}>{block.text}</p>}
           {block.items && (
-            <ul className={cn("space-y-2", textDim)}>
+            <ul className={cn("max-w-[70ch] space-y-2", textDim)}>
               {block.items.map((item, j) => (
                 <li key={j} className="flex items-start gap-3">
                   <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", accentBg)} />
@@ -191,8 +191,8 @@ function MarginNoteAnchor({
   return (
     <div ref={ref}>
       <div className={cn(!isPrint && "xl:hidden", "mb-2 py-0.5 border-l-2 pl-3", isPrint ? "border-[#8a6a2f]/25" : "border-gilt/20")}>
-        <p className={cn("font-mono text-[9px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{block.title}</p>
-        <p className={cn("text-[12.5px] leading-relaxed italic opacity-80", textDim)}>{block.text}</p>
+        <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{block.title}</p>
+        <p className={cn("text-[13.5px] leading-relaxed italic opacity-80", textDim)}>{block.text}</p>
       </div>
     </div>
   )
@@ -247,8 +247,8 @@ function MarginSlot({ note, isPrint, textDim }: { note: ActiveMarginNote | null;
     >
       {note && (
         <div className="border-l-2 border-gilt/20 pl-3 py-0.5">
-          <p className={cn("font-mono text-[9px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{note.title}</p>
-          <p className={cn("text-[12.5px] leading-relaxed italic opacity-80", textDim)}>{note.text}</p>
+          <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-1 opacity-80", textDim)}>{note.title}</p>
+          <p className={cn("text-[13.5px] leading-relaxed italic opacity-80", textDim)}>{note.text}</p>
         </div>
       )}
     </div>
@@ -288,7 +288,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             return (
               <div key={i} id={slugify(block.text)} className="pt-8 first:pt-0 scroll-mt-28">
                 {block.level && (
-                  <span className={cn("inline-block mb-2 font-mono text-[10px] uppercase tracking-wider border px-2 py-0.5", levelStyle[block.level])}>
+                  <span className={cn("inline-block mb-2 font-mono text-[11px] uppercase tracking-wider border px-2 py-0.5", levelStyle[block.level])}>
                     {levelLabel[block.level]}
                   </span>
                 )}
@@ -321,7 +321,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             if (isPrint) {
               return (
                 <div key={i} className={cn("border p-5 md:p-8 text-sm", border, panelBg)}>
-                  <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-2", accent)}>Donnée interrogée en direct</p>
+                  <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", accent)}>Donnée interrogée en direct</p>
                   <p className={textDim}>{LIVE_PRINT_LABEL[block.name]}</p>
                   {block.caption && <p className={cn("mt-2", textDim)}>{block.caption}</p>}
                 </div>
@@ -347,12 +347,12 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
           case "live-game":
             return isPrint ? (
               <div key={i} className={cn("border-2 p-5 md:p-6", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
-                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>À toi de jouer</p>
+                <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>À toi de jouer</p>
                 <p className={textDim}>Exercice interactif de dessin, à faire sur la version web du site.</p>
               </div>
             ) : (
               <div key={i} className="border-2 border-oxblood/40 bg-oxblood/[0.06] p-5 md:p-6">
-                <p className="font-mono text-[11px] uppercase tracking-wider mb-3 text-oxblood-bright">À toi de jouer</p>
+                <p className="font-mono text-[12px] uppercase tracking-wider mb-3 text-oxblood-bright">À toi de jouer</p>
                 <Suspense fallback={<LivePlaceholder textDim={textDim} />}>
                   {block.name === "draw-operation" && <DrawOperationGame />}
                 </Suspense>
@@ -368,13 +368,13 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             return (
               <div key={i} className={cn("border-2 p-5 md:p-6 avoid-break", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-                  <p className={cn("font-mono text-[11px] uppercase tracking-wider", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>
+                  <p className={cn("font-mono text-[12px] uppercase tracking-wider", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>
                     Devoir à rendre : {block.format}
                   </p>
                 </div>
                 <h3 className={cn("font-heading text-lg mb-2", text)}>{block.title}</h3>
-                <p className={cn("leading-relaxed text-justify mb-4", textDim)}>{block.prompt}</p>
-                <ul className="space-y-1.5">
+                <p className={cn("max-w-[70ch] leading-relaxed text-justify mb-4", textDim)}>{block.prompt}</p>
+                <ul className="max-w-[70ch] space-y-1.5">
                   {block.criteria.map((c, j) => (
                     <li key={j} className="flex items-start gap-2 text-sm text-justify">
                       <span className={cn("h-1.5 w-1.5 rounded-full shrink-0 mt-2", isPrint ? "bg-[#7a2f24]" : "bg-oxblood")} />
@@ -408,7 +408,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                       <img src={img.src} alt={img.alt} className="w-full max-h-64 object-contain" loading="lazy" />
                     </div>
                     <figcaption className={cn("px-3 py-2.5 border-t", borderSoft)}>
-                      <p className={cn("font-mono text-[10px] uppercase tracking-wider mb-1", accent)}>{img.label}</p>
+                      <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-1", accent)}>{img.label}</p>
                       <p className={cn("text-xs leading-relaxed text-justify", textDim)}>{img.caption}</p>
                     </figcaption>
                   </figure>
@@ -427,7 +427,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // ni la flèche qui suggèrent à tort une interaction possible sur papier.
             return isPrint ? (
               <div key={i} className={cn("border-l-2 pl-4 py-1", border)}>
-                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-1", accent)}>Voir aussi : {block.label}</p>
+                <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-1", accent)}>Voir aussi : {block.label}</p>
                 {block.description && <p className={cn("text-sm text-justify", textDim)}>{block.description}</p>}
               </div>
             ) : (
@@ -436,7 +436,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                 to={block.to}
                 className={cn("block border p-5 transition-colors hover:bg-gilt/10", border, panelBg)}
               >
-                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-1", accent)}>{block.label} →</p>
+                <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-1", accent)}>{block.label} →</p>
                 {block.description && <p className={cn("text-sm", textDim)}>{block.description}</p>}
               </Link>
             )
@@ -476,20 +476,20 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
           case "formula":
             return (
               <div key={i} className={cn("border p-5 avoid-break", border, panelBg)}>
-                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", accent)}>{block.label}</p>
+                <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", accent)}>{block.label}</p>
                 <p className={cn("font-mono text-sm md:text-base break-words", text)}>{block.formula}</p>
-                {block.note && <p className={cn("text-sm mt-3 text-justify", textDim)}>{block.note}</p>}
+                {block.note && <p className={cn("max-w-[70ch] text-sm mt-3 text-justify", textDim)}>{block.note}</p>}
               </div>
             )
 
           case "callout":
             return (
               <div key={i} className={cn("border p-5 avoid-break", calloutStyles[block.tone ?? "info"])}>
-                <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-2", textDim)}>
+                <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", textDim)}>
                   {calloutLabel[block.tone ?? "info"]}
                 </p>
                 <h3 className={cn("font-heading text-lg mb-1", text)}>{block.title}</h3>
-                <p className={cn("leading-relaxed text-justify", textDim)}>{block.text}</p>
+                <p className={cn("max-w-[70ch] leading-relaxed text-justify", textDim)}>{block.text}</p>
               </div>
             )
 
@@ -533,7 +533,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
                   <thead>
                     <tr className={panelBg}>
                       {block.headers.map((h) => (
-                        <th key={h} className={cn("text-left font-mono text-[11px] uppercase tracking-wider px-3 py-3 sm:px-4 sm:whitespace-nowrap", accent)}>
+                        <th key={h} className={cn("text-left font-mono text-[12px] uppercase tracking-wider px-3 py-3 sm:px-4 sm:whitespace-nowrap", accent)}>
                           {h}
                         </th>
                       ))}
@@ -561,7 +561,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // reste lisible tel quel dans sa salle d'origine.
             return (
               <div key={i} className={cn("border-2 p-5 md:p-6 space-y-4 avoid-break", isPrint ? "border-[#8a6a2f]/45" : "border-gilt/35")}>
-                <p className={cn("font-mono text-[10px] uppercase tracking-wider", accent)}>Brique — {block.title}</p>
+                <p className={cn("font-mono text-[11px] uppercase tracking-wider", accent)}>Brique — {block.title}</p>
                 {block.blocks.map(renderBlock)}
               </div>
             )

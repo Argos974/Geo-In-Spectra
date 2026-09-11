@@ -94,8 +94,11 @@ export function CoordinateMapGame({ cities }: { cities: CityCoord[] }) {
 
   return (
     <div>
-      <p className="font-mono text-[11px] uppercase tracking-wider text-parchment-dim/80 mb-10">
+      <p className="font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 mb-10">
         {revealed.size} / {cities.length} placées · {attempts} essai{attempts !== 1 ? "s" : ""}
+      </p>
+      <p role="status" className="sr-only">
+        {wrongIndex !== null ? "Ce n'est pas la bonne ville, réessaie." : ""}
       </p>
 
       {isDone ? (
@@ -107,7 +110,7 @@ export function CoordinateMapGame({ cities }: { cities: CityCoord[] }) {
           <button
             type="button"
             onClick={reset}
-            className="font-mono text-[11px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
+            className="font-mono text-[12px] uppercase tracking-wider text-gilt border border-gilt/30 px-4 py-2 hover:bg-gilt/10 transition-colors"
           >
             Rejouer
           </button>
@@ -133,16 +136,36 @@ export function CoordinateMapGame({ cities }: { cities: CityCoord[] }) {
               const isWrong = wrongIndex === i
               return (
                 <g key={c.name}>
+                  {/*
+                   * role/tabIndex/onKeyDown : un <circle onClick> nu n'est ni focusable
+                   * ni activable au clavier — sans ça, ce jeu était tout simplement
+                   * injouable sans souris. aria-label ne révèle le nom de la ville
+                   * qu'une fois placée (comme visuellement) : avant, il reste générique
+                   * ("Point N non identifié") pour ne pas donner la réponse à qui
+                   * navigue au clavier plutôt qu'à la souris. strokeDasharray ajoute un
+                   * second indice (pas seulement la couleur) sur un essai raté.
+                   */}
                   <circle
                     cx={sx}
                     cy={sy}
                     r={9}
+                    role="button"
+                    tabIndex={isRevealed ? -1 : 0}
+                    aria-label={isRevealed ? c.name : `Point ${i + 1}, non identifié`}
+                    aria-disabled={isRevealed}
                     className="cursor-pointer"
                     fill={isRevealed ? "rgb(var(--color-gilt))" : isWrong ? "rgb(var(--color-oxblood))" : "rgb(var(--color-lapis))"}
                     fillOpacity={isRevealed ? 0.5 : 0.35}
                     stroke={isRevealed ? "rgb(var(--color-gilt))" : isWrong ? "rgb(var(--color-oxblood))" : "rgb(var(--color-lapis))"}
                     strokeWidth={2}
+                    strokeDasharray={isWrong ? "3,2" : undefined}
                     onClick={() => pick(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        pick(i)
+                      }
+                    }}
                   />
                   {isRevealed && (
                     <text x={sx + 12} y={sy + 4} fontSize={11} fill="rgb(var(--color-gilt))" fontFamily="monospace">

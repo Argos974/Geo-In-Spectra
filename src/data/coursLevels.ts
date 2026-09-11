@@ -30,6 +30,36 @@ export const coursLevelSubtitle: Record<string, Record<ContentLevel, string>> = 
     superieur: "Analyses spatiales, géostatistique et automatisation SIG",
     approfondissement: "Moran, MAUP, krigeage et décision multicritère",
   },
+  qgis: {
+    lycee: "Installer QGIS et faire sa première carte, clic par clic",
+    superieur: "Boîte à outils de traitement, modeleur graphique et expressions",
+    approfondissement: "PyQGIS, extensions et automatisation d'un traitement par lot",
+  },
+  terrset: {
+    lycee: "Ouvrir une image raster et lire une légende dans TerrSet",
+    superieur: "Classification, changement d'occupation du sol et Markov",
+    approfondissement: "Land Change Modeler, automates cellulaires et validation kappa",
+  },
+  "programmation-r": {
+    lycee: "Faire calculer et tracer R, sans écrire un vrai programme",
+    superieur: "Vecteurs, data frames et graphiques avec ggplot2",
+    approfondissement: "Statistique spatiale, modèles et reproductibilité (R Markdown)",
+  },
+  vscode: {
+    lycee: "Installer VS Code et exécuter son premier script",
+    superieur: "Extensions Python/Jupyter, débogueur et terminal intégré",
+    approfondissement: "Git intégré, espaces de travail et automatisation (tasks.json)",
+  },
+  "analyse-statistique": {
+    lycee: "Moyenne, médiane, écart-type : résumer une série de données",
+    superieur: "Tests d'hypothèse, corrélation et régression",
+    approfondissement: "Analyse multivariée et apprentissage statistique",
+  },
+  "algorithmes-spatiaux": {
+    lycee: "Interpoler une valeur manquante, trouver le plus court chemin",
+    superieur: "Structures d'indexation, géométrie computationnelle, réseau",
+    approfondissement: "Détection de motifs, algorithmes avancés et complexité",
+  },
   "traitements-ia": {
     lycee: "Reconnaître une forme sur une image, comme une machine",
     superieur: "Classification supervisée/non supervisée et matrice de confusion",
@@ -64,6 +94,11 @@ export const coursLevelSubtitle: Record<string, Record<ContentLevel, string>> = 
     lycee: "Pourquoi ranger des données géographiques dans une base",
     superieur: "Index spatial, requêtes et jointures géographiques",
     approfondissement: "Topologie, performance et PostGIS Raster",
+  },
+  "systemes-multi-agents": {
+    lycee: "Des règles simples, un comportement de groupe qui émerge",
+    superieur: "Automates cellulaires, essaims et plateformes (NetLogo, Mesa)",
+    approfondissement: "Calibration, validation et enjeux d'un modèle multi-agent",
   },
   "etudes-de-cas-sectorielles": {
     lycee: "Trois problèmes concrets, trois méthodes du cours appliquées",

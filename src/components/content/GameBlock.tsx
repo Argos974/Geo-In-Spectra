@@ -24,7 +24,7 @@ export function GameBlock({ game, isPrint }: { game: GameDef; isPrint?: boolean 
 
   return (
     <div id={slugify(game.title)} className={cn("border-2 p-5 md:p-6 scroll-mt-24", border, bg)}>
-      <p className={cn("font-mono text-[11px] uppercase tracking-wider mb-3", accent)}>À toi de jouer</p>
+      <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-3", accent)}>À toi de jouer</p>
       <p className={cn("font-heading text-xl mb-2", text)}>{game.title}</p>
       <p className={cn("leading-relaxed text-justify mb-4", textDim)}>{game.instructions}</p>
 
