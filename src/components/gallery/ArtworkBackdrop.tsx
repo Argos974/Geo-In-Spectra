@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react"
 import type { Artwork } from "@/data/artworks"
 import { cn } from "@/lib/utils"
-import { toWebpSrc } from "@/lib/imageSrc"
+import { toJpgSrcSet, toWebpSrcSet } from "@/lib/imageSrc"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import { useArtworkKenBurns } from "@/hooks/useArtworkKenBurns"
 import { useArtworkParallax } from "@/hooks/useArtworkParallax"
@@ -41,7 +41,12 @@ export function ArtworkBackdrop({ art, figure, children, className, eager = true
           l'intérieur, les deux mouvements se composent sans se gêner. */}
       <div ref={parallaxRef} className="absolute -inset-y-[10%] inset-x-0">
         <picture>
-          <source srcSet={toWebpSrc(art.src)} type="image/webp" />
+          {/* Paliers réduits (640/1280px, voir scripts/generate-gallery-responsive.mjs)
+              + l'original en repli — sizes="100vw" : le calque photographique occupe
+              toujours toute la largeur de la fenêtre (object-cover), quel que soit
+              l'écran. Sans ça, un mobile téléchargeait la même image que 1920px de large. */}
+          <source srcSet={toWebpSrcSet(art.src)} sizes="100vw" type="image/webp" />
+          <source srcSet={toJpgSrcSet(art.src)} sizes="100vw" type="image/jpeg" />
           <img
             ref={imgRef}
             src={art.src}

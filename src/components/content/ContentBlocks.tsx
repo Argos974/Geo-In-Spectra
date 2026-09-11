@@ -91,7 +91,7 @@ function SolutionBlock({
   const panelId = `solution-${slugify(block.title)}`
 
   return (
-    <div className={cn("border", border, panelBg)}>
+    <div className={cn("max-w-[70ch] border", border, panelBg)}>
       {!isPrint && (
         <button
           type="button"
@@ -366,7 +366,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
             // registre visuel que "warning", volontairement, pour qu'il se distingue
             // au premier coup d'œil de tout le reste du contenu de la séance.
             return (
-              <div key={i} className={cn("border-2 p-5 md:p-6 avoid-break", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
+              <div key={i} className={cn("max-w-[70ch] border-2 p-5 md:p-6 avoid-break", isPrint ? "border-[#7a2f24]/60" : "border-oxblood/60")}>
                 <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
                   <p className={cn("font-mono text-[12px] uppercase tracking-wider", isPrint ? "text-[#7a2f24]" : "text-oxblood-bright")}>
                     Devoir à rendre : {block.format}
@@ -475,7 +475,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "formula":
             return (
-              <div key={i} className={cn("border p-5 avoid-break", border, panelBg)}>
+              <div key={i} className={cn("max-w-[70ch] border p-5 avoid-break", border, panelBg)}>
                 <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", accent)}>{block.label}</p>
                 <p className={cn("font-mono text-sm md:text-base break-words", text)}>{block.formula}</p>
                 {block.note && <p className={cn("max-w-[70ch] text-sm mt-3 text-justify", textDim)}>{block.note}</p>}
@@ -484,7 +484,7 @@ export function ContentBlocks({ blocks, variant = "dark", game, moduleSlug }: { 
 
           case "callout":
             return (
-              <div key={i} className={cn("border p-5 avoid-break", calloutStyles[block.tone ?? "info"])}>
+              <div key={i} className={cn("max-w-[70ch] border p-5 avoid-break", calloutStyles[block.tone ?? "info"])}>
                 <p className={cn("font-mono text-[12px] uppercase tracking-wider mb-2", textDim)}>
                   {calloutLabel[block.tone ?? "info"]}
                 </p>
