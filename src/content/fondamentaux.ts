@@ -202,7 +202,7 @@ export const fondamentauxContent: ContentBlock[] = [
       "Antiquité : Ératosthène (~240 av. J.-C.) estime la circonférence terrestre à partir de la différence d'angle d'ombre entre Alexandrie et Syène, avec un écart de quelques pourcents seulement par rapport à la valeur actuelle",
       "Moyen Âge / Renaissance : les portulans, cartes marines fondées sur le relevé au compas entre ports, précèdent la triangulation terrestre",
       "XVIᵉ siècle : Mercator (1569) publie sa projection conforme, encore la base du Web Mercator des cartes en ligne aujourd'hui",
-      "XVIIIᵉ siècle : la famille Cassini triangule systématiquement la France, premier grand relevé topographique national — de la triangulation, pas de la trilatération (section 2)",
+      "XVIIIᵉ siècle : la famille Cassini triangule systématiquement la France, premier grand relevé topographique national (de la triangulation, pas de la trilatération vue en section 2)",
       "XXᵉ siècle : le système GPS, développé par le département de la Défense américain, atteint sa pleine capacité opérationnelle en 1995, puis s'ouvre progressivement à l'usage civil",
     ],
   },
@@ -214,7 +214,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "marginnote",
     title: "Anecdote : une dynastie sur quatre générations",
-    text: "La Carte de Cassini n'est pas l'œuvre d'un seul homme : Jean-Dominique Cassini (Cassini Iᵉʳ) lance le projet, son fils Jacques (Cassini II) le poursuit, son petit-fils César-François (Cassini III) en dresse le plan général, et son arrière-petit-fils Jean-Dominique (Cassini IV) l'achève : plus d'un siècle de relevés (1683-1789), quatre générations de suite — un chantier de triangulation, justement (section 2).",
+    text: "Quatre Cassini se relaient sur le même chantier. Jean-Dominique (Cassini Iᵉʳ) lance le projet, son fils Jacques (Cassini II) le poursuit, son petit-fils César-François (Cassini III) en dresse le plan général, et son arrière-petit-fils Jean-Dominique (Cassini IV) l'achève. Plus d'un siècle de relevés (1683-1789), quatre générations, et toujours le même chantier de triangulation (section 2).",
   },
 
   { type: "heading", text: "8. Lire une carte", level: "lycee" },
@@ -250,25 +250,25 @@ export const fondamentauxContent: ContentBlock[] = [
       "Tracer sur la carte une ligne droite AB entre les deux points à étudier",
       "Relever, à chaque intersection de cette ligne avec une courbe de niveau, deux valeurs : la distance depuis A (à la règle, convertie avec l'échelle de la carte) et l'altitude de la courbe croisée",
       "Reporter chaque couple (distance ; altitude) sur un graphique : la distance en abscisse, l'altitude en ordonnée",
-      "Relier les points par une ligne continue — c'est le profil topographique du trajet AB",
+      "Relier les points par une ligne continue, qui dessine le profil topographique du trajet AB",
     ],
   },
   {
     type: "callout",
     tone: "example",
     title: "Exemple chiffré",
-    text: "Sur une carte d'équidistance 10 m (l'écart d'altitude entre deux courbes voisines), la ligne AB croise des courbes à 0 m (départ, 40 m), 120 m (50 m), 260 m (60 m), 340 m (70 m) puis redescend à 480 m (60 m) : reportés sur le graphique distance/altitude, ces cinq points dessinent une montée régulière jusqu'à 340 m, puis une redescente — un sommet local, invisible d'un simple coup d'œil sur la carte plane elle-même.",
+    text: "Sur une carte d'équidistance 10 m (l'écart d'altitude entre deux courbes voisines), la ligne AB croise des courbes à 0 m (départ, 40 m), 120 m (50 m), 260 m (60 m), 340 m (70 m) puis redescend à 480 m (60 m). Reportés sur le graphique distance/altitude, ces cinq points dessinent une montée régulière jusqu'à 340 m puis une redescente : un sommet local, invisible d'un simple coup d'œil sur la carte plane elle-même.",
   },
   {
     type: "callout",
     tone: "warning",
     title: "L'exagération verticale n'est pas une erreur de lecture",
-    text: "Un profil topographique dessiné avec la même échelle en abscisse et en ordonnée paraît presque plat : le relief réel s'étale sur des kilomètres mais ne varie que de quelques dizaines à quelques centaines de mètres. Par convention, l'échelle verticale est donc volontairement exagérée (souvent ×5 à ×10) pour rendre la forme du relief lisible — à toujours indiquer explicitement sous le graphique, sans quoi le profil laisse croire à des pentes bien plus fortes qu'en réalité.",
+    text: "Un profil topographique dessiné avec la même échelle en abscisse et en ordonnée paraît presque plat : le relief réel s'étale sur des kilomètres mais ne varie que de quelques dizaines à quelques centaines de mètres. Par convention, l'échelle verticale est donc volontairement exagérée (souvent ×5 à ×10) pour rendre la forme du relief lisible. Il faut toujours l'indiquer sous le graphique, sans quoi le profil laisse croire à des pentes bien plus fortes qu'en réalité.",
   },
   {
     type: "list",
     items: [
-      "Bilan — à retenir : datum (WGS84/RGF93) ≠ un point fixé une fois pour toutes, la Terre est un ellipsoïde ; le GPS trilatère (distances) là où un géomètre du XVIIIe triangulait (angles) ; degrés (WGS84) pour échanger des données, mètres (Lambert-93) pour calculer ; vecteur = objets + attributs, raster = grille de pixels ; une projection préserve soit les angles, soit les surfaces, soit un compromis entre les deux (aphylactique) — jamais tout à la fois ; un profil topographique traduit des courbes de niveau croisées le long d'une ligne en un graphique distance/altitude, à échelle verticale exagérée par convention.",
+      "À retenir de cette piste : datum (WGS84/RGF93) ≠ un point fixé une fois pour toutes, la Terre est un ellipsoïde ; le GPS trilatère (distances) là où un géomètre du XVIIIe triangulait (angles) ; degrés (WGS84) pour échanger des données, mètres (Lambert-93) pour calculer ; vecteur = objets + attributs, raster = grille de pixels ; une projection préserve soit les angles, soit les surfaces, soit un compromis entre les deux (aphylactique), jamais tout à la fois ; un profil topographique traduit des courbes de niveau croisées le long d'une ligne en un graphique distance/altitude, à échelle verticale exagérée par convention.",
     ],
   },
   {
@@ -331,13 +331,13 @@ export const fondamentauxContent: ContentBlock[] = [
     items: [
       "Chaque satellite émet en continu un signal horodaté avec une extrême précision (horloge atomique embarquée)",
       "Le récepteur mesure le temps de trajet du signal, et en déduit la distance au satellite (distance = vitesse de la lumière × temps de trajet)",
-      "L'horloge du récepteur, bien moins précise que celle des satellites, introduit un décalage inconnu : la « distance » mesurée est en réalité une pseudo-distance (vraie distance + ce décalage × vitesse de la lumière), ce qui ajoute une quatrième inconnue (le décalage d'horloge) aux trois coordonnées x, y, z — d'où la nécessité d'un quatrième satellite pour résoudre le système",
+      "L'horloge du récepteur, bien moins précise que celle des satellites, introduit un décalage inconnu : la « distance » mesurée est en réalité une pseudo-distance (vraie distance + ce décalage × vitesse de la lumière). Elle ajoute ainsi une quatrième inconnue (le décalage d'horloge) aux trois coordonnées x, y, z, d'où la nécessité d'un quatrième satellite pour résoudre le système",
       "Un récepteur grand public capte en pratique 8 à 12 satellites simultanément pour affiner et fiabiliser le résultat",
     ],
   },
   {
     type: "paragraph",
-    text: "Cette distance au satellite peut se mesurer de deux façons radicalement différentes en précision — c'est la différence qui sépare un GPS de smartphone d'un récepteur RTK professionnel :",
+    text: "Cette distance au satellite se mesure de deux façons radicalement différentes en précision, ce qui sépare justement un GPS de smartphone d'un récepteur RTK professionnel :",
   },
   {
     type: "comparison",
@@ -614,7 +614,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : WGS84/RGF93 rattachent un point à un modèle de la Terre (l'ellipsoïde) ; le GPS trilatère (distances), un géomètre classique triangule (angles) ; code = précision métrique, phase porteuse (RTK/PPK) = précision centimétrique, au prix de résoudre l'ambiguïté entière ; degrés pour échanger, Lambert-93/EPSG:2154 pour calculer ; conforme/équivalente/aphylactique = trois choix de préservation, jamais les trois ensemble ; WMS = image, WFS = données ; RMSE = résidu moyen d'un calage, à interpréter avec la répartition des points de contrôle.",
+      "Ce qu'il faut garder de cette piste : WGS84/RGF93 rattachent un point à un modèle de la Terre (l'ellipsoïde) ; le GPS trilatère (distances), un géomètre classique triangule (angles) ; code = précision métrique, phase porteuse (RTK/PPK) = précision centimétrique, au prix de résoudre l'ambiguïté entière ; degrés pour échanger, Lambert-93/EPSG:2154 pour calculer ; conforme/équivalente/aphylactique = trois choix de préservation, jamais les trois ensemble ; WMS = image, WFS = données ; RMSE = résidu moyen d'un calage, à interpréter avec la répartition des points de contrôle.",
     ],
   },
   {
@@ -689,7 +689,7 @@ export const fondamentauxContent: ContentBlock[] = [
     items: [
       "Chaque satellite émet en continu un signal horodaté avec une extrême précision (horloge atomique embarquée)",
       "Le récepteur mesure le temps de trajet du signal, et en déduit la distance au satellite (distance = vitesse de la lumière × temps de trajet)",
-      "L'horloge du récepteur, bien moins précise que celle des satellites, introduit un décalage inconnu : la « distance » mesurée est en réalité une pseudo-distance (vraie distance + ce décalage × vitesse de la lumière), ce qui ajoute une quatrième inconnue (le décalage d'horloge) aux trois coordonnées x, y, z — d'où la nécessité d'un quatrième satellite pour résoudre le système",
+      "L'horloge du récepteur, bien moins précise que celle des satellites, introduit un décalage inconnu : la « distance » mesurée est en réalité une pseudo-distance (vraie distance + ce décalage × vitesse de la lumière). Elle ajoute ainsi une quatrième inconnue (le décalage d'horloge) aux trois coordonnées x, y, z, d'où la nécessité d'un quatrième satellite pour résoudre le système",
     ],
   },
   {
@@ -820,7 +820,7 @@ export const fondamentauxContent: ContentBlock[] = [
   {
     type: "list",
     items: [
-      "Bilan — à retenir : le géoïde (surface réelle du champ de gravité) ondule de -106 à +85 m par rapport à l'ellipsoïde ; triangulation (angles, réseaux historiques) et trilatération (distances, GNSS) sont deux généalogies différentes de la mesure de position ; code = mètre, phase porteuse = centimètre une fois l'ambiguïté entière résolue (RTK/PPK) ; ITRF suit la dérive des plaques, ETRS89/RGF93 reste gelé ; le réseau RGP+Centipède (~500 à 750+ stations) rend le RTK possible, mais pas uniformément partout en France ; Helmert à 7 paramètres change de datum, une reprojection seule ne suffit pas.",
+      "L'essentiel de cette piste : le géoïde (surface réelle du champ de gravité) ondule de -106 à +85 m par rapport à l'ellipsoïde ; triangulation (angles, réseaux historiques) et trilatération (distances, GNSS) sont deux généalogies différentes de la mesure de position ; code = mètre, phase porteuse = centimètre une fois l'ambiguïté entière résolue (RTK/PPK) ; ITRF suit la dérive des plaques, ETRS89/RGF93 reste gelé ; le réseau RGP+Centipède (~500 à 750+ stations) rend le RTK possible, mais pas uniformément partout en France ; Helmert à 7 paramètres change de datum, une reprojection seule ne suffit pas.",
     ],
   },
   {
