@@ -145,7 +145,7 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "5. Trois familles de projection, pas une seule « déformation »", level: "lycee" },
   {
     type: "paragraph",
-    text: "Aplatir la surface courbe de la Terre sur un plan déforme nécessairement quelque chose — c'est un fait géométrique (le Theorema Egregium de Gauss, 1827), pas une limite qu'un meilleur logiciel résoudrait. La bonne question n'est donc pas « quelle projection déforme le moins » mais « quelle projection préserve ce dont j'ai besoin ». Toute projection appartient à l'une de ces trois familles :",
+    text: "Aplatir la surface courbe de la Terre sur un plan déforme nécessairement quelque chose. C'est un fait géométrique (le Theorema Egregium de Gauss, 1827), pas une limite qu'un meilleur logiciel résoudrait. La bonne question n'est donc pas « quelle projection déforme le moins » mais « quelle projection préserve ce dont j'ai besoin ». Toute projection appartient à l'une de ces trois familles :",
   },
   {
     type: "table",
@@ -437,7 +437,7 @@ export const fondamentauxContent: ContentBlock[] = [
   { type: "heading", text: "4. Trois familles de projection : ce qu'elles préservent, pas ce qu'elles déforment", level: "superieur" },
   {
     type: "paragraph",
-    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois — c'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss (une surface courbe ne peut être développée sur un plan sans déformation). Plutôt que de partir de « ce qui se déforme », il est plus utile de partir de ce qu'une projection choisit de préserver : c'est ce qui définit sa famille, et donc son bon usage.",
+    text: "Projeter, c'est transformer la surface courbe de l'ellipsoïde en un plan. Cette opération déforme nécessairement quelque chose : les surfaces, les angles, les distances, ou un mélange des trois. C'est une conséquence mathématique inévitable, démontrée dès 1827 par le Theorema Egregium de Gauss (une surface courbe ne peut être développée sur un plan sans déformation). Plutôt que de partir de « ce qui se déforme », il est plus utile de partir de ce qu'une projection choisit de préserver : cela définit sa famille, et donc son bon usage.",
   },
   {
     type: "table",
