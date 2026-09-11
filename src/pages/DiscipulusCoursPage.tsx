@@ -86,7 +86,7 @@ export function DiscipulusCoursPage() {
           <CoursPlanOverview />
         </ChapterAccordion>
 
-        <ChapterNav titles={courseModules.map((m) => m.title)} />
+        <ChapterNav titles={courseModules.map((m) => m.navLabel)} targets={courseModules.map((m) => m.title)} />
 
         {courseModules.map((courseModule, i) => {
           const slug = courseModule.slug

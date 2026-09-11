@@ -3,6 +3,14 @@ import { slugify } from "@/lib/slug"
 
 interface ChapterNavProps {
   titles: string[]
+  /**
+   * Titres complets à utiliser pour calculer l'ancre de défilement (voir
+   * ChapterAccordion, `id={slugify(title)}`), quand `titles` porte un libellé
+   * court (ex. `navLabel`) plutôt que le titre réel du chapitre — sinon
+   * `slugify` sur le libellé court ne correspondrait à aucune ancre existante.
+   * Même longueur que `titles`, même ordre. Omis : `titles` sert aussi de cible.
+   */
+  targets?: string[]
 }
 
 /**
@@ -28,23 +36,26 @@ interface ChapterNavProps {
  * largeur du contenu, seulement le rendu visuel, donc ni chevauchement ni
  * recalcul de mise en page selon la largeur d'écran.
  */
-export function ChapterNav({ titles }: ChapterNavProps) {
+export function ChapterNav({ titles, targets }: ChapterNavProps) {
   return (
     <nav
       aria-label="Chapitres"
       className="sticky top-32 z-10 mb-8 flex flex-row flex-nowrap items-center gap-1 overflow-x-auto bg-ink/90 backdrop-blur-sm border border-gilt/15 py-2 font-mono text-[12px] uppercase tracking-wider text-parchment-dim/80 xl:z-0 xl:w-48 xl:overflow-visible xl:flex-col xl:flex-nowrap xl:items-stretch xl:gap-0.5 xl:bg-transparent xl:border-0 xl:py-0 xl:-translate-x-[13rem] print:hidden"
     >
-      {titles.map((t) => (
-        <button
-          key={t}
-          type="button"
-          onClick={() => openAndScrollTo(slugify(t))}
-          title={t}
-          className="shrink-0 whitespace-nowrap px-3 py-1.5 xl:text-left xl:truncate xl:border-l-2 xl:border-transparent hover:text-gilt xl:hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors"
-        >
-          {t}
-        </button>
-      ))}
+      {titles.map((t, i) => {
+        const target = targets?.[i] ?? t
+        return (
+          <button
+            key={target}
+            type="button"
+            onClick={() => openAndScrollTo(slugify(target))}
+            title={target}
+            className="shrink-0 whitespace-nowrap px-3 py-1.5 xl:text-left xl:truncate xl:border-l-2 xl:border-transparent hover:text-gilt xl:hover:border-gilt/50 hover:bg-gilt/[0.04] transition-colors"
+          >
+            {t}
+          </button>
+        )
+      })}
     </nav>
   )
 }
